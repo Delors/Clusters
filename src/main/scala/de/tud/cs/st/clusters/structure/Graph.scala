@@ -2,11 +2,15 @@ package de.tud.cs.st.clusters.structure
 import de.tud.cs.st.bat.dependency.EdgeType
 import de.tud.cs.st.bat.dependency.DepGraphBuilder
 
-class Graph extends AnyRef with DepGraphBuilder with DotableGraph {
+class Graph(val name: String) extends AnyRef with DepGraphBuilder with DotableGraph {
 
   private var nodes = Array.empty[String]
   private var edges = Array.empty[AdjacenceListEdge]
   private var transposedEdges = Array.empty[AdjacenceListEdge]
+
+  def this() {
+    this(null)
+  }
 
   def getID(identifier: String): Int = {
     var index = nodes.indexOf(identifier)
@@ -45,6 +49,13 @@ class Graph extends AnyRef with DepGraphBuilder with DotableGraph {
     result
   }
 
+  def getEdges(src: Int): AdjacenceListEdge = {
+    edges(src)
+  }
+
   def getNode(id: Int): Node =
     nodes(id)
+
+  def size: Int =
+    nodes.size
 }

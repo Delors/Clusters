@@ -10,22 +10,21 @@ trait DotableGraph {
 
   def getNode(id: Int): Node
 
+  def size: Int
+
+  def name: String
+
   def toDot(): String = {
-    var processedNodes = Set.empty[Int]
+    var s = "digraph \"" + { if (name != null) name else "G" } + "\" {\n"
 
-    var s = "digraph G {\n"
+    // add nodes
+    for (i <- 0 to size - 1) {
+      s += "\t" + i + "[label=\"" + getNode(i) + "\"];\n"
+    }
 
+    // add egdes
     for ((src, trgt, eType) <- getEdges) {
-      if (!processedNodes.contains(src)) {
-        s += "\t" + src + "[label=\"" + getNode(src) + "\"];\n"
-        processedNodes += src
-      }
-      if (!processedNodes.contains(trgt)) {
-        s += "\t" + trgt + "[label=\"" + getNode(trgt) + "\"];\n"
-        processedNodes += trgt
-      }
-
-      s += "\t" + src + " -> " + trgt + "[label=\"" + eType.descr + "\"];\n" // +"[dir=none];\n"
+      s += "\t" + src + " -> " + trgt + "[label=\"" + eType.descr + "\"];\n"
     }
 
     s += "}"
