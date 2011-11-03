@@ -13,11 +13,12 @@ import org.scalatest.events.TestFailed
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import de.tud.cs.st.bat.dependency.DepGraphBuilder
-import de.tud.cs.st.bat.dependency.DepGraphGenerator
 import de.tud.cs.st.clusters.structure.Graph
 import org.junit.After
 import org.junit.Test
 import java.io.FileWriter
+import de.tud.cs.st.bat.dependency.ClassFileProcessor
+import de.tud.cs.st.bat.dependency.DepGraphExtractor
 
 @RunWith(classOf[JUnitRunner])
 class HyperClusterFilterTest extends Suite with de.tud.cs.st.util.perf.BasicPerformanceEvaluation {
@@ -54,17 +55,17 @@ class HyperClusterFilterTest extends Suite with de.tud.cs.st.util.perf.BasicPerf
   }
 
   @Test
-  def testDepGraphGeneration() {
-    println("testDepGraphGeneration - START")
+  def testHyperClusterFiltering() {
+    println("testHyperClusterFiltering - START")
 
     val depGraphBuilder = new Graph
-    val depGraphGen = new DepGraphGenerator(depGraphBuilder)
+    val cfProcessor: ClassFileProcessor = new DepGraphExtractor(depGraphBuilder)
 
     time(duration => println("process time: " + nanoSecondsToMilliseconds(duration) + "ms")) {
       for ((file, entry) <- testCases.values) {
         var classFile: de.tud.cs.st.bat.resolved.ClassFile = null
         classFile = Java6Framework.ClassFile(() => file.getInputStream(entry))
-        depGraphGen.process(classFile)
+        cfProcessor.process(classFile)
       }
     }
 
@@ -78,7 +79,7 @@ class HyperClusterFilterTest extends Suite with de.tud.cs.st.util.perf.BasicPerf
       fw.close()
     })
 
-    println("testDepGraphGeneration - END")
+    println("testHyperClusterFiltering - END")
   }
 
   class TestHyperClusterFilter extends ClusterFilter {

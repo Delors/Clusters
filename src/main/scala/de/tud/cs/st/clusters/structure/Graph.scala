@@ -1,6 +1,6 @@
 package de.tud.cs.st.clusters.structure
-import de.tud.cs.st.bat.dependency.EdgeType
 import de.tud.cs.st.bat.dependency.DepGraphBuilder
+import scala.collection.mutable.Map
 
 class Graph(val name: String) extends AnyRef with DepGraphBuilder with DotableGraph {
 
@@ -37,16 +37,17 @@ class Graph(val name: String) extends AnyRef with DepGraphBuilder with DotableGr
     addEdge(trgt, src, transposedEdges)
   }
 
-  def getEdges: Set[Edge] = {
-    var result = Set.empty[Edge]
+  def getEdges: Set[(Edge, Int)] = {
+    var result = Map[Edge, Int]()
     for (i <- 0 to nodes.length - 1) {
       var e = edges(i)
       while (e != null) {
-        result += ((i, e.target, e.eType))
+        val edge = (i, e.target, e.eType)
+        result(edge) = result.getOrElse(edge, 0) + 1
         e = e.successor
       }
     }
-    result
+    result.toSet
   }
 
   def getEdges(src: Int): AdjacenceListEdge = {

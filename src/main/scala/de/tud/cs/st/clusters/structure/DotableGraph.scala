@@ -1,12 +1,12 @@
 package de.tud.cs.st.clusters.structure
-import de.tud.cs.st.bat.dependency.EdgeType
 
 trait DotableGraph {
 
+  type EdgeType = { val id: Int; val descr: String }
   type Edge = (Int, Int, EdgeType)
   type Node = String
 
-  def getEdges: Set[Edge]
+  def getEdges: Set[(Edge, Int)]
 
   def getNode(id: Int): Node
 
@@ -23,8 +23,8 @@ trait DotableGraph {
     }
 
     // add egdes
-    for ((src, trgt, eType) <- getEdges) {
-      s += "\t" + src + " -> " + trgt + "[label=\"" + eType.descr + "\"];\n"
+    for (((src, trgt, eType), cnt) <- getEdges) {
+      s += "\t" + src + " -> " + trgt + "[label=\"" + eType.descr + "[" + cnt + "]\"];\n"
     }
 
     s += "}"

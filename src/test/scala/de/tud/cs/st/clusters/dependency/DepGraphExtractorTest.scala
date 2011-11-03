@@ -13,14 +13,15 @@ import org.scalatest.events.TestFailed
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import de.tud.cs.st.bat.dependency.DepGraphBuilder
-import de.tud.cs.st.bat.dependency.DepGraphGenerator
 import de.tud.cs.st.clusters.structure.Graph
 import org.junit.After
 import org.junit.Test
 import java.io.FileWriter
+import de.tud.cs.st.bat.dependency.DepGraphExtractor
+import de.tud.cs.st.bat.dependency.ClassFileProcessor
 
 @RunWith(classOf[JUnitRunner])
-class DepGraphGeneratorTest extends Suite with de.tud.cs.st.util.perf.BasicPerformanceEvaluation {
+class DepGraphExtractorTest extends Suite with de.tud.cs.st.util.perf.BasicPerformanceEvaluation {
 
   /*
 	 * Registry of all class files stored in the zip files found in the test data directory.
@@ -58,14 +59,14 @@ class DepGraphGeneratorTest extends Suite with de.tud.cs.st.util.perf.BasicPerfo
     println("testDepGraphGeneration - START")
 
     val depGraphBuilder = new Graph
-    val depGraphGen = new DepGraphGenerator(depGraphBuilder)
+    val cfProcessor: ClassFileProcessor = new DepGraphExtractor(depGraphBuilder)
 
     time(duration => println("process time: " + nanoSecondsToMilliseconds(duration) + "ms")) {
       for ((file, entry) <- testCases.values) {
         var classFile: de.tud.cs.st.bat.resolved.ClassFile = null
         classFile = Java6Framework.ClassFile(() => file.getInputStream(entry))
         //        println(classFile.toXML)
-        depGraphGen.process(classFile)
+        cfProcessor.process(classFile)
       }
     }
     val fw = new FileWriter("output.dot")

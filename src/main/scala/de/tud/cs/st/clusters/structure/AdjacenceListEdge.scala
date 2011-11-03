@@ -1,7 +1,7 @@
 package de.tud.cs.st.clusters.structure
-import de.tud.cs.st.bat.dependency.EdgeType
 
-class AdjacenceListEdge(val target: Int, val eType: EdgeType) {
+class AdjacenceListEdge(val target: Int, val eType: { val id: Int; val descr: String }) {
+
   var predecessor: AdjacenceListEdge = _
 
   var successor: AdjacenceListEdge = _

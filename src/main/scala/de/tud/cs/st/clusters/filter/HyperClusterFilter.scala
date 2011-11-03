@@ -31,7 +31,7 @@ trait HyperClusterFilter extends ClusterFilter {
     var prfxs = prefixRoot.prefixes.map(charArray => String.copyValueOf(charArray))
 
     // create resulting clusters
-    var resultMap = Map[String, Graph]().empty
+    var resultMap = Map[String, Graph]()
     for (i <- 0 to prfxs.size - 1) {
       val prfx = prfxs(i)
       resultMap(prfx) = new Graph(prfx)
