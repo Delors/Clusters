@@ -30,30 +30,29 @@
 *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 *  POSSIBILITY OF SUCH DAMAGE.
 */
-package de.tud.cs.st.clusters.filter
+package de.tud.cs.st.clusters.dependency
 import org.scalatest.FunSuite
 import java.io.File
 import java.util.zip.ZipFile
 import java.util.zip.ZipEntry
-
 import de.tud.cs.st.bat.resolved.reader.Java6Framework
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
-import de.tud.cs.st.bat.resolved.dependency.DepExtractor
 import de.tud.cs.st.clusters.structure.Graph
 import org.junit.Test
 import java.io.FileWriter
+import de.tud.cs.st.bat.resolved.dependency.DepExtractor
 
 /**
  * @author Thomas Schlosser
  *
  */
 @RunWith(classOf[JUnitRunner])
-class HyperClusterFilterTest extends FunSuite with de.tud.cs.st.util.perf.BasicPerformanceEvaluation {
+class DepExtractorTest extends FunSuite with de.tud.cs.st.util.perf.BasicPerformanceEvaluation {
 
   /*
-	 * Registry of all class files stored in the zip files found in the test data directory.
-	 */
+   * Registry of all class files stored in the zip files found in the test data directory.
+   */
   private val testCases = {
 
     var tcs = scala.collection.immutable.Map[String, (ZipFile, ZipEntry)]()
@@ -82,8 +81,8 @@ class HyperClusterFilterTest extends FunSuite with de.tud.cs.st.util.perf.BasicP
     tcs
   }
 
-  test("testHyperClusterFiltering") {
-    println("testHyperClusterFiltering - START")
+  test("testDepGraphGeneration") {
+    println("testDepGraphGeneration - START")
 
     val graph = new Graph
     val depExtractor = new DepExtractor(graph)
@@ -92,26 +91,14 @@ class HyperClusterFilterTest extends FunSuite with de.tud.cs.st.util.perf.BasicP
       for ((file, entry) <- testCases.values) {
         var classFile: de.tud.cs.st.bat.resolved.ClassFile = null
         classFile = Java6Framework.ClassFile(() => file.getInputStream(entry))
+        //        println(classFile.toXML)
         depExtractor.process(classFile)
       }
     }
+    val fw = new FileWriter("output.dot")
+    fw.write(graph.toDot())
+    fw.close()
 
-    val filter = new TestHyperClusterFilter with HyperClusterFilter
-    var hyperClusters = filter.filter(Array(graph), null)
-    println("number of hyper clusters: " + hyperClusters.length)
-    hyperClusters.foreach(c => {
-      println("write cluster[" + c.name + "] into dot file")
-      val fw = new FileWriter(c.name + ".dot")
-      fw.write(c.toDot())
-      fw.close()
-    })
-
-    println("testHyperClusterFiltering - END")
-  }
-
-  class TestHyperClusterFilter extends ClusterFilter {
-    override def filter(clusters: Array[Graph], projectRootDir: Dir): Array[Graph] = {
-      return clusters
-    }
+    println("testDepGraphGeneration - END")
   }
 }
