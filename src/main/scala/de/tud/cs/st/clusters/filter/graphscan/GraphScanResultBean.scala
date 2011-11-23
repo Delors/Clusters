@@ -30,31 +30,81 @@
 *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 *  POSSIBILITY OF SUCH DAMAGE.
 */
-package de.tud.cs.st.clusters.structure
-import de.tud.cs.st.bat.resolved.DependencyType._
+package de.tud.cs.st.clusters
+package filter.graphscan
+import scala.util.Properties
+import scala.collection.mutable.Map
 
 /**
  * @author Thomas Schlosser
  *
  */
-class AdjacenceListEdge(val target: Int, val eType: DependencyType) {
+class GraphScanResultBean {
+  /**
+   * Die Entdeckungszeitpunkte der Knoten des Graphen.
+   */
+  var discoveryTime: Map[Int, Int] = _
 
-  var predecessor: AdjacenceListEdge = _
+  /**
+   * Die Finishing-Zeitpunkte der Knoten des Graphen.
+   */
+  var finishingTime: Map[Int, Int] = _
 
-  var successor: AdjacenceListEdge = _
+  /**
+   * Die Vorgängerknoten der Knoten des Graphen.
+   */
+  var pi: Map[Int, Int] = _
 
-  var weight: Double = 0
+  /**
+   * Die Einfärbung der Knoten des Graphen.
+   */
+  var color: Map[Int, Int] = _
 
-  def remove {
-    val tempPred = this.predecessor
-    val tempSucc = this.successor
-    if (this.predecessor != null) {
-      this.predecessor.successor = tempSucc
-      this.predecessor = null
-    }
-    if (this.successor != null) {
-      this.successor.predecessor = tempPred
-      this.successor = null
-    }
+  /**
+   * Die Knoten des Graphen absteigend nach Finishing-Zeit sortiert.
+   */
+  var order: Array[Int] = _
+
+  /**
+   * Signalisiert ob ein Knoten auf gerader Entfernung zu dem Startknoten
+   * (seiner Wurzel) liegt.
+   */
+  var evenDist: Map[Int, Boolean] = _
+
+  /**
+   * Enthält die Anzahl der unbearbeiteten Knoten(zumindest bezogen auf die
+   * Sortierung).
+   */
+  var unfinishedNodes = 0
+
+  /**
+   * Die Zeit, bei der der Algorithmus beendet wurde.
+   */
+  var time: Int = _
+
+  /**
+   * Erstellt und setzt alle relevanten Daten, die für die Sortierung nach
+   * Finishing-Zeit relevant sind.
+   *
+   * @param size
+   *            Die max-Anzahl der Knoten.
+   */
+  def createOrderElements(size: Int) {
+    order = new Array(size)
+    unfinishedNodes = size
+  }
+
+  /**
+   * Verringert die Anzahl der unbearbeiteten Knoten und gibt dieses Ergebnis
+   * zurück.<br/>
+   * <b style="color:red">HINWEIS:</b> Bevor diese Methode verwendet werden
+   * kann sollte die Methode {@link #createOrderElements(int)} aufgerufen
+   * werden um die benötigte Struktur zu erstellen.
+   *
+   * @return Die Anzahl der unbearbeiteten Knoten.
+   */
+  def decreaseUnfinishedNodes(): Int = {
+    unfinishedNodes -= 1
+    unfinishedNodes
   }
 }

@@ -30,15 +30,25 @@
 *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 *  POSSIBILITY OF SUCH DAMAGE.
 */
-package de.tud.cs.st.clusters.filter
-import java.io.File
-import de.tud.cs.st.clusters.structure.Cluster
+package de.tud.cs.st.clusters.structure
+import de.tud.cs.st.bat.resolved.DependencyType._
+import scala.collection.mutable.Map
 
 /**
  * @author Thomas Schlosser
  *
  */
-trait ClusterFilter {
+trait Node {
 
-  def filter(clusters: Array[Cluster], projectRootDir: File): Array[Cluster]
+  def identifier: String
+
+  def uniqueID: Int
+
+  def addEdge(src: Node, trgt: Node, dType: DependencyType)
+
+  def getEdges(): List[Edge]
+
+  def getTransposedEdges(): List[Edge]
+
+  def toDot(implicit nodeBuffer: StringBuffer, edgeBuffer: StringBuffer): String
 }

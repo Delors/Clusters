@@ -30,15 +30,18 @@
 *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 *  POSSIBILITY OF SUCH DAMAGE.
 */
-package de.tud.cs.st.clusters.filter
-import java.io.File
-import de.tud.cs.st.clusters.structure.Cluster
+package de.tud.cs.st.clusters.structure
+import de.tud.cs.st.bat.resolved.DependencyType._
 
 /**
  * @author Thomas Schlosser
  *
  */
-trait ClusterFilter {
+class TransposedSourceElementNode(node: SourceElementNode) extends SourceElementNode(node.uniqueID, node.identifier) {
 
-  def filter(clusters: Array[Cluster], projectRootDir: File): Array[Cluster]
+  override def getEdges(): List[Edge] =
+    super.getTransposedEdges()
+
+  override def getTransposedEdges(): List[Edge] =
+    super.getEdges()
 }

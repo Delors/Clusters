@@ -30,51 +30,61 @@
 *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 *  POSSIBILITY OF SUCH DAMAGE.
 */
-package de.tud.cs.st.clusters.dependency
+package de.tud.cs.st.clusters.filter
 import org.scalatest.FunSuite
 import java.io.File
 import java.util.zip.ZipFile
 import java.util.zip.ZipEntry
 import de.tud.cs.st.bat.resolved.reader.Java6Framework
+import de.tud.cs.st.bat.resolved.reader.Java6Framework.ClassFile
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
-import de.tud.cs.st.clusters.structure.Cluster
-import org.junit.Test
-import java.io.FileWriter
 import de.tud.cs.st.bat.resolved.dependency.DepExtractor
 import de.tud.cs.st.clusters.structure.ClusterBuilder
-import de.tud.cs.st.bat.resolved.ClassFile
+import org.junit.Test
+import java.io.FileWriter
+import de.tud.cs.st.clusters.resolved.BasicClusteringFramework
 
 /**
  * @author Thomas Schlosser
  *
  */
 @RunWith(classOf[JUnitRunner])
-class DepExtractorTest extends FunSuite with de.tud.cs.st.util.perf.BasicPerformanceEvaluation {
+class GetterSetterClusteringTest extends FunSuite with de.tud.cs.st.util.perf.BasicPerformanceEvaluation {
 
-  test("testDepGraphGeneration") {
-    println("testDepGraphGeneration - START")
+  test("testGetterSetterClustering") {
+    testGetterSetterClustering("testGetterSetterClustering",
+      { de => de.process(Java6Framework.ClassFile("test/classfiles/ClusteringTestProject.zip", "test/GetterSetterTestClass.class")) })
+  }
+
+  test("testGetterSetterClustering2") {
+    testGetterSetterClustering("testGetterSetterClustering2",
+      { de => de.process(Java6Framework.ClassFile("test/classfiles/CommandHistory.class.zip", "CommandHistory.class")) })
+  }
+
+  test("testGetterSetterClustering3") {
+    testGetterSetterClustering("testGetterSetterClustering3",
+      { de => for (cf <- getTestClasses("test/classfiles/Flashcards 0.4 - target 1.6.zip")) de.process(cf) })
+  }
+
+  private def testGetterSetterClustering(testName: String, extractDeps: (DepExtractor) => Unit) {
+    println(testName + " - START")
 
     val clusterBuilder = new ClusterBuilder
     val depExtractor = new DepExtractor(clusterBuilder)
 
-    var testClasses: Array[ClassFile] = null
-    time(duration => println("time to read class files: " + nanoSecondsToMilliseconds(duration) + "ms")) {
-      testClasses = getTestClasses("test/classfiles/Flashcards 0.4 - target 1.6.zip") //"test/classfiles/hibernate-core-3.6.0.Final.jar")
-    }
+    extractDeps(depExtractor)
 
-    time(duration => println("time to extract dependencies: " + nanoSecondsToMilliseconds(duration) + "ms")) {
-      for (classFile <- testClasses) {
-        depExtractor.process(classFile)
-      }
-    }
-    time(duration => println("time to write dot file: " + nanoSecondsToMilliseconds(duration) + "ms")) {
-      val fw = new FileWriter("output.dot")
-      fw.write(clusterBuilder.getCluster.toDot)
+    val framework = new BasicClusteringFramework with GetterSetterClustering
+    var clusters = framework.filter(Array(clusterBuilder.getCluster), null)
+    clusters.foreach(c => {
+      println("write cluster[" + c.identifier + "] into dot file")
+      val fw = new FileWriter(c.identifier + ".dot")
+      fw.write(c.toDot())
       fw.close()
-    }
+    })
 
-    println("testDepGraphGeneration - END")
+    println(testName + " - END")
   }
 
   private def getTestClasses(zipFile: String): Array[ClassFile] = {

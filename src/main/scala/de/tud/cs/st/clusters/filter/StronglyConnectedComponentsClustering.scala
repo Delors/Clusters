@@ -30,15 +30,56 @@
 *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 *  POSSIBILITY OF SUCH DAMAGE.
 */
-package de.tud.cs.st.clusters.filter
+package de.tud.cs.st.clusters
+package filter
+import structure.Cluster
 import java.io.File
-import de.tud.cs.st.clusters.structure.Cluster
+import de.tud.cs.st.bat.resolved.DependencyType._
+import structure.Node
+import de.tud.cs.st.clusters.filter.graphscan.GraphScanResultBean
+import de.tud.cs.st.clusters.filter.graphscan.GraphScanningAlgorithms
+import de.tud.cs.st.clusters.structure.TransposedCluster
+import scala.collection.mutable.Map
 
 /**
  * @author Thomas Schlosser
  *
  */
-trait ClusterFilter {
+trait StronglyConnectedComponentsClustering extends ClusterFilter {
+  abstract override def filter(clusters: Array[Cluster], projectRootDir: File): Array[Cluster] = {
+    for (cluster <- clusters) {
+      createStronglyConnectedComponents(cluster)
+    }
+    super.filter(clusters, projectRootDir)
+    clusters
+  }
 
-  def filter(clusters: Array[Cluster], projectRootDir: File): Array[Cluster]
+  private def createStronglyConnectedComponents(cluster: Cluster) {
+    // calculate finishing times of all nodes using depth first search
+    var result = GraphScanningAlgorithms.graphScanComplete(
+      cluster, 0, true, null)
+
+    // calculate depth first search on the transposed cluster considering
+    // the finishing times of the first run of the depth first search algorithm
+    result = GraphScanningAlgorithms.graphScanComplete(cluster,
+      null, true, result.order)(true)
+
+    // create resulting clusters
+    var resultMap = Map[Int, Cluster]()
+    for (node <- cluster.nodes) {
+      val sccID = result.color(node.uniqueID) - 2
+      if (sccID >= 0) {
+        resultMap.get(sccID) match {
+          case Some(c) =>
+            c.nodes :+= node
+          case None =>
+            val c = new Cluster("SCC_" + sccID)
+            c.nodes :+= node
+            resultMap(sccID) = c
+        }
+      }
+    }
+
+    cluster.nodes = resultMap.values.toList
+  }
 }

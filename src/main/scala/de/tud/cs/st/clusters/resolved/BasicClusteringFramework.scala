@@ -30,15 +30,18 @@
 *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 *  POSSIBILITY OF SUCH DAMAGE.
 */
-package de.tud.cs.st.clusters.filter
-import java.io.File
+package de.tud.cs.st.clusters.resolved
+import de.tud.cs.st.clusters.filter.ClusterFilter
+import de.tud.cs.st.clusters.filter.HyperClusterFilter
 import de.tud.cs.st.clusters.structure.Cluster
+import java.io.File
 
 /**
  * @author Thomas Schlosser
  *
  */
-trait ClusterFilter {
-
-  def filter(clusters: Array[Cluster], projectRootDir: File): Array[Cluster]
+class BasicClusteringFramework extends ClusterFilter {
+  override def filter(clusters: Array[Cluster], projectRootDir: File): Array[Cluster] = {
+    return clusters
+  }
 }

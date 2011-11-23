@@ -30,7 +30,7 @@
 *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 *  POSSIBILITY OF SUCH DAMAGE.
 */
-package de.tud.cs.st.clusters.dependency
+package de.tud.cs.st.clusters.filter
 import org.scalatest.FunSuite
 import java.io.File
 import java.util.zip.ZipFile
@@ -38,56 +38,36 @@ import java.util.zip.ZipEntry
 import de.tud.cs.st.bat.resolved.reader.Java6Framework
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
-import de.tud.cs.st.clusters.structure.Cluster
-import org.junit.Test
-import java.io.FileWriter
 import de.tud.cs.st.bat.resolved.dependency.DepExtractor
 import de.tud.cs.st.clusters.structure.ClusterBuilder
-import de.tud.cs.st.bat.resolved.ClassFile
+import org.junit.Test
+import java.io.FileWriter
+import de.tud.cs.st.clusters.resolved.BasicClusteringFramework
 
 /**
  * @author Thomas Schlosser
  *
  */
 @RunWith(classOf[JUnitRunner])
-class DepExtractorTest extends FunSuite with de.tud.cs.st.util.perf.BasicPerformanceEvaluation {
+class StronglyConnectedComponentsClusteringTest extends FunSuite with de.tud.cs.st.util.perf.BasicPerformanceEvaluation {
 
-  test("testDepGraphGeneration") {
-    println("testDepGraphGeneration - START")
+  test("testStronglyConnectedComponentsClustering") {
+    println("testStronglyConnectedComponentsClustering - START")
 
     val clusterBuilder = new ClusterBuilder
     val depExtractor = new DepExtractor(clusterBuilder)
 
-    var testClasses: Array[ClassFile] = null
-    time(duration => println("time to read class files: " + nanoSecondsToMilliseconds(duration) + "ms")) {
-      testClasses = getTestClasses("test/classfiles/Flashcards 0.4 - target 1.6.zip") //"test/classfiles/hibernate-core-3.6.0.Final.jar")
-    }
+    depExtractor.process(Java6Framework.ClassFile("test/classfiles/ClusteringTestProject.zip", "test/StronglyConnectedComponentsTestClass.class"))
 
-    time(duration => println("time to extract dependencies: " + nanoSecondsToMilliseconds(duration) + "ms")) {
-      for (classFile <- testClasses) {
-        depExtractor.process(classFile)
-      }
-    }
-    time(duration => println("time to write dot file: " + nanoSecondsToMilliseconds(duration) + "ms")) {
-      val fw = new FileWriter("output.dot")
-      fw.write(clusterBuilder.getCluster.toDot)
+    val framework = new BasicClusteringFramework with StronglyConnectedComponentsClustering
+    var clusters = framework.filter(Array(clusterBuilder.getCluster), null)
+    clusters.foreach(c => {
+      println("write cluster[" + c.identifier + "] into dot file")
+      val fw = new FileWriter(c.identifier + ".dot")
+      fw.write(c.toDot())
       fw.close()
-    }
+    })
 
-    println("testDepGraphGeneration - END")
-  }
-
-  private def getTestClasses(zipFile: String): Array[ClassFile] = {
-    var tcls = Array.empty[ClassFile]
-    val zipfile = new ZipFile(new File(zipFile))
-    val zipentries = (zipfile).entries
-    while (zipentries.hasMoreElements) {
-      val zipentry = zipentries.nextElement
-      if (!zipentry.isDirectory && zipentry.getName.endsWith(".class")) {
-        val testClass = (Java6Framework.ClassFile(() => zipfile.getInputStream(zipentry)))
-        tcls :+= testClass
-      }
-    }
-    tcls
+    println("testStronglyConnectedComponentsClustering - END")
   }
 }

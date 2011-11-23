@@ -30,15 +30,12 @@
 *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 *  POSSIBILITY OF SUCH DAMAGE.
 */
-package de.tud.cs.st.clusters.filter
-import java.io.File
-import de.tud.cs.st.clusters.structure.Cluster
+package de.tud.cs.st.clusters.structure
+import de.tud.cs.st.bat.resolved.DependencyType._
 
 /**
  * @author Thomas Schlosser
  *
  */
-trait ClusterFilter {
-
-  def filter(clusters: Array[Cluster], projectRootDir: File): Array[Cluster]
+class Edge(val source: Node, val target: Node, val dType: DependencyType) {
 }

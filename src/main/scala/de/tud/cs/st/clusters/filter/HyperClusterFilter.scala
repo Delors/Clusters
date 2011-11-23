@@ -33,6 +33,7 @@
 package de.tud.cs.st.clusters.filter
 import java.io.File
 import scala.collection.mutable.Map
+import de.tud.cs.st.clusters.structure.Cluster
 
 /**
  * Creates hyper clusters based on greatest common prefix of classes' package names
@@ -40,59 +41,38 @@ import scala.collection.mutable.Map
  *
  */
 trait HyperClusterFilter extends ClusterFilter {
-  type Graph = de.tud.cs.st.clusters.structure.Graph
-  type Dir = File
 
-  abstract override def filter(clusters: Array[Graph], projectRootDir: Dir): Array[Graph] = {
-    var newClusters = Array.empty[Graph]
+  abstract override def filter(clusters: Array[Cluster], projectRootDir: File): Array[Cluster] = {
     for (cluster <- clusters) {
-      newClusters ++= createHyperClusters(cluster, projectRootDir)
+      createHyperClusters(cluster, projectRootDir)
     }
-    super.filter(newClusters, projectRootDir)
+    super.filter(clusters, projectRootDir)
   }
 
-  private def createHyperClusters(cluster: Graph, projectRootDir: Dir): Array[Graph] = {
+  private def createHyperClusters(cluster: Cluster, projectRootDir: File) = {
     def getMatchingPrefix(value: String, prefixes: Array[String]): String = {
       prefixes.foreach(prfx => if (value.startsWith(prfx)) { return prfx })
       null
     }
 
     var prefixRoot = new GreatestCommonCharPrefixTree('#')
-    for (i <- 0 to cluster.size - 1) {
-      prefixRoot.addPrefix(cluster.getNode(i).toCharArray())
+    for (node <- cluster.nodes) {
+      prefixRoot.addPrefix(node.identifier.toCharArray())
     }
     var prfxs = prefixRoot.prefixes.map(charArray => String.copyValueOf(charArray))
 
     // create resulting clusters
-    var resultMap = Map[String, Graph]()
+    var resultMap = Map[String, Cluster]()
     for (i <- 0 to prfxs.size - 1) {
       val prfx = prfxs(i)
-      resultMap(prfx) = new Graph(prfx)
+      resultMap(prfx) = new Cluster(prfx)
     }
-    for (i <- 0 to cluster.size - 1) {
-      val node = cluster.getNode(i)
-      val g = resultMap(getMatchingPrefix(node, prfxs))
-      val id = g.getID(node)
-      val clusterName = g.name
-      //TODO: add all edges...how should edges to nodes of other clusters be handled?
-      //TODO: transposed edges?!?
-      var e = cluster.getEdges(i)
-      while (e != null) {
-        val trgtName = cluster.getNode(e.target)
-        if (trgtName.startsWith(clusterName)) {
-          g.addEdge(id, g.getID(trgtName), e.eType)
-        } else {
-          // edges to nodes of other clusters are connected to a new node that represents this cluster
-          val trgtClusterName = getMatchingPrefix(trgtName, prfxs)
-          g.addEdge(id, g.getID(trgtClusterName), e.eType)
-          val trgtClusterGraph = resultMap(trgtClusterName)
-          trgtClusterGraph.addEdge(trgtClusterGraph.getID(clusterName), trgtClusterGraph.getID(trgtName), e.eType)
-        }
-        e = e.successor
-      }
-
+    for (node <- cluster.nodes) {
+      val nodeIdentifier = node.identifier
+      val c = resultMap(getMatchingPrefix(nodeIdentifier, prfxs))
+      c.nodes:+=node
     }
-    resultMap.values.toArray
+    cluster.nodes = resultMap.values.toList
   }
 }
 

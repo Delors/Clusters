@@ -30,74 +30,63 @@
 *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 *  POSSIBILITY OF SUCH DAMAGE.
 */
-package de.tud.cs.st.clusters.structure
-import de.tud.cs.st.bat.resolved.DependencyType._
-import de.tud.cs.st.bat.resolved.dependency.DepBuilder
-import scala.collection.mutable.Map
+package de.tud.cs.st.clusters
+package filter.graphscan
+import scala.util.Properties
+import java.util.ArrayDeque
 
 /**
+ *
+ * isStack: Signalisiert, ob es sich um einen Stack, oder um eine Queue handelt.
+ *
  * @author Thomas Schlosser
  *
  */
-class Graph(val name: String) extends DepBuilder with DotableGraph {
+class NodeSet(val isStack: Boolean) {
 
-  private var nodes = Array.empty[String]
-  private var edges = Array.empty[AdjacenceListEdge]
-  private var transposedEdges = Array.empty[AdjacenceListEdge]
+  /**
+   * Der Inhalt des {@link NodeSet}s wird in dieser Struktur verwaltet.
+   */
+  private val content = new ArrayDeque[Integer];
 
-  def this() {
-    this(null)
+  /**
+   * Fügt einen Wert zum {@link NodeSet} hinzu.
+   *
+   * @param value
+   *            Wert, der eingefügt werden soll.
+   */
+  def add(value: Int) {
+    if (isStack)
+      content.push(value);
+    else
+      content.add(value);
   }
 
-  def getID(identifier: String): Int = {
-    var index = nodes.indexOf(identifier)
-    if (index == -1) {
-      nodes :+= identifier
-      edges :+= null
-      transposedEdges :+= null
-      index = nodes.length - 1
-    }
-    index
+  /**
+   * Gibt das nächste (erste) Element zurück.
+   *
+   * @return den Wert des nächsten Elements, oder <code>-1</code>, wenn das
+   *         {@link NodeSet} leer ist.
+   */
+  def getNext: Int = {
+    if (content.isEmpty())
+      return -1;
+    return content.peek();
   }
 
-  def addDep(src: Int, trgt: Int, dType: DependencyType) {
-    addEdge(src, trgt, dType)
+  /**
+   * Löscht den ersten Wert des {@link NodeSet}s.
+   */
+  def remove {
+    content.remove();
   }
 
-  def addEdge(src: Int, trgt: Int, eType: DependencyType) {
-    def addEdge(start: Int, end: Int, adjLists: Array[AdjacenceListEdge]) {
-      var successor = adjLists(start)
-      val newEdge = new AdjacenceListEdge(end, eType)
-      newEdge.successor = successor
-      if (successor != null)
-        successor.predecessor = newEdge
-      adjLists(start) = newEdge
-    }
-
-    addEdge(src, trgt, edges)
-    addEdge(trgt, src, transposedEdges)
-  }
-
-  def getEdges: Set[(Edge, Int)] = {
-    var result = Map[Edge, Int]()
-    for (i <- 0 to nodes.length - 1) {
-      var e = edges(i)
-      while (e != null) {
-        val edge = (i, e.target, e.eType)
-        result(edge) = result.getOrElse(edge, 0) + 1
-        e = e.successor
-      }
-    }
-    result.toSet
-  }
-
-  def getEdges(src: Int): AdjacenceListEdge = {
-    edges(src)
-  }
-
-  def getNode(id: Int): Node =
-    nodes(id)
-
-  def size: Int =
-    nodes.size
+  /**
+   * Gibt an, ob das {@link NodeSet} leer ist.
+   *
+   * @return <code>true</code> wenn es leer ist.<br/>
+   *         <code>false</code> wenn es nicht leer ist.
+   */
+  def isEmpty: Boolean =
+    content.isEmpty();
 }
