@@ -37,14 +37,12 @@ class ClusterBuilder extends DepBuilder {
   }
 
   def getID(identifier: String, node: (Int, String) => Node): Int = {
-    var newNode = false
-    val result = idMap.getOrElse(identifier, { newNode = true; lastUsedID += 1; lastUsedID })
-    if (newNode) {
-      idMap += (identifier -> result)
-      nodes :+= node(result, identifier)
-      cluster.nodes :+= nodes(result)
-    }
-    result
+    idMap.getOrElseUpdate(identifier, {
+      lastUsedID += 1
+      nodes :+= node(lastUsedID, identifier)
+      cluster.nodes :+= nodes(lastUsedID)
+      lastUsedID
+    })
   }
 
   def addDep(src: Int, trgt: Int, dType: DependencyType) {
