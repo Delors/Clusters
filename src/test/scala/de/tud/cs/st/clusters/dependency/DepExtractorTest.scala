@@ -52,15 +52,36 @@ import de.tud.cs.st.bat.resolved.ClassFile
 @RunWith(classOf[JUnitRunner])
 class DepExtractorTest extends FunSuite with de.tud.cs.st.util.perf.BasicPerformanceEvaluation {
 
-  test("testDepGraphGeneration") {
-    println("testDepGraphGeneration - START")
+  test("testDepGraphGeneration - Apache ANT 1.7.1 - target 1.5.zip") {
+    testDepGraohGeneration("test/classfiles/Apache ANT 1.7.1 - target 1.5.zip")
+  }
+
+  test("testDepGraphGeneration - ClusteringTestProject.zip") {
+    testDepGraohGeneration("test/classfiles/ClusteringTestProject.zip")
+  }
+
+  test("testDepGraphGeneration - CommandHistory.class.zip") {
+    testDepGraohGeneration("test/classfiles/CommandHistory.class.zip")
+  }
+
+  test("testDepGraphGeneration - Flashcards 0.4 - target 1.6.zip") {
+    testDepGraohGeneration("test/classfiles/Flashcards 0.4 - target 1.6.zip")
+  }
+
+  test("testDepGraphGeneration - hibernate-core-3.6.0.Final.jar") {
+    testDepGraohGeneration("test/classfiles/hibernate-core-3.6.0.Final.jar")
+  }
+
+  private def testDepGraohGeneration(zipFile: String) {
+    println("testDepGraphGeneration[" + zipFile + "] - START")
 
     val clusterBuilder = new ClusterBuilder
     val depExtractor = new DepExtractor(clusterBuilder)
 
     var testClasses: Array[ClassFile] = null
+
     time(duration => println("time to read class files: " + nanoSecondsToMilliseconds(duration) + "ms")) {
-      testClasses = getTestClasses("test/classfiles/Flashcards 0.4 - target 1.6.zip") //"test/classfiles/hibernate-core-3.6.0.Final.jar")
+      testClasses = getTestClasses(zipFile)
     }
 
     time(duration => println("time to extract dependencies: " + nanoSecondsToMilliseconds(duration) + "ms")) {
@@ -69,12 +90,12 @@ class DepExtractorTest extends FunSuite with de.tud.cs.st.util.perf.BasicPerform
       }
     }
     time(duration => println("time to write dot file: " + nanoSecondsToMilliseconds(duration) + "ms")) {
-      val fw = new FileWriter("output.dot")
+      val fw = new FileWriter(new File(zipFile).getName() + ".dot")
       fw.write(clusterBuilder.getCluster.toDot)
       fw.close()
     }
 
-    println("testDepGraphGeneration - END")
+    println("testDepGraphGeneration[" + zipFile + "] - END")
   }
 
   private def getTestClasses(zipFile: String): Array[ClassFile] = {
