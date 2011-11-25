@@ -30,7 +30,8 @@
 *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 *  POSSIBILITY OF SUCH DAMAGE.
 */
-package de.tud.cs.st.clusters.filter
+package de.tud.cs.st.clusters
+package filter
 import org.scalatest.FunSuite
 import java.io.File
 import java.util.zip.ZipFile
@@ -49,25 +50,12 @@ import de.tud.cs.st.clusters.resolved.BasicClusteringFramework
  *
  */
 @RunWith(classOf[JUnitRunner])
-class StronglyConnectedComponentsClusteringTest extends FunSuite with de.tud.cs.st.util.perf.BasicPerformanceEvaluation {
+class StronglyConnectedComponentsClusteringTest extends AbstractClusteringTest {
+
+  implicit val clustering = new BasicClusteringFramework with StronglyConnectedComponentsClustering
 
   test("testStronglyConnectedComponentsClustering") {
-    println("testStronglyConnectedComponentsClustering - START")
-
-    val clusterBuilder = new ClusterBuilder
-    val depExtractor = new DepExtractor(clusterBuilder)
-
-    depExtractor.process(Java6Framework.ClassFile("test/classfiles/ClusteringTestProject.zip", "test/StronglyConnectedComponentsTestClass.class"))
-
-    val framework = new BasicClusteringFramework with StronglyConnectedComponentsClustering
-    var clusters = framework.filter(Array(clusterBuilder.getCluster), null)
-    clusters.foreach(c => {
-      println("write cluster[" + c.identifier + "] into dot file")
-      val fw = new FileWriter(c.identifier + ".dot")
-      fw.write(c.toDot())
-      fw.close()
-    })
-
-    println("testStronglyConnectedComponentsClustering - END")
+    testClustering("testStronglyConnectedComponentsClustering",
+      extractDependencies("test/classfiles/ClusteringTestProject.zip", "test/StronglyConnectedComponentsTestClass.class"))
   }
 }

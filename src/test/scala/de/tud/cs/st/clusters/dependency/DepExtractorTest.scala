@@ -30,7 +30,8 @@
 *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 *  POSSIBILITY OF SUCH DAMAGE.
 */
-package de.tud.cs.st.clusters.dependency
+package de.tud.cs.st.clusters
+package dependency
 import org.scalatest.FunSuite
 import java.io.File
 import java.util.zip.ZipFile
@@ -50,7 +51,7 @@ import de.tud.cs.st.bat.resolved.ClassFile
  *
  */
 @RunWith(classOf[JUnitRunner])
-class DepExtractorTest extends FunSuite with de.tud.cs.st.util.perf.BasicPerformanceEvaluation {
+class DepExtractorTest extends AbstractClusteringTest {
 
   test("testDepGraphGeneration - Apache ANT 1.7.1 - target 1.5.zip") {
     testDepGraohGeneration("test/classfiles/Apache ANT 1.7.1 - target 1.5.zip")
@@ -96,19 +97,5 @@ class DepExtractorTest extends FunSuite with de.tud.cs.st.util.perf.BasicPerform
     }
 
     println("testDepGraphGeneration[" + zipFile + "] - END")
-  }
-
-  private def getTestClasses(zipFile: String): Array[ClassFile] = {
-    var tcls = Array.empty[ClassFile]
-    val zipfile = new ZipFile(new File(zipFile))
-    val zipentries = (zipfile).entries
-    while (zipentries.hasMoreElements) {
-      val zipentry = zipentries.nextElement
-      if (!zipentry.isDirectory && zipentry.getName.endsWith(".class")) {
-        val testClass = (Java6Framework.ClassFile(() => zipfile.getInputStream(zipentry)))
-        tcls :+= testClass
-      }
-    }
-    tcls
   }
 }

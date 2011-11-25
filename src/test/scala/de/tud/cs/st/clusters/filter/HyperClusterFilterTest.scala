@@ -30,7 +30,8 @@
 *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 *  POSSIBILITY OF SUCH DAMAGE.
 */
-package de.tud.cs.st.clusters.filter
+package de.tud.cs.st.clusters
+package filter
 import org.scalatest.FunSuite
 import java.io.File
 import java.util.zip.ZipFile
@@ -50,44 +51,12 @@ import de.tud.cs.st.bat.resolved.ClassFile
  *
  */
 @RunWith(classOf[JUnitRunner])
-class HyperClusterFilterTest extends FunSuite with de.tud.cs.st.util.perf.BasicPerformanceEvaluation {
+class HyperClusterFilterTest extends AbstractClusteringTest {
+
+  implicit val clustering = new BasicClusteringFramework with HyperClusterFilter
 
   test("testHyperClusterFiltering") {
-    testGetterSetterClustering("testHyperClusterFiltering",
-      { de => for (cf <- getTestClasses("test/classfiles/Flashcards 0.4 - target 1.6.zip")) de.process(cf) })
-  }
-
-  private def testGetterSetterClustering(testName: String, extractDeps: (DepExtractor) => Unit) {
-    println(testName + " - START")
-
-    val clusterBuilder = new ClusterBuilder
-    val depExtractor = new DepExtractor(clusterBuilder)
-
-    extractDeps(depExtractor)
-
-    val framework = new BasicClusteringFramework with HyperClusterFilter
-    var clusters = framework.filter(Array(clusterBuilder.getCluster), null)
-    clusters.foreach(c => {
-      println("write cluster[" + c.identifier + "] into dot file")
-      val fw = new FileWriter(c.identifier + ".dot")
-      fw.write(c.toDot())
-      fw.close()
-    })
-
-    println(testName + " - END")
-  }
-
-  private def getTestClasses(zipFile: String): Array[ClassFile] = {
-    var tcls = Array.empty[ClassFile]
-    val zipfile = new ZipFile(new File(zipFile))
-    val zipentries = (zipfile).entries
-    while (zipentries.hasMoreElements) {
-      val zipentry = zipentries.nextElement
-      if (!zipentry.isDirectory && zipentry.getName.endsWith(".class")) {
-        val testClass = (Java6Framework.ClassFile(() => zipfile.getInputStream(zipentry)))
-        tcls :+= testClass
-      }
-    }
-    tcls
+    testClustering("testHyperClusterFiltering",
+      extractDependencies("test/classfiles/Flashcards 0.4 - target 1.6.zip"))
   }
 }
