@@ -32,14 +32,15 @@
 */
 package de.tud.cs.st.clusters
 package filter
-import de.tud.cs.st.clusters.structure.Cluster
-import java.io.File
+
+import framework.filter.ClusterFilter
+import framework.structure.Cluster
+import framework.structure.Node
+import framework.structure.FieldNode
+import framework.structure.MethodNode
 import de.tud.cs.st.bat.resolved.DependencyType._
-import structure.Node
-import de.tud.cs.st.clusters.structure.FieldNode
 import de.tud.cs.st.bat.resolved.Type
 import de.tud.cs.st.bat.resolved.VoidType
-import de.tud.cs.st.clusters.structure.MethodNode
 
 /**
  * @author Thomas Schlosser
@@ -50,11 +51,11 @@ trait GetterSetterClustering extends ClusterFilter {
   val getterPrefix: Option[String] = Some("get")
   val setterPrefix: Option[String] = Some("set")
 
-  abstract override def filter(clusters: Array[Cluster], projectRootDir: File): Array[Cluster] = {
+  abstract override def process(clusters: Array[Cluster]): Array[Cluster] = {
     for (cluster <- clusters) {
       createGetterSetterClusters(cluster)
     }
-    super.filter(clusters, projectRootDir)
+    super.process(clusters)
     clusters
   }
 

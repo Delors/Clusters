@@ -31,20 +31,19 @@
 *  POSSIBILITY OF SUCH DAMAGE.
 */
 package de.tud.cs.st.clusters
-package dependency
-import org.scalatest.FunSuite
+package framework
+package structure
+
 import java.io.File
+import java.io.FileWriter
 import java.util.zip.ZipFile
 import java.util.zip.ZipEntry
-import de.tud.cs.st.bat.resolved.reader.Java6Framework
 import org.junit.runner.RunWith
+import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
-import de.tud.cs.st.clusters.structure.Cluster
-import org.junit.Test
-import java.io.FileWriter
-import de.tud.cs.st.bat.resolved.dependency.DepExtractor
-import de.tud.cs.st.clusters.structure.ClusterBuilder
-import de.tud.cs.st.bat.resolved.ClassFile
+import _root_.de.tud.cs.st.bat.resolved.reader.Java6Framework
+import _root_.de.tud.cs.st.bat.resolved.dependency.DepExtractor
+import _root_.de.tud.cs.st.bat.resolved.ClassFile
 
 /**
  * @author Thomas Schlosser

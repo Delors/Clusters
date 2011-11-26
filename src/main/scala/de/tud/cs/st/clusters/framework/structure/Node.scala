@@ -30,18 +30,28 @@
 *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 *  POSSIBILITY OF SUCH DAMAGE.
 */
-package de.tud.cs.st.clusters.resolved
-import de.tud.cs.st.clusters.filter.ClusterFilter
-import de.tud.cs.st.clusters.filter.HyperClusterFilter
-import de.tud.cs.st.clusters.structure.Cluster
-import java.io.File
+package de.tud.cs.st.clusters
+package framework
+package structure
+
+import de.tud.cs.st.bat.resolved.DependencyType._
+import scala.collection.mutable.Map
 
 /**
  * @author Thomas Schlosser
  *
  */
-class BasicClusteringFramework extends ClusterFilter {
-  override def filter(clusters: Array[Cluster], projectRootDir: File): Array[Cluster] = {
-    return clusters
-  }
+trait Node {
+
+  def identifier: String
+
+  def uniqueID: Int
+
+  def addEdge(src: Node, trgt: Node, dType: DependencyType)
+
+  def getEdges(): List[Edge]
+
+  def getTransposedEdges(): List[Edge]
+
+  def toDot(implicit nodeBuffer: StringBuffer, edgeBuffer: StringBuffer): String
 }

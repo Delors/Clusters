@@ -31,8 +31,9 @@
 *  POSSIBILITY OF SUCH DAMAGE.
 */
 package de.tud.cs.st.clusters
-package filter.graphscan
-import scala.util.Properties
+package filter
+package graphscan
+
 import scala.collection.mutable.Map
 
 /**

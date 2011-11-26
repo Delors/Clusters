@@ -30,7 +30,10 @@
 *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 *  POSSIBILITY OF SUCH DAMAGE.
 */
-package de.tud.cs.st.clusters.structure
+package de.tud.cs.st.clusters
+package framework
+package structure
+
 import de.tud.cs.st.bat.resolved.DependencyType._
 import de.tud.cs.st.bat.resolved.dependency.DepBuilder
 
@@ -38,6 +41,62 @@ import de.tud.cs.st.bat.resolved.dependency.DepBuilder
  * @author Thomas Schlosser
  *
  */
-class TransposedCluster(cluster: Cluster) extends Cluster(cluster.uniqueID, cluster.identifier, cluster.isRootCluster) {
-  nodes = for (n <- cluster.nodes) yield { n match { case c: Cluster => new TransposedCluster(c); case s: SourceElementNode => new TransposedSourceElementNode(s) } }
+class Cluster(val uniqueID: Int, val identifier: String, val isRootCluster: Boolean) extends Node {
+
+  var nodes = List.empty[Node]
+
+  def this() {
+    //TODO: change
+    this(-42, "Unnamed Cluster", false)
+  }
+
+  def this(identifier: String) {
+    //TODO: change
+    this(-42, identifier, false)
+  }
+
+  def this(uniqueID: Int, identifier: String) {
+    this(uniqueID, identifier, false)
+  }
+
+  def addEdge(src: Node, trgt: Node, dType: DependencyType) {
+    error("method \"addEdge\" is currently not supported in Cluster")
+  }
+
+  def getEdges(): List[Edge] = {
+    error("method \"getEdges\" is currently not supported in Cluster")
+  }
+
+  def getTransposedEdges(): List[Edge] = {
+    error("method \"getTransposedEdges\" is currently not supported in Cluster")
+  }
+
+  def toDot(implicit nodeBuffer: StringBuffer = new StringBuffer(), edgeBuffer: StringBuffer = new StringBuffer()): String = {
+    if (isRootCluster) {
+      nodeBuffer.append("digraph G {\n")
+    } else {
+      nodeBuffer.append("subgraph cluster_")
+      nodeBuffer.append(identifier.replace(".", "_"))
+      nodeBuffer.append(" {\n")
+    }
+
+    // add nodes
+    for (node <- nodes) {
+      node.toDot(nodeBuffer, edgeBuffer)
+    }
+
+    if (!isRootCluster) {
+      nodeBuffer.append("\tnode [style=filled,fillcolor=white,color=black];\n")
+      nodeBuffer.append("\tstyle=filled;\n")
+      nodeBuffer.append("\tfillcolor=lightgrey;\n")
+      nodeBuffer.append("\tcolor=black;\n")
+      nodeBuffer.append("\tlabel = \"")
+      nodeBuffer.append(identifier)
+      nodeBuffer.append("\";\n")
+    } else {
+      nodeBuffer.append(edgeBuffer)
+    }
+    nodeBuffer.append("}\n")
+    return nodeBuffer.toString
+  }
 }

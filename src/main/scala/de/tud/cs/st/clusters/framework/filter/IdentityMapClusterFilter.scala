@@ -30,25 +30,18 @@
 *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 *  POSSIBILITY OF SUCH DAMAGE.
 */
-package de.tud.cs.st.clusters.structure
-import de.tud.cs.st.bat.resolved.DependencyType._
-import scala.collection.mutable.Map
+package de.tud.cs.st.clusters
+package framework
+package filter
+
+import structure.Cluster
 
 /**
  * @author Thomas Schlosser
  *
  */
-trait Node {
-
-  def identifier: String
-
-  def uniqueID: Int
-
-  def addEdge(src: Node, trgt: Node, dType: DependencyType)
-
-  def getEdges(): List[Edge]
-
-  def getTransposedEdges(): List[Edge]
-
-  def toDot(implicit nodeBuffer: StringBuffer, edgeBuffer: StringBuffer): String
+class IdentityMapClusterFilter extends ClusterFilter {
+  override def process(clusters: Array[Cluster]): Array[Cluster] = {
+    return clusters
+  }
 }

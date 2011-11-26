@@ -30,12 +30,66 @@
 *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 *  POSSIBILITY OF SUCH DAMAGE.
 */
-package de.tud.cs.st.clusters.structure
+package de.tud.cs.st.clusters
+package framework
+package structure
+
 import de.tud.cs.st.bat.resolved.DependencyType._
+import de.tud.cs.st.bat.resolved.ClassFile
+import de.tud.cs.st.bat.resolved.Field_Info
+import de.tud.cs.st.bat.resolved.Method_Info
 
 /**
  * @author Thomas Schlosser
  *
  */
-class Edge(val source: Node, val target: Node, val dType: DependencyType) {
+class SourceElementNode(val uniqueID: Int, val identifier: String) extends Node {
+
+  protected var edges = List.empty[Edge]
+  protected var transposedEdges = List.empty[Edge]
+
+  def addEdge(src: Node, trgt: Node, dType: DependencyType) {
+    if (src == this) {
+      edges :+= new Edge(src, trgt, dType)
+    }
+    if (trgt == this) {
+      transposedEdges :+= new Edge(trgt, src, dType)
+    }
+  }
+
+  def getEdges(): List[Edge] =
+    edges
+
+  def getTransposedEdges(): List[Edge] =
+    transposedEdges
+
+  def toDot(implicit nodeBuffer: StringBuffer = new StringBuffer, edgeBuffer: StringBuffer = new StringBuffer): String = {
+    nodeBuffer.append("\t\"")
+    nodeBuffer.append(identifier)
+    nodeBuffer.append("\";\n")
+
+    // add egdes
+    for (e <- getEdges()) {
+      edgeBuffer.append("\t\"")
+      edgeBuffer.append(e.source.identifier)
+      edgeBuffer.append("\" -> \"")
+      edgeBuffer.append(e.target.identifier)
+      edgeBuffer.append("\"[label=\"")
+      edgeBuffer.append(e.dType.toString)
+      edgeBuffer.append("\"];\n")
+    }
+    nodeBuffer.toString
+  }
+}
+
+case class ClassNode(id: Int, identif: String, clazz: ClassFile) extends SourceElementNode(id, identif) {
+
+}
+
+case class FieldNode(id: Int, identif: String, field: Field_Info) extends SourceElementNode(id, identif) {
+
+}
+
+case class MethodNode(id: Int, identif: String, method: Method_Info) extends SourceElementNode(id, identif) {
+
 }

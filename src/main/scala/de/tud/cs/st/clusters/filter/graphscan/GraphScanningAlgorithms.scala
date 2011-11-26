@@ -31,11 +31,13 @@
 *  POSSIBILITY OF SUCH DAMAGE.
 */
 package de.tud.cs.st.clusters
-package filter.graphscan
-import structure.Node
-import structure.Cluster
-import structure.Edge
+package filter
+package graphscan
+
 import scala.collection.mutable.Map
+import framework.structure.Node
+import framework.structure.Cluster
+import framework.structure.Edge
 
 /**
  * @author Thomas Schlosser

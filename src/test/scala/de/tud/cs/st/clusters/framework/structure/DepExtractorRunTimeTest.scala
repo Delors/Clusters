@@ -6,11 +6,7 @@
 *  All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without
-*  modification, are perm/**
- * @author thomas
- *
- */
-itted provided that the following conditions are met:
+*  modification, are permitted provided that the following conditions are met:
 *
 *  - Redistributions of source code must retain the above copyright notice,
 *    this list of conditions and the following disclaimer.
@@ -35,53 +31,72 @@ itted provided that the following conditions are met:
 *  POSSIBILITY OF SUCH DAMAGE.
 */
 package de.tud.cs.st.clusters
+package framework
+package structure
+
 import java.io.File
-import java.util.zip.ZipFile
-import de.tud.cs.st.bat.resolved.ClassFile
-import de.tud.cs.st.bat.resolved.reader.Java6Framework
-import org.scalatest.FunSuite
-import org.junit.runner.RunWith
-import org.scalatest.junit.JUnitRunner
-import de.tud.cs.st.bat.resolved.dependency.DepExtractor
-import resolved.BasicClusteringFramework
-import structure.ClusterBuilder
 import java.io.FileWriter
-import filter.ClusterFilter
-import structure.Cluster
+import java.util.zip.ZipFile
+import java.util.zip.ZipEntry
+import org.junit.runner.RunWith
+import org.scalatest.FunSuite
+import org.scalatest.junit.JUnitRunner
+import _root_.de.tud.cs.st.bat.resolved.reader.Java6Framework
+import _root_.de.tud.cs.st.bat.resolved.ClassFile
+import _root_.de.tud.cs.st.bat.resolved.dependency.DepBuilder
+import _root_.de.tud.cs.st.bat.resolved.dependency.DepExtractor
+import _root_.de.tud.cs.st.bat.resolved.DependencyType._
+import _root_.de.tud.cs.st.util.perf.BasicPerformanceEvaluation
 
 /**
  * @author Thomas Schlosser
  *
  */
-trait AbstractClusteringTest extends FunSuite with de.tud.cs.st.util.perf.BasicPerformanceEvaluation {
+@RunWith(classOf[JUnitRunner])
+class DepExtractorRunTimeTest extends FunSuite with BasicPerformanceEvaluation {
 
-  protected def testClustering(testName: String,
-    extractDeps: (DepExtractor) => Unit,
-    resultToDot: Boolean = true)(implicit clusteringAlgortihm: ClusterFilter) {
-    println(testName + " - START")
-
-    val clusterBuilder = new ClusterBuilder
-    implicit val depExtractor = new DepExtractor(clusterBuilder)
-
-    extractDeps(depExtractor)
-
-    var clusters: Array[Cluster] = null
-    time(duration => println("time to cluster input: " + nanoSecondsToMilliseconds(duration) + "ms")) {
-      clusters = clusteringAlgortihm.filter(Array(clusterBuilder.getCluster), null)
-    }
-    if (resultToDot) {
-      clusters.foreach(c => {
-        println("write cluster[" + c.identifier + "] into dot file")
-        val fw = new FileWriter(c.identifier + ".dot")
-        fw.write(c.toDot())
-        fw.close()
-      })
-    }
-
-    println(testName + " - END")
+  test("testDepExtraction - Apache ANT 1.7.1 - target 1.5.zip") {
+    testDepExtraction("test/classfiles/Apache ANT 1.7.1 - target 1.5.zip")
   }
 
-  protected def getTestClasses(zipFile: String): Array[ClassFile] = {
+  test("testDepExtraction - ClusteringTestProject.zip") {
+    testDepExtraction("test/classfiles/ClusteringTestProject.zip")
+  }
+
+  test("testDepExtraction - CommandHistory.class.zip") {
+    testDepExtraction("test/classfiles/CommandHistory.class.zip")
+  }
+
+  test("testDepExtraction - Flashcards 0.4 - target 1.6.zip") {
+    testDepExtraction("test/classfiles/Flashcards 0.4 - target 1.6.zip")
+  }
+
+  test("testDepExtraction - hibernate-core-3.6.0.Final.jar") {
+    testDepExtraction("test/classfiles/hibernate-core-3.6.0.Final.jar")
+  }
+
+  private def testDepExtraction(zipFile: String) {
+    println("testDepExtraction[" + zipFile + "]")
+
+    val clusterBuilder = new ClusterBuilder
+    val depExtractor = new DepExtractor(clusterBuilder)
+
+    var testClasses = getTestClasses(zipFile)
+    var min = Long.MaxValue
+    var max = Long.MinValue
+    for (i <- 1 to 10)
+      time(duration => { min = Math.min(duration, min); max = Math.max(duration, max) }) {
+        for (classFile <- testClasses) {
+          depExtractor.process(classFile)
+        }
+      }
+    println("min time to extract dependencies: " + nanoSecondsToMilliseconds(min) + "ms")
+    println("max time to extract dependencies: " + nanoSecondsToMilliseconds(max) + "ms")
+
+    println()
+  }
+
+  private def getTestClasses(zipFile: String): Array[ClassFile] = {
     var tcls = Array.empty[ClassFile]
     val zipfile = new ZipFile(new File(zipFile))
     val zipentries = (zipfile).entries
@@ -93,13 +108,5 @@ trait AbstractClusteringTest extends FunSuite with de.tud.cs.st.util.perf.BasicP
       }
     }
     tcls
-  }
-
-  protected def extractDependencies(zipFile: String, classFile: String): (DepExtractor) => Unit = {
-    depExtractor => depExtractor.process(Java6Framework.ClassFile(zipFile, classFile))
-  }
-
-  protected def extractDependencies(zipFile: String): (DepExtractor) => Unit = {
-    depExtractor => for (cf <- getTestClasses(zipFile)) depExtractor.process(cf)
   }
 }

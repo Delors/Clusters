@@ -32,19 +32,11 @@
 */
 package de.tud.cs.st.clusters
 package filter
-import org.scalatest.FunSuite
-import java.io.File
-import java.util.zip.ZipFile
-import java.util.zip.ZipEntry
-import de.tud.cs.st.bat.resolved.reader.Java6Framework
+
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
-import de.tud.cs.st.bat.resolved.dependency.DepExtractor
-import de.tud.cs.st.clusters.structure.ClusterBuilder
-import org.junit.Test
-import java.io.FileWriter
-import de.tud.cs.st.clusters.resolved.BasicClusteringFramework
-import de.tud.cs.st.bat.resolved.ClassFile
+import framework.AbstractClusteringTest
+import framework.filter.IdentityMapClusterFilter
 
 /**
  * @author Thomas Schlosser
@@ -53,7 +45,7 @@ import de.tud.cs.st.bat.resolved.ClassFile
 @RunWith(classOf[JUnitRunner])
 class HyperClusterFilterTest extends AbstractClusteringTest {
 
-  implicit val clustering = new BasicClusteringFramework with HyperClusterFilter
+  implicit val clustering = new IdentityMapClusterFilter with HyperClusterFilter
 
   test("testHyperClusterFiltering") {
     testClustering("testHyperClusterFiltering",

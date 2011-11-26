@@ -32,19 +32,11 @@
 */
 package de.tud.cs.st.clusters
 package filter
-import org.scalatest.FunSuite
-import java.io.File
-import java.util.zip.ZipFile
-import java.util.zip.ZipEntry
-import de.tud.cs.st.bat.resolved.reader.Java6Framework
-import de.tud.cs.st.bat.resolved.reader.Java6Framework.ClassFile
+
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
-import de.tud.cs.st.bat.resolved.dependency.DepExtractor
-import de.tud.cs.st.clusters.structure.ClusterBuilder
-import org.junit.Test
-import java.io.FileWriter
-import de.tud.cs.st.clusters.resolved.BasicClusteringFramework
+import framework.AbstractClusteringTest
+import framework.filter.IdentityMapClusterFilter
 
 /**
  * @author Thomas Schlosser
@@ -53,7 +45,7 @@ import de.tud.cs.st.clusters.resolved.BasicClusteringFramework
 @RunWith(classOf[JUnitRunner])
 class GetterSetterClusteringTest extends AbstractClusteringTest {
 
-  implicit val clustering = new BasicClusteringFramework with GetterSetterClustering
+  implicit val clustering = new IdentityMapClusterFilter with GetterSetterClustering
 
   test("testGetterSetterClustering") {
     testClustering("testGetterSetterClustering",

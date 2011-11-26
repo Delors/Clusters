@@ -30,9 +30,11 @@
 *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 *  POSSIBILITY OF SUCH DAMAGE.
 */
-package de.tud.cs.st.clusters.filter
-import java.io.File
-import de.tud.cs.st.clusters.structure.Cluster
+package de.tud.cs.st.clusters
+package framework
+package filter
+
+import structure.Cluster
 
 /**
  * @author Thomas Schlosser
@@ -40,5 +42,5 @@ import de.tud.cs.st.clusters.structure.Cluster
  */
 trait ClusterFilter {
 
-  def filter(clusters: Array[Cluster], projectRootDir: File): Array[Cluster]
+  def process(clusters: Array[Cluster]): Array[Cluster]
 }

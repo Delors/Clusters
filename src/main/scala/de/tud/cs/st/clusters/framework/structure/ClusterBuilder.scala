@@ -30,63 +30,71 @@
 *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 *  POSSIBILITY OF SUCH DAMAGE.
 */
-package de.tud.cs.st.clusters.structure
+package de.tud.cs.st.clusters
+package framework
+package structure
+
+import scala.collection.mutable.Map
+import de.tud.cs.st.bat.resolved.dependency.DepBuilder
 import de.tud.cs.st.bat.resolved.DependencyType._
 import de.tud.cs.st.bat.resolved.ClassFile
 import de.tud.cs.st.bat.resolved.Field_Info
 import de.tud.cs.st.bat.resolved.Method_Info
+import de.tud.cs.st.bat.resolved.dependencies.SourceElementIDs
 
 /**
  * @author Thomas Schlosser
  *
  */
-class SourceElementNode(val uniqueID: Int, val identifier: String) extends Node {
+class ClusterBuilder extends DepBuilder with SourceElementIDs {
 
-  protected var edges = List.empty[Edge]
-  protected var transposedEdges = List.empty[Edge]
+  private var lastUsedID = -1;
 
-  def addEdge(src: Node, trgt: Node, dType: DependencyType) {
-    if (src == this) {
-      edges :+= new Edge(src, trgt, dType)
-    }
-    if (trgt == this) {
-      transposedEdges :+= new Edge(trgt, src, dType)
+  private var idMap = Map.empty[String, Int]
+  private var nodes = Array.empty[Node]
+
+  private val cluster: Cluster = new Cluster(-1, "ROOT", true)
+
+  def getID(identifier: String): Int =
+    getID(identifier, false)
+
+  def getID(identifier: String, clazz: ClassFile): Int =
+    getID(identifier, { (i: Int, s: String) => { new ClassNode(i, s, clazz) } })
+
+  def getID(identifier: String, field: Field_Info): Int =
+    getID(identifier, { (i: Int, s: String) => { new FieldNode(i, s, field) } })
+
+  def getID(identifier: String, method: Method_Info): Int =
+    getID(identifier, { (i: Int, s: String) => { new MethodNode(i, s, method) } })
+
+  def getID(identifier: String, isClusterNode: Boolean): Int = {
+    if (isClusterNode) {
+      getID(identifier, { (i: Int, s: String) => { new Cluster(i, s) } })
+    } else {
+      getID(identifier, { (i: Int, s: String) => { new SourceElementNode(i, s) } })
     }
   }
 
-  def getEdges(): List[Edge] =
-    edges
-
-  def getTransposedEdges(): List[Edge] =
-    transposedEdges
-
-  def toDot(implicit nodeBuffer: StringBuffer = new StringBuffer, edgeBuffer: StringBuffer = new StringBuffer): String = {
-    nodeBuffer.append("\t\"")
-    nodeBuffer.append(identifier)
-    nodeBuffer.append("\";\n")
-
-    // add egdes
-    for (e <- getEdges()) {
-      edgeBuffer.append("\t\"")
-      edgeBuffer.append(e.source.identifier)
-      edgeBuffer.append("\" -> \"")
-      edgeBuffer.append(e.target.identifier)
-      edgeBuffer.append("\"[label=\"")
-      edgeBuffer.append(e.dType.toString)
-      edgeBuffer.append("\"];\n")
-    }
-    nodeBuffer.toString
+  def getID(identifier: String, node: (Int, String) => Node): Int = {
+    idMap.getOrElseUpdate(identifier, {
+      lastUsedID += 1
+      nodes :+= node(lastUsedID, identifier)
+      cluster.nodes :+= nodes(lastUsedID)
+      lastUsedID
+    })
   }
-}
 
-case class ClassNode(id: Int, identif: String, clazz: ClassFile) extends SourceElementNode(id, identif) {
+  def addDep(src: Int, trgt: Int, dType: DependencyType) {
+    val source = nodes(src)
+    val target = nodes(trgt)
+    source.addEdge(source, nodes(trgt), dType)
+    target.addEdge(source, nodes(trgt), dType)
+  }
 
-}
+  def getNode(id: Int): Node =
+    nodes(id)
 
-case class FieldNode(id: Int, identif: String, field: Field_Info) extends SourceElementNode(id, identif) {
-
-}
-
-case class MethodNode(id: Int, identif: String, method: Method_Info) extends SourceElementNode(id, identif) {
+  def getCluster: Cluster =
+    cluster
 
 }

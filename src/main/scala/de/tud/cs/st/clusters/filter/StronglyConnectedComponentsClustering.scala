@@ -32,25 +32,25 @@
 */
 package de.tud.cs.st.clusters
 package filter
-import structure.Cluster
-import java.io.File
-import de.tud.cs.st.bat.resolved.DependencyType._
-import structure.Node
-import de.tud.cs.st.clusters.filter.graphscan.GraphScanResultBean
-import de.tud.cs.st.clusters.filter.graphscan.GraphScanningAlgorithms
-import de.tud.cs.st.clusters.structure.TransposedCluster
+
 import scala.collection.mutable.Map
+import framework.filter.ClusterFilter
+import framework.structure.Cluster
+import framework.structure.Node
+import graphscan.GraphScanResultBean
+import graphscan.GraphScanningAlgorithms
+import de.tud.cs.st.bat.resolved.DependencyType._
 
 /**
  * @author Thomas Schlosser
  *
  */
 trait StronglyConnectedComponentsClustering extends ClusterFilter {
-  abstract override def filter(clusters: Array[Cluster], projectRootDir: File): Array[Cluster] = {
+  abstract override def process(clusters: Array[Cluster]): Array[Cluster] = {
     for (cluster <- clusters) {
       createStronglyConnectedComponents(cluster)
     }
-    super.filter(clusters, projectRootDir)
+    super.process(clusters)
     clusters
   }
 

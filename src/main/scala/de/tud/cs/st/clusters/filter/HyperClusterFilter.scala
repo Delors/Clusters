@@ -30,10 +30,12 @@
 *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 *  POSSIBILITY OF SUCH DAMAGE.
 */
-package de.tud.cs.st.clusters.filter
-import java.io.File
+package de.tud.cs.st.clusters
+package filter
+
 import scala.collection.mutable.Map
-import de.tud.cs.st.clusters.structure.Cluster
+import framework.filter.ClusterFilter
+import framework.structure.Cluster
 
 /**
  * Creates hyper clusters based on greatest common prefix of classes' package names
@@ -42,14 +44,14 @@ import de.tud.cs.st.clusters.structure.Cluster
  */
 trait HyperClusterFilter extends ClusterFilter {
 
-  abstract override def filter(clusters: Array[Cluster], projectRootDir: File): Array[Cluster] = {
+  abstract override def process(clusters: Array[Cluster]): Array[Cluster] = {
     for (cluster <- clusters) {
-      createHyperClusters(cluster, projectRootDir)
+      createHyperClusters(cluster)
     }
-    super.filter(clusters, projectRootDir)
+    super.process(clusters)
   }
 
-  private def createHyperClusters(cluster: Cluster, projectRootDir: File) = {
+  private def createHyperClusters(cluster: Cluster) = {
     def getMatchingPrefix(value: String, prefixes: Array[String]): String = {
       prefixes.foreach(prfx => if (value.startsWith(prfx)) { return prfx })
       null
@@ -70,7 +72,7 @@ trait HyperClusterFilter extends ClusterFilter {
     for (node <- cluster.nodes) {
       val nodeIdentifier = node.identifier
       val c = resultMap(getMatchingPrefix(nodeIdentifier, prfxs))
-      c.nodes:+=node
+      c.nodes :+= node
     }
     cluster.nodes = resultMap.values.toList
   }
