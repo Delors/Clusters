@@ -33,65 +33,72 @@
 package de.tud.cs.st.clusters
 package filter
 
-import scala.collection.mutable.Map
 import framework.filter.ClusterFilter
 import framework.filter.IntermediateClusterFilter
 import framework.structure.Cluster
-import framework.structure.Node
+import framework.structure.TypeNode
+import framework.structure.FieldNode
+import framework.structure.MethodNode
 import framework.structure.NodeCloner
 import framework.structure.util.ClusterBuilder
-import graphscan.GraphScanResultBean
-import graphscan.GraphScanningAlgorithms
 
 /**
  * @author Thomas Schlosser
  *
  */
-class StronglyConnectedComponentsClustering(
+class InternExternClusterFilter(
     val builder: ClusterBuilder,
     val successorFilter: Option[ClusterFilter],
     val clusterNewFilter: Option[ClusterFilter])
         extends IntermediateClusterFilter {
 
     protected override def process(cluster: Cluster): Cluster = {
-        // calculate finishing times of all nodes using depth first search
-        var result = GraphScanningAlgorithms.graphScanComplete(
-            cluster, null, true, null)
-
-        // calculate depth first search on the transposed cluster considering
-        // the finishing times of the first run of the depth first search algorithm
-        result = GraphScanningAlgorithms.graphScanComplete(cluster,
-            null, true, result.order)(true)
-
-        // create resulting clusters
-        val resultCluster = NodeCloner.createCopy(cluster)
-        var resultMap = Map[Int, Cluster]()
+        val result = NodeCloner.createCopy(cluster)
+        val intern = builder.createCluster("intern")
+        val extern = builder.createCluster("extern")
+        result.addNode(intern)
+        result.addNode(extern)
         for (node ← cluster.getNodes) {
-            val sccID = result.color(node.uniqueID) - 2
-            if (sccID >= 0) {
-                resultMap.get(sccID) match {
-                    case Some(c) ⇒
-                        c.addNode(node)
-                    case None ⇒
-                        val c = builder.createCluster("SCC_"+System.nanoTime()) //sccID)
-                        c.addNode(node)
-                        resultMap(sccID) = c
-                        resultCluster.addNode(c)
-                }
+            val copy = NodeCloner.createDeepCopy(node)
+            node match {
+                case TypeNode(_, _, Some(_)) ⇒
+                    intern.addNode(copy)
+                case TypeNode(_, _, None) ⇒
+                    extern.addNode(copy)
+                case FieldNode(_, _, Some(_)) ⇒
+                    intern.addNode(copy)
+                case FieldNode(_, _, None) ⇒
+                    extern.addNode(copy)
+                case MethodNode(_, _, Some(_)) ⇒
+                    intern.addNode(copy)
+                case MethodNode(_, _, None) ⇒
+                    extern.addNode(copy)
+                case _ ⇒
+                    println("intern/extern is unknown")
+                    result.addNode(copy)
             }
         }
-        resultCluster
+        if (clusterNewFilter.isDefined) {
+            val newIntern = clusterNewFilter.get.process(Array(intern))
+            val newExtern = clusterNewFilter.get.process(Array(extern))
+            result.removeNode(intern.uniqueID)
+            result.removeNode(extern.uniqueID)
+            result.addNode(newIntern(0))
+            result.addNode(newExtern(0))
+        }
+        result
     }
 }
 
-object StronglyConnectedComponentsClustering {
+object InternExternClusterFilter {
 
     def apply(
         clusterBuilder: ClusterBuilder,
         successorFilter: ClusterFilter = null,
-        clusterNewFilter: ClusterFilter = null): StronglyConnectedComponentsClustering =
-        new StronglyConnectedComponentsClustering(
+        clusterNewFilter: ClusterFilter = null): InternExternClusterFilter =
+        new InternExternClusterFilter(
             clusterBuilder,
             if (successorFilter == null) None else Some(successorFilter),
             if (clusterNewFilter == null) None else Some(clusterNewFilter))
+
 }

@@ -37,6 +37,7 @@ import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import framework.AbstractClusteringTest
 import framework.filter.IdentityMapClusterFilter
+import framework.structure.util.ClusterBuilder
 
 /**
  * @author Thomas Schlosser
@@ -45,20 +46,28 @@ import framework.filter.IdentityMapClusterFilter
 @RunWith(classOf[JUnitRunner])
 class GetterSetterClusteringTest extends AbstractClusteringTest {
 
-  implicit val clustering = new IdentityMapClusterFilter with GetterSetterClustering
+    implicit val clustering = (builder: ClusterBuilder) ⇒ GetterSetterClustering(builder)
 
-  test("testGetterSetterClustering") {
-    testClustering("testGetterSetterClustering",
-      extractDependencies("test/classfiles/ClusteringTestProject.zip", "test/GetterSetterTestClass.class"))
-  }
+    test("testGetterSetterClustering [ClusteringTestProject.zip]") {
+        testClustering("testGetterSetterClustering [ClusteringTestProject.zip]",
+            extractDependencies("test/classfiles/ClusteringTestProject.zip", "test/GetterSetterTestClass.class"),
+            Some("ClusteringTestProject_GetterSetterTestClass"))
+    }
 
-  test("testGetterSetterClustering2") {
-    testClustering("testGetterSetterClustering2",
-      extractDependencies("test/classfiles/CommandHistory.class.zip", "CommandHistory.class"))
-  }
+    test("testGetterSetterClustering [Flashcards 0.4 - target 1.6.zip -- CommandHistory.class]") {
+        testClustering("testGetterSetterClustering [Flashcards 0.4 - target 1.6.zip -- CommandHistory.class]",
+            extractDependencies("test/classfiles/Flashcards 0.4 - target 1.6.zip", "de/tud/cs/se/flashcards/model/CommandHistory.class"),
+            Some("CommandHistory"))
+    }
 
-  test("testGetterSetterClustering3") {
-    testClustering("testGetterSetterClustering3",
-      extractDependencies("test/classfiles/Flashcards 0.4 - target 1.6.zip"))
-  }
+    test("testGetterSetterClustering [Flashcards 0.4 - target 1.6.zip]") {
+        testClustering("testGetterSetterClustering [Flashcards 0.4 - target 1.6.zip]",
+            extractDependencies("test/classfiles/Flashcards 0.4 - target 1.6.zip"),
+            Some("Flashcards 0.4 - target 1.6"))
+    }
+
+    //    test("testGetterSetterClustering [hibernate-core-3.6.0.Final.jar]") {
+    //        testClustering("testGetterSetterClustering [hibernate-core-3.6.0.Final.jar]",
+    //            extractDependencies("test/classfiles/hibernate-core-3.6.0.Final.jar"))
+    //    }
 }

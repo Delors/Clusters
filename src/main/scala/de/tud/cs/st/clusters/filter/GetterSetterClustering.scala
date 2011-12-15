@@ -33,135 +33,146 @@
 package de.tud.cs.st.clusters
 package filter
 
+import scala.collection.mutable.ListBuffer
 import framework.filter.ClusterFilter
+import framework.filter.IntermediateClusterFilter
 import framework.structure.Cluster
 import framework.structure.Node
 import framework.structure.FieldNode
 import framework.structure.MethodNode
-import de.tud.cs.st.bat.resolved.DependencyType._
+import framework.structure.NodeCloner
+import framework.structure.util.ClusterBuilder
+import de.tud.cs.st.bat.resolved.dependency.DependencyType._
 import de.tud.cs.st.bat.resolved.Type
 import de.tud.cs.st.bat.resolved.VoidType
+import de.tud.cs.st.bat.resolved.Field
 
 /**
  * @author Thomas Schlosser
  *
  */
-trait GetterSetterClustering extends ClusterFilter {
+class GetterSetterClustering(
+    val builder: ClusterBuilder,
+    val successorFilter: Option[ClusterFilter],
+    val clusterNewFilter: Option[ClusterFilter])
+        extends IntermediateClusterFilter {
 
-  val getterPrefix: Option[String] = Some("get")
-  val setterPrefix: Option[String] = Some("set")
+    val getterPrefix: Option[String] = Some("get")
+    val setterPrefix: Option[String] = Some("set")
 
-  abstract override def process(clusters: Array[Cluster]): Array[Cluster] = {
-    for (cluster <- clusters) {
-      createGetterSetterClusters(cluster)
-    }
-    super.process(clusters)
-    clusters
-  }
-
-  def createGetterSetterClusters(cluster: Cluster) {
-    def checkGetterSetterCluster(node: FieldNode): Option[GetterSetterClusterBean] = {
-      def getFieldType(fieldNode: Node): Option[Node] = {
-        for (edge <- fieldNode.getEdges) {
-          if (edge.dType.equals(IS_OF_TYPE))
-            return Some(edge.target)
-        }
-        None
-      }
-
-      var gscBean = new GetterSetterClusterBean
-      // use transposed edges to determine nodes that use this field
-      //TODO: test and refine this algorithm with more complex classes...
-      //add mechanism to algorithms that allows to specify/configure that a cluster is as fine granular as required
-      //TODO: impl. mechanism that allows filter algorithms to create clusters with an unique ID
-      var checkedNodes = Array.empty[Node]
-      for (tEdge <- node.getTransposedEdges) {
-        if (!checkedNodes.contains(tEdge.target)) {
-          tEdge.dType match {
-            case READS_FIELD =>
-              tEdge.target match {
-                case mn: MethodNode =>
-                  if (getterPrefix == None || mn.method.name.startsWith(getterPrefix.get)) {
-                    val descriptor = mn.method.descriptor
-                    if (descriptor.parameterTypes.isEmpty &&
-                      descriptor.returnType.equals(node.field.descriptor.fieldType)) {
-                      if (gscBean.getter != null)
-                        error("only one getter is allowed: current[" + gscBean.getter.identifier + "], new[" + mn.identifier + "]")
-                      gscBean.field = node
-                      gscBean.getter = mn
-                      gscBean.hasGetter = true
-                    }
-                  }
-                case _ => Nil
-              }
-            case WRITES_FIELD =>
-              tEdge.target match {
-                case mn: MethodNode =>
-                  if (setterPrefix == None || mn.method.name.startsWith(setterPrefix.get)) {
-                    val descriptor = mn.method.descriptor
-                    if (descriptor.parameterTypes.size == 1 && descriptor.parameterTypes(0).equals(node.field.descriptor.fieldType) &&
-                      descriptor.returnType.isVoidType) {
-                      if (gscBean.setter != null)
-                        error("only one setter is allowed: current[" + gscBean.setter.identifier + "], new[" + mn.identifier + "]")
-                      gscBean.field = node
-                      gscBean.setter = mn
-                      gscBean.hasSetter = true
-                    }
-                  }
-                case _ => Nil
-              }
-            //          case a => println(a.toString) //return None //this node is out
-          }
-          checkedNodes :+= tEdge.target
-        }
-      }
-      if (gscBean.field == null) None else Some(gscBean)
-    }
-    // TODO: cluster needs methods that return only type/field/method nodes => performance improvement
-    val nodes = cluster.nodes
-    cluster.nodes = List()
-    for (node <- nodes) {
-      if (node.isInstanceOf[FieldNode]) {
-        println(node.asInstanceOf[FieldNode])
-        val optClusterBean = checkGetterSetterCluster(node.asInstanceOf[FieldNode])
-        optClusterBean match {
-          case Some(clusterBean) =>
-            // create setter/getter cluster
-            println("GETTER_SETTER_CLUSTER")
-            val gsCluster = new Cluster("Getter_Setter_" + clusterBean.field.identifier)
-            gsCluster.nodes :+= clusterBean.field
-            if (clusterBean.hasGetter) {
-              gsCluster.nodes :+= clusterBean.getter
+    protected override def process(cluster: Cluster): Cluster = {
+        def checkGetterSetterCluster(node: Node, field: Field): Option[GetterSetterClusterBean] = {
+            def getFieldType(fieldNode: Node): Option[Node] = {
+                for (edge ← fieldNode.getEdges) {
+                    if (edge.dType.equals(IS_OF_TYPE))
+                        return Some(edge.target)
+                }
+                None
             }
-            if (clusterBean.hasSetter) {
-              gsCluster.nodes :+= clusterBean.setter
+
+            var gscBean = new GetterSetterClusterBean
+            // use transposed edges to determine nodes that use this field
+            //TODO: test and refine this algorithm with more complex classes...
+            //add mechanism to algorithms that allows to specify/configure that a cluster is as fine granular as required
+            var checkedNodes = Array.empty[Node]
+            for (tEdge ← node.getTransposedEdges) {
+                if (!checkedNodes.contains(tEdge.target)) {
+                    tEdge.dType match {
+                        case READS_FIELD ⇒
+                            tEdge.target match {
+                                case MethodNode(_, identifier, Some(method)) ⇒
+                                    if (getterPrefix == None || method.name.startsWith(getterPrefix.get)) {
+                                        val descriptor = method.descriptor
+                                        if (descriptor.parameterTypes.isEmpty &&
+                                            descriptor.returnType.equals(field.fieldType)) {
+                                            if (gscBean.getter != null)
+                                                sys.error("only one getter is allowed: current["+gscBean.getter.identifier+"], new["+identifier()+"]")
+                                            gscBean.field = node
+                                            gscBean.getter = tEdge.target
+                                            gscBean.hasGetter = true
+                                        }
+                                    }
+                                case _ ⇒ Nil
+                            }
+                        case WRITES_FIELD ⇒
+                            tEdge.target match {
+                                case MethodNode(_, identifier, Some(method)) ⇒
+                                    if (setterPrefix == None || method.name.startsWith(setterPrefix.get)) {
+                                        val descriptor = method.descriptor
+                                        if (descriptor.parameterTypes.size == 1 && descriptor.parameterTypes(0).equals(field.fieldType) &&
+                                            descriptor.returnType.isVoidType) {
+                                            if (gscBean.setter != null)
+                                                sys.error("only one setter is allowed: current["+gscBean.setter.identifier+"], new["+identifier+"]")
+                                            gscBean.field = node
+                                            gscBean.setter = tEdge.target
+                                            gscBean.hasSetter = true
+                                        }
+                                    }
+                                case _ ⇒ Nil
+                            }
+                        //          case a => println(a.toString) //return None //this node is out
+                    }
+                    checkedNodes :+= tEdge.target
+                }
             }
-            cluster.nodes :+= gsCluster
-          case None =>
-            cluster.nodes :+= node
+            if (gscBean.field == null) None else Some(gscBean)
         }
-      }
+        // TODO: cluster needs methods that return only type/field/method nodes => performance improvement
+        val result = NodeCloner.createCopy(cluster)
+        for (node ← cluster.getNodes) {
+            node match {
+                case FieldNode(_, _, Some(field)) ⇒
+                    val optClusterBean = checkGetterSetterCluster(node, field)
+                    optClusterBean match {
+                        case Some(clusterBean) ⇒
+                            // create setter/getter cluster
+                            println("GETTER_SETTER_CLUSTER")
+                            val gsCluster = builder.createCluster("Getter_Setter_"+clusterBean.field.identifier)
+                            gsCluster.addNode(clusterBean.field)
+                            if (clusterBean.hasGetter) {
+                                gsCluster.addNode(clusterBean.getter)
+                            }
+                            if (clusterBean.hasSetter) {
+                                gsCluster.addNode(clusterBean.setter)
+                            }
+                            result.addNode(gsCluster)
+                        case None ⇒
+                            result.addNode(NodeCloner.createDeepCopy(node))
+                    }
+                case _ ⇒
+                    result.addNode(NodeCloner.createDeepCopy(node))
+            }
+        }
+        result
     }
-  }
 
-  class GetterSetterClusterBean {
-    var field: Node = _
-    var getter: Node = _
-    var setter: Node = _
-    var hasSetter: Boolean = false
-    var hasGetter: Boolean = false
+    class GetterSetterClusterBean {
+        var field: Node = _
+        var getter: Node = _
+        var setter: Node = _
+        var hasSetter: Boolean = false
+        var hasGetter: Boolean = false
 
-    // setter
-    // WRITES_FIELD
-    // only param of field's type
-    // no return value
-    // use field write type evtl. has local variable of type(parameter)
-    // uses field declaring type of the corresponding field
-    // ignore "is instance member of"...
-  }
+        // setter
+        // WRITES_FIELD
+        // only param of field's type
+        // no return value
+        // use field write type evtl. has local variable of type(parameter)
+        // uses field declaring type of the corresponding field
+        // ignore "is instance member of"...
+    }
 
-  class GetterBean {
-    val field: Node = null
-    val method: Node = null
-  }
+}
+
+object GetterSetterClustering {
+
+    def apply(
+        clusterBuilder: ClusterBuilder,
+        successorFilter: ClusterFilter = null,
+        clusterNewFilter: ClusterFilter = null): GetterSetterClustering =
+        new GetterSetterClustering(
+            clusterBuilder,
+            if (successorFilter == null) None else Some(successorFilter),
+            if (clusterNewFilter == null) None else Some(clusterNewFilter))
+
 }

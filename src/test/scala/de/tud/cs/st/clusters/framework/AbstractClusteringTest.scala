@@ -40,64 +40,72 @@ import org.junit.runner.RunWith
 import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
 import filter.ClusterFilter
-import structure.ClusterBuilder
 import structure.Cluster
+import structure.util.ClusterBuilder
 import _root_.de.tud.cs.st.bat.resolved.ClassFile
 import _root_.de.tud.cs.st.bat.resolved.reader.Java6Framework
-import _root_.de.tud.cs.st.bat.resolved.dependency.DepExtractor
-import _root_.de.tud.cs.st.util.perf.BasicPerformanceEvaluation
+import _root_.de.tud.cs.st.bat.resolved.dependency.DependencyExtractor
+import _root_.de.tud.cs.st.util.perf.PerformanceEvaluation
+import de.tud.cs.st.bat.resolved.dependency.FilterDependenciesToBaseAndVoidTypes
+import de.tud.cs.st.bat.resolved.ClassFileTestUtility
 
 /**
  * @author Thomas Schlosser
  *
  */
-trait AbstractClusteringTest extends FunSuite with BasicPerformanceEvaluation {
+trait AbstractClusteringTest extends FunSuite
+        with ClassFileTestUtility
+        with PerformanceEvaluation {
 
-  protected def testClustering(testName: String,
-    extractDeps: (DepExtractor) => Unit,
-    resultToDot: Boolean = true)(implicit clusteringAlgortihm: ClusterFilter) {
-    println(testName + " - START")
+    protected def testClustering(testName: String,
+                                 extractDependencies: (DependencyExtractor) ⇒ Unit,
+                                 dotFileName: Option[String] = None,
+                                 includeSingleNodes: Boolean = true,
+                                 includeEdges: Boolean = true)(implicit clusteringAlgortihm: ClusterBuilder ⇒ ClusterFilter) {
+        println(testName+" - START")
 
-    val clusterBuilder = new ClusterBuilder
-    implicit val depExtractor = new DepExtractor(clusterBuilder)
+        val clusterBuilder = new ClusterBuilder with FilterDependenciesToBaseAndVoidTypes
+        val dependencyExtractor = new DependencyExtractor(clusterBuilder)
 
-    extractDeps(depExtractor)
+        time(duration ⇒ println("time to read classfiles and extract dependencies: "+nanoSecondsToMilliseconds(duration)+"ms")) {
+            extractDependencies(dependencyExtractor)
+        }
 
-    var clusters: Array[Cluster] = null
-    time(duration => println("time to cluster input: " + nanoSecondsToMilliseconds(duration) + "ms")) {
-      clusters = clusteringAlgortihm.process(Array(clusterBuilder.getCluster))
+        println("numberOfNode:"+clusterBuilder.getRootCluster.getNodes.size)
+        var clusters: Array[Cluster] = null
+        if (clusteringAlgortihm != null) {
+            time(duration ⇒ println("time to cluster input: "+nanoSecondsToMilliseconds(duration)+"ms")) {
+                clusters = clusteringAlgortihm(clusterBuilder).process(Array(clusterBuilder.getRootCluster))
+            }
+        }
+        else {
+            clusters = Array(clusterBuilder.getRootCluster)
+        }
+        if (dotFileName.isDefined) {
+            clusters.foreach(c ⇒ {
+                println("write cluster["+c.identifier+"] into dot file["+dotFileName.get+"_"+c.identifier+"]")
+                val fw = new FileWriter(dotFileName.get+"_"+c.identifier+".dot")
+                fw.write(c.toDot(includeSingleNodes, includeEdges))
+                fw.close()
+            })
+        }
+
+        println(testName+" - END")
     }
-    if (resultToDot) {
-      clusters.foreach(c => {
-        println("write cluster[" + c.identifier + "] into dot file")
-        val fw = new FileWriter(c.identifier + ".dot")
-        fw.write(c.toDot())
-        fw.close()
-      })
+
+    protected def testDependencyExtraction(testName: String,
+                                           extractDependencies: (DependencyExtractor) ⇒ Unit,
+                                           dotFileName: Option[String] = None,
+                                           includeSingleNodes: Boolean = true,
+                                           includeEdges: Boolean = true) {
+        testClustering(testName, extractDependencies, dotFileName, includeSingleNodes, includeSingleNodes)(null)
     }
 
-    println(testName + " - END")
-  }
-
-  protected def getTestClasses(zipFile: String): Array[ClassFile] = {
-    var tcls = Array.empty[ClassFile]
-    val zipfile = new ZipFile(new File(zipFile))
-    val zipentries = (zipfile).entries
-    while (zipentries.hasMoreElements) {
-      val zipentry = zipentries.nextElement
-      if (!zipentry.isDirectory && zipentry.getName.endsWith(".class")) {
-        val testClass = (Java6Framework.ClassFile(() => zipfile.getInputStream(zipentry)))
-        tcls :+= testClass
-      }
+    protected def extractDependencies(zipFile: String, classFile: String): (DependencyExtractor) ⇒ Unit = {
+        dependencyExtractor ⇒ dependencyExtractor.process(Java6Framework.ClassFile(zipFile, classFile))
     }
-    tcls
-  }
 
-  protected def extractDependencies(zipFile: String, classFile: String): (DepExtractor) => Unit = {
-    depExtractor => depExtractor.process(Java6Framework.ClassFile(zipFile, classFile))
-  }
-
-  protected def extractDependencies(zipFile: String): (DepExtractor) => Unit = {
-    depExtractor => for (cf <- getTestClasses(zipFile)) depExtractor.process(cf)
-  }
+    protected def extractDependencies(zipFile: String): (DependencyExtractor) ⇒ Unit = {
+        dependencyExtractor ⇒ for (cf ← ClassFiles(zipFile)) dependencyExtractor.process(cf)
+    }
 }

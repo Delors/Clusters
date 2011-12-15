@@ -32,24 +32,47 @@
 */
 package de.tud.cs.st.clusters
 package filter
+package similarity
 
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import framework.AbstractClusteringTest
 import framework.filter.IdentityMapClusterFilter
 import framework.structure.util.ClusterBuilder
+import framework.filter.IdentityMapClusterFilter
 
 /**
  * @author Thomas Schlosser
  *
  */
 @RunWith(classOf[JUnitRunner])
-class HyperClusterFilterTest extends AbstractClusteringTest {
+class AgglomerativeHierarchicalClusteringTest extends AbstractClusteringTest {
 
-    implicit val clustering = (builder: ClusterBuilder) ⇒ HyperClusterFilter(builder)
+    implicit val clustering = (builder: ClusterBuilder) ⇒ AgglomerativeHierarchicalClustering(builder)
 
-    test("testHyperClusterFiltering") {
-        testClustering("testHyperClusterFiltering",
-            extractDependencies("test/classfiles/Flashcards 0.4 - target 1.6.zip"))
+    test("testAgglomerativeHierarchicalClustering [ClusteringTestProject.zip]") {
+        testClustering(
+            "testAgglomerativeHierarchicalClustering [ClusteringTestProject.zip]",
+            extractDependencies("test/classfiles/ClusteringTestProject.zip", "test/GetterSetterTestClass.class"),
+            Some("ClusteringTestProject_GetterSetterTestClass"))
     }
+
+    //    test("testAgglomerativeHierarchicalClustering [Flashcards 0.4 - target 1.6.zip -- CommandHistory.class]") {
+    //        testClustering(
+    //            "testAgglomerativeHierarchicalClustering [Flashcards 0.4 - target 1.6.zip -- CommandHistory.class]",
+    //            extractDependencies("test/classfiles/Flashcards 0.4 - target 1.6.zip", "de/tud/cs/se/flashcards/model/CommandHistory.class"),
+    //            Some("CommandHistory"))
+    //    }
+    //
+    //    test("testAgglomerativeHierarchicalClustering [Flashcards 0.4 - target 1.6.zip]") {
+    //        testClustering(
+    //            "testAgglomerativeHierarchicalClustering [Flashcards 0.4 - target 1.6.zip]",
+    //            extractDependencies("test/classfiles/Flashcards 0.4 - target 1.6.zip"),
+    //            Some("Flashcards 0.4 - target 1.6"))
+    //    }
+    //
+    //    test("testAgglomerativeHierarchicalClustering [hibernate-core-3.6.0.Final.jar]") {
+    //        testClustering("testAgglomerativeHierarchicalClustering [hibernate-core-3.6.0.Final.jar]",
+    //            extractDependencies("test/classfiles/hibernate-core-3.6.0.Final.jar"))
+    //    }
 }

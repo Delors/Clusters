@@ -33,23 +33,47 @@
 package de.tud.cs.st.clusters
 package filter
 
-import org.junit.runner.RunWith
-import org.scalatest.junit.JUnitRunner
-import framework.AbstractClusteringTest
-import framework.filter.IdentityMapClusterFilter
+import framework.filter.ClusterFilter
+import framework.filter.IntermediateClusterFilter
+import framework.structure.Cluster
+import framework.structure.TypeNode
+import framework.structure.FieldNode
+import framework.structure.MethodNode
 import framework.structure.util.ClusterBuilder
+import de.tud.cs.st.clusters.framework.structure.SourceElementNode
 
 /**
  * @author Thomas Schlosser
  *
  */
-@RunWith(classOf[JUnitRunner])
-class HyperClusterFilterTest extends AbstractClusteringTest {
+class SingleElementClusterRemover(
+        val builder: ClusterBuilder,
+        val successorFilter: Option[ClusterFilter],
+        val clusterNewFilter: Option[ClusterFilter]) extends IntermediateClusterFilter {
 
-    implicit val clustering = (builder: ClusterBuilder) ⇒ HyperClusterFilter(builder)
-
-    test("testHyperClusterFiltering") {
-        testClustering("testHyperClusterFiltering",
-            extractDependencies("test/classfiles/Flashcards 0.4 - target 1.6.zip"))
+    //TODO re-check whether it is OK that in this case no copies of the cluster and the nodes are created  
+    protected def process(cluster: Cluster): Cluster = {
+        cluster.getNodes foreach {
+            case c: Cluster ⇒
+                if (c.numberOfNodes == 1) {
+                    cluster.addNode(c.getNodes.first)
+                    cluster.removeNode(c.uniqueID)
+                }
+            case _: SourceElementNode ⇒ // Nothing to do, because SourceElementNodes represent basic nodes and no clusters. 
+        }
+        cluster
     }
+}
+
+object SingleElementClusterRemover {
+
+    def apply(
+        clusterBuilder: ClusterBuilder,
+        successorFilter: ClusterFilter = null,
+        clusterNewFilter: ClusterFilter = null): SingleElementClusterRemover =
+        new SingleElementClusterRemover(
+            clusterBuilder,
+            if (successorFilter == null) None else Some(successorFilter),
+            if (clusterNewFilter == null) None else Some(clusterNewFilter))
+
 }

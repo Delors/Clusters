@@ -37,24 +37,22 @@ package graphscan
 import java.util.ArrayDeque
 
 /**
+ * NodeSet is a structure to store IDs of nodes.
+ * This structure can either be used as as stack or queue
  *
- * isStack: Signalisiert, ob es sich um einen Stack, oder um eine Queue handelt.
+ * @param isStack Signals whether the internal structure is a stack or queue.
  *
  * @author Thomas Schlosser
  *
  */
 class NodeSet(val isStack: Boolean) {
 
-  /**
-   * Der Inhalt des {@link NodeSet}s wird in dieser Struktur verwaltet.
-   */
-  private val content = new ArrayDeque[Integer];
+  private val content = new ArrayDeque[Int];
 
   /**
-   * Fügt einen Wert zum {@link NodeSet} hinzu.
+   * Adds the given Value to the {@link NodeSet}.
    *
-   * @param value
-   *            Wert, der eingefügt werden soll.
+   * @param value The value that should be added.
    */
   def add(value: Int) {
     if (isStack)
@@ -64,10 +62,9 @@ class NodeSet(val isStack: Boolean) {
   }
 
   /**
-   * Gibt das nächste (erste) Element zurück.
+   * Gets the next (first) element.
    *
-   * @return den Wert des nächsten Elements, oder <code>-1</code>, wenn das
-   *         {@link NodeSet} leer ist.
+   * @return value of the next element or <code>-1</code> if the {@link NodeSet} is empty.
    */
   def getNext: Int = {
     if (content.isEmpty())
@@ -76,17 +73,17 @@ class NodeSet(val isStack: Boolean) {
   }
 
   /**
-   * Löscht den ersten Wert des {@link NodeSet}s.
+   * Removes the first value of the {@link NodeSet}.
    */
   def remove {
     content.remove();
   }
 
   /**
-   * Gibt an, ob das {@link NodeSet} leer ist.
+   * Signals whether the {@link NodeSet} is empty.
    *
-   * @return <code>true</code> wenn es leer ist.<br/>
-   *         <code>false</code> wenn es nicht leer ist.
+   * @return <code>true</code> if it is empty.<br/>
+   *         <code>false</code> if it is not empty.
    */
   def isEmpty: Boolean =
     content.isEmpty();

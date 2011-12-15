@@ -40,7 +40,7 @@ import structure.Cluster
  * @author Thomas Schlosser
  *
  */
-class IdentityMapClusterFilter extends ClusterFilter {
+trait IdentityMapClusterFilter extends ClusterFilter {
   override def process(clusters: Array[Cluster]): Array[Cluster] = {
     return clusters
   }

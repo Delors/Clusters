@@ -37,6 +37,7 @@ import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import framework.AbstractClusteringTest
 import framework.filter.IdentityMapClusterFilter
+import framework.structure.util.ClusterBuilder
 
 /**
  * @author Thomas Schlosser
@@ -45,10 +46,29 @@ import framework.filter.IdentityMapClusterFilter
 @RunWith(classOf[JUnitRunner])
 class StronglyConnectedComponentsClusteringTest extends AbstractClusteringTest {
 
-  implicit val clustering = new IdentityMapClusterFilter with StronglyConnectedComponentsClustering
+    implicit val clustering = (builder: ClusterBuilder) ⇒ StronglyConnectedComponentsClustering(builder, SingleElementClusterRemover(builder))
 
-  test("testStronglyConnectedComponentsClustering") {
-    testClustering("testStronglyConnectedComponentsClustering",
-      extractDependencies("test/classfiles/ClusteringTestProject.zip", "test/StronglyConnectedComponentsTestClass.class"))
-  }
+    test("testSCCClustering - ClusteringTestProject.zip - test/StronglyConnectedComponentsTestClass.class") {
+        testClustering(
+            "testSCCClustering - ClusteringTestProject.zip - test/StronglyConnectedComponentsTestClass.class",
+            extractDependencies("test/classfiles/ClusteringTestProject.zip", "test/StronglyConnectedComponentsTestClass.class"),
+            Some("ClusteringTestProject_StronglyConnectedComponentsTestClass")
+        )
+    }
+
+    test("testSCCClustering - Flashcards 0.4 - target 1.6.zip") {
+        testClustering(
+            "testSCCClustering - Flashcards 0.4 - target 1.6.zip",
+            extractDependencies("test/classfiles/Flashcards 0.4 - target 1.6.zip"),
+            Some("Flashcards 0.4 - target 1.6")
+        )
+    }
+
+    test("testSCCClustering - hibernate-core-3.6.0.Final.jar") {
+        testClustering(
+            "testSCCClustering - hibernate-core-3.6.0.Final.jar",
+            extractDependencies("test/classfiles/hibernate-core-3.6.0.Final.jar") //,
+        //            Some("hibernate-core-3.6.0.Final")
+        )
+    }
 }

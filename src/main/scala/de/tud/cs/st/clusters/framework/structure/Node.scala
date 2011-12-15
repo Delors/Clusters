@@ -34,7 +34,7 @@ package de.tud.cs.st.clusters
 package framework
 package structure
 
-import de.tud.cs.st.bat.resolved.DependencyType._
+import de.tud.cs.st.bat.resolved.dependency.DependencyType._
 import scala.collection.mutable.Map
 
 /**
@@ -43,15 +43,22 @@ import scala.collection.mutable.Map
  */
 trait Node {
 
-  def identifier: String
+    def identifier: String
 
-  def uniqueID: Int
+    def uniqueID: Int
 
-  def addEdge(src: Node, trgt: Node, dType: DependencyType)
+    var parent: Node = _
 
-  def getEdges(): List[Edge]
+    def addEdge(src: Node, trgt: Node, dType: DependencyType)
 
-  def getTransposedEdges(): List[Edge]
+    def getEdges: List[Edge]
 
-  def toDot(implicit nodeBuffer: StringBuffer, edgeBuffer: StringBuffer): String
+    def getTransposedEdges: List[Edge]
+
+    def toDot(
+        includeSingleNodes: Boolean,
+        includeEdges: Boolean)(
+            implicit nodeBuffer: StringBuffer,
+            edgeBuffer: StringBuffer): String
+
 }

@@ -41,71 +41,66 @@ import scala.collection.mutable.Map
  *
  */
 class GraphScanResultBean {
-  /**
-   * Die Entdeckungszeitpunkte der Knoten des Graphen.
-   */
-  var discoveryTime: Map[Int, Int] = _
+    /**
+     * Graph's nodes discovery time.
+     */
+    var discoveryTime: Map[Int, Int] = _
 
-  /**
-   * Die Finishing-Zeitpunkte der Knoten des Graphen.
-   */
-  var finishingTime: Map[Int, Int] = _
+    /**
+     * Graph's nodes finishing time.
+     */
+    var finishingTime: Map[Int, Int] = _
 
-  /**
-   * Die Vorgängerknoten der Knoten des Graphen.
-   */
-  var pi: Map[Int, Int] = _
+    /**
+     * Graph's nodes predecessor nodes.
+     */
+    var pi: Map[Int, Int] = _
 
-  /**
-   * Die Einfärbung der Knoten des Graphen.
-   */
-  var color: Map[Int, Int] = _
+    /**
+     * Graph's nodes color.
+     */
+    var color: Map[Int, Int] = _
 
-  /**
-   * Die Knoten des Graphen absteigend nach Finishing-Zeit sortiert.
-   */
-  var order: Array[Int] = _
+    /**
+     * Graph's nodes finishing times sorted in descending order.
+     */
+    var order: Array[Int] = _
 
-  /**
-   * Signalisiert ob ein Knoten auf gerader Entfernung zu dem Startknoten
-   * (seiner Wurzel) liegt.
-   */
-  var evenDist: Map[Int, Boolean] = _
+    /**
+     * Signals, whether a node has an even or uneven distance to the start (root) node.
+     */
+    var evenDist: Map[Int, Boolean] = _
 
-  /**
-   * Enthält die Anzahl der unbearbeiteten Knoten(zumindest bezogen auf die
-   * Sortierung).
-   */
-  var unfinishedNodes = 0
+    /**
+     * The number of unfinished nodes (relating to the nodes' sorting).
+     */
+    var unfinishedNodes = 0
 
-  /**
-   * Die Zeit, bei der der Algorithmus beendet wurde.
-   */
-  var time: Int = _
+    /**
+     * The time, the algorithm was finished.
+     */
+    var time: Int = _
 
-  /**
-   * Erstellt und setzt alle relevanten Daten, die für die Sortierung nach
-   * Finishing-Zeit relevant sind.
-   *
-   * @param size
-   *            Die max-Anzahl der Knoten.
-   */
-  def createOrderElements(size: Int) {
-    order = new Array(size)
-    unfinishedNodes = size
-  }
+    /**
+     * Creates and sets all relevant data, that are relevant for sorting of the finishing times.
+     *
+     * @param size
+     *            Maximum number of nodes.
+     */
+    def createOrderElements(size: Int) {
+        order = new Array(size)
+        unfinishedNodes = size
+    }
 
-  /**
-   * Verringert die Anzahl der unbearbeiteten Knoten und gibt dieses Ergebnis
-   * zurück.<br/>
-   * <b style="color:red">HINWEIS:</b> Bevor diese Methode verwendet werden
-   * kann sollte die Methode {@link #createOrderElements(int)} aufgerufen
-   * werden um die benötigte Struktur zu erstellen.
-   *
-   * @return Die Anzahl der unbearbeiteten Knoten.
-   */
-  def decreaseUnfinishedNodes(): Int = {
-    unfinishedNodes -= 1
-    unfinishedNodes
-  }
+    /**
+     * Decreases the number of unfinished nodes and returns this result.<br/>
+     * <b style="color:red">NOTE:</b> Before using this method, you should call method
+     * {@link #createOrderElements(int)} to create the required structure.
+     *
+     * @return The number of unfinished nodes.
+     */
+    def decreaseUnfinishedNodes(): Int = {
+        unfinishedNodes -= 1
+        unfinishedNodes
+    }
 }

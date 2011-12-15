@@ -30,26 +30,36 @@
 *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 *  POSSIBILITY OF SUCH DAMAGE.
 */
-package de.tud.cs.st.clusters
-package filter
+package de.tud.cs.st
+package clusters
+package framework
+package structure
+package util
 
-import org.junit.runner.RunWith
-import org.scalatest.junit.JUnitRunner
-import framework.AbstractClusteringTest
-import framework.filter.IdentityMapClusterFilter
-import framework.structure.util.ClusterBuilder
+import de.tud.cs.st.bat.resolved.Type
+import de.tud.cs.st.bat.resolved.ObjectType
+import de.tud.cs.st.bat.resolved.MethodDescriptor
 
 /**
+ * If you need unique String identifiers for types, fields or methods, this trait can be mixed in.
+ *
  * @author Thomas Schlosser
  *
  */
-@RunWith(classOf[JUnitRunner])
-class HyperClusterFilterTest extends AbstractClusteringTest {
+trait PrettyPrint {
 
-    implicit val clustering = (builder: ClusterBuilder) ⇒ HyperClusterFilter(builder)
+    protected val FIELD_AND_METHOD_SEPARATOR = "."
 
-    test("testHyperClusterFiltering") {
-        testClustering("testHyperClusterFiltering",
-            extractDependencies("test/classfiles/Flashcards 0.4 - target 1.6.zip"))
-    }
+    def prettyPrint(t: Type): String =
+        t.toJava
+
+    def prettyPrint(definingObjectType: ObjectType, fieldName: String): String =
+        prettyPrint(definingObjectType) + FIELD_AND_METHOD_SEPARATOR + fieldName
+
+    def prettyPrint(definingObjectType: ObjectType, methodName: String, methodDescriptor: MethodDescriptor): String =
+        prettyPrint(definingObjectType) + FIELD_AND_METHOD_SEPARATOR + prettyPrint(methodName, methodDescriptor)
+
+    def prettyPrint(methodName: String, methodDescriptor: MethodDescriptor): String =
+        methodName+"("+methodDescriptor.parameterTypes.map(pT ⇒ prettyPrint(pT)).mkString(", ")+")"
+
 }

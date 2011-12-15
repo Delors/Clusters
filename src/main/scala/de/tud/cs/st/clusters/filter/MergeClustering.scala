@@ -33,65 +33,68 @@
 package de.tud.cs.st.clusters
 package filter
 
-import scala.collection.mutable.Map
 import framework.filter.ClusterFilter
 import framework.filter.IntermediateClusterFilter
 import framework.structure.Cluster
-import framework.structure.Node
+import framework.structure.TypeNode
+import framework.structure.FieldNode
+import framework.structure.MethodNode
 import framework.structure.NodeCloner
 import framework.structure.util.ClusterBuilder
-import graphscan.GraphScanResultBean
-import graphscan.GraphScanningAlgorithms
 
 /**
  * @author Thomas Schlosser
  *
  */
-class StronglyConnectedComponentsClustering(
+class MergeClustering(
     val builder: ClusterBuilder,
-    val successorFilter: Option[ClusterFilter],
-    val clusterNewFilter: Option[ClusterFilter])
-        extends IntermediateClusterFilter {
+    val successorFilter: Option[ClusterFilter])
+        extends ClusterFilter {
 
-    protected override def process(cluster: Cluster): Cluster = {
-        // calculate finishing times of all nodes using depth first search
-        var result = GraphScanningAlgorithms.graphScanComplete(
-            cluster, null, true, null)
-
-        // calculate depth first search on the transposed cluster considering
-        // the finishing times of the first run of the depth first search algorithm
-        result = GraphScanningAlgorithms.graphScanComplete(cluster,
-            null, true, result.order)(true)
-
-        // create resulting clusters
-        val resultCluster = NodeCloner.createCopy(cluster)
-        var resultMap = Map[Int, Cluster]()
-        for (node ← cluster.getNodes) {
-            val sccID = result.color(node.uniqueID) - 2
-            if (sccID >= 0) {
-                resultMap.get(sccID) match {
-                    case Some(c) ⇒
-                        c.addNode(node)
-                    case None ⇒
-                        val c = builder.createCluster("SCC_"+System.nanoTime()) //sccID)
-                        c.addNode(node)
-                        resultMap(sccID) = c
-                        resultCluster.addNode(c)
+    /**
+     * @param clusters Contains clusters with one cluster per filter threads in it which have to be merged.
+     *  These inner clusters contain the result of the corresponding filter thread.
+     *  Hence, the parameter has the following structure:
+     *  Array(
+     *    Cluster(identifier="<identifier of first cluster>",
+     *            nodes=
+     *              Cluster(identifier="split_result_0",
+     *                      nodes=<results of [[SplitCluster]]'s first filter applied to the first cluster>),
+     *              Cluster(identifier="split_result_1",
+     *                      nodes=<results of [[SplitCluster]]'s second filter applied to the first cluster>),
+     *              ...
+     *    ),
+     *    ...
+     *  )
+     */
+    override def process(clusters: Array[Cluster]): Array[Cluster] = {
+        //TODO: impl. and test this split and merge mechanism...
+        val result = clusters map { NodeCloner.createCopy(_) }
+        clusters.zipWithIndex foreach {
+            case (inputCluster, i) ⇒
+                val resultCluster = result(i)
+                // TODO do something with all the splitCluster results 
+                // and add the resulting clusters to 'resultCluster' 
+                inputCluster.getNodes foreach {
+                    case splitCluster: Cluster ⇒
+                    //                    process(splitCluster)
                 }
-            }
         }
-        resultCluster
+        if (successorFilter.isDefined)
+            return successorFilter.get.process(result)
+        else
+            return result
     }
+
 }
 
-object StronglyConnectedComponentsClustering {
+object MergeClustering {
 
     def apply(
         clusterBuilder: ClusterBuilder,
-        successorFilter: ClusterFilter = null,
-        clusterNewFilter: ClusterFilter = null): StronglyConnectedComponentsClustering =
-        new StronglyConnectedComponentsClustering(
+        successorFilter: ClusterFilter = null): MergeClustering =
+        new MergeClustering(
             clusterBuilder,
-            if (successorFilter == null) None else Some(successorFilter),
-            if (clusterNewFilter == null) None else Some(clusterNewFilter))
+            if (successorFilter == null) None else Some(successorFilter))
+
 }

@@ -32,24 +32,31 @@
 */
 package de.tud.cs.st.clusters
 package filter
+package similarity
 
-import org.junit.runner.RunWith
-import org.scalatest.junit.JUnitRunner
-import framework.AbstractClusteringTest
-import framework.filter.IdentityMapClusterFilter
-import framework.structure.util.ClusterBuilder
+import scala.collection.mutable.Map
+import framework.structure.Cluster
+import de.tud.cs.st.bat.resolved.dependency.DependencyType._
+import de.tud.cs.st.bat.resolved.dependency.DependencyType
 
 /**
  * @author Thomas Schlosser
  *
  */
-@RunWith(classOf[JUnitRunner])
-class HyperClusterFilterTest extends AbstractClusteringTest {
+object ContingencyTableCalculator {
 
-    implicit val clustering = (builder: ClusterBuilder) ⇒ HyperClusterFilter(builder)
+    type Features = Map[DependencyType, Int]
 
-    test("testHyperClusterFiltering") {
-        testClustering("testHyperClusterFiltering",
-            extractDependencies("test/classfiles/Flashcards 0.4 - target 1.6.zip"))
-    }
+    def calcA(xFeatures: Features, yFeatures: Features): Int =
+        xFeatures.keySet.intersect(yFeatures.keySet).size
+
+    def calcB(xFeatures: Features, yFeatures: Features): Int =
+        xFeatures.keySet.diff(yFeatures.keySet).size
+
+    def calcC(xFeatures: Features, yFeatures: Features): Int =
+        yFeatures.keySet.diff(xFeatures.keySet).size
+
+    def calcD(xFeatures: Features, yFeatures: Features): Int =
+        DependencyType.values.diff(yFeatures.keySet).diff(xFeatures.keySet).size
+
 }

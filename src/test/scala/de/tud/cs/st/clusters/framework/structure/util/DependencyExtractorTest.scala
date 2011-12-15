@@ -33,68 +33,52 @@
 package de.tud.cs.st.clusters
 package framework
 package structure
+package util
 
-import scala.collection.mutable.Map
-import de.tud.cs.st.bat.resolved.dependency.DepBuilder
-import de.tud.cs.st.bat.resolved.DependencyType._
+import java.io.File
+import java.io.FileWriter
+import java.io.DataInputStream
+import java.util.zip.ZipFile
+import java.util.zip.ZipEntry
+import org.junit.runner.RunWith
+import org.scalatest.FunSuite
+import org.scalatest.junit.JUnitRunner
+import de.tud.cs.st.bat.resolved.reader.Java6Framework
+import de.tud.cs.st.bat.resolved.dependency.DependencyExtractor
+import de.tud.cs.st.bat.resolved.dependency.FilterDependenciesToBaseAndVoidTypes
 import de.tud.cs.st.bat.resolved.ClassFile
-import de.tud.cs.st.bat.resolved.Field_Info
-import de.tud.cs.st.bat.resolved.Method_Info
-import de.tud.cs.st.bat.resolved.dependencies.SourceElementIDs
+import de.tud.cs.st.util.perf.PerformanceEvaluation
 
 /**
  * @author Thomas Schlosser
  *
  */
-class ClusterBuilder extends DepBuilder with SourceElementIDs {
+@RunWith(classOf[JUnitRunner])
+class DependencyExtractorTest extends AbstractClusteringTest with PerformanceEvaluation {
 
-  private var lastUsedID = -1;
-
-  private var idMap = Map.empty[String, Int]
-  private var nodes = Array.empty[Node]
-
-  private val cluster: Cluster = new Cluster(-1, "ROOT", true)
-
-  def getID(identifier: String): Int =
-    getID(identifier, false)
-
-  def getID(identifier: String, clazz: ClassFile): Int =
-    getID(identifier, { (i: Int, s: String) => { new ClassNode(i, s, clazz) } })
-
-  def getID(identifier: String, field: Field_Info): Int =
-    getID(identifier, { (i: Int, s: String) => { new FieldNode(i, s, field) } })
-
-  def getID(identifier: String, method: Method_Info): Int =
-    getID(identifier, { (i: Int, s: String) => { new MethodNode(i, s, method) } })
-
-  def getID(identifier: String, isClusterNode: Boolean): Int = {
-    if (isClusterNode) {
-      getID(identifier, { (i: Int, s: String) => { new Cluster(i, s) } })
-    } else {
-      getID(identifier, { (i: Int, s: String) => { new SourceElementNode(i, s) } })
+    test("testDependencyExtraction - Apache ANT 1.7.1 - target 1.5.zip") {
+        testDependencyExtraction("testDependencyExtraction - Apache ANT 1.7.1 - target 1.5.zip",
+            extractDependencies("test/classfiles/Apache ANT 1.7.1 - target 1.5.zip"))
     }
-  }
 
-  def getID(identifier: String, node: (Int, String) => Node): Int = {
-    idMap.getOrElseUpdate(identifier, {
-      lastUsedID += 1
-      nodes :+= node(lastUsedID, identifier)
-      cluster.nodes :+= nodes(lastUsedID)
-      lastUsedID
-    })
-  }
+    test("testDependencyExtraction - ClusteringTestProject.zip") {
+        testDependencyExtraction("testDependencyExtraction - ClusteringTestProject.zip",
+            extractDependencies("test/classfiles/ClusteringTestProject.zip"))
+    }
 
-  def addDep(src: Int, trgt: Int, dType: DependencyType) {
-    val source = nodes(src)
-    val target = nodes(trgt)
-    source.addEdge(source, nodes(trgt), dType)
-    target.addEdge(source, nodes(trgt), dType)
-  }
+    test("testDependencyExtraction - Flashcards 0.4 - target 1.6.zip") {
+        testDependencyExtraction("testDependencyExtraction - Flashcards 0.4 - target 1.6.zip",
+            extractDependencies("test/classfiles/Flashcards 0.4 - target 1.6.zip"))
+    }
 
-  def getNode(id: Int): Node =
-    nodes(id)
+    test("testDependencyExtraction - hibernate-core-3.6.0.Final.jar") {
+        testDependencyExtraction("testDependencyExtraction - hibernate-core-3.6.0.Final.jar",
+            extractDependencies("test/classfiles/hibernate-core-3.6.0.Final.jar"))
+    }
 
-  def getCluster: Cluster =
-    cluster
+    test("testDependencyExtraction - cocome-impl-classes.jar") {
+        testDependencyExtraction("testDependencyExtraction - cocome-impl-classes.jar",
+            extractDependencies("test/classfiles/cocome-impl-classes.jar"))
+    }
 
 }

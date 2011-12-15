@@ -44,12 +44,32 @@ import framework.structure.util.ClusterBuilder
  *
  */
 @RunWith(classOf[JUnitRunner])
-class HyperClusterFilterTest extends AbstractClusteringTest {
+class CombinedClusteringTest extends AbstractClusteringTest {
 
-    implicit val clustering = (builder: ClusterBuilder) ⇒ HyperClusterFilter(builder)
+    //    implicit val clustering = (builder: ClusterBuilder) ⇒ InternExternClusterFilter(builder, clusterNewFilter = GetterSetterClustering(builder))
+    //    implicit val clustering = (builder: ClusterBuilder) ⇒ InternExternClusterFilter(builder, clusterNewFilter = StronglyConnectedComponentsClustering(builder, SingleElementClusterRemover(builder)))
+    implicit val clustering = (builder: ClusterBuilder) ⇒
+        InternExternClusterFilter(builder,
+            clusterNewFilter = GetterSetterClustering(builder,
+                StronglyConnectedComponentsClustering(builder,
+                    SingleElementClusterRemover(builder,
+                        LayerClustering(builder)))))
 
-    test("testHyperClusterFiltering") {
-        testClustering("testHyperClusterFiltering",
-            extractDependencies("test/classfiles/Flashcards 0.4 - target 1.6.zip"))
+    test("testCombinedClustering - ClusteringTestProject.zip - test/StronglyConnectedComponentsTestClass.class") {
+        testClustering(
+            "testCombinedClustering - ClusteringTestProject.zip - test/StronglyConnectedComponentsTestClass.class",
+            extractDependencies("test/classfiles/ClusteringTestProject.zip", "test/StronglyConnectedComponentsTestClass.class"),
+            Some("ClusteringTestProject_StronglyConnectedComponentsTestClass"),
+            includeSingleNodes = true,
+            includeEdges = true)
+    }
+
+    test("testCombinedClustering - Flashcards 0.4 - target 1.6.zip") {
+        testClustering(
+            "testCombinedClustering - Flashcards 0.4 - target 1.6.zip",
+            extractDependencies("test/classfiles/Flashcards 0.4 - target 1.6.zip"),
+            Some("Flashcards 0.4 - target 1.6"),
+            includeSingleNodes = false,
+            includeEdges = false)
     }
 }

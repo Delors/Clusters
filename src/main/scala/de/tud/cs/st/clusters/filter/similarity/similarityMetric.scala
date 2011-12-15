@@ -32,24 +32,58 @@
 */
 package de.tud.cs.st.clusters
 package filter
+package similarity
 
-import org.junit.runner.RunWith
-import org.scalatest.junit.JUnitRunner
-import framework.AbstractClusteringTest
-import framework.filter.IdentityMapClusterFilter
-import framework.structure.util.ClusterBuilder
+import scala.collection.mutable.Map
+import ContingencyTableCalculator._
+import framework.structure.Cluster
+import framework.structure.Node
+import de.tud.cs.st.bat.resolved.dependency.DependencyType._
 
 /**
  * @author Thomas Schlosser
  *
  */
-@RunWith(classOf[JUnitRunner])
-class HyperClusterFilterTest extends AbstractClusteringTest {
+trait SimilarityMetric {
 
-    implicit val clustering = (builder: ClusterBuilder) ⇒ HyperClusterFilter(builder)
+    type FeaturesMap = Map[Node, Features]
+    type Features = Map[DependencyType, Int]
+    type Similarities = Map[(Int, Int), Double]
 
-    test("testHyperClusterFiltering") {
-        testClustering("testHyperClusterFiltering",
-            extractDependencies("test/classfiles/Flashcards 0.4 - target 1.6.zip"))
+    /**
+     * Calculates similarities between all given nodes.
+     *
+     * Assumption: sim(a,b)=sim(b,a)
+     * Hence, each node pair is considered only once.
+     *
+     * @param features
+     * @return
+     */
+    def calcSimilarities(features: FeaturesMap): Similarities = {
+        var result = Map[(Int, Int), Double]()
+        for ((nodeX, featuresX) ← features) {
+            for ((nodeY, featuresY) ← features if nodeX.uniqueID < nodeY.uniqueID) {
+                result((nodeX.uniqueID, nodeY.uniqueID)) = calcSimilarity(featuresX, featuresY)
+            }
+        }
+        result
     }
+
+    def calcSimilarity(featuresX: Features, featuresY: Features): Double
+
+}
+
+trait BinarySimilarityMetric extends SimilarityMetric {
+
+}
+
+object JacardMetric extends BinarySimilarityMetric {
+
+    override def calcSimilarity(featuresX: Features, featuresY: Features): Double = {
+        val a = calcA(featuresX, featuresY)
+        val b = calcB(featuresX, featuresY)
+        val c = calcC(featuresX, featuresY)
+        a.toDouble / (a + b + c)
+    }
+
 }

@@ -32,24 +32,21 @@
 */
 package de.tud.cs.st.clusters
 package filter
+package similarity
 
-import org.junit.runner.RunWith
-import org.scalatest.junit.JUnitRunner
-import framework.AbstractClusteringTest
-import framework.filter.IdentityMapClusterFilter
-import framework.structure.util.ClusterBuilder
+import scala.collection.mutable.Map
+import framework.structure.Cluster
+import framework.structure.Node
+import de.tud.cs.st.bat.resolved.dependency.DependencyType._
 
 /**
  * @author Thomas Schlosser
  *
  */
-@RunWith(classOf[JUnitRunner])
-class HyperClusterFilterTest extends AbstractClusteringTest {
+trait FeatureSelector {
 
-    implicit val clustering = (builder: ClusterBuilder) ⇒ HyperClusterFilter(builder)
+    type FeaturesMap = Map[Node, Features]
+    type Features = Map[DependencyType, Int]
 
-    test("testHyperClusterFiltering") {
-        testClustering("testHyperClusterFiltering",
-            extractDependencies("test/classfiles/Flashcards 0.4 - target 1.6.zip"))
-    }
+    def selectFeatures(cluster: Cluster): FeaturesMap
 }

@@ -33,23 +33,53 @@
 package de.tud.cs.st.clusters
 package filter
 
-import org.junit.runner.RunWith
-import org.scalatest.junit.JUnitRunner
-import framework.AbstractClusteringTest
-import framework.filter.IdentityMapClusterFilter
+import framework.filter.ClusterFilter
+import framework.filter.IntermediateClusterFilter
+import framework.structure.Cluster
+import framework.structure.TypeNode
+import framework.structure.FieldNode
+import framework.structure.MethodNode
+import framework.structure.NodeCloner
 import framework.structure.util.ClusterBuilder
 
 /**
  * @author Thomas Schlosser
  *
  */
-@RunWith(classOf[JUnitRunner])
-class HyperClusterFilterTest extends AbstractClusteringTest {
+class SplitClustering(
+    val builder: ClusterBuilder,
+    val mergeFilter: MergeClustering,
+    val filters: ClusterFilter*)
+        extends ClusterFilter {
 
-    implicit val clustering = (builder: ClusterBuilder) ⇒ HyperClusterFilter(builder)
-
-    test("testHyperClusterFiltering") {
-        testClustering("testHyperClusterFiltering",
-            extractDependencies("test/classfiles/Flashcards 0.4 - target 1.6.zip"))
+    override def process(clusters: Array[Cluster]): Array[Cluster] = {
+        val splitResults = clusters map { NodeCloner.createCopy(_) }
+        for (cluster ← clusters) {
+            filters.zipWithIndex foreach {
+                case (f, i) ⇒
+                    // no need to retrieve a unique number for this temporary cluster
+                    val splitResult = new Cluster(-1, "split_result_"+i)
+                    f.process(Array(cluster)) foreach {
+                        _.getNodes foreach {
+                            splitResult.addNode(_)
+                        }
+                    }
+                    splitResults(i).addNode(splitResult)
+            }
+        }
+        mergeFilter.process(splitResults)
     }
+}
+
+object SplitClustering {
+
+    def apply(
+        clusterBuilder: ClusterBuilder,
+        mergeFilter: MergeClustering,
+        filters: ClusterFilter*): SplitClustering =
+        new SplitClustering(
+            clusterBuilder,
+            if (mergeFilter != null) mergeFilter else sys.error("A corresponding MergeClustering has to be configured!"),
+            filters: _*)
+
 }

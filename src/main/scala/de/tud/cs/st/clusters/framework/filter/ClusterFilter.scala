@@ -35,6 +35,7 @@ package framework
 package filter
 
 import structure.Cluster
+import structure.util.ClusterBuilder
 
 /**
  * @author Thomas Schlosser
@@ -42,5 +43,8 @@ import structure.Cluster
  */
 trait ClusterFilter {
 
-  def process(clusters: Array[Cluster]): Array[Cluster]
+    val builder: ClusterBuilder
+
+    def process(clusters: Array[Cluster]): Array[Cluster]
+
 }

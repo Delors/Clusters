@@ -33,68 +33,69 @@
 package de.tud.cs.st.clusters
 package framework
 package structure
+package util
 
 import java.io.File
 import java.io.FileWriter
 import java.util.zip.ZipFile
 import java.util.zip.ZipEntry
+import scala.math.Ordering
 import org.junit.runner.RunWith
 import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
 import _root_.de.tud.cs.st.bat.resolved.reader.Java6Framework
-import _root_.de.tud.cs.st.bat.resolved.dependency.DepExtractor
 import _root_.de.tud.cs.st.bat.resolved.ClassFile
+import _root_.de.tud.cs.st.bat.resolved.dependency.DependencyExtractor
+import _root_.de.tud.cs.st.bat.resolved.dependency.FilterDependenciesToBaseAndVoidTypes
+import _root_.de.tud.cs.st.bat.resolved.dependency.DependencyType._
 
 /**
  * @author Thomas Schlosser
  *
  */
 @RunWith(classOf[JUnitRunner])
-class DepExtractorTest extends AbstractClusteringTest {
+class DepExtractorRunTimeTest extends AbstractClusteringTest {
 
-  test("testDepGraphGeneration - Apache ANT 1.7.1 - target 1.5.zip") {
-    testDepGraohGeneration("test/classfiles/Apache ANT 1.7.1 - target 1.5.zip")
-  }
-
-  test("testDepGraphGeneration - ClusteringTestProject.zip") {
-    testDepGraohGeneration("test/classfiles/ClusteringTestProject.zip")
-  }
-
-  test("testDepGraphGeneration - CommandHistory.class.zip") {
-    testDepGraohGeneration("test/classfiles/CommandHistory.class.zip")
-  }
-
-  test("testDepGraphGeneration - Flashcards 0.4 - target 1.6.zip") {
-    testDepGraohGeneration("test/classfiles/Flashcards 0.4 - target 1.6.zip")
-  }
-
-  test("testDepGraphGeneration - hibernate-core-3.6.0.Final.jar") {
-    testDepGraohGeneration("test/classfiles/hibernate-core-3.6.0.Final.jar")
-  }
-
-  private def testDepGraohGeneration(zipFile: String) {
-    println("testDepGraphGeneration[" + zipFile + "] - START")
-
-    val clusterBuilder = new ClusterBuilder
-    val depExtractor = new DepExtractor(clusterBuilder)
-
-    var testClasses: Array[ClassFile] = null
-
-    time(duration => println("time to read class files: " + nanoSecondsToMilliseconds(duration) + "ms")) {
-      testClasses = getTestClasses(zipFile)
+    test("testDepExtraction - Apache ANT 1.7.1 - target 1.5.zip") {
+        testDepExtraction("test/classfiles/Apache ANT 1.7.1 - target 1.5.zip")
     }
 
-    time(duration => println("time to extract dependencies: " + nanoSecondsToMilliseconds(duration) + "ms")) {
-      for (classFile <- testClasses) {
-        depExtractor.process(classFile)
-      }
-    }
-    time(duration => println("time to write dot file: " + nanoSecondsToMilliseconds(duration) + "ms")) {
-      val fw = new FileWriter(new File(zipFile).getName() + ".dot")
-      fw.write(clusterBuilder.getCluster.toDot)
-      fw.close()
+    test("testDepExtraction - ClusteringTestProject.zip") {
+        testDepExtraction("test/classfiles/ClusteringTestProject.zip")
     }
 
-    println("testDepGraphGeneration[" + zipFile + "] - END")
-  }
+    test("testDepExtraction - Flashcards 0.4 - target 1.6.zip") {
+        testDepExtraction("test/classfiles/Flashcards 0.4 - target 1.6.zip")
+    }
+
+    test("testDepExtraction - hibernate-core-3.6.0.Final.jar") {
+        testDepExtraction("test/classfiles/hibernate-core-3.6.0.Final.jar")
+    }
+
+    test("testDepExtraction - cocome-impl-classes.jar") {
+        testDepExtraction("test/classfiles/cocome-impl-classes.jar")
+    }
+
+    private def testDepExtraction(zipFile: String) {
+        println("testDepExtraction["+zipFile+"]")
+
+        val clusterBuilder = new ClusterBuilder with FilterDependenciesToBaseAndVoidTypes
+        val depExtractor = new DependencyExtractor(clusterBuilder)
+
+        var testClasses = Java6Framework.ClassFiles(zipFile)
+        var min = Long.MaxValue
+        var max = Long.MinValue
+        for (i ← 1 to 10) {
+            clusterBuilder.reset
+            time(duration ⇒ { min = Ordering[Long].min(duration, min); max = Ordering[Long].max(duration, max) }) {
+                for (classFile ← testClasses) {
+                    depExtractor.process(classFile)
+                }
+            }
+        }
+        println("min time to extract dependencies: "+nanoSecondsToMilliseconds(min)+"ms")
+        println("max time to extract dependencies: "+nanoSecondsToMilliseconds(max)+"ms")
+
+        println()
+    }
 }

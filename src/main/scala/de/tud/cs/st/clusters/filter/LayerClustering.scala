@@ -33,65 +33,69 @@
 package de.tud.cs.st.clusters
 package filter
 
-import scala.collection.mutable.Map
 import framework.filter.ClusterFilter
 import framework.filter.IntermediateClusterFilter
 import framework.structure.Cluster
-import framework.structure.Node
+import framework.structure.TypeNode
+import framework.structure.FieldNode
+import framework.structure.MethodNode
 import framework.structure.NodeCloner
 import framework.structure.util.ClusterBuilder
-import graphscan.GraphScanResultBean
-import graphscan.GraphScanningAlgorithms
 
 /**
  * @author Thomas Schlosser
  *
  */
-class StronglyConnectedComponentsClustering(
-    val builder: ClusterBuilder,
-    val successorFilter: Option[ClusterFilter],
-    val clusterNewFilter: Option[ClusterFilter])
-        extends IntermediateClusterFilter {
+class LayerClustering(
+        val builder: ClusterBuilder,
+        val successorFilter: Option[ClusterFilter],
+        val clusterNewFilter: Option[ClusterFilter]) extends IntermediateClusterFilter {
 
     protected override def process(cluster: Cluster): Cluster = {
-        // calculate finishing times of all nodes using depth first search
-        var result = GraphScanningAlgorithms.graphScanComplete(
-            cluster, null, true, null)
-
-        // calculate depth first search on the transposed cluster considering
-        // the finishing times of the first run of the depth first search algorithm
-        result = GraphScanningAlgorithms.graphScanComplete(cluster,
-            null, true, result.order)(true)
-
-        // create resulting clusters
-        val resultCluster = NodeCloner.createCopy(cluster)
-        var resultMap = Map[Int, Cluster]()
+        val result = NodeCloner.createCopy(cluster)
+        val topLayer = builder.createCluster("top")
+        val middleLayer = builder.createCluster("middle")
+        val bottomLayer = builder.createCluster("bottom")
+        result.addNode(topLayer)
+        result.addNode(middleLayer)
+        result.addNode(bottomLayer)
         for (node ← cluster.getNodes) {
-            val sccID = result.color(node.uniqueID) - 2
-            if (sccID >= 0) {
-                resultMap.get(sccID) match {
-                    case Some(c) ⇒
-                        c.addNode(node)
-                    case None ⇒
-                        val c = builder.createCluster("SCC_"+System.nanoTime()) //sccID)
-                        c.addNode(node)
-                        resultMap(sccID) = c
-                        resultCluster.addNode(c)
-                }
-            }
+            val inDegree = node.getTransposedEdges.length
+            val outDegree = node.getEdges.length
+            val copy = NodeCloner.createDeepCopy(node)
+            if (inDegree == 0 && outDegree > 0)
+                topLayer.addNode(copy)
+            else if (inDegree > 0 && outDegree > 0)
+                middleLayer.addNode(copy)
+            else if (inDegree > 0 && outDegree == 0)
+                bottomLayer.addNode(copy)
+            else if (inDegree == 0 && outDegree == 0)
+                result.addNode(copy)
         }
-        resultCluster
+        if (clusterNewFilter.isDefined) {
+            val newTopLayer = clusterNewFilter.get.process(Array(topLayer))
+            val newMiddleLayer = clusterNewFilter.get.process(Array(middleLayer))
+            val newBottomLayer = clusterNewFilter.get.process(Array(bottomLayer))
+            result.removeNode(topLayer.uniqueID)
+            result.removeNode(middleLayer.uniqueID)
+            result.removeNode(bottomLayer.uniqueID)
+            result.addNode(newTopLayer(0))
+            result.addNode(newMiddleLayer(0))
+            result.addNode(newBottomLayer(0))
+        }
+        result
     }
 }
 
-object StronglyConnectedComponentsClustering {
+object LayerClustering {
 
     def apply(
         clusterBuilder: ClusterBuilder,
         successorFilter: ClusterFilter = null,
-        clusterNewFilter: ClusterFilter = null): StronglyConnectedComponentsClustering =
-        new StronglyConnectedComponentsClustering(
+        clusterNewFilter: ClusterFilter = null): LayerClustering =
+        new LayerClustering(
             clusterBuilder,
             if (successorFilter == null) None else Some(successorFilter),
             if (clusterNewFilter == null) None else Some(clusterNewFilter))
+
 }

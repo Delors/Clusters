@@ -31,25 +31,27 @@
 *  POSSIBILITY OF SUCH DAMAGE.
 */
 package de.tud.cs.st.clusters
+package framework
 package filter
 
-import org.junit.runner.RunWith
-import org.scalatest.junit.JUnitRunner
-import framework.AbstractClusteringTest
-import framework.filter.IdentityMapClusterFilter
-import framework.structure.util.ClusterBuilder
+import structure.Cluster
 
 /**
  * @author Thomas Schlosser
  *
  */
-@RunWith(classOf[JUnitRunner])
-class HyperClusterFilterTest extends AbstractClusteringTest {
+trait IntermediateClusterFilter extends ClusterFilter with IdentityMapClusterFilter {
 
-    implicit val clustering = (builder: ClusterBuilder) ⇒ HyperClusterFilter(builder)
+    val successorFilter: Option[ClusterFilter]
+    val clusterNewFilter: Option[ClusterFilter]
 
-    test("testHyperClusterFiltering") {
-        testClustering("testHyperClusterFiltering",
-            extractDependencies("test/classfiles/Flashcards 0.4 - target 1.6.zip"))
+    abstract override def process(clusters: Array[Cluster]): Array[Cluster] = {
+        val result = clusters map { process(_) }
+        if (successorFilter.isDefined)
+            return successorFilter.get.process(result)
+        else
+            return result
     }
+
+    protected def process(cluster: Cluster): Cluster
 }

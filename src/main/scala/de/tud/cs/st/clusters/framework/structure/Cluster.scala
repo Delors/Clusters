@@ -34,8 +34,9 @@ package de.tud.cs.st.clusters
 package framework
 package structure
 
-import de.tud.cs.st.bat.resolved.DependencyType._
-import de.tud.cs.st.bat.resolved.dependency.DepBuilder
+import scala.collection.mutable.ListBuffer
+import scala.collection.mutable.Map
+import de.tud.cs.st.bat.resolved.dependency.DependencyType._
 
 /**
  * @author Thomas Schlosser
@@ -43,60 +44,127 @@ import de.tud.cs.st.bat.resolved.dependency.DepBuilder
  */
 class Cluster(val uniqueID: Int, val identifier: String, val isRootCluster: Boolean) extends Node {
 
-  var nodes = List.empty[Node]
+    val nodeMap = Map[Int, Node]()
 
-  def this() {
-    //TODO: change
-    this(-42, "Unnamed Cluster", false)
-  }
-
-  def this(identifier: String) {
-    //TODO: change
-    this(-42, identifier, false)
-  }
-
-  def this(uniqueID: Int, identifier: String) {
-    this(uniqueID, identifier, false)
-  }
-
-  def addEdge(src: Node, trgt: Node, dType: DependencyType) {
-    error("method \"addEdge\" is currently not supported in Cluster")
-  }
-
-  def getEdges(): List[Edge] = {
-    error("method \"getEdges\" is currently not supported in Cluster")
-  }
-
-  def getTransposedEdges(): List[Edge] = {
-    error("method \"getTransposedEdges\" is currently not supported in Cluster")
-  }
-
-  def toDot(implicit nodeBuffer: StringBuffer = new StringBuffer(), edgeBuffer: StringBuffer = new StringBuffer()): String = {
-    if (isRootCluster) {
-      nodeBuffer.append("digraph G {\n")
-    } else {
-      nodeBuffer.append("subgraph cluster_")
-      nodeBuffer.append(identifier.replace(".", "_"))
-      nodeBuffer.append(" {\n")
+    def this(uniqueID: Int, identifier: String) {
+        this(uniqueID, identifier, false)
     }
 
-    // add nodes
-    for (node <- nodes) {
-      node.toDot(nodeBuffer, edgeBuffer)
+    def addNode(node: Node) {
+        nodeMap.put(node.uniqueID, node)
+        if (node.parent != null) {
+            node.parent match {
+                case c: Cluster ⇒ c.removeNode(node.uniqueID)
+            }
+        }
+        node.parent = this
     }
 
-    if (!isRootCluster) {
-      nodeBuffer.append("\tnode [style=filled,fillcolor=white,color=black];\n")
-      nodeBuffer.append("\tstyle=filled;\n")
-      nodeBuffer.append("\tfillcolor=lightgrey;\n")
-      nodeBuffer.append("\tcolor=black;\n")
-      nodeBuffer.append("\tlabel = \"")
-      nodeBuffer.append(identifier)
-      nodeBuffer.append("\";\n")
-    } else {
-      nodeBuffer.append(edgeBuffer)
+    def removeNode(id: Int) {
+        val removedNode = nodeMap.remove(id)
+        if (removedNode.isDefined && removedNode.get.parent == this)
+            removedNode.get.parent = null
     }
-    nodeBuffer.append("}\n")
-    return nodeBuffer.toString
-  }
+
+    def clearNodes() =
+        nodeMap.clear
+
+    def getNode(id: Int): Node = {
+        nodeMap.getOrElse(id, sys.error("Node with ID["+id+"] was not found"))
+    }
+
+    def getNodes: Iterable[Node] = {
+        nodeMap.values
+    }
+
+    def numberOfNodes: Int =
+        nodeMap.size
+
+    def addEdge(src: Node, trgt: Node, dType: DependencyType) {
+        sys.error("method \"addEdge\" is currently not supported in Cluster")
+    }
+
+    def getEdges: List[Edge] = {
+        var edges = List[Edge]()
+        nodeMap.values foreach {
+            node ⇒
+                node.getEdges foreach {
+                    edge ⇒
+                        val containsSource = nodeMap.contains(edge.source.uniqueID)
+                        val containsTarget = nodeMap.contains(edge.target.uniqueID)
+                        if (containsSource && !containsTarget) {
+                            edges = edge :: edges
+                        }
+                }
+        }
+        edges
+    }
+
+    def getTransposedEdges: List[Edge] = {
+        var edges = List[Edge]()
+        nodeMap.values foreach {
+            node ⇒
+                node.getEdges foreach {
+                    edge ⇒
+                        val containsSource = nodeMap.contains(edge.source.uniqueID)
+                        val containsTarget = nodeMap.contains(edge.target.uniqueID)
+                        if (!containsSource && containsTarget) {
+                            edges = edge :: edges
+                        }
+                }
+        }
+        edges
+    }
+
+    def toDot(includeSingleNodes: Boolean = true, includeEdges: Boolean = true)(implicit nodeBuffer: StringBuffer = new StringBuffer(), edgeBuffer: StringBuffer = new StringBuffer()): String = {
+        val subGraphBuffer = new StringBuffer()
+        if (isRootCluster) {
+            nodeBuffer.append("digraph G {\n")
+        }
+        else {
+            subGraphBuffer.append("subgraph cluster_")
+            subGraphBuffer.append(identifier.replace(".", "_"))
+            subGraphBuffer.append('_')
+            subGraphBuffer.append(uniqueID)
+            subGraphBuffer.append(" {\n")
+        }
+
+        var emptyCluster = true
+        // add nodes
+        getNodes foreach {
+            case c: Cluster ⇒
+                if (emptyCluster) {
+                    nodeBuffer.append(subGraphBuffer)
+                    emptyCluster = false
+                }
+                c.toDot(includeSingleNodes, includeEdges)(nodeBuffer, edgeBuffer)
+            case n: SourceElementNode ⇒
+                if (includeSingleNodes && emptyCluster) {
+                    nodeBuffer.append(subGraphBuffer)
+                    emptyCluster = false
+                }
+                n.toDot(includeSingleNodes, includeEdges)(nodeBuffer, edgeBuffer)
+        }
+
+        if (emptyCluster) {
+            nodeBuffer.append("\t\"")
+            nodeBuffer.append(uniqueID)
+            nodeBuffer.append("\"[shape=box, label=\""+identifier+"\"];\n")
+        }
+        else if (!isRootCluster) {
+            nodeBuffer.append("\tnode [style=filled,fillcolor=white,color=black];\n")
+            nodeBuffer.append("\tstyle=filled;\n")
+            nodeBuffer.append("\tfillcolor=lightgrey;\n")
+            nodeBuffer.append("\tcolor=black;\n")
+            nodeBuffer.append("\tlabel = \"")
+            nodeBuffer.append(identifier)
+            nodeBuffer.append("\";\n")
+            nodeBuffer.append("}\n")
+        }
+        else {
+            nodeBuffer.append(edgeBuffer)
+            nodeBuffer.append("}\n")
+        }
+        return nodeBuffer.toString
+    }
 }
