@@ -119,7 +119,12 @@ class Cluster(val uniqueID: Int, val identifier: String, val isRootCluster: Bool
         edges
     }
 
-    def toDot(includeSingleNodes: Boolean = true, includeEdges: Boolean = true)(implicit nodeBuffer: StringBuffer = new StringBuffer(), edgeBuffer: StringBuffer = new StringBuffer()): String = {
+    override def toDot(
+        includeSingleNodes: Boolean = true,
+        includeEdges: Boolean = true)(
+            implicit nodeBuffer: StringBuffer = new StringBuffer(),
+            edgeBuffer: StringBuffer = new StringBuffer()): String = {
+
         val subGraphBuffer = new StringBuffer()
         if (isRootCluster) {
             nodeBuffer.append("digraph G {\n")
@@ -164,7 +169,7 @@ class Cluster(val uniqueID: Int, val identifier: String, val isRootCluster: Bool
             nodeBuffer.append("\";\n")
             nodeBuffer.append("}\n")
         }
-        else {
+        if (isRootCluster) {
             nodeBuffer.append(edgeBuffer)
             nodeBuffer.append("}\n")
         }
