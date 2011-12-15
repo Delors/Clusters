@@ -62,24 +62,17 @@ class GetterSetterClustering(
 
     protected override def process(cluster: Cluster): Cluster = {
         def checkGetterSetterCluster(node: Node, field: Field): Option[GetterSetterClusterBean] = {
-            def getFieldType(fieldNode: Node): Option[Node] = {
-                for (edge ← fieldNode.getEdges) {
-                    if (edge.dType.equals(IS_OF_TYPE))
-                        return Some(edge.target)
-                }
-                None
-            }
-
             var gscBean = new GetterSetterClusterBean
             // use transposed edges to determine nodes that use this field
             //TODO: test and refine this algorithm with more complex classes...
             //add mechanism to algorithms that allows to specify/configure that a cluster is as fine granular as required
-            var checkedNodes = Array.empty[Node]
+            var checkedNodes = Set[Int]()
             for (tEdge ← node.getTransposedEdges) {
-                if (!checkedNodes.contains(tEdge.target)) {
+                val target = builder.getNode(tEdge.targetID)
+                if (!checkedNodes.contains(tEdge.targetID)) {
                     tEdge.dType match {
                         case READS_FIELD ⇒
-                            tEdge.target match {
+                            target match {
                                 case MethodNode(_, identifier, Some(method)) ⇒
                                     if (getterPrefix == None || method.name.startsWith(getterPrefix.get)) {
                                         val descriptor = method.descriptor
@@ -88,14 +81,14 @@ class GetterSetterClustering(
                                             if (gscBean.getter != null)
                                                 sys.error("only one getter is allowed: current["+gscBean.getter.identifier+"], new["+identifier()+"]")
                                             gscBean.field = node
-                                            gscBean.getter = tEdge.target
+                                            gscBean.getter = target
                                             gscBean.hasGetter = true
                                         }
                                     }
                                 case _ ⇒ Nil
                             }
                         case WRITES_FIELD ⇒
-                            tEdge.target match {
+                            target match {
                                 case MethodNode(_, identifier, Some(method)) ⇒
                                     if (setterPrefix == None || method.name.startsWith(setterPrefix.get)) {
                                         val descriptor = method.descriptor
@@ -104,7 +97,7 @@ class GetterSetterClustering(
                                             if (gscBean.setter != null)
                                                 sys.error("only one setter is allowed: current["+gscBean.setter.identifier+"], new["+identifier+"]")
                                             gscBean.field = node
-                                            gscBean.setter = tEdge.target
+                                            gscBean.setter = target
                                             gscBean.hasSetter = true
                                         }
                                     }
@@ -112,7 +105,7 @@ class GetterSetterClustering(
                             }
                         //          case a => println(a.toString) //return None //this node is out
                     }
-                    checkedNodes :+= tEdge.target
+                    checkedNodes += tEdge.targetID
                 }
             }
             if (gscBean.field == null) None else Some(gscBean)
@@ -128,12 +121,12 @@ class GetterSetterClustering(
                             // create setter/getter cluster
                             println("GETTER_SETTER_CLUSTER")
                             val gsCluster = builder.createCluster("Getter_Setter_"+clusterBean.field.identifier)
-                            gsCluster.addNode(clusterBean.field)
+                            gsCluster.addNode(NodeCloner.createDeepCopy(clusterBean.field))
                             if (clusterBean.hasGetter) {
-                                gsCluster.addNode(clusterBean.getter)
+                                gsCluster.addNode(NodeCloner.createDeepCopy(clusterBean.getter))
                             }
                             if (clusterBean.hasSetter) {
-                                gsCluster.addNode(clusterBean.setter)
+                                gsCluster.addNode(NodeCloner.createDeepCopy(clusterBean.setter))
                             }
                             result.addNode(gsCluster)
                         case None ⇒

@@ -40,5 +40,5 @@ import de.tud.cs.st.bat.resolved.dependency.DependencyType._
  * @author Thomas Schlosser
  *
  */
-class Edge(val source: Node, val target: Node, val dType: DependencyType) {
+case class Edge(val sourceID: Int, val targetID: Int, val dType: DependencyType) {
 }

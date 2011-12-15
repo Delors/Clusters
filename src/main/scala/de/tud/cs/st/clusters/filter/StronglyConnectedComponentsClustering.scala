@@ -71,10 +71,10 @@ class StronglyConnectedComponentsClustering(
             if (sccID >= 0) {
                 resultMap.get(sccID) match {
                     case Some(c) ⇒
-                        c.addNode(node)
+                        c.addNode(NodeCloner.createDeepCopy(node))
                     case None ⇒
                         val c = builder.createCluster("SCC_"+System.nanoTime()) //sccID)
-                        c.addNode(node)
+                        c.addNode(NodeCloner.createDeepCopy(node))
                         resultMap(sccID) = c
                         resultCluster.addNode(c)
                 }

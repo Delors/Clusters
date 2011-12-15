@@ -52,11 +52,14 @@ class Cluster(val uniqueID: Int, val identifier: String, val isRootCluster: Bool
 
     def addNode(node: Node) {
         nodeMap.put(node.uniqueID, node)
-        if (node.parent != null) {
-            node.parent match {
-                case c: Cluster ⇒ c.removeNode(node.uniqueID)
-            }
-        }
+        // FIXME: check all caller of this method...
+        // they must remove the node themselves from the parent, if necessary.
+        // the next lines are not valid anymore, since nodes are copied and added to other nodes.
+        //        if (node.parent != null) {
+        //            node.parent match {
+        //                case c: Cluster ⇒ c.removeNode(node.uniqueID)
+        //            }
+        //        }
         node.parent = this
     }
 
@@ -80,7 +83,7 @@ class Cluster(val uniqueID: Int, val identifier: String, val isRootCluster: Bool
     def numberOfNodes: Int =
         nodeMap.size
 
-    def addEdge(src: Node, trgt: Node, dType: DependencyType) {
+    override def addEdge(sourceID: Int, targetID: Int, dType: DependencyType) {
         sys.error("method \"addEdge\" is currently not supported in Cluster")
     }
 
@@ -90,8 +93,8 @@ class Cluster(val uniqueID: Int, val identifier: String, val isRootCluster: Bool
             node ⇒
                 node.getEdges foreach {
                     edge ⇒
-                        val containsSource = nodeMap.contains(edge.source.uniqueID)
-                        val containsTarget = nodeMap.contains(edge.target.uniqueID)
+                        val containsSource = nodeMap.contains(edge.sourceID)
+                        val containsTarget = nodeMap.contains(edge.targetID)
                         if (containsSource && !containsTarget) {
                             edges = edge :: edges
                         }
@@ -106,8 +109,8 @@ class Cluster(val uniqueID: Int, val identifier: String, val isRootCluster: Bool
             node ⇒
                 node.getEdges foreach {
                     edge ⇒
-                        val containsSource = nodeMap.contains(edge.source.uniqueID)
-                        val containsTarget = nodeMap.contains(edge.target.uniqueID)
+                        val containsSource = nodeMap.contains(edge.sourceID)
+                        val containsTarget = nodeMap.contains(edge.targetID)
                         if (!containsSource && containsTarget) {
                             edges = edge :: edges
                         }

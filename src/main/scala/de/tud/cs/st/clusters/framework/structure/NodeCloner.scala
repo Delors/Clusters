@@ -44,19 +44,19 @@ object NodeCloner {
         val copy = createCopy(typeNode)
         // TODO: change edge implementation...only IDs should be used here, because copying of nodes
         // makes references unusable...
-        //        typeNode.getEdges foreach{ edge =>
-        //            copy.addEdge(edge.sou)
-        //        }
+        copyEdges(typeNode, copy)
         copy
     }
 
     def createDeepCopy(fieldNode: FieldNode): FieldNode = {
         val copy = createCopy(fieldNode)
+        copyEdges(fieldNode, copy)
         copy
     }
 
     def createDeepCopy(methodNode: MethodNode): MethodNode = {
         val copy = createCopy(methodNode)
+        copyEdges(methodNode, copy)
         copy
     }
 
@@ -66,6 +66,15 @@ object NodeCloner {
             case t: TypeNode   ⇒ createDeepCopy(t)
             case f: FieldNode  ⇒ createDeepCopy(f)
             case m: MethodNode ⇒ createDeepCopy(m)
+        }
+    }
+
+    private def copyEdges(node: Node, copiedNode: Node) {
+        node.getEdges foreach { edge ⇒
+            copiedNode.addEdge(edge.sourceID, edge.targetID, edge.dType)
+        }
+        node.getTransposedEdges foreach { transposedEdge ⇒
+            copiedNode.addEdge(transposedEdge.targetID, transposedEdge.sourceID, transposedEdge.dType)
         }
     }
 

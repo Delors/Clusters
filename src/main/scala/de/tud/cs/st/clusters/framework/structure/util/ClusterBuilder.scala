@@ -172,11 +172,9 @@ trait ClusterBuilder extends DependencyBuilder
         id
     }
 
-    def addDependency(src: Int, trgt: Int, dType: DependencyType) {
-        val source = getNode(src)
-        val target = getNode(trgt)
-        source.addEdge(source, target, dType)
-        target.addEdge(source, target, dType)
+    def addDependency(sourceID: Int, targetID: Int, dType: DependencyType) {
+        getNode(sourceID).addEdge(sourceID, targetID, dType)
+        getNode(targetID).addEdge(sourceID, targetID, dType)
     }
 
     abstract override def reset {

@@ -49,7 +49,7 @@ trait Node {
 
     var parent: Node = _
 
-    def addEdge(src: Node, trgt: Node, dType: DependencyType)
+    def addEdge(sourceID: Int, targetID: Int, dType: DependencyType)
 
     def getEdges: List[Edge]
 

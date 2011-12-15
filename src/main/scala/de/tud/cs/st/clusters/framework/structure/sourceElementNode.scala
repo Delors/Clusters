@@ -52,12 +52,12 @@ sealed trait SourceElementNode extends Node {
     protected var edges: List[Edge] = Nil
     protected var transposedEdges: List[Edge] = Nil
 
-    def addEdge(src: Node, trgt: Node, dType: DependencyType) {
-        if (src == this) {
-            edges = new Edge(src, trgt, dType) :: edges
+    override def addEdge(srcID: Int, trgtID: Int, dType: DependencyType) {
+        if (srcID == this.uniqueID) {
+            edges = new Edge(srcID, trgtID, dType) :: edges
         }
-        else if (trgt == this) {
-            transposedEdges = new Edge(trgt, src, dType) :: transposedEdges
+        else if (trgtID == this.uniqueID) {
+            transposedEdges = new Edge(trgtID, srcID, dType) :: transposedEdges
         }
     }
 
@@ -69,18 +69,20 @@ sealed trait SourceElementNode extends Node {
 
     def toDot(includeSingleNodes: Boolean = true, includeEdges: Boolean = true)(implicit nodeBuffer: StringBuffer = new StringBuffer, edgeBuffer: StringBuffer = new StringBuffer): String = {
         if (includeSingleNodes) {
-            nodeBuffer.append("\t\"")
+            nodeBuffer.append("\t")
+            nodeBuffer.append(uniqueID)
+            nodeBuffer.append("[label=\"")
             nodeBuffer.append(identifier)
-            nodeBuffer.append("\";\n")
+            nodeBuffer.append("\"];\n")
 
             // add egdes
             if (includeEdges)
                 for (e ← getEdges) {
-                    edgeBuffer.append("\t\"")
-                    edgeBuffer.append(e.source.identifier)
-                    edgeBuffer.append("\" -> \"")
-                    edgeBuffer.append(e.target.identifier)
-                    edgeBuffer.append("\"[label=\"")
+                    edgeBuffer.append("\t")
+                    edgeBuffer.append(e.sourceID)
+                    edgeBuffer.append(" -> ")
+                    edgeBuffer.append(e.targetID)
+                    edgeBuffer.append("[label=\"")
                     edgeBuffer.append(e.dType.toString)
                     edgeBuffer.append("\"];\n")
                 }
