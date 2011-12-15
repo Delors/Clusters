@@ -46,10 +46,31 @@ import framework.structure.util.ClusterBuilder
  * @author Thomas Schlosser
  *
  */
-class MergeClustering(
+class BranchedClustering(
     val builder: ClusterBuilder,
-    val successorFilter: Option[ClusterFilter])
+    val successorFilter: Option[ClusterFilter],
+    val filters: ClusterFilter*)
         extends ClusterFilter {
+
+    override def process(clusters: Array[Cluster]): Array[Cluster] = {
+        val results = clusters map { NodeCloner.createCopy(_) }
+        clusters.zipWithIndex foreach {
+            case (inputCluster, i) ⇒
+                val resultCluster = results(i)
+                filters.zipWithIndex foreach {
+                    case (f, j) ⇒
+                        // no need to retrieve a unique number for this temporary cluster
+                        val splitResult = builder.createCluster("split_result_"+j) //new Cluster(-1, "split_result_"+j)
+                        f.process(Array(inputCluster)) foreach {
+                            _.getNodes foreach {
+                                splitResult.addNode(_)
+                            }
+                        }
+                        resultCluster.addNode(splitResult)
+                }
+        }
+        mergeClusters(results)
+    }
 
     /**
      * @param clusters Contains clusters with one cluster per filter threads in it which have to be merged.
@@ -67,7 +88,7 @@ class MergeClustering(
      *    ...
      *  )
      */
-    override def process(clusters: Array[Cluster]): Array[Cluster] = {
+    def mergeClusters(clusters: Array[Cluster]): Array[Cluster] = {
         //TODO: impl. and test this split and merge mechanism...
         val result = clusters map { NodeCloner.createCopy(_) }
         clusters.zipWithIndex foreach {
@@ -83,18 +104,19 @@ class MergeClustering(
         if (successorFilter.isDefined)
             return successorFilter.get.process(result)
         else
-            return result
+            return clusters //result
     }
-
 }
 
-object MergeClustering {
+object BranchedClustering {
 
     def apply(
         clusterBuilder: ClusterBuilder,
-        successorFilter: ClusterFilter = null): MergeClustering =
-        new MergeClustering(
+        successorFilter: ClusterFilter = null)(
+            filters: ClusterFilter*): BranchedClustering =
+        new BranchedClustering(
             clusterBuilder,
-            if (successorFilter == null) None else Some(successorFilter))
+            if (successorFilter == null) None else Some(successorFilter),
+            filters: _*)
 
 }

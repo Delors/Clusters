@@ -33,53 +33,31 @@
 package de.tud.cs.st.clusters
 package filter
 
-import framework.filter.ClusterFilter
-import framework.filter.IntermediateClusterFilter
-import framework.structure.Cluster
-import framework.structure.TypeNode
-import framework.structure.FieldNode
-import framework.structure.MethodNode
-import framework.structure.NodeCloner
+import org.junit.runner.RunWith
+import org.scalatest.junit.JUnitRunner
+import framework.AbstractClusteringTest
+import framework.filter.IdentityMapClusterFilter
 import framework.structure.util.ClusterBuilder
 
 /**
  * @author Thomas Schlosser
  *
  */
-class SplitClustering(
-    val builder: ClusterBuilder,
-    val mergeFilter: MergeClustering,
-    val filters: ClusterFilter*)
-        extends ClusterFilter {
+@RunWith(classOf[JUnitRunner])
+class BranchedClusteringTest extends AbstractClusteringTest {
 
-    override def process(clusters: Array[Cluster]): Array[Cluster] = {
-        val splitResults = clusters map { NodeCloner.createCopy(_) }
-        for (cluster ← clusters) {
-            filters.zipWithIndex foreach {
-                case (f, i) ⇒
-                    // no need to retrieve a unique number for this temporary cluster
-                    val splitResult = new Cluster(-1, "split_result_"+i)
-                    f.process(Array(cluster)) foreach {
-                        _.getNodes foreach {
-                            splitResult.addNode(_)
-                        }
-                    }
-                    splitResults(i).addNode(splitResult)
-            }
-        }
-        mergeFilter.process(splitResults)
+    implicit val clustering = (builder: ClusterBuilder) ⇒
+        BranchedClustering(
+            builder)(
+                LayerClustering(builder),
+                InternExternClusterFilter(builder))
+
+    test("testSplitMergeClustering [Flashcards 0.4 - target 1.6.zip -- CommandHistory.class]") {
+        testClustering("testSplitMergeClustering [Flashcards 0.4 - target 1.6.zip -- CommandHistory.class]",
+            extractDependencies("test/classfiles/Flashcards 0.4 - target 1.6.zip", "de/tud/cs/se/flashcards/model/CommandHistory.class"),
+            Some("CommandHistory"),
+            includeSingleNodes = true,
+            includeEdges = false)
     }
-}
-
-object SplitClustering {
-
-    def apply(
-        clusterBuilder: ClusterBuilder,
-        mergeFilter: MergeClustering,
-        filters: ClusterFilter*): SplitClustering =
-        new SplitClustering(
-            clusterBuilder,
-            if (mergeFilter != null) mergeFilter else sys.error("A corresponding MergeClustering has to be configured!"),
-            filters: _*)
 
 }
