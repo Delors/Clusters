@@ -36,6 +36,7 @@ package filter
 import framework.filter.ClusterFilter
 import framework.filter.IntermediateClusterFilter
 import framework.structure.Cluster
+import framework.structure.Node
 import framework.structure.TypeNode
 import framework.structure.FieldNode
 import framework.structure.MethodNode
@@ -48,41 +49,96 @@ import framework.structure.util.ClusterBuilder
  */
 class LayerClustering(
         val builder: ClusterBuilder,
+        val performRecursion: Boolean,
         val successorFilter: Option[ClusterFilter],
         val clusterNewFilter: Option[ClusterFilter]) extends IntermediateClusterFilter {
 
     protected override def process(cluster: Cluster): Cluster = {
         val result = NodeCloner.createCopy(cluster)
-        val topLayer = builder.createCluster("top")
-        val middleLayer = builder.createCluster("middle")
-        val bottomLayer = builder.createCluster("bottom")
-        result.addNode(topLayer)
-        result.addNode(middleLayer)
-        result.addNode(bottomLayer)
-        for (node ← cluster.getNodes) {
-            val inDegree = node.getTransposedEdges.length
-            val outDegree = node.getEdges.length
-            val copy = NodeCloner.createDeepCopy(node)
-            if (inDegree == 0 && outDegree > 0)
-                topLayer.addNode(copy)
-            else if (inDegree > 0 && outDegree > 0)
-                middleLayer.addNode(copy)
-            else if (inDegree > 0 && outDegree == 0)
-                bottomLayer.addNode(copy)
-            else if (inDegree == 0 && outDegree == 0)
-                result.addNode(copy)
+        var layer = 0
+        var newClusters = Set[Cluster]()
+
+        def createLayers(nodes: Set[Node]) {
+            def createNewLayerCluster(): Cluster = {
+                val layerCluster = builder.createCluster("layer_"+layer)
+                layer += 1
+                result.addNode(layerCluster)
+                newClusters = newClusters + layerCluster
+                layerCluster
+            }
+
+            def createNewLayerClusterWithNodes(nodes: Iterable[Node]) {
+                val layerCluster = createNewLayerCluster()
+                nodes foreach { node ⇒
+                    layerCluster.addNode(NodeCloner.createDeepCopy(node))
+                }
+            }
+
+            val nodeIDs = nodes map { _.uniqueID }
+
+            var topLayerNodes = Set[Node]()
+            var middleLayerNodes = Set[Node]()
+            var bottomLayerNodes = Set[Node]()
+            var sparatedNodes = Set[Node]()
+
+            for (node ← nodes) {
+                // only edges to nodes in 'nodes' should be considered for degree calculation
+                val inDegree = node.getTransposedEdges.filter(edge ⇒ nodeIDs contains edge.targetID).length
+                val outDegree = node.getEdges.filter(edge ⇒ nodeIDs contains edge.targetID).length
+                if (inDegree == 0 && outDegree > 0)
+                    topLayerNodes = topLayerNodes + node
+                else if (inDegree > 0 && outDegree > 0)
+                    middleLayerNodes = middleLayerNodes + node
+                else if (inDegree > 0 && outDegree == 0)
+                    bottomLayerNodes = bottomLayerNodes + node
+                else if (inDegree == 0 && outDegree == 0)
+                    sparatedNodes = sparatedNodes + node
+            }
+
+            var furtherLayers = true
+            if (bottomLayerNodes.isEmpty && topLayerNodes.isEmpty) {
+                furtherLayers = false
+            }
+
+            if (!sparatedNodes.isEmpty) {
+                if (layer == 0)
+                    sparatedNodes foreach { node ⇒
+                        result.addNode(NodeCloner.createDeepCopy(node))
+                    }
+                else
+                    bottomLayerNodes = bottomLayerNodes ++ sparatedNodes
+            }
+
+            if (!bottomLayerNodes.isEmpty) {
+                // create bottom layer
+                createNewLayerClusterWithNodes(bottomLayerNodes)
+            }
+
+            if (!middleLayerNodes.isEmpty) {
+                if (performRecursion && furtherLayers)
+                    createLayers(middleLayerNodes)
+                else
+                    // create middle layer
+                    createNewLayerClusterWithNodes(middleLayerNodes)
+            }
+
+            if (!topLayerNodes.isEmpty) {
+                // create top layer
+                createNewLayerClusterWithNodes(topLayerNodes)
+            }
         }
+
+        createLayers(cluster.getNodes.toSet)
+
         if (clusterNewFilter.isDefined) {
-            val newTopLayer = clusterNewFilter.get.process(Array(topLayer))
-            val newMiddleLayer = clusterNewFilter.get.process(Array(middleLayer))
-            val newBottomLayer = clusterNewFilter.get.process(Array(bottomLayer))
-            result.removeNode(topLayer.uniqueID)
-            result.removeNode(middleLayer.uniqueID)
-            result.removeNode(bottomLayer.uniqueID)
-            result.addNode(newTopLayer(0))
-            result.addNode(newMiddleLayer(0))
-            result.addNode(newBottomLayer(0))
+            //TODO check how to combine all clusters in one process call...
+            newClusters foreach { layerCluster ⇒
+                val newLayer = clusterNewFilter.get.process(Array(layerCluster))
+                result.removeNode(layerCluster.uniqueID)
+                result.addNode(newLayer(0))
+            }
         }
+
         result
     }
 }
@@ -91,10 +147,12 @@ object LayerClustering {
 
     def apply(
         clusterBuilder: ClusterBuilder,
+        performRecursion: Boolean = false,
         successorFilter: ClusterFilter = null,
         clusterNewFilter: ClusterFilter = null): LayerClustering =
         new LayerClustering(
             clusterBuilder,
+            performRecursion,
             if (successorFilter == null) None else Some(successorFilter),
             if (clusterNewFilter == null) None else Some(clusterNewFilter))
 

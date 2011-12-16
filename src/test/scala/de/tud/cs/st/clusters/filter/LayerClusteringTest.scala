@@ -47,7 +47,7 @@ import framework.filter.IdentityMapClusterFilter
 @RunWith(classOf[JUnitRunner])
 class LayerClusteringTest extends AbstractClusteringTest {
 
-    implicit val clustering = (builder: ClusterBuilder) ⇒ LayerClustering(builder)
+    implicit val clustering = (builder: ClusterBuilder) ⇒ LayerClustering(builder, true)
 
     test("testLayerClustering [ClusteringTestProject.zip]") {
         testClustering(
