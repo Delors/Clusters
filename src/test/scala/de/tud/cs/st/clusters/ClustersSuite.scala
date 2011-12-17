@@ -12,13 +12,13 @@ import org.scalatest.Suites
 @RunWith(classOf[JUnitRunner])
 class ClustersSuite extends Suites(
 
-    // Cluster Filter tests...
-    new filter.CombinedClusteringTest,
-    new filter.GetterSetterClusteringTest,
-    new filter.HyperClusterFilterTest,
-    new filter.InternExternClusterFilterTest,
-    new filter.LayerClusteringTest,
-    new filter.StronglyConnectedComponentsClusteringTest,
+    // Clustering tests...
+    new pipeline.CombinedClusteringTest,
+    new pipeline.GetterSetterClusteringTest,
+    new pipeline.PackageClusteringTest,
+    new pipeline.InternExternClusteringTest,
+    new pipeline.LayerClusteringTest,
+    new pipeline.StronglyConnectedComponentsClusteringTest,
 
     // Framework tests
     new framework.structure.util.DependencyExtractorTest)

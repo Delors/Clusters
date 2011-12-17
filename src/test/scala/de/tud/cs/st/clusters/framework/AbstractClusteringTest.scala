@@ -39,7 +39,7 @@ import java.util.zip.ZipFile
 import org.junit.runner.RunWith
 import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
-import filter.ClusterFilter
+import pipeline.Clustering
 import structure.Cluster
 import structure.util.ClusterBuilder
 import _root_.de.tud.cs.st.bat.resolved.ClassFile
@@ -61,7 +61,7 @@ trait AbstractClusteringTest extends FunSuite
                                  extractDependencies: (DependencyExtractor) ⇒ Unit,
                                  dotFileName: Option[String] = None,
                                  includeSingleNodes: Boolean = true,
-                                 includeEdges: Boolean = true)(implicit clusteringAlgortihm: ClusterBuilder ⇒ ClusterFilter) {
+                                 includeEdges: Boolean = true)(implicit clustering: ClusterBuilder ⇒ Clustering) {
         println(testName+" - START")
 
         val clusterBuilder = new ClusterBuilder with FilterDependenciesToBaseAndVoidTypes
@@ -73,9 +73,9 @@ trait AbstractClusteringTest extends FunSuite
 
         println("numberOfNode:"+clusterBuilder.getRootCluster.getNodes.size)
         var clusters: Array[Cluster] = null
-        if (clusteringAlgortihm != null) {
+        if (clustering != null) {
             time(duration ⇒ println("time to cluster input: "+nanoSecondsToMilliseconds(duration)+"ms")) {
-                clusters = clusteringAlgortihm(clusterBuilder).process(Array(clusterBuilder.getRootCluster))
+                clusters = clustering(clusterBuilder).process(Array(clusterBuilder.getRootCluster))
             }
         }
         else {

@@ -134,7 +134,7 @@ trait ClusterBuilder extends DependencyBuilder
     def createCluster(clusterIdentifier: String): Cluster = {
         var cluster: Cluster = null
         handleIDLookup(
-            //TODO check whether the uniqueness should be forced in the cluster filters
+            //TODO check whether the uniqueness should be forced in the clusterings
             () ⇒ clusterID(clusterIdentifier + System.nanoTime()),
             LOWEST_CLUSTER_ID,
             clusterNodes,
