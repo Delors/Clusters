@@ -131,11 +131,10 @@ class LayerClustering(
         createLayers(cluster.getNodes.toSet)
 
         if (newClusterClustering.isDefined) {
-            //TODO check how to combine all clusters in one process call...
-            newClusters foreach { layerCluster ⇒
-                val newLayer = newClusterClustering.get.process(Array(layerCluster))
-                result.removeNode(layerCluster.uniqueID)
-                result.addNode(newLayer(0))
+            val clusteredLayers = newClusterClustering.get.process(newClusters.toArray)
+            clusteredLayers foreach { clusteredLayer ⇒
+                result.removeNode(clusteredLayer.uniqueID)
+                result.addNode(clusteredLayer)
             }
         }
 
