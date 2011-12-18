@@ -44,43 +44,22 @@ import framework.structure.util.ClusterBuilder
  *
  */
 @RunWith(classOf[JUnitRunner])
-class CombinedClusteringTest extends AbstractClusteringTest {
+class ClassClusteringTest extends AbstractClusteringTest {
 
-    //    implicit val clustering = (builder: ClusterBuilder) ⇒
-    //        InternExternClustering(builder,
-    //            newClusterClustering = GetterSetterClustering(builder,
-    //                StronglyConnectedComponentsClustering(builder,
-    //                    SingleElementClusterRemover(builder,
-    //                        LayerClustering(builder)))))
-    implicit val clustering = (builder: ClusterBuilder) ⇒
-        InternExternClustering(builder,
-            internClustering = InternalClassClustering(builder),
-            newClusterClustering = LayerClustering(builder, true))
+    implicit val clustering = (builder: ClusterBuilder) ⇒ InternalClassClustering(builder)
 
-    test("testCombinedClustering - ClusteringTestProject.zip") {
+    test("testClassClustering [ClusteringTestProject.zip]") {
         testClustering(
-            "testCombinedClustering - ClusteringTestProject.zip",
+            "testClassClustering [ClusteringTestProject.zip]",
             extractDependencies("test/classfiles/ClusteringTestProject.zip"),
-            Some("ClusteringTestProject"),
-            includeSingleNodes = true,
-            includeEdges = true)
+            Some("ClusteringTestProject"))
     }
 
-    test("testCombinedClustering - cocome-impl-classes.jar") {
-        testClustering(
-            "testCombinedClustering - cocome-impl-classes.jar",
-            extractDependencies("test/classfiles/cocome-impl-classes.jar"),
-            Some("cocome-impl-classes"),
-            includeSingleNodes = true,
-            includeEdges = true)
-    }
-
-    //    test("testCombinedClustering - Flashcards 0.4 - target 1.6.zip") {
+    //    test("testClassClustering [Flashcards 0.4 - target 1.6.zip]") {
     //        testClustering(
-    //            "testCombinedClustering - Flashcards 0.4 - target 1.6.zip",
+    //            "testClassClustering [Flashcards 0.4 - target 1.6.zip]",
     //            extractDependencies("test/classfiles/Flashcards 0.4 - target 1.6.zip"),
-    //            Some("Flashcards 0.4 - target 1.6"),
-    //            includeSingleNodes = true,
-    //            includeEdges = false)
+    //            Some("Flashcards 0.4 - target 1.6"))
     //    }
+
 }

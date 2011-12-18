@@ -13,11 +13,12 @@ import org.scalatest.Suites
 class ClustersSuite extends Suites(
 
     // Clustering tests...
+    new pipeline.ClassClusteringTest,
     new pipeline.CombinedClusteringTest,
     new pipeline.GetterSetterClusteringTest,
-    new pipeline.PackageClusteringTest,
     new pipeline.InternExternClusteringTest,
     new pipeline.LayerClusteringTest,
+    new pipeline.PackageClusteringTest,
     new pipeline.StronglyConnectedComponentsClusteringTest,
 
     // Framework tests
