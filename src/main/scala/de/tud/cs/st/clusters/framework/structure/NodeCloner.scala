@@ -40,40 +40,54 @@ object NodeCloner {
         copy
     }
 
-    def createDeepCopy(typeNode: TypeNode): TypeNode = {
+    def createDeepCopy(
+        typeNode: TypeNode,
+        filter: Edge ⇒ Boolean,
+        filterTransposed: Edge ⇒ Boolean): TypeNode = {
         val copy = createCopy(typeNode)
-        // TODO: change edge implementation...only IDs should be used here, because copying of nodes
-        // makes references unusable...
-        copyEdges(typeNode, copy)
+        copyEdges(typeNode, copy, filter, filterTransposed)
         copy
     }
 
-    def createDeepCopy(fieldNode: FieldNode): FieldNode = {
+    def createDeepCopy(
+        fieldNode: FieldNode,
+        filter: Edge ⇒ Boolean,
+        filterTransposed: Edge ⇒ Boolean): FieldNode = {
         val copy = createCopy(fieldNode)
-        copyEdges(fieldNode, copy)
+        copyEdges(fieldNode, copy, filter, filterTransposed)
         copy
     }
 
-    def createDeepCopy(methodNode: MethodNode): MethodNode = {
+    def createDeepCopy(
+        methodNode: MethodNode,
+        filter: Edge ⇒ Boolean,
+        filterTransposed: Edge ⇒ Boolean): MethodNode = {
         val copy = createCopy(methodNode)
-        copyEdges(methodNode, copy)
+        copyEdges(methodNode, copy, filter, filterTransposed)
         copy
     }
 
-    def createDeepCopy(node: Node): Node = {
+    def createDeepCopy(
+        node: Node,
+        filter: Edge ⇒ Boolean = _ ⇒ false,
+        filterTransposed: Edge ⇒ Boolean = _ ⇒ false): Node = {
         node match {
             case c: Cluster    ⇒ createDeepCopy(c)
-            case t: TypeNode   ⇒ createDeepCopy(t)
-            case f: FieldNode  ⇒ createDeepCopy(f)
-            case m: MethodNode ⇒ createDeepCopy(m)
+            case t: TypeNode   ⇒ createDeepCopy(t, filter, filterTransposed)
+            case f: FieldNode  ⇒ createDeepCopy(f, filter, filterTransposed)
+            case m: MethodNode ⇒ createDeepCopy(m, filter, filterTransposed)
         }
     }
 
-    private def copyEdges(node: Node, copiedNode: Node) {
-        node.getEdges foreach { edge ⇒
+    private def copyEdges(
+        node: Node,
+        copiedNode: Node,
+        filter: Edge ⇒ Boolean,
+        filterTransposed: Edge ⇒ Boolean) {
+        for (edge ← node.getEdges if !filter(edge)) {
             copiedNode.addEdge(edge.sourceID, edge.targetID, edge.dType)
         }
-        node.getTransposedEdges foreach { transposedEdge ⇒
+        for (transposedEdge ← node.getTransposedEdges if !filterTransposed(transposedEdge)) {
             copiedNode.addEdge(transposedEdge.targetID, transposedEdge.sourceID, transposedEdge.dType)
         }
     }
