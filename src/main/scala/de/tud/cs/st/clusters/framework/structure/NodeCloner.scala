@@ -42,52 +42,52 @@ object NodeCloner {
 
     def createDeepCopy(
         typeNode: TypeNode,
-        filter: Edge ⇒ Boolean,
-        filterTransposed: Edge ⇒ Boolean): TypeNode = {
+        edgeFilter: Edge ⇒ Boolean,
+        transposedEdgeFilter: Edge ⇒ Boolean): TypeNode = {
         val copy = createCopy(typeNode)
-        copyEdges(typeNode, copy, filter, filterTransposed)
+        copyEdges(typeNode, copy, edgeFilter, transposedEdgeFilter)
         copy
     }
 
     def createDeepCopy(
         fieldNode: FieldNode,
-        filter: Edge ⇒ Boolean,
-        filterTransposed: Edge ⇒ Boolean): FieldNode = {
+        edgeFilter: Edge ⇒ Boolean,
+        transposedEdgeFilter: Edge ⇒ Boolean): FieldNode = {
         val copy = createCopy(fieldNode)
-        copyEdges(fieldNode, copy, filter, filterTransposed)
+        copyEdges(fieldNode, copy, edgeFilter, transposedEdgeFilter)
         copy
     }
 
     def createDeepCopy(
         methodNode: MethodNode,
-        filter: Edge ⇒ Boolean,
-        filterTransposed: Edge ⇒ Boolean): MethodNode = {
+        edgeFilter: Edge ⇒ Boolean,
+        transposedEdgeFilter: Edge ⇒ Boolean): MethodNode = {
         val copy = createCopy(methodNode)
-        copyEdges(methodNode, copy, filter, filterTransposed)
+        copyEdges(methodNode, copy, edgeFilter, transposedEdgeFilter)
         copy
     }
 
     def createDeepCopy(
         node: Node,
-        filter: Edge ⇒ Boolean = _ ⇒ false,
-        filterTransposed: Edge ⇒ Boolean = _ ⇒ false): Node = {
+        edgeFilter: Edge ⇒ Boolean = _ ⇒ false,
+        transposedEdgeFilter: Edge ⇒ Boolean = _ ⇒ false): Node = {
         node match {
             case c: Cluster    ⇒ createDeepCopy(c)
-            case t: TypeNode   ⇒ createDeepCopy(t, filter, filterTransposed)
-            case f: FieldNode  ⇒ createDeepCopy(f, filter, filterTransposed)
-            case m: MethodNode ⇒ createDeepCopy(m, filter, filterTransposed)
+            case t: TypeNode   ⇒ createDeepCopy(t, edgeFilter, transposedEdgeFilter)
+            case f: FieldNode  ⇒ createDeepCopy(f, edgeFilter, transposedEdgeFilter)
+            case m: MethodNode ⇒ createDeepCopy(m, edgeFilter, transposedEdgeFilter)
         }
     }
 
     private def copyEdges(
         node: Node,
         copiedNode: Node,
-        filter: Edge ⇒ Boolean,
-        filterTransposed: Edge ⇒ Boolean) {
-        for (edge ← node.getEdges if !filter(edge)) {
+        edgeFilter: Edge ⇒ Boolean,
+        transposedEdgeFilter: Edge ⇒ Boolean) {
+        for (edge ← node.getEdges if !edgeFilter(edge)) {
             copiedNode.addEdge(edge.sourceID, edge.targetID, edge.dType)
         }
-        for (transposedEdge ← node.getTransposedEdges if !filterTransposed(transposedEdge)) {
+        for (transposedEdge ← node.getTransposedEdges if !transposedEdgeFilter(transposedEdge)) {
             copiedNode.addEdge(transposedEdge.targetID, transposedEdge.sourceID, transposedEdge.dType)
         }
     }
