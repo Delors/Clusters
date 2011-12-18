@@ -48,24 +48,21 @@ import de.tud.cs.st.bat.resolved.dependency.DependencyType._
  */
 trait SameNeighborClustering extends IntermediateClustering {
 
-    val dependencyTypeToNeighbor: DependencyType
-
     val edgeFilter: Int ⇒ Edge ⇒ Boolean = _ ⇒ _ ⇒ false
 
     val transposedEdgeFilter: Int ⇒ Edge ⇒ Boolean = _ ⇒ _ ⇒ false
 
     protected override def process(cluster: Cluster): Cluster = {
-        def getEdgeOfType(dType: DependencyType)(node: Node): Option[Edge] = {
-            node.getEdges.find(edge ⇒ edge.dType == dType)
+        def getConsideredEdge(node: Node): Option[Edge] = {
+            node.getEdges.find(edge ⇒ isOfConsideredDependencyType(edge.dType))
         }
 
         val result = NodeCloner.createCopy(cluster)
 
-        val getMatchingEdge = getEdgeOfType(dependencyTypeToNeighbor)_
         val clustersMap = Map[Int, Set[Node]]()
 
         for (node ← cluster.getNodes) {
-            getMatchingEdge(node) match {
+            getConsideredEdge(node) match {
                 case Some(edge) ⇒
                     val neighborNodeID = edge.targetID
                     val copy = NodeCloner.createDeepCopy(
@@ -100,4 +97,6 @@ trait SameNeighborClustering extends IntermediateClustering {
 
         result
     }
+
+    protected def isOfConsideredDependencyType(dType: DependencyType): Boolean
 }
