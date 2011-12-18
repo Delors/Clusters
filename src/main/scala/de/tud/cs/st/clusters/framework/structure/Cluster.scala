@@ -131,8 +131,6 @@ class Cluster(val uniqueID: Int, val identifier: String, val isRootCluster: Bool
         }
         else {
             subGraphBuffer.append("subgraph cluster_")
-            subGraphBuffer.append(identifier.replace(".", "_"))
-            subGraphBuffer.append('_')
             subGraphBuffer.append(uniqueID)
             subGraphBuffer.append(" {\n")
         }
