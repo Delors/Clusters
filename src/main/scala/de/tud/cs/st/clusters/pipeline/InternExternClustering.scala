@@ -48,12 +48,31 @@ import framework.structure.util.ClusterBuilder
  */
 class InternExternClustering(
     val builder: ClusterBuilder,
+    val internClustering: Option[Clustering],
+    val externClustering: Option[Clustering],
     val successorClustering: Option[Clustering],
     val newClusterClustering: Option[Clustering])
         extends IntermediateClustering {
 
     protected override def process(cluster: Cluster): Cluster = {
         val result = NodeCloner.createCopy(cluster)
+
+        def clusterNewCluster(
+            newCluster: Cluster,
+            firstChoice: Option[Clustering],
+            secondChoice: Option[Clustering]) {
+            if (firstChoice.isDefined || secondChoice.isDefined) {
+                val selectedClustering =
+                    if (firstChoice.isDefined)
+                        firstChoice.get
+                    else
+                        secondChoice.get
+                val clusteredCluster = selectedClustering.process(Array(newCluster))
+                result.removeNode(newCluster.uniqueID)
+                result.addNode(clusteredCluster(0))
+            }
+        }
+
         val intern = builder.createCluster("intern")
         val extern = builder.createCluster("extern")
         result.addNode(intern)
@@ -78,14 +97,10 @@ class InternExternClustering(
                     result.addNode(copy)
             }
         }
-        if (newClusterClustering.isDefined) {
-            val newIntern = newClusterClustering.get.process(Array(intern))
-            val newExtern = newClusterClustering.get.process(Array(extern))
-            result.removeNode(intern.uniqueID)
-            result.removeNode(extern.uniqueID)
-            result.addNode(newIntern(0))
-            result.addNode(newExtern(0))
-        }
+
+        clusterNewCluster(intern, internClustering, newClusterClustering)
+        clusterNewCluster(extern, externClustering, newClusterClustering)
+
         result
     }
 }
@@ -94,10 +109,14 @@ object InternExternClustering {
 
     def apply(
         clusterBuilder: ClusterBuilder,
+        internClustering: Clustering = null,
+        externClustering: Clustering = null,
         successorClustering: Clustering = null,
         newClusterClustering: Clustering = null): InternExternClustering =
         new InternExternClustering(
             clusterBuilder,
+            if (internClustering == null) None else Some(internClustering),
+            if (externClustering == null) None else Some(externClustering),
             if (successorClustering == null) None else Some(successorClustering),
             if (newClusterClustering == null) None else Some(newClusterClustering))
 
