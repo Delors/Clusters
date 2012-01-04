@@ -36,7 +36,7 @@ package structure
 
 import scala.collection.mutable.ListBuffer
 import scala.collection.mutable.Map
-import de.tud.cs.st.bat.resolved.dependency.DependencyType._
+import de.tud.cs.st.bat.resolved.dependency._
 
 /**
  * @author Thomas Schlosser

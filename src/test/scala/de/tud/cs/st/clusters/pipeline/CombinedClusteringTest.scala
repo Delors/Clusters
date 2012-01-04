@@ -54,8 +54,8 @@ class CombinedClusteringTest extends AbstractClusteringTest {
     //                        LayerClustering(builder)))))
     implicit val clustering = (builder: ClusterBuilder) ⇒
         InternExternClustering(builder,
-            internClustering = InternalClassClustering(builder),
-            newClusterClustering = LayerClustering(builder, true))
+            internClustering = InternalClassClustering(builder)) //,
+    //            newClusterClustering = LayerClustering(builder, true))
 
     test("testCombinedClustering - ClusteringTestProject.zip") {
         testClustering(

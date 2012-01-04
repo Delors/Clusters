@@ -34,7 +34,6 @@ package de.tud.cs.st.clusters
 package framework
 package structure
 package util
-import de.tud.cs.st.bat.resolved.dependency.IDResetter
 
 /**
  * Associates a cluster with a unique id.
@@ -43,7 +42,7 @@ import de.tud.cs.st.bat.resolved.dependency.IDResetter
  *
  * @author Thomas Schlosser
  */
-trait ClusterIDsMap extends ClusterIDs with IDResetter {
+trait ClusterIDsMap extends ClusterIDs {
 
     //
     // Associates each cluster with an unique ID
@@ -53,14 +52,15 @@ trait ClusterIDsMap extends ClusterIDs with IDResetter {
 
     import scala.collection.mutable.WeakHashMap
 
-    private var lastClusterID = LOWEST_CLUSTER_ID - 1;
+    private var lastClusterID = LOWEST_CLUSTER_ID - 1
 
     private val clusterIDs = WeakHashMap[String, Int]()
 
     def clusterID(name: String): Int = clusterIDs.getOrElseUpdate(name, { lastClusterID += 1; lastClusterID })
 
-    abstract override def reset {
-        super.reset
+    //abstract override def reset {
+    def reset {
+        //TODO        super.reset
         lastClusterID = LOWEST_CLUSTER_ID - 1
         clusterIDs.clear()
     }

@@ -80,9 +80,9 @@ class BranchedClustering(
      *    Cluster(identifier="<identifier of first cluster>",
      *            nodes=
      *              Cluster(identifier="split_result_0",
-     *                      nodes=<results of [[SplitCluster]]'s first clustering applied to the first cluster>),
+     *                      nodes=<results of [[de.tud.cs.st.clusters.pipeline.SplitCluster]]'s first clustering applied to the first cluster>),
      *              Cluster(identifier="split_result_1",
-     *                      nodes=<results of [[SplitCluster]]'s second clustering applied to the first cluster>),
+     *                      nodes=<results of [[de.tud.cs.st.clusters.pipeline.SplitCluster]]'s second clustering applied to the first cluster>),
      *              ...
      *    ),
      *    ...

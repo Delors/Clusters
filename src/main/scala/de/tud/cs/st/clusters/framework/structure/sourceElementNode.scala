@@ -34,7 +34,7 @@ package de.tud.cs.st.clusters
 package framework
 package structure
 
-import de.tud.cs.st.bat.resolved.dependency.DependencyType._
+import de.tud.cs.st.bat.resolved.dependency._
 import de.tud.cs.st.bat.resolved.ClassFile
 import de.tud.cs.st.bat.resolved.Field
 import de.tud.cs.st.bat.resolved.Method

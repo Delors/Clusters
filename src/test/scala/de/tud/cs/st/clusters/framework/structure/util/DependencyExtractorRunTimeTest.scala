@@ -45,9 +45,7 @@ import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
 import _root_.de.tud.cs.st.bat.resolved.reader.Java6Framework
 import _root_.de.tud.cs.st.bat.resolved.ClassFile
-import _root_.de.tud.cs.st.bat.resolved.dependency.DependencyExtractor
-import _root_.de.tud.cs.st.bat.resolved.dependency.FilterDependenciesToBaseAndVoidTypes
-import _root_.de.tud.cs.st.bat.resolved.dependency.DependencyType._
+import _root_.de.tud.cs.st.bat.resolved.dependency._
 
 /**
  * @author Thomas Schlosser
@@ -79,14 +77,13 @@ class DepExtractorRunTimeTest extends AbstractClusteringTest {
     private def testDepExtraction(zipFile: String) {
         println("testDepExtraction["+zipFile+"]")
 
-        val clusterBuilder = new ClusterBuilder with FilterDependenciesToBaseAndVoidTypes
-        val depExtractor = new DependencyExtractor(clusterBuilder)
+        val depExtractor = new ClusterBuilder {}
 
         var testClasses = Java6Framework.ClassFiles(zipFile)
         var min = Long.MaxValue
         var max = Long.MinValue
         for (i ← 1 to 10) {
-            clusterBuilder.reset
+            depExtractor.reset
             time(duration ⇒ { min = Ordering[Long].min(duration, min); max = Ordering[Long].max(duration, max) }) {
                 for (classFile ← testClasses) {
                     depExtractor.process(classFile)

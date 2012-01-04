@@ -42,7 +42,7 @@ import framework.structure.Node
 import framework.structure.Edge
 import framework.structure.NodeCloner
 import framework.structure.util.ClusterBuilder
-import de.tud.cs.st.bat.resolved.dependency.DependencyType._
+import de.tud.cs.st.bat.resolved.dependency._
 
 /**
  * @author Thomas Schlosser
@@ -59,7 +59,7 @@ class InternalClassClustering(
         extends ClassClustering with SameNeighborClustering {
 
     override protected def isOfConsideredDependencyType(dType: DependencyType): Boolean =
-        dType == IS_INSTANCE_MEMBER_OF || dType == IS_CLASS_MEMBER_OF
+        dType == DependencyType.IS_INSTANCE_MEMBER_OF || dType == DependencyType.IS_CLASS_MEMBER_OF
 
     //TODO: check whether some edges should be filtered here...
     //    override val edgeFilter: Int ⇒ Edge ⇒ Boolean = classNodeID ⇒ {

@@ -45,7 +45,6 @@ import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
 import de.tud.cs.st.bat.resolved.reader.Java6Framework
 import de.tud.cs.st.bat.resolved.dependency.DependencyExtractor
-import de.tud.cs.st.bat.resolved.dependency.FilterDependenciesToBaseAndVoidTypes
 import de.tud.cs.st.bat.resolved.ClassFile
 import de.tud.cs.st.util.perf.PerformanceEvaluation
 

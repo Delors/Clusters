@@ -46,29 +46,25 @@ import _root_.de.tud.cs.st.bat.resolved.ClassFile
 import _root_.de.tud.cs.st.bat.resolved.reader.Java6Framework
 import _root_.de.tud.cs.st.bat.resolved.dependency.DependencyExtractor
 import _root_.de.tud.cs.st.util.perf.PerformanceEvaluation
-import de.tud.cs.st.bat.resolved.dependency.FilterDependenciesToBaseAndVoidTypes
-import de.tud.cs.st.bat.resolved.ClassFileTestUtility
 
 /**
  * @author Thomas Schlosser
  *
  */
 trait AbstractClusteringTest extends FunSuite
-        with ClassFileTestUtility
         with PerformanceEvaluation {
 
     protected def testClustering(testName: String,
                                  extractDependencies: (DependencyExtractor) ⇒ Unit,
                                  dotFileName: Option[String] = None,
                                  includeSingleNodes: Boolean = true,
-                                 includeEdges: Boolean = true)(implicit clustering: ClusterBuilder ⇒ Clustering) {
+                                 includeEdges: Boolean = true)(implicit clustering: ClusterBuilder ⇒ Clustering): Array[Cluster] = {
         println(testName+" - START")
 
-        val clusterBuilder = new ClusterBuilder with FilterDependenciesToBaseAndVoidTypes
-        val dependencyExtractor = new DependencyExtractor(clusterBuilder)
+        val clusterBuilder = new ClusterBuilder {}
 
         time(duration ⇒ println("time to read classfiles and extract dependencies: "+nanoSecondsToMilliseconds(duration)+"ms")) {
-            extractDependencies(dependencyExtractor)
+            extractDependencies(clusterBuilder)
         }
 
         println("numberOfNode:"+clusterBuilder.getRootCluster.getNodes.size)
@@ -91,6 +87,7 @@ trait AbstractClusteringTest extends FunSuite
         }
 
         println(testName+" - END")
+        clusters
     }
 
     protected def testDependencyExtraction(testName: String,
@@ -106,6 +103,6 @@ trait AbstractClusteringTest extends FunSuite
     }
 
     protected def extractDependencies(zipFile: String): (DependencyExtractor) ⇒ Unit = {
-        dependencyExtractor ⇒ for (cf ← ClassFiles(zipFile)) dependencyExtractor.process(cf)
+        dependencyExtractor ⇒ for (cf ← Java6Framework.ClassFiles(zipFile)) dependencyExtractor.process(cf)
     }
 }

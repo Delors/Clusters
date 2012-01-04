@@ -38,22 +38,20 @@ package util
 
 import scala.collection.mutable.Map
 import scala.collection.mutable.ArrayBuffer
-import de.tud.cs.st.bat.resolved.dependency.DependencyBuilder
-import de.tud.cs.st.bat.resolved.dependency.DependencyType._
+import de.tud.cs.st.bat.resolved.dependency._
 import de.tud.cs.st.bat.resolved.ClassFile
 import de.tud.cs.st.bat.resolved.Field
 import de.tud.cs.st.bat.resolved.Method
 import de.tud.cs.st.bat.resolved.Type
 import de.tud.cs.st.bat.resolved.ObjectType
 import de.tud.cs.st.bat.resolved.MethodDescriptor
-import de.tud.cs.st.bat.resolved.dependency.DefaultIDMappingDependencyBuilder
+//import de.tud.cs.st.bat.resolved.dependency.DefaultIDMappingDependencyBuilder
 
 /**
  * @author Thomas Schlosser
  *
  */
-trait ClusterBuilder extends DependencyBuilder
-        with DefaultIDMappingDependencyBuilder
+trait ClusterBuilder extends DependencyExtractor with SourceElementIDsMap
         with ClusterIDsMap
         with PrettyPrint {
 
@@ -68,54 +66,54 @@ trait ClusterBuilder extends DependencyBuilder
 
     private var rootCluster = new Cluster(clusterID(ROOT_CLUSTER_NAME), ROOT_CLUSTER_NAME, true)
 
-    abstract override def getID(clazz: ClassFile): Int = {
-        handleIDLookup(
-            () ⇒ super.getID(clazz),
-            LOWEST_TYPE_ID,
-            typeNodes,
-            (oldNode: TypeNode) ⇒ oldNode.clazz = Some(clazz),
-            (id) ⇒ TypeNode(id, () ⇒ prettyPrint(clazz.thisClass), clazz))
-    }
+    //    abstract override def sourceElementID(clazz: ClassFile): Int = {
+    //        handleIDLookup(
+    //            () ⇒ super.sourceElementID(clazz),
+    //            LOWEST_TYPE_ID,
+    //            typeNodes,
+    //            (oldNode: TypeNode) ⇒ oldNode.clazz = Some(clazz),
+    //            (id) ⇒ TypeNode(id, () ⇒ prettyPrint(clazz.thisClass), clazz))
+    //    }
 
-    abstract override def getID(t: Type): Int = {
+    abstract override def sourceElementID(t: Type): Int = {
         handleIDLookup(
-            () ⇒ super.getID(t),
+            () ⇒ super.sourceElementID(t),
             LOWEST_TYPE_ID,
             typeNodes,
             (_: TypeNode) ⇒ Unit,
             (id) ⇒ TypeNode(id, () ⇒ prettyPrint(t)))
     }
 
-    abstract override def getID(definingObjectType: ObjectType, field: Field): Int = {
-        handleIDLookup(
-            () ⇒ super.getID(definingObjectType, field),
-            LOWEST_FIELD_ID,
-            fieldNodes,
-            (oldNode: FieldNode) ⇒ oldNode.field = Some(field),
-            (id) ⇒ FieldNode(id, () ⇒ prettyPrint(definingObjectType, field.name), field))
-    }
+    //    abstract override def sourceElementID(definingObjectType: ObjectType, field: Field): Int = {
+    //        handleIDLookup(
+    //            () ⇒ super.sourceElementID(definingObjectType, field),
+    //            LOWEST_FIELD_ID,
+    //            fieldNodes,
+    //            (oldNode: FieldNode) ⇒ oldNode.field = Some(field),
+    //            (id) ⇒ FieldNode(id, () ⇒ prettyPrint(definingObjectType, field.name), field))
+    //    }
 
-    abstract override def getID(definingObjectType: ObjectType, fieldName: String): Int = {
+    abstract override def sourceElementID(definingObjectType: ObjectType, fieldName: String): Int = {
         handleIDLookup(
-            () ⇒ super.getID(definingObjectType, fieldName),
+            () ⇒ super.sourceElementID(definingObjectType, fieldName),
             LOWEST_FIELD_ID,
             fieldNodes,
             (_: FieldNode) ⇒ Unit,
             (id) ⇒ FieldNode(id, () ⇒ prettyPrint(definingObjectType, fieldName)))
     }
 
-    abstract override def getID(definingObjectType: ObjectType, method: Method): Int = {
-        handleIDLookup(
-            () ⇒ super.getID(definingObjectType, method),
-            LOWEST_METHOD_ID,
-            methodNodes,
-            (oldNode: MethodNode) ⇒ oldNode.method = Some(method),
-            (id) ⇒ MethodNode(id, () ⇒ prettyPrint(definingObjectType, method.name, method.descriptor), method))
-    }
+    //    abstract override def sourceElementID(definingObjectType: ObjectType, method: Method): Int = {
+    //        handleIDLookup(
+    //            () ⇒ super.sourceElementID(definingObjectType, method),
+    //            LOWEST_METHOD_ID,
+    //            methodNodes,
+    //            (oldNode: MethodNode) ⇒ oldNode.method = Some(method),
+    //            (id) ⇒ MethodNode(id, () ⇒ prettyPrint(definingObjectType, method.name, method.descriptor), method))
+    //    }
 
-    abstract override def getID(definingObjectType: ObjectType, methodName: String, methodDescriptor: MethodDescriptor): Int = {
+    abstract override def sourceElementID(definingObjectType: ObjectType, methodName: String, methodDescriptor: MethodDescriptor): Int = {
         handleIDLookup(
-            () ⇒ super.getID(definingObjectType, methodName, methodDescriptor),
+            () ⇒ super.sourceElementID(definingObjectType, methodName, methodDescriptor),
             LOWEST_METHOD_ID,
             methodNodes,
             (_: MethodNode) ⇒ Unit,
@@ -172,7 +170,7 @@ trait ClusterBuilder extends DependencyBuilder
         id
     }
 
-    def addDependency(sourceID: Int, targetID: Int, dType: DependencyType) {
+    override def processDependency(sourceID: Int, targetID: Int, dType: DependencyType) {
         getNode(sourceID).addEdge(sourceID, targetID, dType)
         getNode(targetID).addEdge(sourceID, targetID, dType)
     }

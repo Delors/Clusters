@@ -40,7 +40,7 @@ import framework.structure.Node
 import framework.structure.Edge
 import framework.structure.NodeCloner
 import framework.structure.util.ClusterBuilder
-import de.tud.cs.st.bat.resolved.dependency.DependencyType._
+import de.tud.cs.st.bat.resolved.dependency._
 
 /**
  * @author Thomas Schlosser

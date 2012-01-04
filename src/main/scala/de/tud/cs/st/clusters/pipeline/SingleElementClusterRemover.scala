@@ -53,7 +53,7 @@ class SingleElementClusterRemover(
         cluster.getNodes foreach {
             case c: Cluster ⇒
                 if (c.numberOfNodes == 1) {
-                    cluster.addNode(c.getNodes.first)
+                    cluster.addNode(c.getNodes.head)
                     cluster.removeNode(c.uniqueID)
                 }
             case _: SourceElementNode ⇒ // Nothing to do, because SourceElementNodes represent basic nodes and no clusters. 

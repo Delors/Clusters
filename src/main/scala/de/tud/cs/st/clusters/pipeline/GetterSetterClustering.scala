@@ -46,7 +46,6 @@ import de.tud.cs.st.bat.resolved.dependency.DependencyType._
 import de.tud.cs.st.bat.resolved.Type
 import de.tud.cs.st.bat.resolved.VoidType
 import de.tud.cs.st.bat.resolved.Field
-import de.tud.cs.st.clusters.pipeline.GetterSetterClustering;
 
 /**
  * @author Thomas Schlosser

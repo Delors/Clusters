@@ -31,60 +31,43 @@
 *  POSSIBILITY OF SUCH DAMAGE.
 */
 package de.tud.cs.st.clusters
-package pipeline
-package similarity
+package framework
+package validation
 
-import scala.collection.mutable.Map
-import ContingencyTableCalculator._
-import framework.structure.Cluster
-import framework.structure.Node
-import de.tud.cs.st.bat.resolved.dependency.DependencyType._
-import ContingencyTableCalculator._;
+import org.junit.runner.RunWith
+import org.scalatest.junit.JUnitRunner
+import structure.Cluster
+import structure.SourceElementNode
+import mojo.MoJoCalculator
+import de.tud.cs.st.clusters.framework.structure.util.ClusterBuilder
+import de.tud.cs.st.clusters.pipeline.InternalClassClustering
+import de.tud.cs.st.clusters.pipeline.InternExternClustering
+import de.tud.cs.st.clusters.framework.pipeline.Clustering
 
 /**
  * @author Thomas Schlosser
  *
  */
-trait SimilarityMetric {
+@RunWith(classOf[JUnitRunner])
+class MoJoWrapperTest extends AbstractClusteringTest {
 
-    type FeaturesMap = Map[Node, Features]
-    type Features = Map[DependencyType, Int]
-    type Similarities = Map[(Int, Int), Double]
+    test("calculate double direction MojoFM quality value") {
+        val clusteringA = (builder: ClusterBuilder) ⇒ InternalClassClustering(builder)
 
-    /**
-     * Calculates similarities between all given nodes.
-     *
-     * Assumption: sim(a,b)=sim(b,a)
-     * Hence, each node pair is considered only once.
-     *
-     * @param features
-     * @return
-     */
-    def calcSimilarities(features: FeaturesMap): Similarities = {
-        var result = Map[(Int, Int), Double]()
-        for ((nodeX, featuresX) ← features) {
-            for ((nodeY, featuresY) ← features if nodeX.uniqueID < nodeY.uniqueID) {
-                result((nodeX.uniqueID, nodeY.uniqueID)) = calcSimilarity(featuresX, featuresY)
-            }
-        }
-        result
+        val clustersA = testClustering(
+            "testClassClustering [ClusteringTestProject.zip]",
+            extractDependencies("test/classfiles/ClusteringTestProject.zip"),
+            Some("clusterA"))(clusteringA)
+
+        val clusteringB = (builder: ClusterBuilder) ⇒ InternExternClustering(builder)
+
+        val clustersB = testClustering(
+            "testClassClustering [ClusteringTestProject.zip]",
+            extractDependencies("test/classfiles/ClusteringTestProject.zip"),
+            Some("clusterB"))(clusteringB)
+
+        println("MoJo:")
+        var mjw = new MoJoWrapper(clustersA(0), clustersB(0))
+        println(mjw.doubleDirectionMojoFM)
     }
-
-    def calcSimilarity(featuresX: Features, featuresY: Features): Double
-
-}
-
-trait BinarySimilarityMetric extends SimilarityMetric {
-
-}
-
-object JacardMetric extends BinarySimilarityMetric {
-
-    override def calcSimilarity(featuresX: Features, featuresY: Features): Double = {
-        val a = calcA(featuresX, featuresY)
-        val b = calcB(featuresX, featuresY)
-        val c = calcC(featuresX, featuresY)
-        a.toDouble / (a + b + c)
-    }
-
 }

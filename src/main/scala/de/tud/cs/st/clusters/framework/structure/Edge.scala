@@ -34,11 +34,11 @@ package de.tud.cs.st.clusters
 package framework
 package structure
 
-import de.tud.cs.st.bat.resolved.dependency.DependencyType._
+import de.tud.cs.st.bat.resolved.dependency._
 
 /**
  * @author Thomas Schlosser
  *
  */
-case class Edge(val sourceID: Int, val targetID: Int, val dType: DependencyType) {
+class Edge(val sourceID: Int, val targetID: Int, val dType: DependencyType) {
 }

@@ -78,6 +78,9 @@ class LayerClusteringTest extends AbstractClusteringTest {
 
     test("testLayerClustering [hibernate-core-3.6.0.Final.jar]") {
         testClustering("testLayerClustering [hibernate-core-3.6.0.Final.jar]",
-            extractDependencies("test/classfiles/hibernate-core-3.6.0.Final.jar"))
+            extractDependencies("test/classfiles/hibernate-core-3.6.0.Final.jar"),
+            Some("hibernate"),
+            true,
+            false)
     }
 }

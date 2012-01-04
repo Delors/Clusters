@@ -73,6 +73,9 @@ class InternExternClustering(
             }
         }
 
+        //TODO change impl.
+        // If there is any class file in a package, then all classes in that package are intern.
+        // Otherwise, the class is an external one.
         val intern = builder.createCluster("intern")
         val extern = builder.createCluster("extern")
         result.addNode(intern)
@@ -111,13 +114,12 @@ object InternExternClustering {
         clusterBuilder: ClusterBuilder,
         internClustering: Clustering = null,
         externClustering: Clustering = null,
-        successorClustering: Clustering = null,
-        newClusterClustering: Clustering = null): InternExternClustering =
+        successorClustering: Clustering = null): InternExternClustering =
         new InternExternClustering(
             clusterBuilder,
             if (internClustering == null) None else Some(internClustering),
             if (externClustering == null) None else Some(externClustering),
             if (successorClustering == null) None else Some(successorClustering),
-            if (newClusterClustering == null) None else Some(newClusterClustering))
+            None)
 
 }

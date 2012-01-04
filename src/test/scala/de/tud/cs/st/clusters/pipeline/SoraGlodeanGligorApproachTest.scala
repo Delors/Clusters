@@ -47,9 +47,9 @@ import framework.structure.util.ClusterBuilder
 class SoraGlodeanGligorApproachTest extends AbstractClusteringTest {
 
     implicit val clustering = (builder: ClusterBuilder) ⇒
-        InternExternClustering(builder,
-            // newClusterClustering = MinimalSpanningTreeClustering(builder))
-            newClusterClustering = LayerClustering(builder))
+        InternExternClustering(builder) //,
+    // newClusterClustering = MinimalSpanningTreeClustering(builder))
+    //newClusterClustering = LayerClustering(builder))
 
     test("testCombinedClustering - ClusteringTestProject.zip - test/StronglyConnectedComponentsTestClass.class") {
         testClustering(

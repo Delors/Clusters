@@ -68,7 +68,7 @@ object GraphScanningAlgorithms {
         graphScanIntern(cluster, {
             if (startNode == null) {
                 if (order != null) order(0)
-                else cluster.getNodes.first.uniqueID
+                else cluster.getNodes.head.uniqueID
             }
             else startNode
         }, dfs, 0, { countStarts += 1; countStarts - 1 })
