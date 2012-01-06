@@ -53,27 +53,19 @@ import de.tud.cs.st.bat.resolved.MethodDescriptor
  */
 trait ClusterBuilder extends DependencyExtractor with SourceElementIDsMap
         with ClusterIDsMap
-        with PrettyPrint {
+        with PrettyPrint
+        with NodeMappingSourceElementsVisitor {
 
     protected val INITIAL_ARRAY_SIZE = 100000
 
     protected val ROOT_CLUSTER_NAME = "ROOT"
 
-    private var typeNodes = new ArrayBuffer[TypeNode](INITIAL_ARRAY_SIZE)
-    private var fieldNodes = new ArrayBuffer[FieldNode](INITIAL_ARRAY_SIZE)
-    private var methodNodes = new ArrayBuffer[MethodNode](INITIAL_ARRAY_SIZE)
-    private var clusterNodes = new ArrayBuffer[Cluster](INITIAL_ARRAY_SIZE)
+    protected var typeNodes = new ArrayBuffer[TypeNode](INITIAL_ARRAY_SIZE)
+    protected var fieldNodes = new ArrayBuffer[FieldNode](INITIAL_ARRAY_SIZE)
+    protected var methodNodes = new ArrayBuffer[MethodNode](INITIAL_ARRAY_SIZE)
+    protected var clusterNodes = new ArrayBuffer[Cluster](INITIAL_ARRAY_SIZE)
 
     private var rootCluster = new Cluster(clusterID(ROOT_CLUSTER_NAME), ROOT_CLUSTER_NAME, true)
-
-    //    abstract override def sourceElementID(clazz: ClassFile): Int = {
-    //        handleIDLookup(
-    //            () ⇒ super.sourceElementID(clazz),
-    //            LOWEST_TYPE_ID,
-    //            typeNodes,
-    //            (oldNode: TypeNode) ⇒ oldNode.clazz = Some(clazz),
-    //            (id) ⇒ TypeNode(id, () ⇒ prettyPrint(clazz.thisClass), clazz))
-    //    }
 
     abstract override def sourceElementID(t: Type): Int = {
         handleIDLookup(
@@ -84,15 +76,6 @@ trait ClusterBuilder extends DependencyExtractor with SourceElementIDsMap
             (id) ⇒ TypeNode(id, () ⇒ prettyPrint(t)))
     }
 
-    //    abstract override def sourceElementID(definingObjectType: ObjectType, field: Field): Int = {
-    //        handleIDLookup(
-    //            () ⇒ super.sourceElementID(definingObjectType, field),
-    //            LOWEST_FIELD_ID,
-    //            fieldNodes,
-    //            (oldNode: FieldNode) ⇒ oldNode.field = Some(field),
-    //            (id) ⇒ FieldNode(id, () ⇒ prettyPrint(definingObjectType, field.name), field))
-    //    }
-
     abstract override def sourceElementID(definingObjectType: ObjectType, fieldName: String): Int = {
         handleIDLookup(
             () ⇒ super.sourceElementID(definingObjectType, fieldName),
@@ -101,15 +84,6 @@ trait ClusterBuilder extends DependencyExtractor with SourceElementIDsMap
             (_: FieldNode) ⇒ Unit,
             (id) ⇒ FieldNode(id, () ⇒ prettyPrint(definingObjectType, fieldName)))
     }
-
-    //    abstract override def sourceElementID(definingObjectType: ObjectType, method: Method): Int = {
-    //        handleIDLookup(
-    //            () ⇒ super.sourceElementID(definingObjectType, method),
-    //            LOWEST_METHOD_ID,
-    //            methodNodes,
-    //            (oldNode: MethodNode) ⇒ oldNode.method = Some(method),
-    //            (id) ⇒ MethodNode(id, () ⇒ prettyPrint(definingObjectType, method.name, method.descriptor), method))
-    //    }
 
     abstract override def sourceElementID(definingObjectType: ObjectType, methodName: String, methodDescriptor: MethodDescriptor): Int = {
         handleIDLookup(
@@ -145,7 +119,7 @@ trait ClusterBuilder extends DependencyExtractor with SourceElementIDsMap
         cluster
     }
 
-    private def handleIDLookup[N <: Node](
+    protected def handleIDLookup[N <: Node](
         lookupId: () ⇒ Int,
         lowestId: Int,
         nodes: ArrayBuffer[N],

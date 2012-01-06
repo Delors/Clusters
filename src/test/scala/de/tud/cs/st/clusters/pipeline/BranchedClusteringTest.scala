@@ -50,7 +50,7 @@ class BranchedClusteringTest extends AbstractClusteringTest {
         BranchedClustering(
             builder)(
                 LayerClustering(builder),
-                InternExternClustering(builder))
+                InternalExternalClustering(builder))
 
     test("testSplitMergeClustering [Flashcards 0.4 - target 1.6.zip -- CommandHistory.class]") {
         testClustering("testSplitMergeClustering [Flashcards 0.4 - target 1.6.zip -- CommandHistory.class]",

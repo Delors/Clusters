@@ -33,6 +33,7 @@
 package de.tud.cs.st.clusters
 package pipeline
 
+import scala.collection.mutable.Set
 import framework.pipeline.Clustering
 import framework.pipeline.IntermediateClustering
 import framework.structure.Cluster
@@ -43,13 +44,18 @@ import framework.structure.NodeCloner
 import framework.structure.util.ClusterBuilder
 
 /**
+ * Splits the nodes into internal and external cluster.
+ * A node is added to the internal cluster if a type with a package that prefixes the package
+ * of that node exists. A package prefixes another package only if every sub-package matches as a whole.
+ * All other nodes are added to the external cluster.
+ *
  * @author Thomas Schlosser
  *
  */
-class InternExternClustering(
+class InternalExternalClustering(
     val builder: ClusterBuilder,
-    val internClustering: Option[Clustering],
-    val externClustering: Option[Clustering],
+    val internalClustering: Option[Clustering],
+    val externalClustering: Option[Clustering],
     val successorClustering: Option[Clustering],
     val newClusterClustering: Option[Clustering])
         extends IntermediateClustering {
@@ -73,52 +79,62 @@ class InternExternClustering(
             }
         }
 
-        //TODO change impl.
-        // If there is any class file in a package, then all classes in that package are intern.
-        // Otherwise, the class is an external one.
-        val intern = builder.createCluster("intern")
-        val extern = builder.createCluster("extern")
-        result.addNode(intern)
-        result.addNode(extern)
+        // create list that contains all names of internal packages
+        var internalPackages: Set[String] = Set()
         for (node ← cluster.getNodes) {
-            val copy = NodeCloner.createDeepCopy(node)
             node match {
-                case TypeNode(_, _, Some(_)) ⇒
-                    intern.addNode(copy)
-                case TypeNode(_, _, None) ⇒
-                    extern.addNode(copy)
-                case FieldNode(_, _, Some(_)) ⇒
-                    intern.addNode(copy)
-                case FieldNode(_, _, None) ⇒
-                    extern.addNode(copy)
-                case MethodNode(_, _, Some(_)) ⇒
-                    intern.addNode(copy)
-                case MethodNode(_, _, None) ⇒
-                    extern.addNode(copy)
+                case TypeNode(_, _, Some(t)) ⇒
+                    internalPackages = internalPackages + (t.thisClass.packageName.replace('/', '.') + '.')
                 case _ ⇒
-                    println("intern/extern is unknown")
-                    result.addNode(copy)
+                // nothing to do in this case, because the node is not associated with a classFile object
+                // fields and methods can be omitted, since their packages will be added to the list
+                // when their declaring class is analyzed 
             }
         }
 
-        clusterNewCluster(intern, internClustering, newClusterClustering)
-        clusterNewCluster(extern, externClustering, newClusterClustering)
+        // reduce set to unique prefixes
+        def removeLongerPackagePrefix(pkg: String) {
+            for (pkg2 ← internalPackages if (pkg != pkg2 && pkg.startsWith(pkg2))) {
+                internalPackages = internalPackages - pkg
+                return
+            }
+        }
+
+        internalPackages foreach { removeLongerPackagePrefix(_) }
+
+        //TODO After finishing this implementation, this should be documented in the thesis!
+        val internal = builder.createCluster("internal")
+        val external = builder.createCluster("external")
+        result.addNode(internal)
+        result.addNode(external)
+        for (node ← cluster.getNodes) {
+            val copy = NodeCloner.createDeepCopy(node)
+            if (internalPackages exists (node.identifier.startsWith(_))) {
+                internal.addNode(copy)
+            }
+            else {
+                external.addNode(copy)
+            }
+        }
+
+        clusterNewCluster(internal, internalClustering, newClusterClustering)
+        clusterNewCluster(external, externalClustering, newClusterClustering)
 
         result
     }
 }
 
-object InternExternClustering {
+object InternalExternalClustering {
 
     def apply(
         clusterBuilder: ClusterBuilder,
-        internClustering: Clustering = null,
-        externClustering: Clustering = null,
-        successorClustering: Clustering = null): InternExternClustering =
-        new InternExternClustering(
+        internalClustering: Clustering = null,
+        externalClustering: Clustering = null,
+        successorClustering: Clustering = null): InternalExternalClustering =
+        new InternalExternalClustering(
             clusterBuilder,
-            if (internClustering == null) None else Some(internClustering),
-            if (externClustering == null) None else Some(externClustering),
+            if (internalClustering == null) None else Some(internalClustering),
+            if (externalClustering == null) None else Some(externalClustering),
             if (successorClustering == null) None else Some(successorClustering),
             None)
 

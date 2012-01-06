@@ -16,7 +16,7 @@ class ClustersSuite extends Suites(
     new pipeline.ClassClusteringTest,
     new pipeline.CombinedClusteringTest,
     new pipeline.GetterSetterClusteringTest,
-    new pipeline.InternExternClusteringTest,
+    new pipeline.InternalExternalClusteringTest,
     new pipeline.LayerClusteringTest,
     new pipeline.PackageClusteringTest,
     new pipeline.StronglyConnectedComponentsClusteringTest,

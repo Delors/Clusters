@@ -41,7 +41,7 @@ import structure.SourceElementNode
 import mojo.MoJoCalculator
 import de.tud.cs.st.clusters.framework.structure.util.ClusterBuilder
 import de.tud.cs.st.clusters.pipeline.InternalClassClustering
-import de.tud.cs.st.clusters.pipeline.InternExternClustering
+import de.tud.cs.st.clusters.pipeline.InternalExternalClustering
 import de.tud.cs.st.clusters.framework.pipeline.Clustering
 
 /**
@@ -59,7 +59,7 @@ class MoJoWrapperTest extends AbstractClusteringTest {
             extractDependencies("test/classfiles/ClusteringTestProject.zip"),
             Some("clusterA"))(clusteringA)
 
-        val clusteringB = (builder: ClusterBuilder) ⇒ InternExternClustering(builder)
+        val clusteringB = (builder: ClusterBuilder) ⇒ InternalExternalClustering(builder)
 
         val clustersB = testClustering(
             "testClassClustering [ClusteringTestProject.zip]",

@@ -44,33 +44,33 @@ import framework.structure.util.ClusterBuilder
  *
  */
 @RunWith(classOf[JUnitRunner])
-class InternExternClusteringTest extends AbstractClusteringTest {
+class InternalExternalClusteringTest extends AbstractClusteringTest {
 
-    implicit val clustering = (builder: ClusterBuilder) ⇒ InternExternClustering(builder)
+    implicit val clustering = (builder: ClusterBuilder) ⇒ InternalExternalClustering(builder)
 
-    test("testInternExternClustering [ClusteringTestProject.zip]") {
+    test("testInternalExternalClustering [ClusteringTestProject.zip]") {
         testClustering(
-            "testInternExternClustering [ClusteringTestProject.zip]",
+            "testInternalExternalClustering [ClusteringTestProject.zip]",
             extractDependencies("test/classfiles/ClusteringTestProject.zip", "test/GetterSetterTestClass.class"),
             Some("ClusteringTestProject_GetterSetterTestClass"))
     }
 
-    test("testInternExternClustering [Flashcards 0.4 - target 1.6.zip -- CommandHistory.class]") {
+    test("testInternalExternalClustering [Flashcards 0.4 - target 1.6.zip -- CommandHistory.class]") {
         testClustering(
-            "testInternExternClustering [Flashcards 0.4 - target 1.6.zip -- CommandHistory.class]",
+            "testInternalExternalClustering [Flashcards 0.4 - target 1.6.zip -- CommandHistory.class]",
             extractDependencies("test/classfiles/Flashcards 0.4 - target 1.6.zip", "de/tud/cs/se/flashcards/model/CommandHistory.class"),
             Some("CommandHistory"))
     }
 
-    test("testInternExternClustering [Flashcards 0.4 - target 1.6.zip]") {
+    test("testInternalExternalClustering [Flashcards 0.4 - target 1.6.zip]") {
         testClustering(
-            "testInternExternClustering [Flashcards 0.4 - target 1.6.zip]",
+            "testInternalExternalClustering [Flashcards 0.4 - target 1.6.zip]",
             extractDependencies("test/classfiles/Flashcards 0.4 - target 1.6.zip"),
             Some("Flashcards 0.4 - target 1.6"))
     }
 
-    test("testInternExternClustering [hibernate-core-3.6.0.Final.jar]") {
-        testClustering("testInternExternClustering [hibernate-core-3.6.0.Final.jar]",
+    test("testInternalExternalClustering [hibernate-core-3.6.0.Final.jar]") {
+        testClustering("testInternalExternalClustering [hibernate-core-3.6.0.Final.jar]",
             extractDependencies("test/classfiles/hibernate-core-3.6.0.Final.jar"))
     }
 }
