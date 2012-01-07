@@ -49,6 +49,10 @@ import framework.structure.util.ClusterBuilder
  * of that node exists. A package prefixes another package only if every sub-package matches as a whole.
  * All other nodes are added to the external cluster.
  *
+ * The <code>newClusterClustering</code> parameter is not needed/used in this class, because
+ * a more specific configuration can be done by using <code>internalClustering</code> and
+ * <code>externalClustering</code>.
+ *
  * @author Thomas Schlosser
  *
  */
@@ -65,15 +69,9 @@ class InternalExternalClustering(
 
         def clusterNewCluster(
             newCluster: Cluster,
-            firstChoice: Option[Clustering],
-            secondChoice: Option[Clustering]) {
-            if (firstChoice.isDefined || secondChoice.isDefined) {
-                val selectedClustering =
-                    if (firstChoice.isDefined)
-                        firstChoice.get
-                    else
-                        secondChoice.get
-                val clusteredCluster = selectedClustering.process(Array(newCluster))
+            clustering: Option[Clustering]) {
+            if (clustering.isDefined) {
+                val clusteredCluster = clustering.get.process(Array(newCluster))
                 result.removeNode(newCluster.uniqueID)
                 result.addNode(clusteredCluster(0))
             }
@@ -102,7 +100,6 @@ class InternalExternalClustering(
 
         internalPackages foreach { removeLongerPackagePrefix(_) }
 
-        //TODO After finishing this implementation, this should be documented in the thesis!
         val internal = builder.createCluster("internal")
         val external = builder.createCluster("external")
         result.addNode(internal)
@@ -117,8 +114,8 @@ class InternalExternalClustering(
             }
         }
 
-        clusterNewCluster(internal, internalClustering, newClusterClustering)
-        clusterNewCluster(external, externalClustering, newClusterClustering)
+        clusterNewCluster(internal, internalClustering)
+        clusterNewCluster(external, externalClustering)
 
         result
     }
