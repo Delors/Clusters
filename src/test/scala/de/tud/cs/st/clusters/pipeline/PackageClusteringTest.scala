@@ -48,8 +48,8 @@ class PackageClusteringTest extends AbstractClusteringTest {
 
     implicit val clustering = (builder: ClusterBuilder) ⇒ PackageClustering(builder)
 
-    test("testPackageClustering") {
-        testClustering("testPackageClustering",
-            extractDependencies("test/classfiles/Flashcards 0.4 - target 1.6.zip"))
+    test("testPackageClustering [hibernate]") {
+        testClustering("testPackageClustering [hibernate]",
+            hibernateDependencyExtractor)
     }
 }

@@ -49,24 +49,6 @@ sealed trait SourceElementNode extends Node {
     lazy val identifier = identifierFun()
     def identifierFun: () ⇒ String
 
-    protected var edges: List[Edge] = Nil
-    protected var transposedEdges: List[Edge] = Nil
-
-    override def addEdge(srcID: Int, trgtID: Int, dType: DependencyType) {
-        if (srcID == this.uniqueID) {
-            edges = new Edge(srcID, trgtID, dType) :: edges
-        }
-        else if (trgtID == this.uniqueID) {
-            transposedEdges = new Edge(trgtID, srcID, dType) :: transposedEdges
-        }
-    }
-
-    def getEdges: List[Edge] =
-        edges
-
-    def getTransposedEdges: List[Edge] =
-        transposedEdges
-
     def toDot(includeSingleNodes: Boolean = true, includeEdges: Boolean = true)(implicit nodeBuffer: StringBuffer = new StringBuffer, edgeBuffer: StringBuffer = new StringBuffer): String = {
         if (includeSingleNodes) {
             nodeBuffer.append("\t")

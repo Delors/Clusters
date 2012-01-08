@@ -42,7 +42,11 @@ import de.tud.cs.st.bat.resolved.dependency._
  * @author Thomas Schlosser
  *
  */
-class Cluster(val uniqueID: Int, val identifier: String, val isRootCluster: Boolean) extends Node {
+class Cluster(
+    val uniqueID: Int,
+    val identifier: String,
+    val isRootCluster: Boolean)
+        extends Node {
 
     val nodeMap = Map[Int, Node]()
 
@@ -83,12 +87,13 @@ class Cluster(val uniqueID: Int, val identifier: String, val isRootCluster: Bool
     def numberOfNodes: Int =
         nodeMap.size
 
-    override def addEdge(sourceID: Int, targetID: Int, dType: DependencyType) {
-        sys.error("method \"addEdge\" is currently not supported in Cluster")
-    }
+    override def getEdges: List[Edge] = {
+        var edges = super.getEdges
+        if (!edges.isEmpty)
+            return edges
 
-    def getEdges: List[Edge] = {
-        var edges = List[Edge]()
+        // fetch edges from cluster elements
+        edges = List[Edge]()
         nodeMap.values foreach {
             node ⇒
                 node.getEdges foreach {
@@ -103,8 +108,13 @@ class Cluster(val uniqueID: Int, val identifier: String, val isRootCluster: Bool
         edges
     }
 
-    def getTransposedEdges: List[Edge] = {
-        var edges = List[Edge]()
+    override def getTransposedEdges: List[Edge] = {
+        var edges = super.getTransposedEdges
+        if (!edges.isEmpty)
+            return edges
+
+        // fetch transposed edges from cluster elements
+        edges = List[Edge]()
         nodeMap.values foreach {
             node ⇒
                 node.getEdges foreach {

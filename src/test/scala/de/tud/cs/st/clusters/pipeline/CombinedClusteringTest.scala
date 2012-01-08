@@ -57,30 +57,22 @@ class CombinedClusteringTest extends AbstractClusteringTest {
             internalClustering = InternalClassClustering(builder)) //,
     //            newClusterClustering = LayerClustering(builder, true))
 
-    test("testCombinedClustering - ClusteringTestProject.zip") {
+    test("testCombinedClustering [ClusteringTestProject]") {
         testClustering(
-            "testCombinedClustering - ClusteringTestProject.zip",
-            extractDependencies("test/classfiles/ClusteringTestProject.zip"),
-            Some("ClusteringTestProject"),
+            "testCombinedClustering [ClusteringTestProject]",
+            clusteringTestProjectDependencyExtractor,
+            Some("combinedClust_ClusteringTestProject"),
             includeSingleNodes = true,
             includeEdges = true)
     }
 
-    test("testCombinedClustering - cocome-impl-classes.jar") {
+    test("testCombinedClustering [cocome]") {
         testClustering(
-            "testCombinedClustering - cocome-impl-classes.jar",
-            extractDependencies("test/classfiles/cocome-impl-classes.jar"),
-            Some("cocome-impl-classes"),
+            "testCombinedClustering [cocome]",
+            cocomeDependencyExtractor,
+            Some("combinedClust_cocome"),
             includeSingleNodes = true,
             includeEdges = true)
     }
 
-    //    test("testCombinedClustering - Flashcards 0.4 - target 1.6.zip") {
-    //        testClustering(
-    //            "testCombinedClustering - Flashcards 0.4 - target 1.6.zip",
-    //            extractDependencies("test/classfiles/Flashcards 0.4 - target 1.6.zip"),
-    //            Some("Flashcards 0.4 - target 1.6"),
-    //            includeSingleNodes = true,
-    //            includeEdges = false)
-    //    }
 }

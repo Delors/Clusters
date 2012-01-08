@@ -49,11 +49,23 @@ trait Node {
 
     var parent: Node = _
 
-    def addEdge(sourceID: Int, targetID: Int, dType: DependencyType)
+    protected var edges: List[Edge] = Nil
+    protected var transposedEdges: List[Edge] = Nil
 
-    def getEdges: List[Edge]
+    def addEdge(srcID: Int, trgtID: Int, dType: DependencyType) {
+        if (srcID == this.uniqueID) {
+            edges = new Edge(srcID, trgtID, dType) :: edges
+        }
+        else if (trgtID == this.uniqueID) {
+            transposedEdges = new Edge(trgtID, srcID, dType) :: transposedEdges
+        }
+    }
 
-    def getTransposedEdges: List[Edge]
+    def getEdges: List[Edge] =
+        edges
+
+    def getTransposedEdges: List[Edge] =
+        transposedEdges
 
     def toDot(
         includeSingleNodes: Boolean,

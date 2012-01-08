@@ -30,52 +30,25 @@ object NodeCloner {
             case m: MethodNode ⇒ createCopy(m)
         }
 
-    def createDeepCopy(cluster: Cluster): Cluster = {
-        val copy = createCopy(cluster)
-        cluster.getNodes map {
-            createDeepCopy(_)
-        } map { node ⇒
-            copy.addNode(node)
-        }
-        copy
-    }
-
-    def createDeepCopy(
-        typeNode: TypeNode,
-        edgeFilter: Edge ⇒ Boolean,
-        transposedEdgeFilter: Edge ⇒ Boolean): TypeNode = {
-        val copy = createCopy(typeNode)
-        copyEdges(typeNode, copy, edgeFilter, transposedEdgeFilter)
-        copy
-    }
-
-    def createDeepCopy(
-        fieldNode: FieldNode,
-        edgeFilter: Edge ⇒ Boolean,
-        transposedEdgeFilter: Edge ⇒ Boolean): FieldNode = {
-        val copy = createCopy(fieldNode)
-        copyEdges(fieldNode, copy, edgeFilter, transposedEdgeFilter)
-        copy
-    }
-
-    def createDeepCopy(
-        methodNode: MethodNode,
-        edgeFilter: Edge ⇒ Boolean,
-        transposedEdgeFilter: Edge ⇒ Boolean): MethodNode = {
-        val copy = createCopy(methodNode)
-        copyEdges(methodNode, copy, edgeFilter, transposedEdgeFilter)
-        copy
-    }
-
     def createDeepCopy(
         node: Node,
         edgeFilter: Edge ⇒ Boolean = _ ⇒ false,
         transposedEdgeFilter: Edge ⇒ Boolean = _ ⇒ false): Node = {
         node match {
-            case c: Cluster    ⇒ createDeepCopy(c)
-            case t: TypeNode   ⇒ createDeepCopy(t, edgeFilter, transposedEdgeFilter)
-            case f: FieldNode  ⇒ createDeepCopy(f, edgeFilter, transposedEdgeFilter)
-            case m: MethodNode ⇒ createDeepCopy(m, edgeFilter, transposedEdgeFilter)
+            case c: Cluster ⇒
+                val copy = createCopy(c)
+                // add copies of cluster elements to the cluster's copy
+                c.getNodes map {
+                    createDeepCopy(_)
+                } map { node ⇒
+                    copy.addNode(node)
+                }
+                copyEdges(node, copy, edgeFilter, transposedEdgeFilter)
+                copy
+            case sen: SourceElementNode ⇒
+                val copy = createCopy(node)
+                copyEdges(node, copy, edgeFilter, transposedEdgeFilter)
+                copy
         }
     }
 

@@ -48,38 +48,24 @@ class LayerClusteringTest extends AbstractClusteringTest {
 
     implicit val clustering = (builder: ClusterBuilder) ⇒ LayerClustering(builder, true)
 
-    test("testLayerClustering [ClusteringTestProject.zip]") {
+    test("testLayerClustering [getterSetterTestClass]") {
         testClustering(
-            "testLayerClustering [ClusteringTestProject.zip]",
-            extractDependencies("test/classfiles/ClusteringTestProject.zip", "test/GetterSetterTestClass.class"),
-            Some("ClusteringTestProject_GetterSetterTestClass"))
+            "testLayerClustering [getterSetterTestClass]",
+            getterSetterTestClassDependencyExtractor,
+            Some("layerClust_getterSetterTestClass"))
     }
 
-    test("testLayerClustering [Flashcards 0.4 - target 1.6.zip -- CommandHistory.class]") {
+    test("testLayerClustering [cocome]") {
         testClustering(
-            "testLayerClustering [Flashcards 0.4 - target 1.6.zip -- CommandHistory.class]",
-            extractDependencies("test/classfiles/Flashcards 0.4 - target 1.6.zip", "de/tud/cs/se/flashcards/model/CommandHistory.class"),
-            Some("CommandHistory"))
+            "testLayerClustering [cocome]",
+            cocomeDependencyExtractor,
+            Some("layerClust_cocome"))
     }
 
-    test("testLayerClustering [Flashcards 0.4 - target 1.6.zip]") {
-        testClustering(
-            "testLayerClustering [Flashcards 0.4 - target 1.6.zip]",
-            extractDependencies("test/classfiles/Flashcards 0.4 - target 1.6.zip"),
-            Some("Flashcards 0.4 - target 1.6"))
-    }
-
-    test("testLayerClustering [cocome-impl-classes.jar]") {
-        testClustering(
-            "testLayerClustering [cocome-impl-classes.jar]",
-            extractDependencies("test/classfiles/cocome-impl-classes.jar"),
-            Some("cocome-impl"))
-    }
-
-    test("testLayerClustering [hibernate-core-3.6.0.Final.jar]") {
-        testClustering("testLayerClustering [hibernate-core-3.6.0.Final.jar]",
-            extractDependencies("test/classfiles/hibernate-core-3.6.0.Final.jar"),
-            Some("hibernate"),
+    test("testLayerClustering [hibernate]") {
+        testClustering("testLayerClustering [hibernate]",
+            hibernateDependencyExtractor,
+            Some("layerClust_hibernate"),
             true,
             false)
     }

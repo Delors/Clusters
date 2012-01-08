@@ -48,18 +48,11 @@ class ClassClusteringTest extends AbstractClusteringTest {
 
     implicit val clustering = (builder: ClusterBuilder) ⇒ InternalClassClustering(builder)
 
-    test("testClassClustering [ClusteringTestProject.zip]") {
+    test("testClassClustering [ClusteringTestProject]") {
         testClustering(
-            "testClassClustering [ClusteringTestProject.zip]",
-            extractDependencies("test/classfiles/ClusteringTestProject.zip"),
-            Some("ClusteringTestProject"))
+            "testClassClustering [ClusteringTestProject]",
+            clusteringTestProjectDependencyExtractor,
+            Some("classClust_ClusteringTestProject"))
     }
-
-    //    test("testClassClustering [Flashcards 0.4 - target 1.6.zip]") {
-    //        testClustering(
-    //            "testClassClustering [Flashcards 0.4 - target 1.6.zip]",
-    //            extractDependencies("test/classfiles/Flashcards 0.4 - target 1.6.zip"),
-    //            Some("Flashcards 0.4 - target 1.6"))
-    //    }
 
 }

@@ -45,6 +45,9 @@ import framework.structure.Node
  * @author Thomas Schlosser
  *
  */
+//FIXME fundamental problem with the ClusterBuilder concept for ID->Node lookups,
+// because nodes have been cloned in each step and the nodes in ClusterBuilder represent
+// the state of the root cluster (for each point in time)
 trait EdgeGeneralizer extends IntermediateClustering {
 
     protected override def process(cluster: Cluster): Cluster = {
@@ -67,6 +70,7 @@ trait EdgeGeneralizer extends IntermediateClustering {
     }
 
     protected def convertEdges(node: Node, copiedNode: Node) {
+        //TODO converted edges have to start at the new sourceID...or something like that
         for (edge ← node.getEdges) {
             copiedNode.addEdge(newSourceID(edge.sourceID), newTargetID(edge.targetID), edge.dType)
         }

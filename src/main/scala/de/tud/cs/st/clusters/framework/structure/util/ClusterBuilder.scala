@@ -51,7 +51,9 @@ import de.tud.cs.st.bat.resolved.MethodDescriptor
  * @author Thomas Schlosser
  *
  */
-trait ClusterBuilder extends DependencyExtractor with SourceElementIDsMap
+trait ClusterBuilder extends DependencyExtractor
+        with SourceElementIDsMap
+        with UseIDOfBaseTypeForArrayTypes
         with ClusterIDsMap
         with PrettyPrint
         with NodeMappingSourceElementsVisitor {

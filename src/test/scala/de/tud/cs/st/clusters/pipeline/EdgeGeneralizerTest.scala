@@ -44,28 +44,17 @@ import framework.structure.util.ClusterBuilder
  *
  */
 @RunWith(classOf[JUnitRunner])
-class SoraGlodeanGligorApproachTest extends AbstractClusteringTest {
+class EdgeGeneralizerTest extends AbstractClusteringTest {
 
     implicit val clustering = (builder: ClusterBuilder) ⇒
-        InternalExternalClustering(builder) //,
-    // newClusterClustering = MinimalSpanningTreeClustering(builder))
-    //newClusterClustering = LayerClustering(builder))
+        InternalExternalClustering(
+            builder,
+            internalClustering = EdgeTargetGeneralizer(builder))
 
-    test("testCombinedClustering - ClusteringTestProject.zip - test/StronglyConnectedComponentsTestClass.class") {
+    test("testEdgeGeneralizer [getterSetterTestClass]") {
         testClustering(
-            "testCombinedClustering - ClusteringTestProject.zip - test/StronglyConnectedComponentsTestClass.class",
-            extractDependencies("test/classfiles/ClusteringTestProject.zip", "test/StronglyConnectedComponentsTestClass.class"),
-            Some("ClusteringTestProject_StronglyConnectedComponentsTestClass"),
-            includeSingleNodes = true,
-            includeEdges = true)
-    }
-
-    test("testCombinedClustering - Flashcards 0.4 - target 1.6.zip") {
-        testClustering(
-            "testCombinedClustering - Flashcards 0.4 - target 1.6.zip",
-            extractDependencies("test/classfiles/Flashcards 0.4 - target 1.6.zip"),
-            Some("Flashcards 0.4 - target 1.6"),
-            includeSingleNodes = false,
-            includeEdges = false)
+            "testEdgeGeneralizer [getterSetterTestClass]",
+            getterSetterTestClassDependencyExtractor,
+            Some("edgeGen_getterSetterTestClass"))
     }
 }

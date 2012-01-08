@@ -98,11 +98,24 @@ trait AbstractClusteringTest extends FunSuite
         testClustering(testName, extractDependencies, dotFileName, includeSingleNodes, includeSingleNodes)(null)
     }
 
-    protected def extractDependencies(zipFile: String, classFile: String): (DependencyExtractor) ⇒ Unit = {
-        dependencyExtractor ⇒ dependencyExtractor.process(Java6Framework.ClassFile(zipFile, classFile))
+    protected def extractDependencies(zipFile: String, classFiles: String*): (DependencyExtractor) ⇒ Unit = {
+        dependencyExtractor ⇒ for (classFile ← classFiles) dependencyExtractor.process(Java6Framework.ClassFile(zipFile, classFile))
     }
 
     protected def extractDependencies(zipFile: String): (DependencyExtractor) ⇒ Unit = {
         dependencyExtractor ⇒ for (cf ← Java6Framework.ClassFiles(zipFile)) dependencyExtractor.process(cf)
     }
+
+    protected val clusteringTestProjectDependencyExtractor = extractDependencies("test/classfiles/ClusteringTestProject.zip")
+    protected val getterSetterTestClassDependencyExtractor = extractDependencies("test/classfiles/ClusteringTestProject.zip", "test/GetterSetterTestClass.class")
+    protected val stronglyConnectedComponentsTestClassDependencyExtractor = extractDependencies("test/classfiles/ClusteringTestProject.zip", "test/StronglyConnectedComponentsTestClass.class")
+
+    protected val hibernateDependencyExtractor = extractDependencies("test/classfiles/hibernate-core-3.6.0.Final.jar")
+
+    protected val cocomeDependencyExtractor = extractDependencies("test/classfiles/cocome-impl-classes.jar")
+    protected val cocomePrintercontrollerDependencyExtractor = extractDependencies("test/classfiles/cocome-impl-classes.jar",
+        "org/cocome/tradingsystem/cashdeskline/cashdesk/printercontroller/PrinterControllerEventHandlerIf.class",
+        "org/cocome/tradingsystem/cashdeskline/cashdesk/printercontroller/impl/PrinterController.class",
+        "org/cocome/tradingsystem/cashdeskline/cashdesk/printercontroller/impl/PrinterControllerEventHandlerImpl.class",
+        "org/cocome/tradingsystem/cashdeskline/cashdesk/printercontroller/impl/PrinterStates.class")
 }

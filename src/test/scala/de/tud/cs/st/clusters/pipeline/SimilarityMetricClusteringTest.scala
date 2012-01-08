@@ -44,20 +44,26 @@ import framework.structure.util.ClusterBuilder
  *
  */
 @RunWith(classOf[JUnitRunner])
-class BranchedClusteringTest extends AbstractClusteringTest {
+class SimilarityMetricClusteringTest extends AbstractClusteringTest {
 
-    implicit val clustering = (builder: ClusterBuilder) ⇒
-        BranchedClustering(
-            builder)(
-                LayerClustering(builder),
-                InternalExternalClustering(builder))
+    implicit val clustering = (builder: ClusterBuilder) ⇒ SimilarityMetricClustering(builder)
 
-    test("testBranchedClustering [cocome-printercontroller]") {
-        testClustering("testBranchedClustering [cocome-printercontroller]",
+    test("testSimilarityMetricClustering [cocome-printercontroller]") {
+        testClustering(
+            "testSimilarityMetricClustering [cocome-printercontroller]",
             cocomePrintercontrollerDependencyExtractor,
-            Some("branchedClust_cocome-printercontroller"),
-            includeSingleNodes = true,
-            includeEdges = false)
+            Some("simMetricClust_cocome-printercontroller"))
     }
 
+    test("testSimilarityMetricClustering [cocome]") {
+        testClustering(
+            "testSimilarityMetricClustering [cocome]",
+            cocomeDependencyExtractor,
+            Some("simMetricClust_cocome"))
+    }
+
+    test("testSimilarityMetricClustering [hibernate]") {
+        testClustering("testSimilarityMetricClustering [hibernate]",
+            hibernateDependencyExtractor)
+    }
 }

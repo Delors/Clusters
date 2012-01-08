@@ -48,26 +48,14 @@ class GetterSetterClusteringTest extends AbstractClusteringTest {
 
     implicit val clustering = (builder: ClusterBuilder) ⇒ GetterSetterClustering(builder)
 
-    test("testGetterSetterClustering [ClusteringTestProject.zip]") {
-        testClustering("testGetterSetterClustering [ClusteringTestProject.zip]",
-            extractDependencies("test/classfiles/ClusteringTestProject.zip", "test/GetterSetterTestClass.class"),
-            Some("ClusteringTestProject_GetterSetterTestClass"))
+    test("testGetterSetterClustering [getterSetterTestClass]") {
+        testClustering("testGetterSetterClustering [getterSetterTestClass]",
+            getterSetterTestClassDependencyExtractor,
+            Some("getterSetterClust_getterSetterTestClass"))
     }
 
-    test("testGetterSetterClustering [Flashcards 0.4 - target 1.6.zip -- CommandHistory.class]") {
-        testClustering("testGetterSetterClustering [Flashcards 0.4 - target 1.6.zip -- CommandHistory.class]",
-            extractDependencies("test/classfiles/Flashcards 0.4 - target 1.6.zip", "de/tud/cs/se/flashcards/model/CommandHistory.class"),
-            Some("CommandHistory"))
+    test("testGetterSetterClustering [hibernate]") {
+        testClustering("testGetterSetterClustering [hibernate]",
+            hibernateDependencyExtractor)
     }
-
-    test("testGetterSetterClustering [Flashcards 0.4 - target 1.6.zip]") {
-        testClustering("testGetterSetterClustering [Flashcards 0.4 - target 1.6.zip]",
-            extractDependencies("test/classfiles/Flashcards 0.4 - target 1.6.zip"),
-            Some("Flashcards 0.4 - target 1.6"))
-    }
-
-    //    test("testGetterSetterClustering [hibernate-core-3.6.0.Final.jar]") {
-    //        testClustering("testGetterSetterClustering [hibernate-core-3.6.0.Final.jar]",
-    //            extractDependencies("test/classfiles/hibernate-core-3.6.0.Final.jar"))
-    //    }
 }

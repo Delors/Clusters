@@ -48,29 +48,22 @@ class InternalExternalClusteringTest extends AbstractClusteringTest {
 
     implicit val clustering = (builder: ClusterBuilder) ⇒ InternalExternalClustering(builder)
 
-    test("testInternalExternalClustering [ClusteringTestProject.zip]") {
+    test("testInternalExternalClustering [cocome-printercontroller]") {
         testClustering(
-            "testInternalExternalClustering [ClusteringTestProject.zip]",
-            extractDependencies("test/classfiles/ClusteringTestProject.zip", "test/GetterSetterTestClass.class"),
-            Some("ClusteringTestProject_GetterSetterTestClass"))
+            "testInternalExternalClustering [cocome-printercontroller]",
+            cocomePrintercontrollerDependencyExtractor,
+            Some("intExtClust_cocome-printercontroller"))
     }
 
-    test("testInternalExternalClustering [Flashcards 0.4 - target 1.6.zip -- CommandHistory.class]") {
+    test("testInternalExternalClustering [getterSetterTestClass]") {
         testClustering(
-            "testInternalExternalClustering [Flashcards 0.4 - target 1.6.zip -- CommandHistory.class]",
-            extractDependencies("test/classfiles/Flashcards 0.4 - target 1.6.zip", "de/tud/cs/se/flashcards/model/CommandHistory.class"),
-            Some("CommandHistory"))
+            "testInternalExternalClustering [getterSetterTestClass]",
+            getterSetterTestClassDependencyExtractor,
+            Some("intExtClust_getterSetterTestClass"))
     }
 
-    test("testInternalExternalClustering [Flashcards 0.4 - target 1.6.zip]") {
-        testClustering(
-            "testInternalExternalClustering [Flashcards 0.4 - target 1.6.zip]",
-            extractDependencies("test/classfiles/Flashcards 0.4 - target 1.6.zip"),
-            Some("Flashcards 0.4 - target 1.6"))
-    }
-
-    test("testInternalExternalClustering [hibernate-core-3.6.0.Final.jar]") {
-        testClustering("testInternalExternalClustering [hibernate-core-3.6.0.Final.jar]",
-            extractDependencies("test/classfiles/hibernate-core-3.6.0.Final.jar"))
+    test("testInternalExternalClustering [hibernate]") {
+        testClustering("testInternalExternalClustering [hibernate]",
+            hibernateDependencyExtractor)
     }
 }
