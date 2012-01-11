@@ -43,7 +43,7 @@ import framework.structure.TypeNode
 import framework.structure.FieldNode
 import framework.structure.MethodNode
 import framework.structure.NodeCloner
-import framework.structure.util.ClusterBuilder
+import framework.structure.util.NodeManager
 import de.tud.cs.st.bat.resolved.dependency._
 
 /**
@@ -52,13 +52,13 @@ import de.tud.cs.st.bat.resolved.dependency._
  *
  */
 class SimilarityMetricClustering(
-    val builder: ClusterBuilder,
+    val nodeManager: NodeManager,
     val successorClustering: Option[Clustering],
     val newClusterClustering: Option[Clustering])
         extends IntermediateClustering {
 
     protected override def process(cluster: Cluster): Cluster = {
-        val result = NodeCloner.createCopy(cluster)
+        val result = nodeManager.createCopy(cluster)
 
         val weightMatrix: Map[(Int, Int), Long] = Map()
 
@@ -123,9 +123,9 @@ class SimilarityMetricClustering(
         val result = new Array[Cluster](clusterset.size)
         var i = 0
         clusterset foreach { nodes ⇒
-            val cluster = builder.createCluster("simMetricCluster"+i)
+            val cluster = nodeManager.createCluster("simMetricCluster"+i)
             nodes foreach { node ⇒
-                cluster.addNode(builder.getNode(node))
+                cluster.addNode(nodeManager.getNode(node))
             }
             result(i) = cluster
             i += 1
@@ -190,11 +190,11 @@ class SimilarityMetricClustering(
 object SimilarityMetricClustering {
 
     def apply(
-        clusterBuilder: ClusterBuilder,
+        nodeManager: NodeManager,
         successorClustering: Clustering = null,
         newClusterClustering: Clustering = null): SimilarityMetricClustering =
         new SimilarityMetricClustering(
-            clusterBuilder,
+            nodeManager,
             if (successorClustering == null) None else Some(successorClustering),
             if (newClusterClustering == null) None else Some(newClusterClustering))
 

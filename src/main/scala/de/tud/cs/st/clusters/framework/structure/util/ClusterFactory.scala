@@ -35,36 +35,46 @@ package framework
 package structure
 package util
 
-import scala.collection.mutable.ArrayBuffer
-import de.tud.cs.st.bat.resolved.SourceElementsVisitor
-import de.tud.cs.st.bat.resolved.ClassFile
-import de.tud.cs.st.bat.resolved.Method
+import de.tud.cs.st.bat.resolved.Type
 import de.tud.cs.st.bat.resolved.Field
-import de.tud.cs.st.bat.resolved.dependency.SourceElementIDs
+import de.tud.cs.st.bat.resolved.Method
+import de.tud.cs.st.bat.resolved.ClassFile
+import de.tud.cs.st.bat.resolved.ObjectType
+import de.tud.cs.st.bat.resolved.MethodDescriptor
 
 /**
- * Implementation of the SourceElementsVisitor trait where all source elements
- * are added to the corresponding node in the lookup buffer. If there is no node
- * for the given source element, a new node that directly contains the source element
- * is added.
+ * @author thomas
  *
- * @author Thomas Schlosser
  */
-trait NodeMappingSourceElementsVisitor extends SourceElementsVisitor[Unit]
-        with SourceElementIDs
-        with NodeFactory
-        with PrettyPrint {
+trait ClusterFactory
+        extends PrettyPrint
+        with ClusterIDsMap
+        with NodeStore {
 
-    override def visit(classFile: ClassFile) {
-        createTypeNode(super.sourceElementID(classFile), classFile)
+    def createCluster(clusterIdentifier: String): Cluster =
+        createCluster(
+            clusterID(clusterIdentifier + System.nanoTime()),
+            (c: Cluster) ⇒ Unit,
+            (id) ⇒ new Cluster(id, clusterIdentifier))
+
+    private def createCluster[N <: Node](
+        id: Int,
+        nodeExistsAction: (N) ⇒ Unit = (n: N) ⇒ Unit,
+        newNode: (Int) ⇒ N): N = {
+        val oldNode = getNode(id).asInstanceOf[N]
+        if (oldNode != null) {
+            nodeExistsAction(oldNode)
+            oldNode
+        }
+        else {
+            val node = newNode(id)
+            storeNode(node)
+            node
+        }
     }
+}
 
-    override def visit(classFile: ClassFile, method: Method) {
-        createMethodNode(super.sourceElementID(classFile, method), classFile, method)
-    }
-
-    override def visit(classFile: ClassFile, field: Field) {
-        createFieldNode(super.sourceElementID(classFile, field), classFile, field)
-    }
-
+object ClusterFactory {
+    def apply(_store: NodeStore): ClusterFactory =
+        new ClusterFactory { val store = _store }
 }

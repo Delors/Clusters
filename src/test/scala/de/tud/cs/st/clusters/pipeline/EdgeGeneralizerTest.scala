@@ -37,7 +37,6 @@ import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 
 import framework.AbstractClusteringTest
-import framework.structure.util.ClusterBuilder
 
 /**
  * @author Thomas Schlosser
@@ -46,7 +45,7 @@ import framework.structure.util.ClusterBuilder
 @RunWith(classOf[JUnitRunner])
 class EdgeGeneralizerTest extends AbstractClusteringTest {
 
-    implicit val clustering = (builder: ClusterBuilder) ⇒
+    implicit val clustering = (builder: BaseDependencyExtractor) ⇒
         InternalExternalClustering(
             builder,
             internalClustering = EdgeTargetGeneralizer(builder))

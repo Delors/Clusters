@@ -36,7 +36,7 @@ package pipeline
 import framework.pipeline.Clustering
 import framework.pipeline.IntermediateClustering
 import framework.structure.Cluster
-import framework.structure.util.ClusterBuilder
+import framework.structure.util.NodeManager
 import framework.structure.SourceElementNode
 
 /**
@@ -44,7 +44,7 @@ import framework.structure.SourceElementNode
  *
  */
 class SingleElementClusterRemover(
-        val builder: ClusterBuilder,
+        val nodeManager: NodeManager,
         val successorClustering: Option[Clustering],
         val newClusterClustering: Option[Clustering]) extends IntermediateClustering {
 
@@ -65,11 +65,11 @@ class SingleElementClusterRemover(
 object SingleElementClusterRemover {
 
     def apply(
-        clusterBuilder: ClusterBuilder,
+        nodeManager: NodeManager,
         successorClustering: Clustering = null,
         newClusterClustering: Clustering = null): SingleElementClusterRemover =
         new SingleElementClusterRemover(
-            clusterBuilder,
+            nodeManager,
             if (successorClustering == null) None else Some(successorClustering),
             if (newClusterClustering == null) None else Some(newClusterClustering))
 

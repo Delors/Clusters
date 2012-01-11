@@ -38,7 +38,7 @@ import framework.pipeline.Clustering
 import framework.pipeline.IntermediateClustering
 import framework.structure.Cluster
 import framework.structure.NodeCloner
-import framework.structure.util.ClusterBuilder
+import framework.structure.util.NodeManager
 
 /**
  * Creates hyper clusters based on greatest common prefix of classes' package names
@@ -46,7 +46,7 @@ import framework.structure.util.ClusterBuilder
  *
  */
 class PackageClustering(
-    val builder: ClusterBuilder,
+    val nodeManager: NodeManager,
     val successorClustering: Option[Clustering],
     val newClusterClustering: Option[Clustering])
         extends IntermediateClustering {
@@ -64,17 +64,17 @@ class PackageClustering(
         var prfxs = prefixRoot.prefixes.map(charArray ⇒ String.copyValueOf(charArray))
 
         // create resulting clusters
-        val result = NodeCloner.createCopy(cluster)
+        val result = nodeManager.createCopy(cluster)
         var resultMap = Map[String, Cluster]()
         for (i ← 0 to prfxs.size - 1) {
             val prfx = prfxs(i)
-            val cl = builder.createCluster(prfx)
+            val cl = nodeManager.createCluster(prfx)
             resultMap(prfx) = cl
             result.addNode(cl)
         }
         for (node ← cluster.getNodes) {
             val c = resultMap(getMatchingPrefix(node.identifier, prfxs))
-            c.addNode(NodeCloner.createDeepCopy(node))
+            c.addNode(nodeManager.createDeepCopy(node))
         }
         result
     }
@@ -146,10 +146,10 @@ private trait GreatestCommonPrefixTree[Content] {
 object PackageClustering {
 
     def apply(
-        clusterBuilder: ClusterBuilder,
+        nodeManager: NodeManager,
         successorClustering: Clustering = null,
         newClusterClustering: Clustering = null): PackageClustering =
-        new PackageClustering(clusterBuilder,
+        new PackageClustering(nodeManager,
             if (successorClustering == null) None else Some(successorClustering),
             if (newClusterClustering == null) None else Some(newClusterClustering))
 }

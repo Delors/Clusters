@@ -39,28 +39,27 @@ import framework.structure.Cluster
 import framework.structure.TypeNode
 import framework.structure.FieldNode
 import framework.structure.MethodNode
-import framework.structure.NodeCloner
-import framework.structure.util.ClusterBuilder
+import framework.structure.util.NodeManager
 
 /**
  * @author Thomas Schlosser
  *
  */
 class BranchedClustering(
-    val builder: ClusterBuilder,
+    val nodeManager: NodeManager,
     val successorClustering: Option[Clustering],
     val clusterings: Clustering*)
         extends Clustering {
 
     override def process(clusters: Array[Cluster]): Array[Cluster] = {
-        val results = clusters map { NodeCloner.createCopy(_) }
+        val results = clusters map { nodeManager.createCopy(_) }
         clusters.zipWithIndex foreach {
             case (inputCluster, i) ⇒
                 val resultCluster = results(i)
                 clusterings.zipWithIndex foreach {
                     case (f, j) ⇒
                         // no need to retrieve a unique number for this temporary cluster
-                        val splitResult = builder.createCluster("split_result_"+j) //new Cluster(-1, "split_result_"+j)
+                        val splitResult = nodeManager.createCluster("split_result_"+j) //new Cluster(-1, "split_result_"+j)
                         f.process(Array(inputCluster)) foreach {
                             _.getNodes foreach {
                                 splitResult.addNode(_)
@@ -90,7 +89,7 @@ class BranchedClustering(
      */
     def mergeClusters(clusters: Array[Cluster]): Array[Cluster] = {
         //TODO: impl. and test this split and merge mechanism...
-        val result = clusters map { NodeCloner.createCopy(_) }
+        val result = clusters map { nodeManager.createCopy(_) }
         clusters.zipWithIndex foreach {
             case (inputCluster, i) ⇒
                 val resultCluster = result(i)
@@ -111,11 +110,11 @@ class BranchedClustering(
 object BranchedClustering {
 
     def apply(
-        clusterBuilder: ClusterBuilder,
+        nodeManager: NodeManager,
         successorClustering: Clustering = null)(
             clusterings: Clustering*): BranchedClustering =
         new BranchedClustering(
-            clusterBuilder,
+            nodeManager,
             if (successorClustering == null) None else Some(successorClustering),
             clusterings: _*)
 

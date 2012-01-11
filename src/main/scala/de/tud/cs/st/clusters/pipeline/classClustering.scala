@@ -41,7 +41,7 @@ import framework.structure.Cluster
 import framework.structure.Node
 import framework.structure.Edge
 import framework.structure.NodeCloner
-import framework.structure.util.ClusterBuilder
+import framework.structure.util.NodeManager
 import de.tud.cs.st.bat.resolved.dependency._
 
 /**
@@ -53,7 +53,7 @@ trait ClassClustering extends IntermediateClustering {
 }
 
 class InternalClassClustering(
-    val builder: ClusterBuilder,
+    val nodeManager: NodeManager,
     val successorClustering: Option[Clustering],
     val newClusterClustering: Option[Clustering])
         extends ClassClustering with SameNeighborClustering {
@@ -72,24 +72,24 @@ class InternalClassClustering(
 object InternalClassClustering {
 
     def apply(
-        clusterBuilder: ClusterBuilder,
+        nodeManager: NodeManager,
         successorClustering: Clustering = null,
         newClusterClustering: Clustering = null): InternalClassClustering =
         new InternalClassClustering(
-            clusterBuilder,
+            nodeManager,
             if (successorClustering == null) None else Some(successorClustering),
             if (newClusterClustering == null) None else Some(newClusterClustering))
 
 }
 
 class ExternalClassClustering(
-    val builder: ClusterBuilder,
+    val nodeManager: NodeManager,
     val successorClustering: Option[Clustering],
     val newClusterClustering: Option[Clustering])
         extends ClassClustering {
 
     protected override def process(cluster: Cluster): Cluster = {
-        val result = NodeCloner.createCopy(cluster)
+        val result = nodeManager.createCopy(cluster)
 
         val classClustersMap = Map[Int, Set[Node]]()
 
@@ -107,8 +107,8 @@ class ExternalClassClustering(
 
         var newClusters = Set[Cluster]()
         for ((classNodeID, nodeSet) ← classClustersMap) {
-            val classNode = builder.getNode(classNodeID)
-            val classCluster = builder.createCluster(classNode.identifier)
+            val classNode = nodeManager.getNode(classNodeID)
+            val classCluster = nodeManager.createCluster(classNode.identifier)
             nodeSet foreach {
                 classCluster.addNode(_) // node was cloned before it was put into map
             }
@@ -131,11 +131,11 @@ class ExternalClassClustering(
 object ExternalClassClustering {
 
     def apply(
-        clusterBuilder: ClusterBuilder,
+        nodeManager: NodeManager,
         successorClustering: Clustering = null,
         newClusterClustering: Clustering = null): ExternalClassClustering =
         new ExternalClassClustering(
-            clusterBuilder,
+            nodeManager,
             if (successorClustering == null) None else Some(successorClustering),
             if (newClusterClustering == null) None else Some(newClusterClustering))
 

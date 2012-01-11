@@ -44,11 +44,11 @@ package util
  */
 trait ClusterIDsMap extends ClusterIDs {
 
+    import ClusterIDsMap._
+
     //
     // Associates each cluster with an unique ID
     //
-
-    val LOWEST_CLUSTER_ID: Int = 1500000000
 
     import scala.collection.mutable.WeakHashMap
 
@@ -58,11 +58,9 @@ trait ClusterIDsMap extends ClusterIDs {
 
     def clusterID(name: String): Int = clusterIDs.getOrElseUpdate(name, { lastClusterID += 1; lastClusterID })
 
-    //abstract override def reset {
-    def reset {
-        //TODO        super.reset
-        lastClusterID = LOWEST_CLUSTER_ID - 1
-        clusterIDs.clear()
-    }
+}
+
+object ClusterIDsMap {
+    val LOWEST_CLUSTER_ID: Int = 1500000000
 }
 

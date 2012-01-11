@@ -77,13 +77,11 @@ class DepExtractorRunTimeTest extends AbstractClusteringTest {
     private def testDepExtraction(zipFile: String) {
         println("testDepExtraction["+zipFile+"]")
 
-        val depExtractor = new ClusterBuilder {}
-
         var testClasses = Java6Framework.ClassFiles(zipFile)
         var min = Long.MaxValue
         var max = Long.MinValue
         for (i ← 1 to 10) {
-            depExtractor.reset
+            val depExtractor = RootClusterBuilder()
             time(duration ⇒ { min = Ordering[Long].min(duration, min); max = Ordering[Long].max(duration, max) }) {
                 for (classFile ← testClasses) {
                     depExtractor.process(classFile)

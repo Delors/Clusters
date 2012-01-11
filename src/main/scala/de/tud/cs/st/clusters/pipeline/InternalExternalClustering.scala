@@ -41,7 +41,7 @@ import framework.structure.TypeNode
 import framework.structure.FieldNode
 import framework.structure.MethodNode
 import framework.structure.NodeCloner
-import framework.structure.util.ClusterBuilder
+import framework.structure.util.NodeManager
 
 /**
  * Splits the nodes into internal and external cluster.
@@ -57,7 +57,7 @@ import framework.structure.util.ClusterBuilder
  *
  */
 class InternalExternalClustering(
-    val builder: ClusterBuilder,
+    val nodeManager: NodeManager,
     val internalClustering: Option[Clustering],
     val externalClustering: Option[Clustering],
     val successorClustering: Option[Clustering],
@@ -65,7 +65,7 @@ class InternalExternalClustering(
         extends IntermediateClustering {
 
     protected override def process(cluster: Cluster): Cluster = {
-        val result = NodeCloner.createCopy(cluster)
+        val result = nodeManager.createCopy(cluster)
 
         def clusterNewCluster(
             newCluster: Cluster,
@@ -100,12 +100,12 @@ class InternalExternalClustering(
 
         internalPackages foreach { removeLongerPackagePrefix(_) }
 
-        val internal = builder.createCluster("internal")
-        val external = builder.createCluster("external")
+        val internal = nodeManager.createCluster("internal")
+        val external = nodeManager.createCluster("external")
         result.addNode(internal)
         result.addNode(external)
         for (node ← cluster.getNodes) {
-            val copy = NodeCloner.createDeepCopy(node)
+            val copy = nodeManager.createDeepCopy(node)
             if (internalPackages exists (node.identifier.startsWith(_))) {
                 internal.addNode(copy)
             }
@@ -124,12 +124,12 @@ class InternalExternalClustering(
 object InternalExternalClustering {
 
     def apply(
-        clusterBuilder: ClusterBuilder,
+        nodeManager: NodeManager,
         internalClustering: Clustering = null,
         externalClustering: Clustering = null,
         successorClustering: Clustering = null): InternalExternalClustering =
         new InternalExternalClustering(
-            clusterBuilder,
+            nodeManager,
             if (internalClustering == null) None else Some(internalClustering),
             if (externalClustering == null) None else Some(externalClustering),
             if (successorClustering == null) None else Some(successorClustering),

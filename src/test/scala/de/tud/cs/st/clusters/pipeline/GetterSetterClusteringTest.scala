@@ -37,7 +37,6 @@ import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 
 import framework.AbstractClusteringTest
-import framework.structure.util.ClusterBuilder
 
 /**
  * @author Thomas Schlosser
@@ -46,7 +45,7 @@ import framework.structure.util.ClusterBuilder
 @RunWith(classOf[JUnitRunner])
 class GetterSetterClusteringTest extends AbstractClusteringTest {
 
-    implicit val clustering = (builder: ClusterBuilder) ⇒ GetterSetterClustering(builder)
+    implicit val clustering = (builder: BaseDependencyExtractor) ⇒ GetterSetterClustering(builder)
 
     test("testGetterSetterClustering [getterSetterTestClass]") {
         testClustering("testGetterSetterClustering [getterSetterTestClass]",

@@ -41,26 +41,26 @@ import framework.structure.TypeNode
 import framework.structure.FieldNode
 import framework.structure.MethodNode
 import framework.structure.NodeCloner
-import framework.structure.util.ClusterBuilder
+import framework.structure.util.NodeManager
 
 /**
  * @author Thomas Schlosser
  *
  */
 class LayerClustering(
-        val builder: ClusterBuilder,
+        val nodeManager: NodeManager,
         val performRecursion: Boolean,
         val successorClustering: Option[Clustering],
         val newClusterClustering: Option[Clustering]) extends IntermediateClustering {
 
     protected override def process(cluster: Cluster): Cluster = {
-        val result = NodeCloner.createCopy(cluster)
+        val result = nodeManager.createCopy(cluster)
         var layer = 0
         var newClusters = Set[Cluster]()
 
         def createLayers(nodes: Set[Node]) {
             def createNewLayerCluster(): Cluster = {
-                val layerCluster = builder.createCluster("layer_"+layer)
+                val layerCluster = nodeManager.createCluster("layer_"+layer)
                 layer += 1
                 result.addNode(layerCluster)
                 newClusters = newClusters + layerCluster
@@ -70,7 +70,7 @@ class LayerClustering(
             def createNewLayerClusterWithNodes(nodes: Iterable[Node]) {
                 val layerCluster = createNewLayerCluster()
                 nodes foreach { node ⇒
-                    layerCluster.addNode(NodeCloner.createDeepCopy(node))
+                    layerCluster.addNode(nodeManager.createDeepCopy(node))
                 }
             }
 
@@ -103,7 +103,7 @@ class LayerClustering(
             if (!sparatedNodes.isEmpty) {
                 if (layer == 0)
                     sparatedNodes foreach { node ⇒
-                        result.addNode(NodeCloner.createDeepCopy(node))
+                        result.addNode(nodeManager.createDeepCopy(node))
                     }
                 else
                     bottomLayerNodes = bottomLayerNodes ++ sparatedNodes
@@ -145,12 +145,12 @@ class LayerClustering(
 object LayerClustering {
 
     def apply(
-        clusterBuilder: ClusterBuilder,
+        nodeManager: NodeManager,
         performRecursion: Boolean = false,
         successorClustering: Clustering = null,
         newClusterClustering: Clustering = null): LayerClustering =
         new LayerClustering(
-            clusterBuilder,
+            nodeManager,
             performRecursion,
             if (successorClustering == null) None else Some(successorClustering),
             if (newClusterClustering == null) None else Some(newClusterClustering))

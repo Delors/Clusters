@@ -37,7 +37,6 @@ import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 
 import framework.AbstractClusteringTest
-import framework.structure.util.ClusterBuilder
 
 /**
  * @author Thomas Schlosser
@@ -46,7 +45,7 @@ import framework.structure.util.ClusterBuilder
 @RunWith(classOf[JUnitRunner])
 class InternalExternalClusteringTest extends AbstractClusteringTest {
 
-    implicit val clustering = (builder: ClusterBuilder) ⇒ InternalExternalClustering(builder)
+    implicit val clustering = (builder: BaseDependencyExtractor) ⇒ InternalExternalClustering(builder)
 
     test("testInternalExternalClustering [cocome-printercontroller]") {
         testClustering(

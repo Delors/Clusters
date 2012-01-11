@@ -41,7 +41,7 @@ import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
 import pipeline.Clustering
 import structure.Cluster
-import structure.util.ClusterBuilder
+import structure.util.RootClusterBuilder
 import _root_.de.tud.cs.st.bat.resolved.ClassFile
 import _root_.de.tud.cs.st.bat.resolved.reader.Java6Framework
 import _root_.de.tud.cs.st.bat.resolved.dependency.DependencyExtractor
@@ -54,14 +54,16 @@ import _root_.de.tud.cs.st.util.perf.PerformanceEvaluation
 trait AbstractClusteringTest extends FunSuite
         with PerformanceEvaluation {
 
+    type BaseDependencyExtractor = RootClusterBuilder
+
     protected def testClustering(testName: String,
                                  extractDependencies: (DependencyExtractor) ⇒ Unit,
                                  dotFileName: Option[String] = None,
                                  includeSingleNodes: Boolean = true,
-                                 includeEdges: Boolean = true)(implicit clustering: ClusterBuilder ⇒ Clustering): Array[Cluster] = {
+                                 includeEdges: Boolean = true)(implicit clustering: BaseDependencyExtractor ⇒ Clustering): Array[Cluster] = {
         println(testName+" - START")
 
-        val clusterBuilder = new ClusterBuilder {}
+        val clusterBuilder = RootClusterBuilder()
 
         time(duration ⇒ println("time to read classfiles and extract dependencies: "+nanoSecondsToMilliseconds(duration)+"ms")) {
             extractDependencies(clusterBuilder)

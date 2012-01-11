@@ -38,8 +38,6 @@ import scala.collection.mutable.Map
 import framework.structure.Cluster
 import framework.structure.Node
 import framework.structure.Edge
-import framework.structure.NodeCloner
-import framework.structure.util.ClusterBuilder
 import de.tud.cs.st.bat.resolved.dependency._
 
 /**
@@ -57,7 +55,7 @@ trait SameNeighborClustering extends IntermediateClustering {
             node.getEdges.find(edge ⇒ isOfConsideredDependencyType(edge.dType))
         }
 
-        val result = NodeCloner.createCopy(cluster)
+        val result = nodeManager.createCopy(cluster)
 
         val clustersMap = Map[Int, Set[Node]]()
 
@@ -65,7 +63,7 @@ trait SameNeighborClustering extends IntermediateClustering {
             getConsideredEdge(node) match {
                 case Some(edge) ⇒
                     val neighborNodeID = edge.targetID
-                    val copy = NodeCloner.createDeepCopy(
+                    val copy = nodeManager.createDeepCopy(
                         node,
                         edgeFilter(neighborNodeID),
                         transposedEdgeFilter(neighborNodeID))
@@ -77,8 +75,8 @@ trait SameNeighborClustering extends IntermediateClustering {
 
         var newClusters = Set[Cluster]()
         for ((neighborNodeID, nodeSet) ← clustersMap) {
-            val neighborNode = builder.getNode(neighborNodeID)
-            val sameNeighborCluster = builder.createCluster(neighborNode.identifier)
+            val neighborNode = nodeManager.getNode(neighborNodeID)
+            val sameNeighborCluster = nodeManager.createCluster(neighborNode.identifier)
             sameNeighborCluster.addNode(neighborNode)
             nodeSet foreach {
                 sameNeighborCluster.addNode(_) // node was cloned before it was put into map

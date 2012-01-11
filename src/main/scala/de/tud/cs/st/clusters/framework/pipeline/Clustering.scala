@@ -35,7 +35,7 @@ package framework
 package pipeline
 
 import structure.Cluster
-import structure.util.ClusterBuilder
+import structure.util.NodeManager
 
 /**
  * @author Thomas Schlosser
@@ -43,7 +43,7 @@ import structure.util.ClusterBuilder
  */
 trait Clustering {
 
-    val builder: ClusterBuilder
+    val nodeManager: NodeManager
 
     def process(clusters: Array[Cluster]): Array[Cluster]
 

@@ -35,36 +35,13 @@ package framework
 package structure
 package util
 
-import scala.collection.mutable.ArrayBuffer
-import de.tud.cs.st.bat.resolved.SourceElementsVisitor
-import de.tud.cs.st.bat.resolved.ClassFile
-import de.tud.cs.st.bat.resolved.Method
-import de.tud.cs.st.bat.resolved.Field
-import de.tud.cs.st.bat.resolved.dependency.SourceElementIDs
-
 /**
- * Implementation of the SourceElementsVisitor trait where all source elements
- * are added to the corresponding node in the lookup buffer. If there is no node
- * for the given source element, a new node that directly contains the source element
- * is added.
+ * @author thomas
  *
- * @author Thomas Schlosser
  */
-trait NodeMappingSourceElementsVisitor extends SourceElementsVisitor[Unit]
-        with SourceElementIDs
+trait NodeManager
+        extends NodeCloner
         with NodeFactory
-        with PrettyPrint {
-
-    override def visit(classFile: ClassFile) {
-        createTypeNode(super.sourceElementID(classFile), classFile)
-    }
-
-    override def visit(classFile: ClassFile, method: Method) {
-        createMethodNode(super.sourceElementID(classFile, method), classFile, method)
-    }
-
-    override def visit(classFile: ClassFile, field: Field) {
-        createFieldNode(super.sourceElementID(classFile, field), classFile, field)
-    }
+        with ClusterFactory {
 
 }

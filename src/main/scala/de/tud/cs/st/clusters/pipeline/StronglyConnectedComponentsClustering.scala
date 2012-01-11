@@ -38,8 +38,7 @@ import framework.pipeline.Clustering
 import framework.pipeline.IntermediateClustering
 import framework.structure.Cluster
 import framework.structure.Node
-import framework.structure.NodeCloner
-import framework.structure.util.ClusterBuilder
+import framework.structure.util.NodeManager
 import graphscan.GraphScanResultBean
 import graphscan.GraphScanningAlgorithms
 
@@ -48,7 +47,7 @@ import graphscan.GraphScanningAlgorithms
  *
  */
 class StronglyConnectedComponentsClustering(
-    val builder: ClusterBuilder,
+    val nodeManager: NodeManager,
     val successorClustering: Option[Clustering],
     val newClusterClustering: Option[Clustering])
         extends IntermediateClustering {
@@ -64,17 +63,17 @@ class StronglyConnectedComponentsClustering(
             null, true, result.order)(true)
 
         // create resulting clusters
-        val resultCluster = NodeCloner.createCopy(cluster)
+        val resultCluster = nodeManager.createCopy(cluster)
         var resultMap = Map[Int, Cluster]()
         for (node ← cluster.getNodes) {
             val sccID = result.color(node.uniqueID) - 2
             if (sccID >= 0) {
                 resultMap.get(sccID) match {
                     case Some(c) ⇒
-                        c.addNode(NodeCloner.createDeepCopy(node))
+                        c.addNode(nodeManager.createDeepCopy(node))
                     case None ⇒
-                        val c = builder.createCluster("SCC_"+System.nanoTime()) //sccID)
-                        c.addNode(NodeCloner.createDeepCopy(node))
+                        val c = nodeManager.createCluster("SCC_"+System.nanoTime()) //sccID)
+                        c.addNode(nodeManager.createDeepCopy(node))
                         resultMap(sccID) = c
                         resultCluster.addNode(c)
                 }
@@ -87,11 +86,11 @@ class StronglyConnectedComponentsClustering(
 object StronglyConnectedComponentsClustering {
 
     def apply(
-        clusterBuilder: ClusterBuilder,
+        nodeManager: NodeManager,
         successorClustering: Clustering = null,
         newClusterClustering: Clustering = null): StronglyConnectedComponentsClustering =
         new StronglyConnectedComponentsClustering(
-            clusterBuilder,
+            nodeManager,
             if (successorClustering == null) None else Some(successorClustering),
             if (newClusterClustering == null) None else Some(newClusterClustering))
 }

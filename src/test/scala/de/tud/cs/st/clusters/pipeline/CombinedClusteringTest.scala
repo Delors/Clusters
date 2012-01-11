@@ -37,7 +37,6 @@ import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 
 import framework.AbstractClusteringTest
-import framework.structure.util.ClusterBuilder
 
 /**
  * @author Thomas Schlosser
@@ -52,7 +51,7 @@ class CombinedClusteringTest extends AbstractClusteringTest {
     //                StronglyConnectedComponentsClustering(builder,
     //                    SingleElementClusterRemover(builder,
     //                        LayerClustering(builder)))))
-    implicit val clustering = (builder: ClusterBuilder) ⇒
+    implicit val clustering = (builder: BaseDependencyExtractor) ⇒
         InternalExternalClustering(builder,
             internalClustering = InternalClassClustering(builder)) //,
     //            newClusterClustering = LayerClustering(builder, true))
