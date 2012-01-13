@@ -57,8 +57,6 @@ import framework.structure.util.ClusterManager
 class InternalExternalClustering extends Clustering {
 
     protected override def process(cluster: Cluster): Cluster = {
-        val result = clusterManager.createCopy(cluster)
-
         // create list that contains all names of internal packages
         var internalPackages: Set[String] = Set()
         for (node ← cluster.getNodes) {
@@ -82,21 +80,22 @@ class InternalExternalClustering extends Clustering {
 
         internalPackages foreach { removeLongerPackagePrefix(_) }
 
+        val inputNodes = cluster.getNodes.toArray
+        cluster.clearNodes()
         val internal = clusterManager.createCluster("internal")
         val external = clusterManager.createCluster("external")
-        result.addNode(internal)
-        result.addNode(external)
-        for (node ← cluster.getNodes) {
-            val copy = clusterManager.createDeepCopy(node)
+        cluster.addNode(internal)
+        cluster.addNode(external)
+        for (node ← inputNodes) {
             if (internalPackages exists (node.identifier.startsWith(_))) {
-                internal.addNode(copy)
+                internal.addNode(node)
             }
             else {
-                external.addNode(copy)
+                external.addNode(node)
             }
         }
 
-        result
+        cluster
     }
 }
 

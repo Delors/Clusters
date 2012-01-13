@@ -52,11 +52,11 @@ import de.tud.cs.st.bat.resolved.dependency._
 class SimilarityMetricClustering extends Clustering {
 
     protected override def process(cluster: Cluster): Cluster = {
-        val result = clusterManager.createCopy(cluster)
+        val inputNodes = cluster.getNodes.toArray
 
         val weightMatrix: Map[(Int, Int), Long] = Map()
 
-        cluster.getNodes foreach {
+        inputNodes foreach {
             _.getEdges foreach { edge ⇒
                 val key = (edge.sourceID, edge.targetID)
                 val oldWeight: Long = weightMatrix.getOrElse(key, 0)
@@ -71,17 +71,12 @@ class SimilarityMetricClustering extends Clustering {
         val sortedEdges = weightMatrix.toList.sortWith((a, b) ⇒ a._2 > b._2)
         //        println(sortedEdges.mkString("\n"))
 
-        calcClusters(sortedEdges, cluster.getNodes) foreach {
-            result.addNode(_)
+        cluster.clearNodes()
+        calcClusters(sortedEdges, inputNodes) foreach {
+            cluster.addNode(_)
         }
-        //        val newClusters = calcClusters(sortedEdges, cluster.getNodes)
-        //        cluster.clearNodes()
-        //
-        //        newClusters foreach {
-        //            cluster.addNode(_)
-        //        }
 
-        result
+        cluster
     }
 
     private def calcClusters(sortedEdges: List[((Int, Int), Long)], nodes: Iterable[Node]): Array[Cluster] = {
