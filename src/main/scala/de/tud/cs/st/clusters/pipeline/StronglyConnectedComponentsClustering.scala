@@ -35,10 +35,9 @@ package pipeline
 
 import scala.collection.mutable.Map
 import framework.pipeline.Clustering
-import framework.pipeline.IntermediateClustering
 import framework.structure.Cluster
 import framework.structure.Node
-import framework.structure.util.NodeManager
+import framework.structure.util.ClusterManager
 import graphscan.GraphScanResultBean
 import graphscan.GraphScanningAlgorithms
 
@@ -46,11 +45,7 @@ import graphscan.GraphScanningAlgorithms
  * @author Thomas Schlosser
  *
  */
-class StronglyConnectedComponentsClustering(
-    val nodeManager: NodeManager,
-    val successorClustering: Option[Clustering],
-    val newClusterClustering: Option[Clustering])
-        extends IntermediateClustering {
+class StronglyConnectedComponentsClustering extends Clustering {
 
     protected override def process(cluster: Cluster): Cluster = {
         // calculate finishing times of all nodes using depth first search
@@ -63,17 +58,17 @@ class StronglyConnectedComponentsClustering(
             null, true, result.order)(true)
 
         // create resulting clusters
-        val resultCluster = nodeManager.createCopy(cluster)
+        val resultCluster = clusterManager.createCopy(cluster)
         var resultMap = Map[Int, Cluster]()
         for (node ← cluster.getNodes) {
             val sccID = result.color(node.uniqueID) - 2
             if (sccID >= 0) {
                 resultMap.get(sccID) match {
                     case Some(c) ⇒
-                        c.addNode(nodeManager.createDeepCopy(node))
+                        c.addNode(clusterManager.createDeepCopy(node))
                     case None ⇒
-                        val c = nodeManager.createCluster("SCC_"+System.nanoTime()) //sccID)
-                        c.addNode(nodeManager.createDeepCopy(node))
+                        val c = clusterManager.createCluster("SCC_"+System.nanoTime()) //sccID)
+                        c.addNode(clusterManager.createDeepCopy(node))
                         resultMap(sccID) = c
                         resultCluster.addNode(c)
                 }
@@ -85,12 +80,6 @@ class StronglyConnectedComponentsClustering(
 
 object StronglyConnectedComponentsClustering {
 
-    def apply(
-        nodeManager: NodeManager,
-        successorClustering: Clustering = null,
-        newClusterClustering: Clustering = null): StronglyConnectedComponentsClustering =
-        new StronglyConnectedComponentsClustering(
-            nodeManager,
-            if (successorClustering == null) None else Some(successorClustering),
-            if (newClusterClustering == null) None else Some(newClusterClustering))
+    def apply(): StronglyConnectedComponentsClustering = new StronglyConnectedComponentsClustering
+
 }

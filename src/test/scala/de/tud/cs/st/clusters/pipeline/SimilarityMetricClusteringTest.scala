@@ -35,8 +35,8 @@ package pipeline
 
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
-
 import framework.AbstractClusteringTest
+import framework.pipeline.Clustering
 
 /**
  * @author Thomas Schlosser
@@ -45,7 +45,9 @@ import framework.AbstractClusteringTest
 @RunWith(classOf[JUnitRunner])
 class SimilarityMetricClusteringTest extends AbstractClusteringTest {
 
-    implicit val clustering = (builder: BaseDependencyExtractor) ⇒ SimilarityMetricClustering(builder)
+    implicit val clusterings: Array[Clustering] = Array(
+        SimilarityMetricClustering()
+    )
 
     test("testSimilarityMetricClustering [cocome-printercontroller]") {
         testClustering(

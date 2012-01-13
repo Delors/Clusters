@@ -51,14 +51,14 @@ import framework.pipeline.Clustering
 class MoJoWrapperTest extends AbstractClusteringTest {
 
     test("calculate double direction MojoFM quality value") {
-        val clusteringA = (builder: BaseDependencyExtractor) ⇒ InternalClassClustering(builder)
+        val clusteringA: Array[Clustering] = Array(InternalClassClustering())
 
         val clustersA = testClustering(
             "testClassClustering [ClusteringTestProject.zip]",
             extractDependencies("test/classfiles/ClusteringTestProject.zip"),
             Some("clusterA"))(clusteringA)
 
-        val clusteringB = (builder: BaseDependencyExtractor) ⇒ InternalExternalClustering(builder)
+        val clusteringB: Array[Clustering] = Array(InternalExternalClustering())
 
         val clustersB = testClustering(
             "testClassClustering [ClusteringTestProject.zip]",
@@ -66,7 +66,7 @@ class MoJoWrapperTest extends AbstractClusteringTest {
             Some("clusterB"))(clusteringB)
 
         println("MoJo:")
-        var mjw = new MoJoWrapper(clustersA(0), clustersB(0))
+        var mjw = new MoJoWrapper(clustersA, clustersB)
         println(mjw.doubleDirectionMojoFM)
     }
 }

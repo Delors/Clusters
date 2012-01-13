@@ -35,8 +35,8 @@ package pipeline
 
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
-
 import framework.AbstractClusteringTest
+import framework.pipeline.Clustering
 
 /**
  * @author Thomas Schlosser
@@ -45,7 +45,9 @@ import framework.AbstractClusteringTest
 @RunWith(classOf[JUnitRunner])
 class LayerClusteringTest extends AbstractClusteringTest {
 
-    implicit val clustering = (builder: BaseDependencyExtractor) ⇒ LayerClustering(builder, true)
+    implicit val clusterings: Array[Clustering] = Array(
+        LayerClustering(true)
+    )
 
     test("testLayerClustering [getterSetterTestClass]") {
         testClustering(

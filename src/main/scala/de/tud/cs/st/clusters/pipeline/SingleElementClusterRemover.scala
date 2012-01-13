@@ -34,19 +34,15 @@ package de.tud.cs.st.clusters
 package pipeline
 
 import framework.pipeline.Clustering
-import framework.pipeline.IntermediateClustering
 import framework.structure.Cluster
-import framework.structure.util.NodeManager
+import framework.structure.util.ClusterManager
 import framework.structure.SourceElementNode
 
 /**
  * @author Thomas Schlosser
  *
  */
-class SingleElementClusterRemover(
-        val nodeManager: NodeManager,
-        val successorClustering: Option[Clustering],
-        val newClusterClustering: Option[Clustering]) extends IntermediateClustering {
+class SingleElementClusterRemover extends Clustering {
 
     //TODO re-check whether it is OK that in this case no copies of the cluster and the nodes are created  
     protected def process(cluster: Cluster): Cluster = {
@@ -64,13 +60,6 @@ class SingleElementClusterRemover(
 
 object SingleElementClusterRemover {
 
-    def apply(
-        nodeManager: NodeManager,
-        successorClustering: Clustering = null,
-        newClusterClustering: Clustering = null): SingleElementClusterRemover =
-        new SingleElementClusterRemover(
-            nodeManager,
-            if (successorClustering == null) None else Some(successorClustering),
-            if (newClusterClustering == null) None else Some(newClusterClustering))
+    def apply(): SingleElementClusterRemover = new SingleElementClusterRemover
 
 }

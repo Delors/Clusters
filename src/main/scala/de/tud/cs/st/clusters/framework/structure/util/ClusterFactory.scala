@@ -43,7 +43,7 @@ import de.tud.cs.st.bat.resolved.ObjectType
 import de.tud.cs.st.bat.resolved.MethodDescriptor
 
 /**
- * @author thomas
+ * @author Thomas Schlosser
  *
  */
 trait ClusterFactory

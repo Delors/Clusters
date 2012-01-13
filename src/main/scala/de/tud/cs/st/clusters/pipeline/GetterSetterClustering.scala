@@ -35,13 +35,11 @@ package pipeline
 
 import scala.collection.mutable.ListBuffer
 import framework.pipeline.Clustering
-import framework.pipeline.IntermediateClustering
 import framework.structure.Cluster
 import framework.structure.Node
 import framework.structure.FieldNode
 import framework.structure.MethodNode
-import framework.structure.NodeCloner
-import framework.structure.util.NodeManager
+import framework.structure.util.ClusterManager
 import de.tud.cs.st.bat.resolved.dependency.DependencyType._
 import de.tud.cs.st.bat.resolved.Type
 import de.tud.cs.st.bat.resolved.VoidType
@@ -51,11 +49,7 @@ import de.tud.cs.st.bat.resolved.Field
  * @author Thomas Schlosser
  *
  */
-class GetterSetterClustering(
-    val nodeManager: NodeManager,
-    val successorClustering: Option[Clustering],
-    val newClusterClustering: Option[Clustering])
-        extends IntermediateClustering {
+class GetterSetterClustering extends Clustering {
 
     val getterPrefix: Option[String] = Some("get")
     val setterPrefix: Option[String] = Some("set")
@@ -68,7 +62,7 @@ class GetterSetterClustering(
             //add mechanism to algorithms that allows to specify/configure that a cluster is as fine granular as required
             var checkedNodes = Set[Int]()
             for (tEdge ← node.getTransposedEdges) {
-                val target = nodeManager.getNode(tEdge.targetID)
+                val target = clusterManager.getNode(tEdge.targetID)
                 if (!checkedNodes.contains(tEdge.targetID)) {
                     tEdge.dType match {
                         case READS_FIELD ⇒
@@ -111,7 +105,7 @@ class GetterSetterClustering(
             if (gscBean.field == null) None else Some(gscBean)
         }
         // TODO: cluster needs methods that return only type/field/method nodes => performance improvement
-        val result = nodeManager.createCopy(cluster)
+        val result = clusterManager.createCopy(cluster)
         for (node ← cluster.getNodes) {
             node match {
                 case FieldNode(_, _, Some(field)) ⇒
@@ -120,20 +114,20 @@ class GetterSetterClustering(
                         case Some(clusterBean) ⇒
                             // create setter/getter cluster
                             println("GETTER_SETTER_CLUSTER")
-                            val gsCluster = nodeManager.createCluster("Getter_Setter_"+clusterBean.field.identifier)
-                            gsCluster.addNode(nodeManager.createDeepCopy(clusterBean.field))
+                            val gsCluster = clusterManager.createCluster("Getter_Setter_"+clusterBean.field.identifier)
+                            gsCluster.addNode(clusterManager.createDeepCopy(clusterBean.field))
                             if (clusterBean.hasGetter) {
-                                gsCluster.addNode(nodeManager.createDeepCopy(clusterBean.getter))
+                                gsCluster.addNode(clusterManager.createDeepCopy(clusterBean.getter))
                             }
                             if (clusterBean.hasSetter) {
-                                gsCluster.addNode(nodeManager.createDeepCopy(clusterBean.setter))
+                                gsCluster.addNode(clusterManager.createDeepCopy(clusterBean.setter))
                             }
                             result.addNode(gsCluster)
                         case None ⇒
-                            result.addNode(nodeManager.createDeepCopy(node))
+                            result.addNode(clusterManager.createDeepCopy(node))
                     }
                 case _ ⇒
-                    result.addNode(nodeManager.createDeepCopy(node))
+                    result.addNode(clusterManager.createDeepCopy(node))
             }
         }
         result
@@ -159,13 +153,6 @@ class GetterSetterClustering(
 
 object GetterSetterClustering {
 
-    def apply(
-        nodeManager: NodeManager,
-        successorClustering: Clustering = null,
-        newClusterClustering: Clustering = null): GetterSetterClustering =
-        new GetterSetterClustering(
-            nodeManager,
-            if (successorClustering == null) None else Some(successorClustering),
-            if (newClusterClustering == null) None else Some(newClusterClustering))
+    def apply(): GetterSetterClustering = new GetterSetterClustering
 
 }

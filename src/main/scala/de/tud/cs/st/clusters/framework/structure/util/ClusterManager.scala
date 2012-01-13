@@ -51,12 +51,14 @@ import ClusterIDsMap._
  * @author Thomas Schlosser
  *
  */
-trait RootClusterBuilder extends DependencyExtractor
+trait ClusterManager extends DependencyExtractor
         with SourceElementIDsMap
         with UseIDOfBaseTypeForArrayTypes
         with ClusterIDsMap
         with NodeMappingSourceElementsVisitor
-        with NodeManager
+        with NodeFactory
+        with ClusterFactory
+        with NodeCloner
         with NodeStore {
 
     protected val ROOT_CLUSTER_NAME = "ROOT"
@@ -94,8 +96,8 @@ trait RootClusterBuilder extends DependencyExtractor
 
 }
 
-object RootClusterBuilder {
-    def apply(): RootClusterBuilder = {
-        new RootClusterBuilder {}
+object ClusterManager {
+    def apply(): ClusterManager = {
+        new ClusterManager {}
     }
 }

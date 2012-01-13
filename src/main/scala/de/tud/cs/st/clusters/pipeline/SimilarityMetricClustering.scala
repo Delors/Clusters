@@ -36,14 +36,12 @@ package pipeline
 import scala.collection.mutable.Map
 import scala.collection.mutable.Set
 import framework.pipeline.Clustering
-import framework.pipeline.IntermediateClustering
 import framework.structure.Cluster
 import framework.structure.Node
 import framework.structure.TypeNode
 import framework.structure.FieldNode
 import framework.structure.MethodNode
-import framework.structure.NodeCloner
-import framework.structure.util.NodeManager
+import framework.structure.util.ClusterManager
 import de.tud.cs.st.bat.resolved.dependency._
 
 /**
@@ -51,14 +49,10 @@ import de.tud.cs.st.bat.resolved.dependency._
  * @author Thomas Schlosser
  *
  */
-class SimilarityMetricClustering(
-    val nodeManager: NodeManager,
-    val successorClustering: Option[Clustering],
-    val newClusterClustering: Option[Clustering])
-        extends IntermediateClustering {
+class SimilarityMetricClustering extends Clustering {
 
     protected override def process(cluster: Cluster): Cluster = {
-        val result = nodeManager.createCopy(cluster)
+        val result = clusterManager.createCopy(cluster)
 
         val weightMatrix: Map[(Int, Int), Long] = Map()
 
@@ -80,8 +74,12 @@ class SimilarityMetricClustering(
         calcClusters(sortedEdges, cluster.getNodes) foreach {
             result.addNode(_)
         }
-
-        //TODO: cluster newClusters
+        //        val newClusters = calcClusters(sortedEdges, cluster.getNodes)
+        //        cluster.clearNodes()
+        //
+        //        newClusters foreach {
+        //            cluster.addNode(_)
+        //        }
 
         result
     }
@@ -123,9 +121,9 @@ class SimilarityMetricClustering(
         val result = new Array[Cluster](clusterset.size)
         var i = 0
         clusterset foreach { nodes ⇒
-            val cluster = nodeManager.createCluster("simMetricCluster"+i)
+            val cluster = clusterManager.createCluster("simMetricCluster"+i)
             nodes foreach { node ⇒
-                cluster.addNode(nodeManager.getNode(node))
+                cluster.addNode(clusterManager.getNode(node))
             }
             result(i) = cluster
             i += 1
@@ -189,14 +187,7 @@ class SimilarityMetricClustering(
 
 object SimilarityMetricClustering {
 
-    def apply(
-        nodeManager: NodeManager,
-        successorClustering: Clustering = null,
-        newClusterClustering: Clustering = null): SimilarityMetricClustering =
-        new SimilarityMetricClustering(
-            nodeManager,
-            if (successorClustering == null) None else Some(successorClustering),
-            if (newClusterClustering == null) None else Some(newClusterClustering))
+    def apply(): SimilarityMetricClustering = new SimilarityMetricClustering
 
 }
 

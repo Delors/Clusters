@@ -35,8 +35,8 @@ package pipeline
 
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
-
 import framework.AbstractClusteringTest
+import framework.pipeline.Clustering
 
 /**
  * @author Thomas Schlosser
@@ -45,8 +45,10 @@ import framework.AbstractClusteringTest
 @RunWith(classOf[JUnitRunner])
 class StronglyConnectedComponentsClusteringTest extends AbstractClusteringTest {
 
-    implicit val clustering = (builder: BaseDependencyExtractor) ⇒
-        StronglyConnectedComponentsClustering(builder, SingleElementClusterRemover(builder))
+    implicit val clusterings: Array[Clustering] = Array(
+        StronglyConnectedComponentsClustering(),
+        SingleElementClusterRemover()
+    )
 
     test("testSCCClustering [sccTestClass]") {
         testClustering(

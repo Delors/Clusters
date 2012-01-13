@@ -34,33 +34,27 @@ package de.tud.cs.st.clusters
 package pipeline
 
 import framework.pipeline.Clustering
-import framework.pipeline.IntermediateClustering
 import framework.structure.Cluster
 import framework.structure.Node
 import framework.structure.TypeNode
 import framework.structure.FieldNode
 import framework.structure.MethodNode
-import framework.structure.NodeCloner
-import framework.structure.util.NodeManager
+import framework.structure.util.ClusterManager
 
 /**
  * @author Thomas Schlosser
  *
  */
-class LayerClustering(
-        val nodeManager: NodeManager,
-        val performRecursion: Boolean,
-        val successorClustering: Option[Clustering],
-        val newClusterClustering: Option[Clustering]) extends IntermediateClustering {
+class LayerClustering(val performRecursion: Boolean) extends Clustering {
 
     protected override def process(cluster: Cluster): Cluster = {
-        val result = nodeManager.createCopy(cluster)
+        val result = clusterManager.createCopy(cluster)
         var layer = 0
         var newClusters = Set[Cluster]()
 
         def createLayers(nodes: Set[Node]) {
             def createNewLayerCluster(): Cluster = {
-                val layerCluster = nodeManager.createCluster("layer_"+layer)
+                val layerCluster = clusterManager.createCluster("layer_"+layer)
                 layer += 1
                 result.addNode(layerCluster)
                 newClusters = newClusters + layerCluster
@@ -70,7 +64,7 @@ class LayerClustering(
             def createNewLayerClusterWithNodes(nodes: Iterable[Node]) {
                 val layerCluster = createNewLayerCluster()
                 nodes foreach { node ⇒
-                    layerCluster.addNode(nodeManager.createDeepCopy(node))
+                    layerCluster.addNode(clusterManager.createDeepCopy(node))
                 }
             }
 
@@ -103,7 +97,7 @@ class LayerClustering(
             if (!sparatedNodes.isEmpty) {
                 if (layer == 0)
                     sparatedNodes foreach { node ⇒
-                        result.addNode(nodeManager.createDeepCopy(node))
+                        result.addNode(clusterManager.createDeepCopy(node))
                     }
                 else
                     bottomLayerNodes = bottomLayerNodes ++ sparatedNodes
@@ -130,29 +124,13 @@ class LayerClustering(
 
         createLayers(cluster.getNodes.toSet)
 
-        if (newClusterClustering.isDefined) {
-            val clusteredLayers = newClusterClustering.get.process(newClusters.toArray)
-            clusteredLayers foreach { clusteredLayer ⇒
-                result.removeNode(clusteredLayer.uniqueID)
-                result.addNode(clusteredLayer)
-            }
-        }
-
         result
     }
 }
 
 object LayerClustering {
 
-    def apply(
-        nodeManager: NodeManager,
-        performRecursion: Boolean = false,
-        successorClustering: Clustering = null,
-        newClusterClustering: Clustering = null): LayerClustering =
-        new LayerClustering(
-            nodeManager,
-            performRecursion,
-            if (successorClustering == null) None else Some(successorClustering),
-            if (newClusterClustering == null) None else Some(newClusterClustering))
+    def apply(performRecursion: Boolean = false): LayerClustering =
+        new LayerClustering(performRecursion)
 
 }

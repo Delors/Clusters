@@ -44,7 +44,7 @@ import de.tud.cs.st.bat.resolved.dependency._
  * @author Thomas Schlosser
  *
  */
-trait SameNeighborClustering extends IntermediateClustering {
+trait SameNeighborClustering extends Clustering {
 
     val edgeFilter: Int ⇒ Edge ⇒ Boolean = _ ⇒ _ ⇒ false
 
@@ -55,45 +55,32 @@ trait SameNeighborClustering extends IntermediateClustering {
             node.getEdges.find(edge ⇒ isOfConsideredDependencyType(edge.dType))
         }
 
-        val result = nodeManager.createCopy(cluster)
-
         val clustersMap = Map[Int, Set[Node]]()
 
         for (node ← cluster.getNodes) {
             getConsideredEdge(node) match {
                 case Some(edge) ⇒
                     val neighborNodeID = edge.targetID
-                    val copy = nodeManager.createDeepCopy(
-                        node,
-                        edgeFilter(neighborNodeID),
-                        transposedEdgeFilter(neighborNodeID))
                     val clusterSet = clustersMap.getOrElse(neighborNodeID, Set())
-                    clustersMap(neighborNodeID) = clusterSet + copy
+                    clustersMap(neighborNodeID) = clusterSet + node
                 case None ⇒
             }
         }
 
+        cluster.clearNodes()
         var newClusters = Set[Cluster]()
         for ((neighborNodeID, nodeSet) ← clustersMap) {
-            val neighborNode = nodeManager.getNode(neighborNodeID)
-            val sameNeighborCluster = nodeManager.createCluster(neighborNode.identifier)
+            val neighborNode = clusterManager.getNode(neighborNodeID)
+            val sameNeighborCluster = clusterManager.createCluster(neighborNode.identifier)
             sameNeighborCluster.addNode(neighborNode)
             nodeSet foreach {
                 sameNeighborCluster.addNode(_) // node was cloned before it was put into map
             }
-            result.addNode(sameNeighborCluster)
+            cluster.addNode(sameNeighborCluster)
             newClusters = newClusters + sameNeighborCluster
         }
 
-        if (newClusterClustering.isDefined) {
-            val clusteredLayers = newClusterClustering.get.process(newClusters.toArray)
-            clusteredLayers foreach { clusteredLayer ⇒
-                result.removeNode(clusteredLayer.uniqueID)
-                result.addNode(clusteredLayer)
-            }
-        }
-
-        result
+        cluster
     }
 
     protected def isOfConsideredDependencyType(dType: DependencyType): Boolean

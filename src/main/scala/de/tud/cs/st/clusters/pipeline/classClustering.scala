@@ -35,28 +35,22 @@ package pipeline
 
 import scala.collection.mutable.Map
 import framework.pipeline.Clustering
-import framework.pipeline.IntermediateClustering
 import framework.pipeline.SameNeighborClustering
 import framework.structure.Cluster
 import framework.structure.Node
 import framework.structure.Edge
-import framework.structure.NodeCloner
-import framework.structure.util.NodeManager
+import framework.structure.util.ClusterManager
 import de.tud.cs.st.bat.resolved.dependency._
 
 /**
  * @author Thomas Schlosser
  *
  */
-trait ClassClustering extends IntermediateClustering {
+trait ClassClustering extends Clustering {
 
 }
 
-class InternalClassClustering(
-    val nodeManager: NodeManager,
-    val successorClustering: Option[Clustering],
-    val newClusterClustering: Option[Clustering])
-        extends ClassClustering with SameNeighborClustering {
+class InternalClassClustering extends ClassClustering with SameNeighborClustering {
 
     override protected def isOfConsideredDependencyType(dType: DependencyType): Boolean =
         dType == DependencyType.IS_INSTANCE_MEMBER_OF || dType == DependencyType.IS_CLASS_MEMBER_OF
@@ -71,25 +65,14 @@ class InternalClassClustering(
 
 object InternalClassClustering {
 
-    def apply(
-        nodeManager: NodeManager,
-        successorClustering: Clustering = null,
-        newClusterClustering: Clustering = null): InternalClassClustering =
-        new InternalClassClustering(
-            nodeManager,
-            if (successorClustering == null) None else Some(successorClustering),
-            if (newClusterClustering == null) None else Some(newClusterClustering))
+    def apply(): InternalClassClustering = new InternalClassClustering()
 
 }
 
-class ExternalClassClustering(
-    val nodeManager: NodeManager,
-    val successorClustering: Option[Clustering],
-    val newClusterClustering: Option[Clustering])
-        extends ClassClustering {
+class ExternalClassClustering extends ClassClustering {
 
     protected override def process(cluster: Cluster): Cluster = {
-        val result = nodeManager.createCopy(cluster)
+        val result = clusterManager.createCopy(cluster)
 
         val classClustersMap = Map[Int, Set[Node]]()
 
@@ -107,8 +90,8 @@ class ExternalClassClustering(
 
         var newClusters = Set[Cluster]()
         for ((classNodeID, nodeSet) ← classClustersMap) {
-            val classNode = nodeManager.getNode(classNodeID)
-            val classCluster = nodeManager.createCluster(classNode.identifier)
+            val classNode = clusterManager.getNode(classNodeID)
+            val classCluster = clusterManager.createCluster(classNode.identifier)
             nodeSet foreach {
                 classCluster.addNode(_) // node was cloned before it was put into map
             }
@@ -116,27 +99,12 @@ class ExternalClassClustering(
             newClusters = newClusters + classCluster
         }
 
-        if (newClusterClustering.isDefined) {
-            val clusteredLayers = newClusterClustering.get.process(newClusters.toArray)
-            clusteredLayers foreach { clusteredLayer ⇒
-                result.removeNode(clusteredLayer.uniqueID)
-                result.addNode(clusteredLayer)
-            }
-        }
-
-        result
+        cluster
     }
 }
 
 object ExternalClassClustering {
 
-    def apply(
-        nodeManager: NodeManager,
-        successorClustering: Clustering = null,
-        newClusterClustering: Clustering = null): ExternalClassClustering =
-        new ExternalClassClustering(
-            nodeManager,
-            if (successorClustering == null) None else Some(successorClustering),
-            if (newClusterClustering == null) None else Some(newClusterClustering))
+    def apply(): ExternalClassClustering = new ExternalClassClustering()
 
 }

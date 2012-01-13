@@ -35,8 +35,8 @@ package pipeline
 
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
-
 import framework.AbstractClusteringTest
+import framework.pipeline.Clustering
 
 /**
  * @author Thomas Schlosser
@@ -51,10 +51,11 @@ class CombinedClusteringTest extends AbstractClusteringTest {
     //                StronglyConnectedComponentsClustering(builder,
     //                    SingleElementClusterRemover(builder,
     //                        LayerClustering(builder)))))
-    implicit val clustering = (builder: BaseDependencyExtractor) ⇒
-        InternalExternalClustering(builder,
-            internalClustering = InternalClassClustering(builder)) //,
-    //            newClusterClustering = LayerClustering(builder, true))
+
+    implicit val clusterings: Array[Clustering] = Array(
+        InternalExternalClustering(),
+        InternalClassClustering()
+    )
 
     test("testCombinedClustering [ClusteringTestProject]") {
         testClustering(

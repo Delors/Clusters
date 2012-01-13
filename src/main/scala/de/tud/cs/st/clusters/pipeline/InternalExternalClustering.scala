@@ -35,13 +35,11 @@ package pipeline
 
 import scala.collection.mutable.Set
 import framework.pipeline.Clustering
-import framework.pipeline.IntermediateClustering
 import framework.structure.Cluster
 import framework.structure.TypeNode
 import framework.structure.FieldNode
 import framework.structure.MethodNode
-import framework.structure.NodeCloner
-import framework.structure.util.NodeManager
+import framework.structure.util.ClusterManager
 
 /**
  * Splits the nodes into internal and external cluster.
@@ -56,26 +54,10 @@ import framework.structure.util.NodeManager
  * @author Thomas Schlosser
  *
  */
-class InternalExternalClustering(
-    val nodeManager: NodeManager,
-    val internalClustering: Option[Clustering],
-    val externalClustering: Option[Clustering],
-    val successorClustering: Option[Clustering],
-    val newClusterClustering: Option[Clustering])
-        extends IntermediateClustering {
+class InternalExternalClustering extends Clustering {
 
     protected override def process(cluster: Cluster): Cluster = {
-        val result = nodeManager.createCopy(cluster)
-
-        def clusterNewCluster(
-            newCluster: Cluster,
-            clustering: Option[Clustering]) {
-            if (clustering.isDefined) {
-                val clusteredCluster = clustering.get.process(Array(newCluster))
-                result.removeNode(newCluster.uniqueID)
-                result.addNode(clusteredCluster(0))
-            }
-        }
+        val result = clusterManager.createCopy(cluster)
 
         // create list that contains all names of internal packages
         var internalPackages: Set[String] = Set()
@@ -100,12 +82,12 @@ class InternalExternalClustering(
 
         internalPackages foreach { removeLongerPackagePrefix(_) }
 
-        val internal = nodeManager.createCluster("internal")
-        val external = nodeManager.createCluster("external")
+        val internal = clusterManager.createCluster("internal")
+        val external = clusterManager.createCluster("external")
         result.addNode(internal)
         result.addNode(external)
         for (node ← cluster.getNodes) {
-            val copy = nodeManager.createDeepCopy(node)
+            val copy = clusterManager.createDeepCopy(node)
             if (internalPackages exists (node.identifier.startsWith(_))) {
                 internal.addNode(copy)
             }
@@ -114,25 +96,12 @@ class InternalExternalClustering(
             }
         }
 
-        clusterNewCluster(internal, internalClustering)
-        clusterNewCluster(external, externalClustering)
-
         result
     }
 }
 
 object InternalExternalClustering {
 
-    def apply(
-        nodeManager: NodeManager,
-        internalClustering: Clustering = null,
-        externalClustering: Clustering = null,
-        successorClustering: Clustering = null): InternalExternalClustering =
-        new InternalExternalClustering(
-            nodeManager,
-            if (internalClustering == null) None else Some(internalClustering),
-            if (externalClustering == null) None else Some(externalClustering),
-            if (successorClustering == null) None else Some(successorClustering),
-            None)
+    def apply(): InternalExternalClustering = new InternalExternalClustering
 
 }

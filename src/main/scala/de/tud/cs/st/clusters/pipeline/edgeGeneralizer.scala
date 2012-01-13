@@ -34,10 +34,8 @@ package de.tud.cs.st.clusters
 package pipeline
 
 import framework.pipeline.Clustering
-import framework.pipeline.IntermediateClustering
 import framework.structure.Cluster
-import framework.structure.NodeCloner
-import framework.structure.util.NodeManager
+import framework.structure.util.ClusterManager
 import framework.structure.SourceElementNode
 import framework.structure.Node
 
@@ -48,20 +46,20 @@ import framework.structure.Node
 //FIXME fundamental problem with the ClusterBuilder concept for ID->Node lookups,
 // because nodes have been cloned in each step and the nodes in ClusterBuilder represent
 // the state of the root cluster (for each point in time)
-trait EdgeGeneralizer extends IntermediateClustering {
+trait EdgeGeneralizer extends Clustering {
 
     protected override def process(cluster: Cluster): Cluster = {
         convertCluster(cluster)
     }
 
     protected def convertCluster(cluster: Cluster): Cluster = {
-        val result = nodeManager.createCopy(cluster)
+        val result = clusterManager.createCopy(cluster)
         for (node ← cluster.getNodes) {
             node match {
                 case c: Cluster ⇒
                     result.addNode(convertCluster(c))
                 case sen: SourceElementNode ⇒
-                    val copy = nodeManager.createCopy(node)
+                    val copy = clusterManager.createCopy(node)
                     convertEdges(node, copy)
                     result.addNode(copy)
             }
@@ -87,14 +85,10 @@ trait EdgeGeneralizer extends IntermediateClustering {
 
 }
 
-class EdgeSourceGeneralizer(
-    val nodeManager: NodeManager,
-    val successorClustering: Option[Clustering],
-    val newClusterClustering: Option[Clustering])
-        extends EdgeGeneralizer {
+class EdgeSourceGeneralizer extends EdgeGeneralizer {
 
     protected override def newSourceID(oldSourceID: Int): Int = {
-        val oldNode = nodeManager.getNode(oldSourceID)
+        val oldNode = clusterManager.getNode(oldSourceID)
         if (oldNode != null && oldNode.parent != null) {
             oldNode.parent.uniqueID
         }
@@ -107,24 +101,16 @@ class EdgeSourceGeneralizer(
 
 object EdgeSourceGeneralizer {
 
-    def apply(
-        nodeManager: NodeManager,
-        successorClustering: Clustering = null): EdgeSourceGeneralizer =
-        new EdgeSourceGeneralizer(
-            nodeManager,
-            if (successorClustering == null) None else Some(successorClustering),
-            None)
+    def apply(): EdgeSourceGeneralizer =
+        new EdgeSourceGeneralizer
 
 }
 
-class EdgeTargetGeneralizer(
-    val nodeManager: NodeManager,
-    val successorClustering: Option[Clustering],
-    val newClusterClustering: Option[Clustering])
+class EdgeTargetGeneralizer
         extends EdgeGeneralizer {
 
     protected override def newTargetID(oldTargetID: Int): Int = {
-        val oldNode = nodeManager.getNode(oldTargetID)
+        val oldNode = clusterManager.getNode(oldTargetID)
         if (oldNode != null && oldNode.parent != null) {
             oldNode.parent.uniqueID
         }
@@ -137,12 +123,6 @@ class EdgeTargetGeneralizer(
 
 object EdgeTargetGeneralizer {
 
-    def apply(
-        nodeManager: NodeManager,
-        successorClustering: Clustering = null): EdgeTargetGeneralizer =
-        new EdgeTargetGeneralizer(
-            nodeManager,
-            if (successorClustering == null) None else Some(successorClustering),
-            None)
+    def apply(): EdgeTargetGeneralizer = new EdgeTargetGeneralizer
 
 }

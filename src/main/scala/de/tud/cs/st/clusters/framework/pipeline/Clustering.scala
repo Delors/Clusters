@@ -35,7 +35,7 @@ package framework
 package pipeline
 
 import structure.Cluster
-import structure.util.NodeManager
+import structure.util.ClusterManager
 
 /**
  * @author Thomas Schlosser
@@ -43,8 +43,13 @@ import structure.util.NodeManager
  */
 trait Clustering {
 
-    val nodeManager: NodeManager
+    private[this] var cm: ClusterManager = null
+    def clusterManager: ClusterManager = cm
+    def clusterManager_=(cm: ClusterManager) { this.cm = cm }
 
-    def process(clusters: Array[Cluster]): Array[Cluster]
+    protected def process(cluster: Cluster): Cluster
+
+    private[pipeline] def cluster(cluster: Cluster): Cluster =
+        process(cluster)
 
 }

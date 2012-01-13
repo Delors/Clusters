@@ -35,21 +35,15 @@ package pipeline
 
 import scala.collection.mutable.Map
 import framework.pipeline.Clustering
-import framework.pipeline.IntermediateClustering
 import framework.structure.Cluster
-import framework.structure.NodeCloner
-import framework.structure.util.NodeManager
+import framework.structure.util.ClusterManager
 
 /**
  * Creates hyper clusters based on greatest common prefix of classes' package names
  * @author Thomas Schlosser
  *
  */
-class PackageClustering(
-    val nodeManager: NodeManager,
-    val successorClustering: Option[Clustering],
-    val newClusterClustering: Option[Clustering])
-        extends IntermediateClustering {
+class PackageClustering extends Clustering {
 
     protected override def process(cluster: Cluster): Cluster = {
         def getMatchingPrefix(value: String, prefixes: Array[String]): String = {
@@ -64,17 +58,17 @@ class PackageClustering(
         var prfxs = prefixRoot.prefixes.map(charArray ⇒ String.copyValueOf(charArray))
 
         // create resulting clusters
-        val result = nodeManager.createCopy(cluster)
+        val result = clusterManager.createCopy(cluster)
         var resultMap = Map[String, Cluster]()
         for (i ← 0 to prfxs.size - 1) {
             val prfx = prfxs(i)
-            val cl = nodeManager.createCluster(prfx)
+            val cl = clusterManager.createCluster(prfx)
             resultMap(prfx) = cl
             result.addNode(cl)
         }
         for (node ← cluster.getNodes) {
             val c = resultMap(getMatchingPrefix(node.identifier, prfxs))
-            c.addNode(nodeManager.createDeepCopy(node))
+            c.addNode(clusterManager.createDeepCopy(node))
         }
         result
     }
@@ -145,11 +139,6 @@ private trait GreatestCommonPrefixTree[Content] {
 
 object PackageClustering {
 
-    def apply(
-        nodeManager: NodeManager,
-        successorClustering: Clustering = null,
-        newClusterClustering: Clustering = null): PackageClustering =
-        new PackageClustering(nodeManager,
-            if (successorClustering == null) None else Some(successorClustering),
-            if (newClusterClustering == null) None else Some(newClusterClustering))
+    def apply(): PackageClustering = new PackageClustering
+
 }
