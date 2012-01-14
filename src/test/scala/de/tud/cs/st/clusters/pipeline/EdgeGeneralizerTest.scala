@@ -47,6 +47,7 @@ class EdgeGeneralizerTest extends AbstractClusteringTest {
 
     implicit val clusterings: Array[Clustering] = Array(
         InternalExternalClustering(),
+        EdgeTargetGeneralizer(),
         EdgeSourceGeneralizer()
     )
 
