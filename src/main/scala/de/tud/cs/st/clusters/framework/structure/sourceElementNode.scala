@@ -49,28 +49,6 @@ sealed trait SourceElementNode extends Node {
     lazy val identifier = identifierFun()
     def identifierFun: () ⇒ String
 
-    def toDot(includeSingleNodes: Boolean = true, includeEdges: Boolean = true)(implicit nodeBuffer: StringBuffer = new StringBuffer, edgeBuffer: StringBuffer = new StringBuffer): String = {
-        if (includeSingleNodes) {
-            nodeBuffer.append("\t")
-            nodeBuffer.append(uniqueID)
-            nodeBuffer.append("[label=\"")
-            nodeBuffer.append(identifier)
-            nodeBuffer.append("\"];\n")
-
-            // add egdes
-            if (includeEdges)
-                for (e ← getEdges) {
-                    edgeBuffer.append("\t")
-                    edgeBuffer.append(e.sourceID)
-                    edgeBuffer.append(" -> ")
-                    edgeBuffer.append(e.targetID)
-                    edgeBuffer.append("[label=\"")
-                    edgeBuffer.append(e.dType.toString)
-                    edgeBuffer.append("\"];\n")
-                }
-        }
-        nodeBuffer.toString
-    }
 }
 
 case class TypeNode private (

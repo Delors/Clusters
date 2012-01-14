@@ -47,6 +47,9 @@ import _root_.de.tud.cs.st.bat.resolved.ClassFile
 import _root_.de.tud.cs.st.bat.resolved.reader.Java6Framework
 import _root_.de.tud.cs.st.bat.resolved.dependency.DependencyExtractor
 import _root_.de.tud.cs.st.util.perf.PerformanceEvaluation
+import pipeline.ClusteringResultWriter
+import pipeline.DOTClusteringResultWriter
+import pipeline.GMLClusteringResultWriter
 
 /**
  * @author Thomas Schlosser
@@ -64,9 +67,16 @@ trait AbstractClusteringTest extends FunSuite
                                  includeEdges: Boolean = true)(implicit clusterings: Array[Clustering]): Cluster = {
         println(testName+" - START")
 
-        val clusteringPipeline = ClusteringPipeline(clusterings, extractDependencies)
+        var clusteringPipeline: ClusteringPipeline = null
         if (dotFileName.isDefined) {
-            clusteringPipeline.dotFileName = dotFileName.get
+            //            clusteringPipeline = ClusteringPipeline(clusterings, extractDependencies, DOTClusteringResultWriter(dotFileName.get+".dot", includeSingleNodes, includeEdges))
+            clusteringPipeline = ClusteringPipeline(
+                clusterings,
+                extractDependencies,
+                GMLClusteringResultWriter(dotFileName.get+".gml"))
+        }
+        else {
+            clusteringPipeline = ClusteringPipeline(clusterings, extractDependencies)
         }
         //TODO add pipeline configuration
 

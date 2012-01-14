@@ -34,7 +34,6 @@ package de.tud.cs.st.clusters
 package framework
 package pipeline
 
-import java.io.FileWriter
 import scala.collection.mutable.Queue
 import structure.Cluster
 import structure.util.ClusterManager
@@ -55,7 +54,7 @@ trait ClusteringPipeline extends PerformanceEvaluation {
 
     private var extractDependencies: (DependencyExtractor) ⇒ Unit = null
 
-    var dotFileName: String = null
+    private var resultWriter: ClusteringResultWriter = null
 
     def addClustering(clustering: Clustering) {
         clusterings += clustering
@@ -79,7 +78,11 @@ trait ClusteringPipeline extends PerformanceEvaluation {
 
         val result = cluster(clusterManager)
 
-        export(result)
+        // export result by calling write method of ClusteringResultWriter trait
+        if (resultWriter != null) {
+            resultWriter.write(result)
+            resultWriter.close() // TODO: check how to handle this on a nice way
+        }
 
         result
     }
@@ -99,7 +102,10 @@ trait ClusteringPipeline extends PerformanceEvaluation {
             cluster(clusterManager)
         }
 
-        export(result)
+        if (resultWriter != null) {
+            resultWriter.write(result)
+            resultWriter.close() // TODO: check how to handle this on a nice way
+        }
 
         result
     }
@@ -113,26 +119,20 @@ trait ClusteringPipeline extends PerformanceEvaluation {
         result
     }
 
-    private def export(cluster: Cluster) {
-        if (dotFileName != null) {
-            println("write cluster["+cluster.identifier+"] into dot file["+dotFileName+"_"+cluster.identifier+"]")
-            val fw = new FileWriter(dotFileName+"_"+cluster.identifier+".dot")
-            fw.write(cluster.toDot()) //TODO:includeSingleNodes, includeEdges))
-            fw.close()
-        }
-    }
-
 }
 
 object ClusteringPipeline {
-    def apply(): ClusteringPipeline =
-        new ClusteringPipeline {}
 
-    def apply(clusteringArray: Array[Clustering], extractDependenciesFunktion: (DependencyExtractor) ⇒ Unit): ClusteringPipeline =
+    def apply(
+        clusteringArray: Array[Clustering],
+        extractDependenciesFunktion: (DependencyExtractor) ⇒ Unit,
+        clusteringResultWriter: ClusteringResultWriter = null): ClusteringPipeline =
         new ClusteringPipeline {
             if (clusteringArray != null) {
                 clusteringArray foreach { addClustering(_) }
             }
             extractDependencies = extractDependenciesFunktion
+            resultWriter = clusteringResultWriter
         }
+
 }

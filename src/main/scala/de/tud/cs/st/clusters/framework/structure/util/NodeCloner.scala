@@ -65,36 +65,36 @@ trait NodeCloner {
         }
 
     def createDeepCopy(
-        node: Node,
-        edgeFilter: Edge ⇒ Boolean = _ ⇒ false,
-        transposedEdgeFilter: Edge ⇒ Boolean = _ ⇒ false): Node = {
+        cluster: Cluster): Cluster = {
+        val copy = createCopy(cluster)
+        // add copies of cluster elements to the cluster's copy
+        cluster.getNodes map {
+            createDeepCopy(_)
+        } map { node ⇒
+            copy.addNode(node)
+        }
+        copyEdges(cluster, copy)
+        copy
+    }
+
+    def createDeepCopy(node: Node): Node = {
         node match {
             case c: Cluster ⇒
-                val copy = createCopy(c)
-                // add copies of cluster elements to the cluster's copy
-                c.getNodes map {
-                    createDeepCopy(_)
-                } map { node ⇒
-                    copy.addNode(node)
-                }
-                copyEdges(node, copy, edgeFilter, transposedEdgeFilter)
-                copy
+                createDeepCopy(c)
             case sen: SourceElementNode ⇒
                 val copy = createCopy(node)
-                copyEdges(node, copy, edgeFilter, transposedEdgeFilter)
+                copyEdges(node, copy)
                 copy
         }
     }
 
     private def copyEdges(
         node: Node,
-        copiedNode: Node,
-        edgeFilter: Edge ⇒ Boolean,
-        transposedEdgeFilter: Edge ⇒ Boolean) {
-        for (edge ← node.getEdges if !edgeFilter(edge)) {
+        copiedNode: Node) {
+        for (edge ← node.getEdges) {
             copiedNode.addEdge(edge.sourceID, edge.targetID, edge.dType)
         }
-        for (transposedEdge ← node.getTransposedEdges if !transposedEdgeFilter(transposedEdge)) {
+        for (transposedEdge ← node.getTransposedEdges) {
             copiedNode.addEdge(transposedEdge.targetID, transposedEdge.sourceID, transposedEdge.dType)
         }
     }

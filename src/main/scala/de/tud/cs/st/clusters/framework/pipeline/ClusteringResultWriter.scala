@@ -32,44 +32,35 @@
 */
 package de.tud.cs.st.clusters
 package framework
-package structure
+package pipeline
 
-import de.tud.cs.st.bat.resolved.dependency._
-import scala.collection.mutable.Map
+import structure.Cluster
+import structure.SourceElementNode
+import structure.util.ClusterManager
+import java.io.FileWriter
 
 /**
  * @author Thomas Schlosser
  *
  */
-trait Node {
+abstract class ClusteringResultWriter(val fileName: String) extends FileWriter(fileName) {
 
-    def identifier: String
-
-    def uniqueID: Int
-
-    var parent: Node = _
-
-    protected var edges: List[Edge] = Nil
-    protected var transposedEdges: List[Edge] = Nil
-
-    def addEdge(srcID: Int, trgtID: Int, dType: DependencyType) {
-        if (srcID == this.uniqueID) {
-            edges = new Edge(srcID, trgtID, dType) :: edges
-        }
-        else if (trgtID == this.uniqueID) {
-            transposedEdges = new Edge(trgtID, srcID, dType) :: transposedEdges
-        }
+    private[pipeline] def write(clusteringResult: Cluster) {
+        writeHeader()
+        implicit val nodeBuffer = new StringBuffer()
+        implicit val edgeBuffer = new StringBuffer()
+        writeCluster(clusteringResult, nodeBuffer, edgeBuffer)
+        write(nodeBuffer.toString)
+        write(edgeBuffer.toString)
+        writeFooter()
     }
 
-    def clearEdges() {
-        edges = Nil
-        transposedEdges = Nil
-    }
+    protected def writeHeader()
 
-    def getEdges: List[Edge] =
-        edges
+    protected def writeFooter()
 
-    def getTransposedEdges: List[Edge] =
-        transposedEdges
+    protected def writeCluster(cluster: Cluster, nodeBuffer: StringBuffer, edgeBuffer: StringBuffer)
+
+    protected def writeSourceElementNode(node: SourceElementNode, nodeBuffer: StringBuffer, edgeBuffer: StringBuffer)
 
 }

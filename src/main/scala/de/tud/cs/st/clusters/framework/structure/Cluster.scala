@@ -87,100 +87,46 @@ class Cluster(
     def numberOfNodes: Int =
         nodeMap.size
 
-    override def getEdges: List[Edge] = {
-        var edges = super.getEdges
-        if (!edges.isEmpty)
-            return edges
+    //    override def getEdges: List[Edge] = {
+    //        var edges = super.getEdges
+    //        if (!edges.isEmpty)
+    //            return edges
+    //
+    //        // fetch edges from cluster elements
+    //        edges = List[Edge]()
+    //        nodeMap.values foreach {
+    //            node ⇒
+    //                node.getEdges foreach {
+    //                    edge ⇒
+    //                        val containsSource = nodeMap.contains(edge.sourceID)
+    //                        val containsTarget = nodeMap.contains(edge.targetID)
+    //                        if (containsSource && !containsTarget) {
+    //                            edges = edge :: edges
+    //                        }
+    //                }
+    //        }
+    //        edges
+    //    }
 
-        // fetch edges from cluster elements
-        edges = List[Edge]()
-        nodeMap.values foreach {
-            node ⇒
-                node.getEdges foreach {
-                    edge ⇒
-                        val containsSource = nodeMap.contains(edge.sourceID)
-                        val containsTarget = nodeMap.contains(edge.targetID)
-                        if (containsSource && !containsTarget) {
-                            edges = edge :: edges
-                        }
-                }
-        }
-        edges
-    }
+    //    override def getTransposedEdges: List[Edge] = {
+    //        var edges = super.getTransposedEdges
+    //        if (!edges.isEmpty)
+    //            return edges
+    //
+    //        // fetch transposed edges from cluster elements
+    //        edges = List[Edge]()
+    //        nodeMap.values foreach {
+    //            node ⇒
+    //                node.getEdges foreach {
+    //                    edge ⇒
+    //                        val containsSource = nodeMap.contains(edge.sourceID)
+    //                        val containsTarget = nodeMap.contains(edge.targetID)
+    //                        if (!containsSource && containsTarget) {
+    //                            edges = edge :: edges
+    //                        }
+    //                }
+    //        }
+    //        edges
+    //    }
 
-    override def getTransposedEdges: List[Edge] = {
-        var edges = super.getTransposedEdges
-        if (!edges.isEmpty)
-            return edges
-
-        // fetch transposed edges from cluster elements
-        edges = List[Edge]()
-        nodeMap.values foreach {
-            node ⇒
-                node.getEdges foreach {
-                    edge ⇒
-                        val containsSource = nodeMap.contains(edge.sourceID)
-                        val containsTarget = nodeMap.contains(edge.targetID)
-                        if (!containsSource && containsTarget) {
-                            edges = edge :: edges
-                        }
-                }
-        }
-        edges
-    }
-
-    override def toDot(
-        includeSingleNodes: Boolean = true,
-        includeEdges: Boolean = true)(
-            implicit nodeBuffer: StringBuffer = new StringBuffer(),
-            edgeBuffer: StringBuffer = new StringBuffer()): String = {
-
-        val subGraphBuffer = new StringBuffer()
-        if (isRootCluster) {
-            nodeBuffer.append("digraph G {\n")
-        }
-        else {
-            subGraphBuffer.append("subgraph cluster_")
-            subGraphBuffer.append(uniqueID)
-            subGraphBuffer.append(" {\n")
-        }
-
-        var emptyCluster = true
-        // add nodes
-        getNodes foreach {
-            case c: Cluster ⇒
-                if (emptyCluster) {
-                    nodeBuffer.append(subGraphBuffer)
-                    emptyCluster = false
-                }
-                c.toDot(includeSingleNodes, includeEdges)(nodeBuffer, edgeBuffer)
-            case n: SourceElementNode ⇒
-                if (includeSingleNodes && emptyCluster) {
-                    nodeBuffer.append(subGraphBuffer)
-                    emptyCluster = false
-                }
-                n.toDot(includeSingleNodes, includeEdges)(nodeBuffer, edgeBuffer)
-        }
-
-        if (emptyCluster) {
-            nodeBuffer.append("\t\"")
-            nodeBuffer.append(uniqueID)
-            nodeBuffer.append("\"[shape=box, label=\""+identifier+"\"];\n")
-        }
-        else if (!isRootCluster) {
-            nodeBuffer.append("\tnode [style=filled,fillcolor=white,color=black];\n")
-            nodeBuffer.append("\tstyle=filled;\n")
-            nodeBuffer.append("\tfillcolor=lightgrey;\n")
-            nodeBuffer.append("\tcolor=black;\n")
-            nodeBuffer.append("\tlabel = \"")
-            nodeBuffer.append(identifier)
-            nodeBuffer.append("\";\n")
-            nodeBuffer.append("}\n")
-        }
-        if (isRootCluster) {
-            nodeBuffer.append(edgeBuffer)
-            nodeBuffer.append("}\n")
-        }
-        return nodeBuffer.toString
-    }
 }

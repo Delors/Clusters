@@ -49,31 +49,44 @@ import framework.structure.Node
 trait EdgeGeneralizer extends Clustering {
 
     protected override def process(cluster: Cluster): Cluster = {
-        convertCluster(cluster)
+        val inputCluster = clusterManager.createDeepCopy(cluster)
+        cluster.clearEdges()
+        removeAllOriginalEdges(cluster)
+        convertCluster(inputCluster)
+        clusterManager.getRootCluster
     }
 
-    protected def convertCluster(cluster: Cluster): Cluster = {
-        val result = clusterManager.createCopy(cluster)
-        for (node ← cluster.getNodes) {
+    private def removeAllOriginalEdges(originalCluster: Cluster) {
+        for (node ← originalCluster.getNodes) {
+            node.clearEdges()
             node match {
                 case c: Cluster ⇒
-                    result.addNode(convertCluster(c))
-                case sen: SourceElementNode ⇒
-                    val copy = clusterManager.createCopy(node)
-                    convertEdges(node, copy)
-                    result.addNode(copy)
+                    removeAllOriginalEdges(c)
+                case _ ⇒ // nothing further to do in case of source element nodes
             }
         }
-        result
     }
 
-    protected def convertEdges(node: Node, copiedNode: Node) {
-        //TODO converted edges have to start at the new sourceID...or something like that
-        for (edge ← node.getEdges) {
-            copiedNode.addEdge(newSourceID(edge.sourceID), newTargetID(edge.targetID), edge.dType)
+    /**
+     * Side effect: edges in the clusterManager's cluster that corresponds to the given cluster are generalized
+     */
+    protected def convertCluster(inputCluster: Cluster) {
+        for (node ← inputCluster.getNodes) {
+            convertEdges(node)
+            node match {
+                case c: Cluster ⇒
+                    convertCluster(c)
+                case _ ⇒ // nothing further to do in case of source element nodes
+            }
         }
-        for (transposedEdge ← node.getTransposedEdges) {
-            copiedNode.addEdge(newTargetID(transposedEdge.targetID), newSourceID(transposedEdge.sourceID), transposedEdge.dType)
+    }
+
+    protected def convertEdges(node: Node) {
+        for (edge ← node.getEdges) {
+            val newSource = clusterManager.getNode(newSourceID(edge.sourceID))
+            val newTarget = clusterManager.getNode(newTargetID(edge.targetID))
+            newSource.addEdge(newSource.uniqueID, newTarget.uniqueID, edge.dType)
+            newTarget.addEdge(newSource.uniqueID, newTarget.uniqueID, edge.dType)
         }
     }
 
@@ -106,8 +119,7 @@ object EdgeSourceGeneralizer {
 
 }
 
-class EdgeTargetGeneralizer
-        extends EdgeGeneralizer {
+class EdgeTargetGeneralizer extends EdgeGeneralizer {
 
     protected override def newTargetID(oldTargetID: Int): Int = {
         val oldNode = clusterManager.getNode(oldTargetID)

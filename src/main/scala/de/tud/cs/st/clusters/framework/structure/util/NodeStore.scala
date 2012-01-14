@@ -97,6 +97,34 @@ trait NodeStore {
         sys.error("No mapping found for ID["+id+"]")
     }
 
+    def getCluster(id: Int): Cluster = {
+        if (id >= LOWEST_CLUSTER_ID) {
+            return get(id, clusterNodes, LOWEST_CLUSTER_ID)
+        }
+        sys.error("No cluster mapping found for ID["+id+"]")
+    }
+
+    def getMethodNode(id: Int): MethodNode = {
+        if (id < LOWEST_CLUSTER_ID && id >= LOWEST_METHOD_ID) {
+            return get(id, methodNodes, LOWEST_METHOD_ID)
+        }
+        sys.error("No methode node mapping found for ID["+id+"]")
+    }
+
+    def getFieldNode(id: Int): FieldNode = {
+        if (id < LOWEST_METHOD_ID && id >= LOWEST_FIELD_ID) {
+            return get(id, fieldNodes, LOWEST_FIELD_ID)
+        }
+        sys.error("No field node mapping found for ID["+id+"]")
+    }
+
+    def getTypeNode(id: Int): TypeNode = {
+        if (id < LOWEST_FIELD_ID && id >= LOWEST_TYPE_ID) {
+            return get(id, typeNodes, LOWEST_TYPE_ID)
+        }
+        sys.error("No type node mapping found for ID["+id+"]")
+    }
+
     private def get[N <: Node](id: Int, nodes: Map[Int, N], lowestID: Int): N = {
         val index = id - lowestID
         nodes.getOrElse(index, null.asInstanceOf[N])
