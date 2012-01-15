@@ -56,14 +56,11 @@ class Cluster(
 
     def addNode(node: Node) {
         nodeMap.put(node.uniqueID, node)
-        // FIXME: check all caller of this method...
-        // they must remove the node themselves from the parent, if necessary.
-        // the next lines are not valid anymore, since nodes are copied and added to other nodes.
-        //        if (node.parent != null) {
-        //            node.parent match {
-        //                case c: Cluster ⇒ c.removeNode(node.uniqueID)
-        //            }
-        //        }
+        if (node.parent != null && node.parent != this) {
+            node.parent match {
+                case c: Cluster ⇒ c.removeNode(node.uniqueID)
+            }
+        }
         node.parent = this
     }
 
