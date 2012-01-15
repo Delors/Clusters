@@ -46,10 +46,6 @@ import de.tud.cs.st.bat.resolved.dependency._
  */
 trait SameNeighborClustering extends Clustering {
 
-    val edgeFilter: Int ⇒ Edge ⇒ Boolean = _ ⇒ _ ⇒ false
-
-    val transposedEdgeFilter: Int ⇒ Edge ⇒ Boolean = _ ⇒ _ ⇒ false
-
     protected override def process(cluster: Cluster): Cluster = {
         def getConsideredEdge(node: Node): Option[Edge] = {
             node.getEdges.find(edge ⇒ isOfConsideredDependencyType(edge.dType))
@@ -74,7 +70,7 @@ trait SameNeighborClustering extends Clustering {
             val sameNeighborCluster = clusterManager.createCluster(neighborNode.identifier)
             sameNeighborCluster.addNode(neighborNode)
             nodeSet foreach {
-                sameNeighborCluster.addNode(_) // node was cloned before it was put into map
+                sameNeighborCluster.addNode(_)
             }
             cluster.addNode(sameNeighborCluster)
             newClusters = newClusters + sameNeighborCluster

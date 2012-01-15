@@ -60,7 +60,7 @@ class SimilarityMetricClustering extends Clustering {
             _.getEdges foreach { edge ⇒
                 val key = (edge.sourceID, edge.targetID)
                 val oldWeight: Long = weightMatrix.getOrElse(key, 0)
-                val newWeight = oldWeight + getWeight(edge.dType)
+                val newWeight = oldWeight + (getWeight(edge.dType) * edge.count)
                 if (newWeight != 0)
                     weightMatrix(key) = newWeight
             }

@@ -61,6 +61,7 @@ class GetterSetterClustering extends Clustering {
             //TODO: test and refine this algorithm with more complex classes...
             //add mechanism to algorithms that allows to specify/configure that a cluster is as fine granular as required
             var checkedNodes = Set[Int]()
+            //TODO: edge count should be considered...have to be equal to one
             for (tEdge ← node.getTransposedEdges) {
                 val target = clusterManager.getNode(tEdge.targetID)
                 if (!checkedNodes.contains(tEdge.targetID)) {

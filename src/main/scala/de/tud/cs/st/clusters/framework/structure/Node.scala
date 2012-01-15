@@ -50,11 +50,20 @@ trait Node {
     var parent: Node = _
 
     protected var edges: List[Edge] = Nil
+    //    protected val edgesMap: Map[(Int, DependencyType), Int] = Map()
+    protected val edgesMap: Map[(Int, Object), Edge] = Map()
     protected var transposedEdges: List[Edge] = Nil
 
-    def addEdge(srcID: Int, trgtID: Int, dType: DependencyType) {
+    def addEdge(srcID: Int, trgtID: Int, dType: DependencyType, count: Int = 1) {
         if (srcID == this.uniqueID) {
-            edges = new Edge(srcID, trgtID, dType) :: edges
+            val key = (trgtID, dType)
+            var edge = edgesMap.getOrElse(key, null)
+            if (edge == null) {
+                edge = new Edge(srcID, trgtID, dType, 0)
+                edges = edge :: edges
+                edgesMap(key) = edge
+            }
+            edge.count += count
         }
         else if (trgtID == this.uniqueID) {
             transposedEdges = new Edge(trgtID, srcID, dType) :: transposedEdges
@@ -62,7 +71,9 @@ trait Node {
     }
 
     def clearEdges() {
+        //TODO: transposed edges of the target must be cleared too.
         edges = Nil
+        edgesMap.clear()
         transposedEdges = Nil
     }
 

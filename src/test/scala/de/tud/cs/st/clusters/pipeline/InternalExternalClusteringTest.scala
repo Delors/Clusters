@@ -52,8 +52,8 @@ class InternalExternalClusteringTest extends AbstractClusteringTest {
     test("testInternalExternalClustering [cocome-printercontroller]") {
         testClustering(
             "testInternalExternalClustering [cocome-printercontroller]",
-            cocomePrintercontrollerDependencyExtractor,
-            Some("intExtClust_cocome-printercontroller"))
+            cocomeDependencyExtractor,
+            Some("intExtClust_cocome"))
     }
 
     test("testInternalExternalClustering [getterSetterTestClass]") {

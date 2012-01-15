@@ -92,10 +92,10 @@ trait NodeCloner {
         node: Node,
         copiedNode: Node) {
         for (edge ← node.getEdges) {
-            copiedNode.addEdge(edge.sourceID, edge.targetID, edge.dType)
+            copiedNode.addEdge(edge.sourceID, edge.targetID, edge.dType, edge.count)
         }
         for (transposedEdge ← node.getTransposedEdges) {
-            copiedNode.addEdge(transposedEdge.targetID, transposedEdge.sourceID, transposedEdge.dType)
+            copiedNode.addEdge(transposedEdge.targetID, transposedEdge.sourceID, transposedEdge.dType, transposedEdge.count)
         }
     }
 

@@ -85,8 +85,8 @@ trait EdgeGeneralizer extends Clustering {
         for (edge ← node.getEdges) {
             val newSource = clusterManager.getNode(newSourceID(edge.sourceID))
             val newTarget = clusterManager.getNode(newTargetID(edge.targetID))
-            newSource.addEdge(newSource.uniqueID, newTarget.uniqueID, edge.dType)
-            newTarget.addEdge(newSource.uniqueID, newTarget.uniqueID, edge.dType)
+            newSource.addEdge(newSource.uniqueID, newTarget.uniqueID, edge.dType, edge.count)
+            newTarget.addEdge(newSource.uniqueID, newTarget.uniqueID, edge.dType, edge.count)
         }
     }
 

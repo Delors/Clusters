@@ -77,15 +77,17 @@ class LayerClustering(val performRecursion: Boolean) extends Clustering {
 
             for (node ← nodes) {
                 // only edges to nodes in 'nodes' should be considered for degree calculation
-                val inDegree = node.getTransposedEdges.filter(edge ⇒ nodeIDs contains edge.targetID).length
-                val outDegree = node.getEdges.filter(edge ⇒ nodeIDs contains edge.targetID).length
-                if (inDegree == 0 && outDegree > 0)
+                // each edge group (edges with same source, target and dependency type are grouped together)
+                // is only counted once.
+                val groupedInDegree = node.getTransposedEdges.filter(edge ⇒ nodeIDs contains edge.targetID).length
+                val groupedOutDegree = node.getEdges.filter(edge ⇒ nodeIDs contains edge.targetID).length
+                if (groupedInDegree == 0 && groupedOutDegree > 0)
                     topLayerNodes = topLayerNodes + node
-                else if (inDegree > 0 && outDegree > 0)
+                else if (groupedInDegree > 0 && groupedOutDegree > 0)
                     middleLayerNodes = middleLayerNodes + node
-                else if (inDegree > 0 && outDegree == 0)
+                else if (groupedInDegree > 0 && groupedOutDegree == 0)
                     bottomLayerNodes = bottomLayerNodes + node
-                else if (inDegree == 0 && outDegree == 0)
+                else if (groupedInDegree == 0 && groupedOutDegree == 0)
                     sparatedNodes = sparatedNodes + node
             }
 

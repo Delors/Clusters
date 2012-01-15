@@ -55,12 +55,6 @@ class InternalClassClustering extends ClassClustering with SameNeighborClusterin
     override protected def isOfConsideredDependencyType(dType: DependencyType): Boolean =
         dType == DependencyType.IS_INSTANCE_MEMBER_OF || dType == DependencyType.IS_CLASS_MEMBER_OF
 
-    //TODO: check whether some edges should be filtered here...
-    //    override val edgeFilter: Int ⇒ Edge ⇒ Boolean = classNodeID ⇒ {
-    //        case Edge(_, targetID, dType) ⇒
-    //            targetID == classNodeID
-    //        //                                dType == IS_INSTANCE_MEMBER_OF && targetID == classNodeID
-    //    }
 }
 
 object InternalClassClustering {

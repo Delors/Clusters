@@ -87,6 +87,7 @@ class Cluster(
     def numberOfNodes: Int =
         nodeMap.size
 
+    //TODO remove if not needed
     //    override def getEdges: List[Edge] = {
     //        var edges = super.getEdges
     //        if (!edges.isEmpty)

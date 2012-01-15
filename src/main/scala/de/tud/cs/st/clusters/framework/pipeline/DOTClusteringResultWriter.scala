@@ -126,7 +126,9 @@ class DOTClusteringResultWriter private (
                 edgeBuffer.append(e.targetID)
                 edgeBuffer.append("[label=\"")
                 edgeBuffer.append(e.dType.toString)
-                edgeBuffer.append("\"];\n")
+                edgeBuffer.append(" [")
+                edgeBuffer.append(e.count)
+                edgeBuffer.append("]\"];\n")
             }
     }
 }

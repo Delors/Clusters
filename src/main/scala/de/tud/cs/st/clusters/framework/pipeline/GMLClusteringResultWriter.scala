@@ -133,7 +133,9 @@ class GMLClusteringResultWriter(
             edgeBuffer.append(e.targetID)
             edgeBuffer.append("\n\t\tlabel\t\"")
             edgeBuffer.append(e.dType.toString)
-            edgeBuffer.append("\"\n\t]\n")
+            edgeBuffer.append(" [")
+            edgeBuffer.append(e.count)
+            edgeBuffer.append("]\"\n\t]\n")
         }
     }
 }
