@@ -58,23 +58,24 @@ class StronglyConnectedComponentsClustering extends Clustering {
             null, true, result.order)(true)
 
         // create resulting clusters
-        val resultCluster = clusterManager.createCopy(cluster)
+        val inputNodes = cluster.getNodes.toArray
+        cluster.clearNodes()
         var resultMap = Map[Int, Cluster]()
-        for (node ← cluster.getNodes) {
+        for (node ← inputNodes) {
             val sccID = result.color(node.uniqueID) - 2
             if (sccID >= 0) {
                 resultMap.get(sccID) match {
                     case Some(c) ⇒
-                        c.addNode(clusterManager.createDeepCopy(node))
+                        c.addNode(node)
                     case None ⇒
                         val c = clusterManager.createCluster("SCC_"+System.nanoTime()) //sccID)
-                        c.addNode(clusterManager.createDeepCopy(node))
+                        c.addNode(node)
                         resultMap(sccID) = c
-                        resultCluster.addNode(c)
+                        cluster.addNode(c)
                 }
             }
         }
-        resultCluster
+        cluster
     }
 }
 

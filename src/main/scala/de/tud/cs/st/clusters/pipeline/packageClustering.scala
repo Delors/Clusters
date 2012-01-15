@@ -48,7 +48,7 @@ class PackageClustering extends Clustering {
     protected override def process(cluster: Cluster): Cluster = {
         def getMatchingPrefix(value: String, prefixes: Array[String]): String = {
             prefixes.foreach(prfx ⇒ if (value.startsWith(prfx)) { return prfx })
-            null
+            sys.error("No matching prefix found for \""+value+"\" in prefixes: "+prefixes.mkString("\n"))
         }
 
         var prefixRoot = new GreatestCommonCharPrefixTree('#')
@@ -57,20 +57,22 @@ class PackageClustering extends Clustering {
         }
         var prfxs = prefixRoot.prefixes.map(charArray ⇒ String.copyValueOf(charArray))
 
+        val inputNodes = cluster.getNodes.toArray
+        cluster.clearNodes()
+
         // create resulting clusters
-        val result = clusterManager.createCopy(cluster)
         var resultMap = Map[String, Cluster]()
         for (i ← 0 to prfxs.size - 1) {
             val prfx = prfxs(i)
             val cl = clusterManager.createCluster(prfx)
             resultMap(prfx) = cl
-            result.addNode(cl)
+            cluster.addNode(cl)
         }
-        for (node ← cluster.getNodes) {
+        for (node ← inputNodes) {
             val c = resultMap(getMatchingPrefix(node.identifier, prfxs))
-            c.addNode(clusterManager.createDeepCopy(node))
+            c.addNode(node)
         }
-        result
+        cluster
     }
 }
 
@@ -83,7 +85,7 @@ private class GreatestCommonCharPrefixTree(
         this(content, Map.empty)
 
     override def isEndMarker(content: Char): Boolean =
-        content.isUpper || content == '[' //TODO: remove if primitive (arrays) will be filtered in an earlier step 
+        content.isUpper
 
     override def GreatestCommonPrefixTree(content: Char): GreatestCommonCharPrefixTree =
         new GreatestCommonCharPrefixTree(content)

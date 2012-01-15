@@ -44,7 +44,6 @@ import framework.structure.SourceElementNode
  */
 class SingleElementClusterRemover extends Clustering {
 
-    //TODO re-check whether it is OK that in this case no copies of the cluster and the nodes are created  
     protected def process(cluster: Cluster): Cluster = {
         cluster.getNodes foreach {
             case c: Cluster ⇒

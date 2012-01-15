@@ -106,8 +106,9 @@ class GetterSetterClustering extends Clustering {
             if (gscBean.field == null) None else Some(gscBean)
         }
         // TODO: cluster needs methods that return only type/field/method nodes => performance improvement
-        val result = clusterManager.createCopy(cluster)
-        for (node ← cluster.getNodes) {
+        val inputNodes = cluster.getNodes.toArray
+        cluster.clearNodes()
+        for (node ← inputNodes) {
             node match {
                 case FieldNode(_, _, Some(field)) ⇒
                     val optClusterBean = checkGetterSetterCluster(node, field)
@@ -116,22 +117,22 @@ class GetterSetterClustering extends Clustering {
                             // create setter/getter cluster
                             println("GETTER_SETTER_CLUSTER")
                             val gsCluster = clusterManager.createCluster("Getter_Setter_"+clusterBean.field.identifier)
-                            gsCluster.addNode(clusterManager.createDeepCopy(clusterBean.field))
+                            gsCluster.addNode(clusterBean.field)
                             if (clusterBean.hasGetter) {
-                                gsCluster.addNode(clusterManager.createDeepCopy(clusterBean.getter))
+                                gsCluster.addNode(clusterBean.getter)
                             }
                             if (clusterBean.hasSetter) {
-                                gsCluster.addNode(clusterManager.createDeepCopy(clusterBean.setter))
+                                gsCluster.addNode(clusterBean.setter)
                             }
-                            result.addNode(gsCluster)
+                            cluster.addNode(gsCluster)
                         case None ⇒
-                            result.addNode(clusterManager.createDeepCopy(node))
+                            cluster.addNode(node)
                     }
                 case _ ⇒
-                    result.addNode(clusterManager.createDeepCopy(node))
+                    cluster.addNode(node)
             }
         }
-        result
+        cluster
     }
 
     class GetterSetterClusterBean {

@@ -49,6 +49,12 @@ class PackageClusteringTest extends AbstractClusteringTest {
         PackageClustering()
     )
 
+    test("testPackageClustering [cocome]") {
+        testClustering("testPackageClustering [cocome]",
+            cocomeDependencyExtractor,
+            Some("pckgClust_cocome"))
+    }
+
     test("testPackageClustering [hibernate]") {
         testClustering("testPackageClustering [hibernate]",
             hibernateDependencyExtractor)

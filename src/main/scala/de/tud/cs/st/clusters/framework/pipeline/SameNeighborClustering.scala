@@ -64,7 +64,6 @@ trait SameNeighborClustering extends Clustering {
         }
 
         cluster.clearNodes()
-        var newClusters = Set[Cluster]()
         for ((neighborNodeID, nodeSet) ← clustersMap) {
             val neighborNode = clusterManager.getNode(neighborNodeID)
             val sameNeighborCluster = clusterManager.createCluster(neighborNode.identifier)
@@ -73,7 +72,6 @@ trait SameNeighborClustering extends Clustering {
                 sameNeighborCluster.addNode(_)
             }
             cluster.addNode(sameNeighborCluster)
-            newClusters = newClusters + sameNeighborCluster
         }
 
         cluster

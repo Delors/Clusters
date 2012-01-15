@@ -66,31 +66,28 @@ object InternalClassClustering {
 class ExternalClassClustering extends ClassClustering {
 
     protected override def process(cluster: Cluster): Cluster = {
-        val result = clusterManager.createCopy(cluster)
-
         val classClustersMap = Map[Int, Set[Node]]()
 
         for (node ← cluster.getNodes) {
             //TODO implement based on nodes' identifiers 
             //            getClassMemberEdge(node) match {
             //                case Some(edge) ⇒
-            //                    val copy = NodeCloner.createDeepCopy(node)
             //                    val classNodeID = edge.targetID
             //                    val clusterSet = classClustersMap.getOrElse(classNodeID, Set())
-            //                    classClustersMap(classNodeID) = clusterSet + copy
+            //                    classClustersMap(classNodeID) = clusterSet + node
             //                case None ⇒
             //            }
         }
 
-        var newClusters = Set[Cluster]()
+        cluster.clearNodes()
         for ((classNodeID, nodeSet) ← classClustersMap) {
             val classNode = clusterManager.getNode(classNodeID)
             val classCluster = clusterManager.createCluster(classNode.identifier)
+            classCluster.addNode(classNode)
             nodeSet foreach {
-                classCluster.addNode(_) // node was cloned before it was put into map
+                classCluster.addNode(_)
             }
-            result.addNode(classCluster)
-            newClusters = newClusters + classCluster
+            cluster.addNode(classCluster)
         }
 
         cluster

@@ -48,23 +48,20 @@ import framework.structure.util.ClusterManager
 class LayerClustering(val performRecursion: Boolean) extends Clustering {
 
     protected override def process(cluster: Cluster): Cluster = {
-        val result = clusterManager.createCopy(cluster)
         var layer = 0
-        var newClusters = Set[Cluster]()
 
         def createLayers(nodes: Set[Node]) {
             def createNewLayerCluster(): Cluster = {
                 val layerCluster = clusterManager.createCluster("layer_"+layer)
                 layer += 1
-                result.addNode(layerCluster)
-                newClusters = newClusters + layerCluster
+                cluster.addNode(layerCluster)
                 layerCluster
             }
 
             def createNewLayerClusterWithNodes(nodes: Iterable[Node]) {
                 val layerCluster = createNewLayerCluster()
                 nodes foreach { node ⇒
-                    layerCluster.addNode(clusterManager.createDeepCopy(node))
+                    layerCluster.addNode(node)
                 }
             }
 
@@ -99,7 +96,7 @@ class LayerClustering(val performRecursion: Boolean) extends Clustering {
             if (!sparatedNodes.isEmpty) {
                 if (layer == 0)
                     sparatedNodes foreach { node ⇒
-                        result.addNode(clusterManager.createDeepCopy(node))
+                        cluster.addNode(node)
                     }
                 else
                     bottomLayerNodes = bottomLayerNodes ++ sparatedNodes
@@ -124,9 +121,11 @@ class LayerClustering(val performRecursion: Boolean) extends Clustering {
             }
         }
 
-        createLayers(cluster.getNodes.toSet)
+        val inputNodes = cluster.getNodes.toSet
+        cluster.clearNodes()
+        createLayers(inputNodes)
 
-        result
+        cluster
     }
 }
 
