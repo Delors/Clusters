@@ -32,55 +32,21 @@
 */
 package de.tud.cs.st.clusters
 package framework
-package structure
-
-import de.tud.cs.st.bat.resolved.dependency._
-import scala.collection.mutable.Map
+package pipeline
 
 /**
- * @author Thomas Schlosser
+ * Enumeration of all kinds of modes that can be used by the
+ * [[de.tud.cs.st.clusters.framework.pipeline.ClusteringStage]]s
+ * to instruct the [[de.tud.cs.st.clusters.framework.pipeline.ClusteringPipeline]]
+ * how to pass the clusters to the stage.
  *
+ * @author Thomas Schlosser
  */
-trait Node {
+object ClusteringMode extends Enumeration {
 
-    def identifier: String
-
-    def uniqueID: Int
-
-    var parent: Cluster = _
-
-    protected var edges: List[Edge] = Nil
-    //    protected val edgesMap: Map[(Int, DependencyType), Int] = Map()
-    protected val edgesMap: Map[(Int, Object), Edge] = Map()
-    protected var transposedEdges: List[Edge] = Nil
-
-    def addEdge(srcID: Int, trgtID: Int, dType: DependencyType, count: Int = 1) {
-        if (srcID == this.uniqueID) {
-            val key = (trgtID, dType)
-            var edge = edgesMap.getOrElse(key, null)
-            if (edge == null) {
-                edge = new Edge(srcID, trgtID, dType, 0)
-                edges = edge :: edges
-                edgesMap(key) = edge
-            }
-            edge.count += count
-        }
-        else if (trgtID == this.uniqueID) {
-            transposedEdges = new Edge(trgtID, srcID, dType) :: transposedEdges
-        }
-    }
-
-    def clearEdges() {
-        //TODO: transposed edges of the target must be cleared too.
-        edges = Nil
-        edgesMap.clear()
-        transposedEdges = Nil
-    }
-
-    def getEdges: List[Edge] =
-        edges
-
-    def getTransposedEdges: List[Edge] =
-        transposedEdges
+    val ROOT = Value("root")
+    val ALL_CLUSTERABLES = Value("all clusterables")
+    val MOST_INNER_CLUSTERABLES = Value("most inner clusterables")
+    val MOST_OUTER_CLUSTERABLES = Value("most outer clusterables")
 
 }

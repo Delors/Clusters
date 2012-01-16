@@ -54,7 +54,11 @@ class CombinedClusteringTest extends AbstractClusteringTest {
 
     implicit val clusterings: Array[Clustering] = Array(
         InternalExternalClustering(),
-        InternalClassClustering()
+        EdgeTargetGeneralizer(true),
+        GetterSetterClustering() //,
+    //        StronglyConnectedComponentsClustering(),
+    //        SimilarityMetricClustering()
+    //        InternalClassClustering()
     )
 
     test("testCombinedClustering [ClusteringTestProject]") {

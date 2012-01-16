@@ -84,6 +84,8 @@ class InternalExternalClustering extends Clustering {
         cluster.clearNodes()
         val internal = clusterManager.createCluster("internal")
         val external = clusterManager.createCluster("external")
+        //TODO: remove
+        external.clusterable = false
         cluster.addNode(internal)
         cluster.addNode(external)
         for (node ← inputNodes) {

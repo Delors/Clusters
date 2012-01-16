@@ -98,11 +98,14 @@ trait EdgeGeneralizer extends Clustering {
 
 }
 
-class EdgeSourceGeneralizer extends EdgeGeneralizer {
+class EdgeSourceGeneralizer(val considerOnlyUnclusterableSources: Boolean) extends EdgeGeneralizer {
 
     protected override def newSourceID(oldSourceID: Int): Int = {
         val oldNode = clusterManager.getNode(oldSourceID)
-        if (oldNode != null && oldNode.parent != null) {
+        if (oldNode != null
+            && oldNode.parent != null
+            && (considerOnlyUnclusterableSources
+                || !oldNode.parent.clusterable)) {
             oldNode.parent.uniqueID
         }
         else {
@@ -115,15 +118,22 @@ class EdgeSourceGeneralizer extends EdgeGeneralizer {
 object EdgeSourceGeneralizer {
 
     def apply(): EdgeSourceGeneralizer =
-        new EdgeSourceGeneralizer
+        new EdgeSourceGeneralizer(false)
+
+    def apply(considerOnlyUnclusterableSources: Boolean) =
+        new EdgeSourceGeneralizer(considerOnlyUnclusterableSources)
 
 }
 
-class EdgeTargetGeneralizer extends EdgeGeneralizer {
+class EdgeTargetGeneralizer(val considerOnlyUnclusterableTargets: Boolean) extends EdgeGeneralizer {
 
     protected override def newTargetID(oldTargetID: Int): Int = {
         val oldNode = clusterManager.getNode(oldTargetID)
-        if (oldNode != null && oldNode.parent != null) {
+        //if (oldNode != null && oldNode.parent != null) {
+        if (oldNode != null
+            && oldNode.parent != null
+            && (!considerOnlyUnclusterableTargets
+                || !oldNode.parent.clusterable)) {
             oldNode.parent.uniqueID
         }
         else {
@@ -135,6 +145,10 @@ class EdgeTargetGeneralizer extends EdgeGeneralizer {
 
 object EdgeTargetGeneralizer {
 
-    def apply(): EdgeTargetGeneralizer = new EdgeTargetGeneralizer
+    def apply(): EdgeTargetGeneralizer =
+        new EdgeTargetGeneralizer(false)
+
+    def apply(considerOnlyUnclusterableTargets: Boolean) =
+        new EdgeTargetGeneralizer(considerOnlyUnclusterableTargets)
 
 }

@@ -47,6 +47,8 @@ trait Clustering {
     def clusterManager: ClusterManager = cm
     def clusterManager_=(cm: ClusterManager) { this.cm = cm }
 
+    val clusteringMode: ClusteringMode = ClusteringMode.ROOT // default mode
+
     protected def process(cluster: Cluster): Cluster
 
     private[pipeline] def cluster(cluster: Cluster): Cluster =

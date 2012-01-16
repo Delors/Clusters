@@ -48,6 +48,8 @@ class Cluster(
     val isRootCluster: Boolean)
         extends Node {
 
+    var clusterable = true
+
     val nodeMap = Map[Int, Node]()
 
     def this(uniqueID: Int, identifier: String) {

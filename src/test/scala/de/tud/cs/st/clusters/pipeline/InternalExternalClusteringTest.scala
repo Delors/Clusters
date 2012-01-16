@@ -65,6 +65,7 @@ class InternalExternalClusteringTest extends AbstractClusteringTest {
 
     test("testInternalExternalClustering [hibernate]") {
         testClustering("testInternalExternalClustering [hibernate]",
-            hibernateDependencyExtractor)
+            hibernateDependencyExtractor,
+            Some("intExtClust_hibernate"))
     }
 }

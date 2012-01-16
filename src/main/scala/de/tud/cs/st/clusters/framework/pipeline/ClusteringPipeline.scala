@@ -113,6 +113,7 @@ trait ClusteringPipeline extends PerformanceEvaluation {
     private def cluster(clusterManager: ClusterManager): Cluster = {
         var result = clusterManager.getRootCluster
         clusterings foreach { stage ⇒
+            //TODO analyze: stage.clusteringMode
             stage.clusterManager = clusterManager
             result = stage.cluster(result)
         }
