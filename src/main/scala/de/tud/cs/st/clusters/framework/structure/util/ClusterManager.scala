@@ -13,9 +13,9 @@
 *  - Redistributions in binary form must reproduce the above copyright notice,
 *    this list of conditions and the following disclaimer in the documentation
 *    and/or other materials provided with the distribution.
-*  - Neither the name of the Software Technology Group or Technische 
-*    Universität Darmstadt nor the names of its contributors may be used to 
-*    endorse or promote products derived from this software without specific 
+*  - Neither the name of the Software Technology Group or Technische
+*    Universität Darmstadt nor the names of its contributors may be used to
+*    endorse or promote products derived from this software without specific
 *    prior written permission.
 *
 *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -46,14 +46,15 @@ import de.tud.cs.st.bat.resolved.Type
 import de.tud.cs.st.bat.resolved.ObjectType
 import de.tud.cs.st.bat.resolved.MethodDescriptor
 import ClusterIDsMap._
+import de.tud.cs.st.bat.resolved.dependency.SourceElementIDsMap
 
 /**
  * @author Thomas Schlosser
  *
  */
-trait ClusterManager extends DependencyExtractor
-        with SourceElementIDsMap
-        with UseIDOfBaseTypeForArrayTypes
+trait ClusterManager
+        extends SourceElementIDs
+        with DependencyProcessor
         with ClusterIDsMap
         with NodeMappingSourceElementsVisitor
         with NodeFactory
@@ -63,7 +64,7 @@ trait ClusterManager extends DependencyExtractor
 
     protected val ROOT_CLUSTER_NAME = "ROOT"
 
-    private val rootCluster = new Cluster(clusterID(ROOT_CLUSTER_NAME), ROOT_CLUSTER_NAME, true)
+    private val rootCluster = new Cluster(clusterID(ROOT_CLUSTER_NAME),ROOT_CLUSTER_NAME, true)
 
     abstract override def sourceElementID(t: Type): Int = {
         val id = super.sourceElementID(t)
@@ -86,7 +87,7 @@ trait ClusterManager extends DependencyExtractor
         id
     }
 
-    override def processDependency(sourceID: Int, targetID: Int, dType: DependencyType) {
+    def processDependency(sourceID: Int, targetID: Int, dType: DependencyType) {
         getNode(sourceID).addEdge(sourceID, targetID, dType)
         getNode(targetID).addEdge(sourceID, targetID, dType)
     }
@@ -96,8 +97,8 @@ trait ClusterManager extends DependencyExtractor
 
 }
 
-object ClusterManager {
-    def apply(): ClusterManager = {
-        new ClusterManager {}
-    }
-}
+object ClusterManager
+	extends DependencyExtractor
+	with SourceElementIDsMap
+	with ClusterManager
+	with UseIDOfBaseTypeForArrayTypes
