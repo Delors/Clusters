@@ -34,8 +34,8 @@ package de.tud.cs.st.clusters
 package pipeline
 
 import scala.collection.mutable.Map
-import framework.pipeline.Clustering
-import framework.pipeline.SameNeighborClustering
+import framework.pipeline.ClusteringStage
+import framework.pipeline.SameNeighborClusteringStage
 import framework.structure.Cluster
 import framework.structure.Node
 import framework.structure.Edge
@@ -46,24 +46,24 @@ import de.tud.cs.st.bat.resolved.dependency._
  * @author Thomas Schlosser
  *
  */
-trait ClassClustering extends Clustering {
+trait ClassClusteringStage extends ClusteringStage {
 
 }
 
-class InternalClassClustering extends ClassClustering with SameNeighborClustering {
+class InternalClassClusteringStage extends ClassClusteringStage with SameNeighborClusteringStage {
 
     override protected def isOfConsideredDependencyType(dType: DependencyType): Boolean =
         dType == DependencyType.IS_INSTANCE_MEMBER_OF || dType == DependencyType.IS_CLASS_MEMBER_OF
 
 }
 
-object InternalClassClustering {
+object InternalClassClusteringStage {
 
-    def apply(): InternalClassClustering = new InternalClassClustering()
+    def apply(): InternalClassClusteringStage = new InternalClassClusteringStage()
 
 }
 
-class ExternalClassClustering extends ClassClustering {
+class ExternalClassClusteringStage extends ClassClusteringStage {
 
     protected override def process(cluster: Cluster): Cluster = {
         val classClustersMap = Map[Int, Set[Node]]()
@@ -94,8 +94,8 @@ class ExternalClassClustering extends ClassClustering {
     }
 }
 
-object ExternalClassClustering {
+object ExternalClassClusteringStage {
 
-    def apply(): ExternalClassClustering = new ExternalClassClustering()
+    def apply(): ExternalClassClusteringStage = new ExternalClassClusteringStage()
 
 }

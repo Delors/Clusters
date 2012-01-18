@@ -34,7 +34,7 @@ package de.tud.cs.st.clusters
 package pipeline
 
 import scala.collection.mutable.ListBuffer
-import framework.pipeline.Clustering
+import framework.pipeline.ClusteringStage
 import framework.structure.Cluster
 import framework.structure.Node
 import framework.structure.FieldNode
@@ -49,7 +49,7 @@ import de.tud.cs.st.bat.resolved.Field
  * @author Thomas Schlosser
  *
  */
-class GetterSetterClustering extends Clustering {
+class GetterSetterClusteringStage extends ClusteringStage {
 
     val getterPrefix: Option[String] = Some("get")
     val setterPrefix: Option[String] = Some("set")
@@ -153,8 +153,8 @@ class GetterSetterClustering extends Clustering {
 
 }
 
-object GetterSetterClustering {
+object GetterSetterClusteringStage {
 
-    def apply(): GetterSetterClustering = new GetterSetterClustering
+    def apply(): GetterSetterClusteringStage = new GetterSetterClusteringStage
 
 }

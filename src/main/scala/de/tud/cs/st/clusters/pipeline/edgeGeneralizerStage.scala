@@ -33,7 +33,7 @@
 package de.tud.cs.st.clusters
 package pipeline
 
-import framework.pipeline.Clustering
+import framework.pipeline.ClusteringStage
 import framework.structure.Cluster
 import framework.structure.util.ClusterManager
 import framework.structure.SourceElementNode
@@ -46,7 +46,7 @@ import framework.structure.Node
 //FIXME fundamental problem with the ClusterBuilder concept for ID->Node lookups,
 // because nodes have been cloned in each step and the nodes in ClusterBuilder represent
 // the state of the root cluster (for each point in time)
-trait EdgeGeneralizer extends Clustering {
+trait EdgeGeneralizerStage extends ClusteringStage {
 
     protected override def process(cluster: Cluster): Cluster = {
         val inputCluster = clusterManager.createDeepCopy(cluster)
@@ -98,7 +98,7 @@ trait EdgeGeneralizer extends Clustering {
 
 }
 
-class EdgeSourceGeneralizer(val considerOnlyUnclusterableSources: Boolean) extends EdgeGeneralizer {
+class EdgeSourceGeneralizerStage(val considerOnlyUnclusterableSources: Boolean) extends EdgeGeneralizerStage {
 
     protected override def newSourceID(oldSourceID: Int): Int = {
         val oldNode = clusterManager.getNode(oldSourceID)
@@ -115,17 +115,17 @@ class EdgeSourceGeneralizer(val considerOnlyUnclusterableSources: Boolean) exten
 
 }
 
-object EdgeSourceGeneralizer {
+object EdgeSourceGeneralizerStage {
 
-    def apply(): EdgeSourceGeneralizer =
-        new EdgeSourceGeneralizer(false)
+    def apply(): EdgeSourceGeneralizerStage =
+        new EdgeSourceGeneralizerStage(false)
 
-    def apply(considerOnlyUnclusterableSources: Boolean) =
-        new EdgeSourceGeneralizer(considerOnlyUnclusterableSources)
+    def apply(considerOnlyUnclusterableSources: Boolean): EdgeSourceGeneralizerStage =
+        new EdgeSourceGeneralizerStage(considerOnlyUnclusterableSources)
 
 }
 
-class EdgeTargetGeneralizer(val considerOnlyUnclusterableTargets: Boolean) extends EdgeGeneralizer {
+class EdgeTargetGeneralizerStage(val considerOnlyUnclusterableTargets: Boolean) extends EdgeGeneralizerStage {
 
     protected override def newTargetID(oldTargetID: Int): Int = {
         val oldNode = clusterManager.getNode(oldTargetID)
@@ -143,12 +143,12 @@ class EdgeTargetGeneralizer(val considerOnlyUnclusterableTargets: Boolean) exten
 
 }
 
-object EdgeTargetGeneralizer {
+object EdgeTargetGeneralizerStage {
 
-    def apply(): EdgeTargetGeneralizer =
-        new EdgeTargetGeneralizer(false)
+    def apply(): EdgeTargetGeneralizerStage =
+        new EdgeTargetGeneralizerStage(false)
 
-    def apply(considerOnlyUnclusterableTargets: Boolean) =
-        new EdgeTargetGeneralizer(considerOnlyUnclusterableTargets)
+    def apply(considerOnlyUnclusterableTargets: Boolean): EdgeTargetGeneralizerStage =
+        new EdgeTargetGeneralizerStage(considerOnlyUnclusterableTargets)
 
 }

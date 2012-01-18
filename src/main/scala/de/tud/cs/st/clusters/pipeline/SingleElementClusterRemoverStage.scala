@@ -33,30 +33,32 @@
 package de.tud.cs.st.clusters
 package pipeline
 
-import org.junit.runner.RunWith
-import org.scalatest.junit.JUnitRunner
-import framework.AbstractClusteringTest
-import framework.pipeline.Clustering
+import framework.pipeline.ClusteringStage
+import framework.structure.Cluster
+import framework.structure.util.ClusterManager
+import framework.structure.SourceElementNode
 
 /**
  * @author Thomas Schlosser
  *
  */
-@RunWith(classOf[JUnitRunner])
-class PackageClusteringTest extends AbstractClusteringTest {
+class SingleElementClusterRemoverStage extends ClusteringStage {
 
-    implicit val clusterings: Array[Clustering] = Array(
-        PackageClustering()
-    )
-
-    test("testPackageClustering [cocome]") {
-        testClustering("testPackageClustering [cocome]",
-            cocomeDependencyExtractor,
-            Some("pckgClust_cocome"))
+    protected def process(cluster: Cluster): Cluster = {
+        cluster.getNodes foreach {
+            case c: Cluster ⇒
+                if (c.numberOfNodes == 1) {
+                    cluster.addNode(c.getNodes.head)
+                    cluster.removeNode(c.uniqueID)
+                }
+            case _: SourceElementNode ⇒ // Nothing to do, because SourceElementNodes represent basic nodes and no clusters. 
+        }
+        cluster
     }
+}
 
-    test("testPackageClustering [hibernate]") {
-        testClustering("testPackageClustering [hibernate]",
-            hibernateDependencyExtractor)
-    }
+object SingleElementClusterRemoverStage {
+
+    def apply(): SingleElementClusterRemoverStage = new SingleElementClusterRemoverStage
+
 }

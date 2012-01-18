@@ -33,7 +33,7 @@
 package de.tud.cs.st.clusters
 package pipeline
 
-import framework.pipeline.Clustering
+import framework.pipeline.ClusteringStage
 import framework.structure.Cluster
 import framework.structure.Node
 import framework.structure.TypeNode
@@ -45,7 +45,7 @@ import framework.structure.util.ClusterManager
  * @author Thomas Schlosser
  *
  */
-class LayerClustering(val performRecursion: Boolean) extends Clustering {
+class LayerClusteringStage(val performRecursion: Boolean) extends ClusteringStage {
 
     protected override def process(cluster: Cluster): Cluster = {
         var layer = 0
@@ -129,9 +129,9 @@ class LayerClustering(val performRecursion: Boolean) extends Clustering {
     }
 }
 
-object LayerClustering {
+object LayerClusteringStage {
 
-    def apply(performRecursion: Boolean = false): LayerClustering =
-        new LayerClustering(performRecursion)
+    def apply(performRecursion: Boolean = false): LayerClusteringStage =
+        new LayerClusteringStage(performRecursion)
 
 }

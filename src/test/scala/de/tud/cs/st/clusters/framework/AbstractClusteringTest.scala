@@ -39,7 +39,7 @@ import java.util.zip.ZipFile
 import org.junit.runner.RunWith
 import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
-import pipeline.Clustering
+import pipeline.ClusteringStage
 import pipeline.ClusteringPipeline
 import structure.Cluster
 import structure.util.ClusterManager
@@ -64,19 +64,19 @@ trait AbstractClusteringTest extends FunSuite
                                  extractDependencies: (DependencyExtractor) ⇒ Unit,
                                  dotFileName: Option[String] = None,
                                  includeSingleNodes: Boolean = true,
-                                 includeEdges: Boolean = true)(implicit clusterings: Array[Clustering]): Cluster = {
+                                 includeEdges: Boolean = true)(implicit clusteringStages: Array[ClusteringStage]): Cluster = {
         println(testName+" - START")
 
         var clusteringPipeline: ClusteringPipeline = null
         if (dotFileName.isDefined) {
             //            clusteringPipeline = ClusteringPipeline(clusterings, extractDependencies, DOTClusteringResultWriter(dotFileName.get+".dot", includeSingleNodes, includeEdges))
             clusteringPipeline = ClusteringPipeline(
-                clusterings,
+                clusteringStages,
                 extractDependencies,
                 GMLClusteringResultWriter(dotFileName.get+".gml"))
         }
         else {
-            clusteringPipeline = ClusteringPipeline(clusterings, extractDependencies)
+            clusteringPipeline = ClusteringPipeline(clusteringStages, extractDependencies)
         }
         //TODO add pipeline configuration
 

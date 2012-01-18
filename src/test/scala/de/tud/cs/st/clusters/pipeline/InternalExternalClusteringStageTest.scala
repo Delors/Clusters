@@ -31,27 +31,41 @@
 *  POSSIBILITY OF SUCH DAMAGE.
 */
 package de.tud.cs.st.clusters
-package framework
 package pipeline
 
-import structure.Cluster
-import structure.util.ClusterManager
+import org.junit.runner.RunWith
+import org.scalatest.junit.JUnitRunner
+import framework.AbstractClusteringTest
+import framework.pipeline.ClusteringStage
 
 /**
  * @author Thomas Schlosser
  *
  */
-trait Clustering {
+@RunWith(classOf[JUnitRunner])
+class InternalExternalClusteringStageTest extends AbstractClusteringTest {
 
-    private[this] var cm: ClusterManager = null
-    def clusterManager: ClusterManager = cm
-    def clusterManager_=(cm: ClusterManager) { this.cm = cm }
+    implicit val clusteringStages: Array[ClusteringStage] = Array(
+        InternalExternalClusteringStage()
+    )
 
-    val clusteringMode: ClusteringMode = ClusteringMode.ROOT // default mode
+    test("testInternalExternalClusteringStage [cocome-printercontroller]") {
+        testClustering(
+            "testInternalExternalClusteringStage [cocome-printercontroller]",
+            cocomeDependencyExtractor,
+            Some("intExtClust_cocome"))
+    }
 
-    protected def process(cluster: Cluster): Cluster
+    test("testInternalExternalClusteringStage [getterSetterTestClass]") {
+        testClustering(
+            "testInternalExternalClusteringStage [getterSetterTestClass]",
+            getterSetterTestClassDependencyExtractor,
+            Some("intExtClust_getterSetterTestClass"))
+    }
 
-    private[pipeline] def cluster(cluster: Cluster): Cluster =
-        process(cluster)
-
+    test("testInternalExternalClusteringStage [hibernate]") {
+        testClustering("testInternalExternalClusteringStage [hibernate]",
+            hibernateDependencyExtractor,
+            Some("intExtClust_hibernate"))
+    }
 }

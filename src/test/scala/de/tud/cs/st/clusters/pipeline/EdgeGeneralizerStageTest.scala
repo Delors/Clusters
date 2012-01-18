@@ -36,36 +36,25 @@ package pipeline
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import framework.AbstractClusteringTest
-import framework.pipeline.Clustering
+import framework.pipeline.ClusteringStage
 
 /**
  * @author Thomas Schlosser
  *
  */
 @RunWith(classOf[JUnitRunner])
-class InternalExternalClusteringTest extends AbstractClusteringTest {
+class EdgeGeneralizerStageTest extends AbstractClusteringTest {
 
-    implicit val clusterings: Array[Clustering] = Array(
-        InternalExternalClustering()
+    implicit val clusteringStages: Array[ClusteringStage] = Array(
+        InternalExternalClusteringStage(),
+        EdgeTargetGeneralizerStage(),
+        EdgeSourceGeneralizerStage()
     )
 
-    test("testInternalExternalClustering [cocome-printercontroller]") {
+    test("testEdgeGeneralizerStage [getterSetterTestClass]") {
         testClustering(
-            "testInternalExternalClustering [cocome-printercontroller]",
-            cocomeDependencyExtractor,
-            Some("intExtClust_cocome"))
-    }
-
-    test("testInternalExternalClustering [getterSetterTestClass]") {
-        testClustering(
-            "testInternalExternalClustering [getterSetterTestClass]",
+            "testEdgeGeneralizerStage [getterSetterTestClass]",
             getterSetterTestClassDependencyExtractor,
-            Some("intExtClust_getterSetterTestClass"))
-    }
-
-    test("testInternalExternalClustering [hibernate]") {
-        testClustering("testInternalExternalClustering [hibernate]",
-            hibernateDependencyExtractor,
-            Some("intExtClust_hibernate"))
+            Some("edgeGen_getterSetterTestClass"))
     }
 }

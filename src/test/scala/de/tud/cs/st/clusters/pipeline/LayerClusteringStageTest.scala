@@ -36,27 +36,38 @@ package pipeline
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import framework.AbstractClusteringTest
-import framework.pipeline.Clustering
+import framework.pipeline.ClusteringStage
 
 /**
  * @author Thomas Schlosser
  *
  */
 @RunWith(classOf[JUnitRunner])
-class GetterSetterClusteringTest extends AbstractClusteringTest {
+class LayerClusteringStageTest extends AbstractClusteringTest {
 
-    implicit val clusterings: Array[Clustering] = Array(
-        GetterSetterClustering()
+    implicit val clusteringStages: Array[ClusteringStage] = Array(
+        LayerClusteringStage(true)
     )
 
-    test("testGetterSetterClustering [getterSetterTestClass]") {
-        testClustering("testGetterSetterClustering [getterSetterTestClass]",
+    test("testLayerClusteringStage [getterSetterTestClass]") {
+        testClustering(
+            "testLayerClusteringStage [getterSetterTestClass]",
             getterSetterTestClassDependencyExtractor,
-            Some("getterSetterClust_getterSetterTestClass"))
+            Some("layerClust_getterSetterTestClass"))
     }
 
-    test("testGetterSetterClustering [hibernate]") {
-        testClustering("testGetterSetterClustering [hibernate]",
-            hibernateDependencyExtractor)
+    test("testLayerClusteringStage [cocome]") {
+        testClustering(
+            "testLayerClusteringStage [cocome]",
+            cocomeDependencyExtractor,
+            Some("layerClust_cocome"))
+    }
+
+    test("testLayerClusteringStage [hibernate]") {
+        testClustering("testLayerClusteringStage [hibernate]",
+            hibernateDependencyExtractor,
+            Some("layerClust_hibernate"),
+            true,
+            false)
     }
 }

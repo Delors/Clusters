@@ -36,43 +36,36 @@ package pipeline
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import framework.AbstractClusteringTest
-import framework.pipeline.Clustering
+import framework.pipeline.ClusteringStage
 
 /**
  * @author Thomas Schlosser
  *
  */
 @RunWith(classOf[JUnitRunner])
-class CombinedClusteringTest extends AbstractClusteringTest {
+class CombinedClusteringStageTest extends AbstractClusteringTest {
 
-    //    implicit val clustering = (builder: ClusterBuilder) ⇒
-    //        InternExternClustering(builder,
-    //            newClusterClustering = GetterSetterClustering(builder,
-    //                StronglyConnectedComponentsClustering(builder,
-    //                    SingleElementClusterRemover(builder,
-    //                        LayerClustering(builder)))))
-
-    implicit val clusterings: Array[Clustering] = Array(
-        InternalExternalClustering(),
-        EdgeTargetGeneralizer(true),
-        GetterSetterClustering() //,
-    //        StronglyConnectedComponentsClustering(),
-    //        SimilarityMetricClustering()
-    //        InternalClassClustering()
+    implicit val clusteringStages: Array[ClusteringStage] = Array(
+        InternalExternalClusteringStage(),
+        EdgeTargetGeneralizerStage(true),
+        GetterSetterClusteringStage() //,
+    //        StronglyConnectedComponentsClusteringStage(),
+    //        SimilarityMetricClusteringStage()
+    //        InternalClassClusteringStage()
     )
 
-    test("testCombinedClustering [ClusteringTestProject]") {
+    test("testCombinedClusteringStage [ClusteringTestProject]") {
         testClustering(
-            "testCombinedClustering [ClusteringTestProject]",
+            "testCombinedClusteringStage [ClusteringTestProject]",
             clusteringTestProjectDependencyExtractor,
             Some("combinedClust_ClusteringTestProject"),
             includeSingleNodes = true,
             includeEdges = true)
     }
 
-    test("testCombinedClustering [cocome]") {
+    test("testCombinedClusteringStage [cocome]") {
         testClustering(
-            "testCombinedClustering [cocome]",
+            "testCombinedClusteringStage [cocome]",
             cocomeDependencyExtractor,
             Some("combinedClust_cocome"),
             includeSingleNodes = true,

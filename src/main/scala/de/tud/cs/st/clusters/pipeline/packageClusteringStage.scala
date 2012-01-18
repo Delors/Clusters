@@ -34,7 +34,7 @@ package de.tud.cs.st.clusters
 package pipeline
 
 import scala.collection.mutable.Map
-import framework.pipeline.Clustering
+import framework.pipeline.ClusteringStage
 import framework.structure.Cluster
 import framework.structure.util.ClusterManager
 
@@ -43,7 +43,7 @@ import framework.structure.util.ClusterManager
  * @author Thomas Schlosser
  *
  */
-class PackageClustering extends Clustering {
+class PackageClusteringStage extends ClusteringStage {
 
     protected override def process(cluster: Cluster): Cluster = {
         def getMatchingPrefix(value: String, prefixes: Array[String]): String = {
@@ -139,8 +139,8 @@ private trait GreatestCommonPrefixTree[Content] {
 
 }
 
-object PackageClustering {
+object PackageClusteringStage {
 
-    def apply(): PackageClustering = new PackageClustering
+    def apply(): PackageClusteringStage = new PackageClusteringStage
 
 }

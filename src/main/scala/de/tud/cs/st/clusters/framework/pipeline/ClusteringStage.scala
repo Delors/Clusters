@@ -31,29 +31,27 @@
 *  POSSIBILITY OF SUCH DAMAGE.
 */
 package de.tud.cs.st.clusters
+package framework
 package pipeline
 
-import org.junit.runner.RunWith
-import org.scalatest.junit.JUnitRunner
-import framework.AbstractClusteringTest
-import framework.pipeline.Clustering
+import structure.Cluster
+import structure.util.ClusterManager
 
 /**
  * @author Thomas Schlosser
  *
  */
-@RunWith(classOf[JUnitRunner])
-class ClassClusteringTest extends AbstractClusteringTest {
+trait ClusteringStage {
 
-    implicit val clusterings: Array[Clustering] = Array(
-        InternalClassClustering()
-    )
+    private[this] var cm: ClusterManager = null
+    def clusterManager: ClusterManager = cm
+    def clusterManager_=(cm: ClusterManager) { this.cm = cm }
 
-    test("testClassClustering [ClusteringTestProject]") {
-        testClustering(
-            "testClassClustering [ClusteringTestProject]",
-            clusteringTestProjectDependencyExtractor,
-            Some("classClust_ClusteringTestProject"))
-    }
+    val clusteringMode: ClusteringMode = ClusteringMode.ROOT // default mode
+
+    protected def process(cluster: Cluster): Cluster
+
+    private[pipeline] def cluster(cluster: Cluster): Cluster =
+        process(cluster)
 
 }

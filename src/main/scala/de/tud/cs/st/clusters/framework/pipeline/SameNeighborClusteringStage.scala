@@ -31,30 +31,51 @@
 *  POSSIBILITY OF SUCH DAMAGE.
 */
 package de.tud.cs.st.clusters
+package framework
 package pipeline
 
-import org.junit.runner.RunWith
-import org.scalatest.junit.JUnitRunner
-import framework.AbstractClusteringTest
-import framework.pipeline.Clustering
+import scala.collection.mutable.Map
+import framework.structure.Cluster
+import framework.structure.Node
+import framework.structure.Edge
+import de.tud.cs.st.bat.resolved.dependency._
 
 /**
  * @author Thomas Schlosser
  *
  */
-@RunWith(classOf[JUnitRunner])
-class EdgeGeneralizerTest extends AbstractClusteringTest {
+trait SameNeighborClusteringStage extends ClusteringStage {
 
-    implicit val clusterings: Array[Clustering] = Array(
-        InternalExternalClustering(),
-        EdgeTargetGeneralizer(),
-        EdgeSourceGeneralizer()
-    )
+    protected override def process(cluster: Cluster): Cluster = {
+        def getConsideredEdge(node: Node): Option[Edge] = {
+            node.getEdges.find(edge ⇒ isOfConsideredDependencyType(edge.dType))
+        }
 
-    test("testEdgeGeneralizer [getterSetterTestClass]") {
-        testClustering(
-            "testEdgeGeneralizer [getterSetterTestClass]",
-            getterSetterTestClassDependencyExtractor,
-            Some("edgeGen_getterSetterTestClass"))
+        val clustersMap = Map[Int, Set[Node]]()
+
+        for (node ← cluster.getNodes) {
+            getConsideredEdge(node) match {
+                case Some(edge) ⇒
+                    val neighborNodeID = edge.targetID
+                    val clusterSet = clustersMap.getOrElse(neighborNodeID, Set())
+                    clustersMap(neighborNodeID) = clusterSet + node
+                case None ⇒
+            }
+        }
+
+        cluster.clearNodes()
+        for ((neighborNodeID, nodeSet) ← clustersMap) {
+            val neighborNode = clusterManager.getNode(neighborNodeID)
+            val sameNeighborCluster = clusterManager.createCluster(neighborNode.identifier)
+            sameNeighborCluster.addNode(neighborNode)
+            nodeSet foreach {
+                sameNeighborCluster.addNode(_)
+            }
+            cluster.addNode(sameNeighborCluster)
+        }
+
+        cluster
     }
+
+    protected def isOfConsideredDependencyType(dType: DependencyType): Boolean
 }

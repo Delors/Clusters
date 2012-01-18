@@ -33,34 +33,54 @@
 package de.tud.cs.st.clusters
 package pipeline
 
-import org.junit.runner.RunWith
-import org.scalatest.junit.JUnitRunner
-import framework.AbstractClusteringTest
-import framework.pipeline.Clustering
+import scala.collection.mutable.Map
+import framework.pipeline.ClusteringStage
+import framework.structure.Cluster
+import framework.structure.Node
+import framework.structure.util.ClusterManager
+import graphscan.GraphScanResultBean
+import graphscan.GraphScanningAlgorithms
 
 /**
  * @author Thomas Schlosser
  *
  */
-@RunWith(classOf[JUnitRunner])
-class StronglyConnectedComponentsClusteringTest extends AbstractClusteringTest {
+class StronglyConnectedComponentsClusteringStage extends ClusteringStage {
 
-    implicit val clusterings: Array[Clustering] = Array(
-        StronglyConnectedComponentsClustering(),
-        SingleElementClusterRemover()
-    )
+    protected override def process(cluster: Cluster): Cluster = {
+        // calculate finishing times of all nodes using depth first search
+        var result = GraphScanningAlgorithms.graphScanComplete(
+            cluster, null, true, null)
 
-    test("testSCCClustering [sccTestClass]") {
-        testClustering(
-            "testSCCClustering [sccTestClass]",
-            stronglyConnectedComponentsTestClassDependencyExtractor,
-            Some("sccClust_sccTestClass")
-        )
+        // calculate depth first search on the transposed cluster considering
+        // the finishing times of the first run of the depth first search algorithm
+        result = GraphScanningAlgorithms.graphScanComplete(cluster,
+            null, true, result.order)(true)
+
+        // create resulting clusters
+        val inputNodes = cluster.getNodes.toArray
+        cluster.clearNodes()
+        var resultMap = Map[Int, Cluster]()
+        for (node ← inputNodes) {
+            val sccID = result.color(node.uniqueID) - 2
+            if (sccID >= 0) {
+                resultMap.get(sccID) match {
+                    case Some(c) ⇒
+                        c.addNode(node)
+                    case None ⇒
+                        val c = clusterManager.createCluster("SCC_"+System.nanoTime()) //sccID)
+                        c.addNode(node)
+                        resultMap(sccID) = c
+                        cluster.addNode(c)
+                }
+            }
+        }
+        cluster
     }
+}
 
-    test("testSCCClustering [hibernate]") {
-        testClustering(
-            "testSCCClustering [hibernate]",
-            hibernateDependencyExtractor)
-    }
+object StronglyConnectedComponentsClusteringStage {
+
+    def apply(): StronglyConnectedComponentsClusteringStage = new StronglyConnectedComponentsClusteringStage
+
 }

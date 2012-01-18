@@ -36,38 +36,35 @@ package pipeline
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import framework.AbstractClusteringTest
-import framework.pipeline.Clustering
+import framework.pipeline.ClusteringStage
 
 /**
  * @author Thomas Schlosser
  *
  */
 @RunWith(classOf[JUnitRunner])
-class LayerClusteringTest extends AbstractClusteringTest {
+class SimilarityMetricClusteringStageTest extends AbstractClusteringTest {
 
-    implicit val clusterings: Array[Clustering] = Array(
-        LayerClustering(true)
+    implicit val clusterings: Array[ClusteringStage] = Array(
+        SimilarityMetricClusteringStage()
     )
 
-    test("testLayerClustering [getterSetterTestClass]") {
+    test("testSimilarityMetricClusteringStage [cocome-printercontroller]") {
         testClustering(
-            "testLayerClustering [getterSetterTestClass]",
-            getterSetterTestClassDependencyExtractor,
-            Some("layerClust_getterSetterTestClass"))
+            "testSimilarityMetricClusteringStage [cocome-printercontroller]",
+            cocomePrintercontrollerDependencyExtractor,
+            Some("simMetricClust_cocome-printercontroller"))
     }
 
-    test("testLayerClustering [cocome]") {
+    test("testSimilarityMetricClusteringStage [cocome]") {
         testClustering(
-            "testLayerClustering [cocome]",
+            "testSimilarityMetricClusteringStage [cocome]",
             cocomeDependencyExtractor,
-            Some("layerClust_cocome"))
+            Some("simMetricClust_cocome"))
     }
 
-    test("testLayerClustering [hibernate]") {
-        testClustering("testLayerClustering [hibernate]",
-            hibernateDependencyExtractor,
-            Some("layerClust_hibernate"),
-            true,
-            false)
+    test("testSimilarityMetricClusteringStage [hibernate]") {
+        testClustering("testSimilarityMetricClusteringStage [hibernate]",
+            hibernateDependencyExtractor)
     }
 }

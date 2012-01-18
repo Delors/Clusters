@@ -33,32 +33,34 @@
 package de.tud.cs.st.clusters
 package pipeline
 
-import framework.pipeline.Clustering
-import framework.structure.Cluster
-import framework.structure.util.ClusterManager
-import framework.structure.SourceElementNode
+import org.junit.runner.RunWith
+import org.scalatest.junit.JUnitRunner
+import framework.AbstractClusteringTest
+import framework.pipeline.ClusteringStage
 
 /**
  * @author Thomas Schlosser
  *
  */
-class SingleElementClusterRemover extends Clustering {
+@RunWith(classOf[JUnitRunner])
+class StronglyConnectedComponentsClusteringStageTest extends AbstractClusteringTest {
 
-    protected def process(cluster: Cluster): Cluster = {
-        cluster.getNodes foreach {
-            case c: Cluster ⇒
-                if (c.numberOfNodes == 1) {
-                    cluster.addNode(c.getNodes.head)
-                    cluster.removeNode(c.uniqueID)
-                }
-            case _: SourceElementNode ⇒ // Nothing to do, because SourceElementNodes represent basic nodes and no clusters. 
-        }
-        cluster
+    implicit val clusteringStages: Array[ClusteringStage] = Array(
+        StronglyConnectedComponentsClusteringStage(),
+        SingleElementClusterRemoverStage()
+    )
+
+    test("testSCCClusteringStage [sccTestClass]") {
+        testClustering(
+            "testSCCClusteringStage [sccTestClass]",
+            stronglyConnectedComponentsTestClassDependencyExtractor,
+            Some("sccClust_sccTestClass")
+        )
     }
-}
 
-object SingleElementClusterRemover {
-
-    def apply(): SingleElementClusterRemover = new SingleElementClusterRemover
-
+    test("testSCCClusteringStage [hibernate]") {
+        testClustering(
+            "testSCCClusteringStage [hibernate]",
+            hibernateDependencyExtractor)
+    }
 }

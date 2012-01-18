@@ -48,7 +48,7 @@ trait ClusteringPipeline extends PerformanceEvaluation {
 
     // Configurations
 
-    private val clusterings: Queue[Clustering] = new Queue()
+    private val clusteringStages: Queue[ClusteringStage] = new Queue()
 
     private val clusterManager = ClusterManager
 
@@ -56,8 +56,8 @@ trait ClusteringPipeline extends PerformanceEvaluation {
 
     private var resultWriter: ClusteringResultWriter = null
 
-    def addClustering(clustering: Clustering) {
-        clusterings += clustering
+    def addClusteringStage(clusteringStage: ClusteringStage) {
+        clusteringStages += clusteringStage
     }
 
     def runPipeline(debug: Boolean = false): Cluster = {
@@ -112,7 +112,7 @@ trait ClusteringPipeline extends PerformanceEvaluation {
 
     private def cluster(clusterManager: ClusterManager): Cluster = {
         var result = clusterManager.getRootCluster
-        clusterings foreach { stage ⇒
+        clusteringStages foreach { stage ⇒
             //TODO analyze: stage.clusteringMode
             stage.clusterManager = clusterManager
             result = stage.cluster(result)
@@ -125,12 +125,12 @@ trait ClusteringPipeline extends PerformanceEvaluation {
 object ClusteringPipeline {
 
     def apply(
-        clusteringArray: Array[Clustering],
+        clusteringStageArray: Array[ClusteringStage],
         extractDependenciesFunktion: (DependencyExtractor) ⇒ Unit,
         clusteringResultWriter: ClusteringResultWriter = null): ClusteringPipeline =
         new ClusteringPipeline {
-            if (clusteringArray != null) {
-                clusteringArray foreach { addClustering(_) }
+            if (clusteringStageArray != null) {
+                clusteringStageArray foreach { addClusteringStage(_) }
             }
             extractDependencies = extractDependenciesFunktion
             resultWriter = clusteringResultWriter

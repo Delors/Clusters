@@ -35,7 +35,7 @@ package pipeline
 
 import scala.collection.mutable.Map
 import scala.collection.mutable.Set
-import framework.pipeline.Clustering
+import framework.pipeline.ClusteringStage
 import framework.structure.Cluster
 import framework.structure.Node
 import framework.structure.TypeNode
@@ -49,7 +49,7 @@ import de.tud.cs.st.bat.resolved.dependency._
  * @author Thomas Schlosser
  *
  */
-class SimilarityMetricClustering extends Clustering {
+class SimilarityMetricClusteringStage extends ClusteringStage {
 
     protected override def process(cluster: Cluster): Cluster = {
         val inputNodes = cluster.getNodes.toArray
@@ -180,9 +180,9 @@ class SimilarityMetricClustering extends Clustering {
     }
 }
 
-object SimilarityMetricClustering {
+object SimilarityMetricClusteringStage {
 
-    def apply(): SimilarityMetricClustering = new SimilarityMetricClustering
+    def apply(): SimilarityMetricClusteringStage = new SimilarityMetricClusteringStage
 
 }
 

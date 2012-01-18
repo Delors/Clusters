@@ -31,51 +31,32 @@
 *  POSSIBILITY OF SUCH DAMAGE.
 */
 package de.tud.cs.st.clusters
-package framework
 package pipeline
 
-import scala.collection.mutable.Map
-import framework.structure.Cluster
-import framework.structure.Node
-import framework.structure.Edge
-import de.tud.cs.st.bat.resolved.dependency._
+import org.junit.runner.RunWith
+import org.scalatest.junit.JUnitRunner
+import framework.AbstractClusteringTest
+import framework.pipeline.ClusteringStage
 
 /**
  * @author Thomas Schlosser
  *
  */
-trait SameNeighborClustering extends Clustering {
+@RunWith(classOf[JUnitRunner])
+class GetterSetterClusteringStageTest extends AbstractClusteringTest {
 
-    protected override def process(cluster: Cluster): Cluster = {
-        def getConsideredEdge(node: Node): Option[Edge] = {
-            node.getEdges.find(edge ⇒ isOfConsideredDependencyType(edge.dType))
-        }
+    implicit val clusteringStages: Array[ClusteringStage] = Array(
+        GetterSetterClusteringStage()
+    )
 
-        val clustersMap = Map[Int, Set[Node]]()
-
-        for (node ← cluster.getNodes) {
-            getConsideredEdge(node) match {
-                case Some(edge) ⇒
-                    val neighborNodeID = edge.targetID
-                    val clusterSet = clustersMap.getOrElse(neighborNodeID, Set())
-                    clustersMap(neighborNodeID) = clusterSet + node
-                case None ⇒
-            }
-        }
-
-        cluster.clearNodes()
-        for ((neighborNodeID, nodeSet) ← clustersMap) {
-            val neighborNode = clusterManager.getNode(neighborNodeID)
-            val sameNeighborCluster = clusterManager.createCluster(neighborNode.identifier)
-            sameNeighborCluster.addNode(neighborNode)
-            nodeSet foreach {
-                sameNeighborCluster.addNode(_)
-            }
-            cluster.addNode(sameNeighborCluster)
-        }
-
-        cluster
+    test("testGetterSetterClusteringStage [getterSetterTestClass]") {
+        testClustering("testGetterSetterClusteringStage [getterSetterTestClass]",
+            getterSetterTestClassDependencyExtractor,
+            Some("getterSetterClust_getterSetterTestClass"))
     }
 
-    protected def isOfConsideredDependencyType(dType: DependencyType): Boolean
+    test("testGetterSetterClusteringStage [hibernate]") {
+        testClustering("testGetterSetterClusteringStage [hibernate]",
+            hibernateDependencyExtractor)
+    }
 }
