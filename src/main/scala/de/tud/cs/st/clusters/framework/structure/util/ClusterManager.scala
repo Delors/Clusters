@@ -45,7 +45,6 @@ import de.tud.cs.st.bat.resolved.Method
 import de.tud.cs.st.bat.resolved.Type
 import de.tud.cs.st.bat.resolved.ObjectType
 import de.tud.cs.st.bat.resolved.MethodDescriptor
-import ClusterIDsMap._
 import de.tud.cs.st.bat.resolved.dependency.SourceElementIDsMap
 
 /**
@@ -55,7 +54,7 @@ import de.tud.cs.st.bat.resolved.dependency.SourceElementIDsMap
 trait ClusterManager
         extends SourceElementIDs
         with DependencyProcessor
-        with ClusterIDsMap
+        with ClusterIDs
         with NodeMappingSourceElementsVisitor
         with NodeFactory
         with ClusterFactory
@@ -64,7 +63,7 @@ trait ClusterManager
 
     protected val ROOT_CLUSTER_NAME = "ROOT"
 
-    private val rootCluster = new Cluster(clusterID(ROOT_CLUSTER_NAME),ROOT_CLUSTER_NAME, true)
+    private val rootCluster = new Cluster(clusterID(ROOT_CLUSTER_NAME), ROOT_CLUSTER_NAME, true)
 
     abstract override def sourceElementID(t: Type): Int = {
         val id = super.sourceElementID(t)
@@ -98,7 +97,8 @@ trait ClusterManager
 }
 
 object ClusterManager
-	extends DependencyExtractor
-	with SourceElementIDsMap
-	with ClusterManager
-	with UseIDOfBaseTypeForArrayTypes
+    extends DependencyExtractor
+    with SourceElementIDsMap
+    with ClusterIDsMap
+    with ClusterManager
+    with UseIDOfBaseTypeForArrayTypes

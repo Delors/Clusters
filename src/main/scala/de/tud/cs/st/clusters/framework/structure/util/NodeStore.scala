@@ -37,13 +37,12 @@ package util
 
 import scala.collection.mutable.Map
 import de.tud.cs.st.bat.resolved.dependency.SourceElementIDsMap
-import ClusterIDsMap._
 
 /**
  * @author thomas
  *
  */
-trait NodeStore {
+trait NodeStore extends SourceElementIDsMap with ClusterIDsMap {
 
     protected val INITIAL_ARRAY_SIZE = 100000
 
@@ -51,10 +50,6 @@ trait NodeStore {
     protected val fieldNodes: Map[Int, FieldNode] = Map()
     protected val methodNodes: Map[Int, MethodNode] = Map()
     protected val clusterNodes: Map[Int, Cluster] = Map()
-
-    //TODO: the constants in SourceElementIDsMap should be static values
-    private val const = new SourceElementIDsMap {}
-    import const._
 
     def storeNode(node: TypeNode) {
         store(node, typeNodes, LOWEST_TYPE_ID)
