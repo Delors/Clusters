@@ -38,6 +38,7 @@ import scala.collection.mutable.Queue
 import structure.Cluster
 import structure.SourceElementNode
 import structure.util.ClusterManager
+import structure.util.DefaultDependencyExtractor
 import de.tud.cs.st.bat.resolved.dependency.DependencyExtractor
 import de.tud.cs.st.util.perf.PerformanceEvaluation
 
@@ -49,9 +50,9 @@ trait ClusteringPipeline extends PerformanceEvaluation {
 
     // Configurations
 
-    private val clusteringStages: Queue[ClusteringStage[_]] = new Queue()
+    private val clusteringStages = new Queue[ClusteringStage[_]]()
 
-    private val clusterManager = ClusterManager()
+    private val clusterManager = new DefaultDependencyExtractor()
 
     private var extractDependencies: (DependencyExtractor) ⇒ Unit = null
 

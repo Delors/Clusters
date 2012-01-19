@@ -110,6 +110,6 @@ trait InternalExternalClusteringStageConfiguration extends ClusteringStageConfig
 object InternalExternalClusteringStage {
 
     def apply(c: InternalExternalClusteringStageConfiguration): InternalExternalClusteringStage =
-        new { override val configuration = c } with InternalExternalClusteringStage
+        new { val configuration = c } with InternalExternalClusteringStage
 
 }

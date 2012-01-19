@@ -158,13 +158,13 @@ object EdgeTargetGeneralizerStage {
 }
 
 //TODO: how to fix this without generalization of EdgeSourceGeneralizerStage and EdgeTargetGeneralizerStage?
-//trait AllEdgesGeneralizerStage
-//        extends EdgeGeneralizerStage[AllEdgesGeneralizerStageConfiguration]
-//        with EdgeSourceGeneralizerStage
-//        with EdgeTargetGeneralizerStage {
-//
-//}
-//
+trait AllEdgesGeneralizerStage
+        extends EdgeGeneralizerStage[AllEdgesGeneralizerStageConfiguration]
+        with EdgeSourceGeneralizerStage
+        with EdgeTargetGeneralizerStage {
+
+}
+
 trait AllEdgesGeneralizerStageConfiguration
         extends EdgeGeneralizerStageConfiguration
         with EdgeSourceGeneralizerStageConfiguration

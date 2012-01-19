@@ -108,3 +108,4 @@ object ClusterManager {
         new DependencyExtractor with SourceElementIDsMap with ClusterIDsMap with ClusterManager with UseIDOfBaseTypeForArrayTypes
     }
 }
+class DefaultDependencyExtractor extends DependencyExtractor with SourceElementIDsMap with ClusterIDsMap with ClusterManager with UseIDOfBaseTypeForArrayTypes

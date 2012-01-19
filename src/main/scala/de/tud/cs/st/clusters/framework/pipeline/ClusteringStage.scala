@@ -46,7 +46,7 @@ import structure.util.ClusterManager
  *
  * @author Thomas Schlosser
  */
-trait ClusteringStage[+C <: ClusteringStageConfiguration] {
+trait ClusteringStage[C <: ClusteringStageConfiguration] {
 
     protected val configuration: C
 
@@ -54,6 +54,7 @@ trait ClusteringStage[+C <: ClusteringStageConfiguration] {
     def clusterManager: ClusterManager = cm
     def clusterManager_=(cm: ClusterManager) { this.cm = cm }
 
+    //TODO: make this method public; comment intension
     protected def process(cluster: Cluster): Cluster
 
     private[pipeline] def cluster(cluster: Cluster): Cluster =
