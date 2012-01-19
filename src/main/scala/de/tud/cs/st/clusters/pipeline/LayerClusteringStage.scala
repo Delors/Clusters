@@ -34,6 +34,7 @@ package de.tud.cs.st.clusters
 package pipeline
 
 import framework.pipeline.ClusteringStage
+import framework.pipeline.ClusteringStageConfiguration
 import framework.structure.Cluster
 import framework.structure.Node
 import framework.structure.TypeNode
@@ -45,7 +46,7 @@ import framework.structure.util.ClusterManager
  * @author Thomas Schlosser
  *
  */
-class LayerClusteringStage(val performRecursion: Boolean) extends ClusteringStage {
+trait LayerClusteringStage extends ClusteringStage[LayerClusteringStageConfiguration] {
 
     protected override def process(cluster: Cluster): Cluster = {
         var layer = 0
@@ -108,7 +109,7 @@ class LayerClusteringStage(val performRecursion: Boolean) extends ClusteringStag
             }
 
             if (!middleLayerNodes.isEmpty) {
-                if (performRecursion && furtherLayers)
+                if (configuration.performRecursion && furtherLayers)
                     createLayers(middleLayerNodes)
                 else
                     // create middle layer
@@ -129,9 +130,13 @@ class LayerClusteringStage(val performRecursion: Boolean) extends ClusteringStag
     }
 }
 
+trait LayerClusteringStageConfiguration extends ClusteringStageConfiguration {
+    val performRecursion: Boolean = false
+}
+
 object LayerClusteringStage {
 
-    def apply(performRecursion: Boolean = false): LayerClusteringStage =
-        new LayerClusteringStage(performRecursion)
+    def apply(c: LayerClusteringStageConfiguration): LayerClusteringStage =
+        new { override val configuration = c } with LayerClusteringStage
 
 }

@@ -45,8 +45,10 @@ import framework.pipeline.ClusteringStage
 @RunWith(classOf[JUnitRunner])
 class PackageClusteringStageTest extends AbstractClusteringTest {
 
-    implicit val clusteringStages: Array[ClusteringStage] = Array(
-        PackageClusteringStage()
+    val configuration = new PackageClusteringStageConfiguration {}
+
+    implicit val clusteringStages: Array[ClusteringStage[_]] = Array(
+        PackageClusteringStage(configuration)
     )
 
     test("testPackageClusteringStage [cocome]") {

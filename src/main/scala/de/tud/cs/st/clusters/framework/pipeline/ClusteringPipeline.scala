@@ -36,6 +36,7 @@ package pipeline
 
 import scala.collection.mutable.Queue
 import structure.Cluster
+import structure.SourceElementNode
 import structure.util.ClusterManager
 import de.tud.cs.st.bat.resolved.dependency.DependencyExtractor
 import de.tud.cs.st.util.perf.PerformanceEvaluation
@@ -48,15 +49,15 @@ trait ClusteringPipeline extends PerformanceEvaluation {
 
     // Configurations
 
-    private val clusteringStages: Queue[ClusteringStage] = new Queue()
+    private val clusteringStages: Queue[ClusteringStage[_]] = new Queue()
 
-    private val clusterManager = ClusterManager
+    private val clusterManager = ClusterManager()
 
     private var extractDependencies: (DependencyExtractor) ⇒ Unit = null
 
     private var resultWriter: ClusteringResultWriter = null
 
-    def addClusteringStage(clusteringStage: ClusteringStage) {
+    def addClusteringStage(clusteringStage: ClusteringStage[_]) {
         clusteringStages += clusteringStage
     }
 
@@ -111,13 +112,25 @@ trait ClusteringPipeline extends PerformanceEvaluation {
     }
 
     private def cluster(clusterManager: ClusterManager): Cluster = {
-        var result = clusterManager.getRootCluster
-        clusteringStages foreach { stage ⇒
-            //TODO analyze: stage.clusteringMode
-            stage.clusterManager = clusterManager
-            result = stage.cluster(result)
+        def clusterStructure(cluster: Cluster, stage: ClusteringStage[_]) {
+            if (cluster.clusterable) {
+                stage.cluster(cluster)
+            }
+            else {
+                cluster.getNodes foreach {
+                    case subCluster: Cluster ⇒
+                        clusterStructure(subCluster, stage)
+                    case sen: SourceElementNode ⇒ // nothing to do; a single node cannot be clustered
+                }
+            }
         }
-        result
+
+        var rootCluster = clusterManager.getRootCluster
+        clusteringStages foreach { stage ⇒
+            stage.clusterManager = clusterManager
+            clusterStructure(rootCluster, stage)
+        }
+        rootCluster
     }
 
 }
@@ -125,7 +138,7 @@ trait ClusteringPipeline extends PerformanceEvaluation {
 object ClusteringPipeline {
 
     def apply(
-        clusteringStageArray: Array[ClusteringStage],
+        clusteringStageArray: Array[ClusteringStage[_]],
         extractDependenciesFunktion: (DependencyExtractor) ⇒ Unit,
         clusteringResultWriter: ClusteringResultWriter = null): ClusteringPipeline =
         new ClusteringPipeline {

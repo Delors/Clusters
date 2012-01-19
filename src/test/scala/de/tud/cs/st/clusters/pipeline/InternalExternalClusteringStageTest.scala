@@ -45,8 +45,10 @@ import framework.pipeline.ClusteringStage
 @RunWith(classOf[JUnitRunner])
 class InternalExternalClusteringStageTest extends AbstractClusteringTest {
 
-    implicit val clusteringStages: Array[ClusteringStage] = Array(
-        InternalExternalClusteringStage()
+    val configuration = new InternalExternalClusteringStageConfiguration {}
+
+    implicit val clusteringStages: Array[ClusteringStage[_]] = Array(
+        InternalExternalClusteringStage(configuration)
     )
 
     test("testInternalExternalClusteringStage [cocome-printercontroller]") {

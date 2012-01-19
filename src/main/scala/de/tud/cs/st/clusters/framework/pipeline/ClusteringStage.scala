@@ -38,20 +38,29 @@ import structure.Cluster
 import structure.util.ClusterManager
 
 /**
- * @author Thomas Schlosser
+ * Trait that represents a stage in the clustering pipeline. It defines an abstract method
+ * 'process' which is called from the [[de.tud.cs.st.clusters.framework.pipeline.ClusteringPipeline]]
+ * to start the clustering process or a part of the whole clustering process, respectively.
+ * Implementations of this trait/method define the way how the root cluster or parts of it
+ * are passed to the cluster stage.
  *
+ * @author Thomas Schlosser
  */
-trait ClusteringStage {
+trait ClusteringStage[+C <: ClusteringStageConfiguration] {
+
+    protected val configuration: C
 
     private[this] var cm: ClusterManager = null
     def clusterManager: ClusterManager = cm
     def clusterManager_=(cm: ClusterManager) { this.cm = cm }
 
-    val clusteringMode: ClusteringMode = ClusteringMode.ROOT // default mode
-
     protected def process(cluster: Cluster): Cluster
 
     private[pipeline] def cluster(cluster: Cluster): Cluster =
         process(cluster)
+
+}
+
+trait ClusteringStageConfiguration {
 
 }

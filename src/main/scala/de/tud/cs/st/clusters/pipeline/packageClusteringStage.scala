@@ -35,6 +35,7 @@ package pipeline
 
 import scala.collection.mutable.Map
 import framework.pipeline.ClusteringStage
+import framework.pipeline.ClusteringStageConfiguration
 import framework.structure.Cluster
 import framework.structure.util.ClusterManager
 
@@ -43,7 +44,7 @@ import framework.structure.util.ClusterManager
  * @author Thomas Schlosser
  *
  */
-class PackageClusteringStage extends ClusteringStage {
+trait PackageClusteringStage extends ClusteringStage[PackageClusteringStageConfiguration] {
 
     protected override def process(cluster: Cluster): Cluster = {
         def getMatchingPrefix(value: String, prefixes: Array[String]): String = {
@@ -139,8 +140,13 @@ private trait GreatestCommonPrefixTree[Content] {
 
 }
 
+trait PackageClusteringStageConfiguration extends ClusteringStageConfiguration {
+
+}
+
 object PackageClusteringStage {
 
-    def apply(): PackageClusteringStage = new PackageClusteringStage
+    def apply(c: PackageClusteringStageConfiguration): PackageClusteringStage =
+        new { override val configuration = c } with PackageClusteringStage
 
 }

@@ -45,8 +45,10 @@ import framework.pipeline.ClusteringStage
 @RunWith(classOf[JUnitRunner])
 class GetterSetterClusteringStageTest extends AbstractClusteringTest {
 
-    implicit val clusteringStages: Array[ClusteringStage] = Array(
-        GetterSetterClusteringStage()
+    val configuration = new GetterSetterClusteringStageConfiguration {}
+
+    implicit val clusteringStages: Array[ClusteringStage[_]] = Array(
+        GetterSetterClusteringStage(configuration)
     )
 
     test("testGetterSetterClusteringStage [getterSetterTestClass]") {

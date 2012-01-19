@@ -34,6 +34,7 @@ package de.tud.cs.st.clusters
 package pipeline
 
 import framework.pipeline.ClusteringStage
+import framework.pipeline.ClusteringStageConfiguration
 import framework.structure.Cluster
 import framework.structure.util.ClusterManager
 import framework.structure.SourceElementNode
@@ -42,7 +43,7 @@ import framework.structure.SourceElementNode
  * @author Thomas Schlosser
  *
  */
-class SingleElementClusterRemoverStage extends ClusteringStage {
+trait SingleElementClusterRemoverStage extends ClusteringStage[SingleElementClusterRemoverStageConfiguration] {
 
     protected def process(cluster: Cluster): Cluster = {
         cluster.getNodes foreach {
@@ -57,8 +58,13 @@ class SingleElementClusterRemoverStage extends ClusteringStage {
     }
 }
 
+trait SingleElementClusterRemoverStageConfiguration extends ClusteringStageConfiguration {
+
+}
+
 object SingleElementClusterRemoverStage {
 
-    def apply(): SingleElementClusterRemoverStage = new SingleElementClusterRemoverStage
+    def apply(c: SingleElementClusterRemoverStageConfiguration): SingleElementClusterRemoverStage =
+        new { override val configuration = c } with SingleElementClusterRemoverStage
 
 }

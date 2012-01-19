@@ -64,7 +64,7 @@ trait AbstractClusteringTest extends FunSuite
                                  extractDependencies: (DependencyExtractor) ⇒ Unit,
                                  dotFileName: Option[String] = None,
                                  includeSingleNodes: Boolean = true,
-                                 includeEdges: Boolean = true)(implicit clusteringStages: Array[ClusteringStage]): Cluster = {
+                                 includeEdges: Boolean = true)(implicit clusteringStages: Array[ClusteringStage[_]]): Cluster = {
         println(testName+" - START")
 
         var clusteringPipeline: ClusteringPipeline = null

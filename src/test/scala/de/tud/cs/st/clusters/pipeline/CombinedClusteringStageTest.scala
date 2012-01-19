@@ -45,10 +45,16 @@ import framework.pipeline.ClusteringStage
 @RunWith(classOf[JUnitRunner])
 class CombinedClusteringStageTest extends AbstractClusteringTest {
 
-    implicit val clusteringStages: Array[ClusteringStage] = Array(
-        InternalExternalClusteringStage(),
-        EdgeTargetGeneralizerStage(true),
-        GetterSetterClusteringStage() //,
+    val intExtConfiguration = new InternalExternalClusteringStageConfiguration {}
+    val edgeTargetGeneralizerConfiguration = new {
+        override val considerOnlyUnclusterableTargets = true
+    } with EdgeTargetGeneralizerStageConfiguration
+    val getterSetterConfiguration = new GetterSetterClusteringStageConfiguration {}
+
+    implicit val clusteringStages: Array[ClusteringStage[_]] = Array(
+        InternalExternalClusteringStage(intExtConfiguration),
+        EdgeTargetGeneralizerStage(edgeTargetGeneralizerConfiguration),
+        GetterSetterClusteringStage(getterSetterConfiguration) //,
     //        StronglyConnectedComponentsClusteringStage(),
     //        SimilarityMetricClusteringStage()
     //        InternalClassClusteringStage()

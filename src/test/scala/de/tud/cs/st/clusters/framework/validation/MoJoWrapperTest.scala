@@ -40,7 +40,9 @@ import structure.Cluster
 import structure.SourceElementNode
 import mojo.MoJoCalculator
 import de.tud.cs.st.clusters.pipeline.InternalClassClusteringStage
+import de.tud.cs.st.clusters.pipeline.InternalClassClusteringStageConfiguration
 import de.tud.cs.st.clusters.pipeline.InternalExternalClusteringStage
+import de.tud.cs.st.clusters.pipeline.InternalExternalClusteringStageConfiguration
 import framework.pipeline.ClusteringStage
 
 /**
@@ -51,14 +53,16 @@ import framework.pipeline.ClusteringStage
 class MoJoWrapperTest extends AbstractClusteringTest {
 
     test("calculate double direction MojoFM quality value") {
-        val clusteringA: Array[ClusteringStage] = Array(InternalClassClusteringStage())
+        val intClassConfiguration = new InternalClassClusteringStageConfiguration {}
+        val clusteringA: Array[ClusteringStage[_]] = Array(InternalClassClusteringStage(intClassConfiguration))
 
         val clustersA = testClustering(
             "testInternalClassClusteringStage [ClusteringTestProject.zip]",
             extractDependencies("test/classfiles/ClusteringTestProject.zip"),
             Some("clusterA"))(clusteringA)
 
-        val clusteringB: Array[ClusteringStage] = Array(InternalExternalClusteringStage())
+        val intExtConfiguration = new InternalExternalClusteringStageConfiguration {}
+        val clusteringB: Array[ClusteringStage[_]] = Array(InternalExternalClusteringStage(intExtConfiguration))
 
         val clustersB = testClustering(
             "testInternalExternalClusteringStage [ClusteringTestProject.zip]",

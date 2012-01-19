@@ -35,6 +35,7 @@ package pipeline
 
 import scala.collection.mutable.Set
 import framework.pipeline.ClusteringStage
+import framework.pipeline.ClusteringStageConfiguration
 import framework.structure.Cluster
 import framework.structure.TypeNode
 import framework.structure.FieldNode
@@ -54,7 +55,7 @@ import framework.structure.util.ClusterManager
  * @author Thomas Schlosser
  *
  */
-class InternalExternalClusteringStage extends ClusteringStage {
+trait InternalExternalClusteringStage extends ClusteringStage[InternalExternalClusteringStageConfiguration] {
 
     protected override def process(cluster: Cluster): Cluster = {
         // create list that contains all names of internal packages
@@ -82,6 +83,7 @@ class InternalExternalClusteringStage extends ClusteringStage {
 
         val inputNodes = cluster.getNodes.toArray
         cluster.clearNodes()
+        cluster.clusterable = false
         val internal = clusterManager.createCluster("internal")
         val external = clusterManager.createCluster("external")
         //TODO: remove
@@ -101,8 +103,13 @@ class InternalExternalClusteringStage extends ClusteringStage {
     }
 }
 
+trait InternalExternalClusteringStageConfiguration extends ClusteringStageConfiguration {
+
+}
+
 object InternalExternalClusteringStage {
 
-    def apply(): InternalExternalClusteringStage = new InternalExternalClusteringStage
+    def apply(c: InternalExternalClusteringStageConfiguration): InternalExternalClusteringStage =
+        new { override val configuration = c } with InternalExternalClusteringStage
 
 }

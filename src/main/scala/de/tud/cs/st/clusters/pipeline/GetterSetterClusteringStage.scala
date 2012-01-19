@@ -35,6 +35,7 @@ package pipeline
 
 import scala.collection.mutable.ListBuffer
 import framework.pipeline.ClusteringStage
+import framework.pipeline.ClusteringStageConfiguration
 import framework.structure.Cluster
 import framework.structure.Node
 import framework.structure.FieldNode
@@ -49,12 +50,13 @@ import de.tud.cs.st.bat.resolved.Field
  * @author Thomas Schlosser
  *
  */
-class GetterSetterClusteringStage extends ClusteringStage {
+trait GetterSetterClusteringStage extends ClusteringStage[GetterSetterClusteringStageConfiguration] {
 
     val getterPrefix: Option[String] = Some("get")
     val setterPrefix: Option[String] = Some("set")
 
     protected override def process(cluster: Cluster): Cluster = {
+        println("GETTER_SETTER_CLUSTERING_STAGE # START")
         def checkGetterSetterCluster(node: Node, field: Field): Option[GetterSetterClusterBean] = {
             var gscBean = new GetterSetterClusterBean
             // use transposed edges to determine nodes that use this field
@@ -108,6 +110,7 @@ class GetterSetterClusteringStage extends ClusteringStage {
         // TODO: cluster needs methods that return only type/field/method nodes => performance improvement
         val inputNodes = cluster.getNodes.toArray
         cluster.clearNodes()
+        println(inputNodes.size)
         for (node ← inputNodes) {
             node match {
                 case FieldNode(_, _, Some(field)) ⇒
@@ -124,6 +127,7 @@ class GetterSetterClusteringStage extends ClusteringStage {
                             if (clusterBean.hasSetter) {
                                 gsCluster.addNode(clusterBean.setter)
                             }
+                            gsCluster.clusterable = false
                             cluster.addNode(gsCluster)
                         case None ⇒
                             cluster.addNode(node)
@@ -153,8 +157,13 @@ class GetterSetterClusteringStage extends ClusteringStage {
 
 }
 
+trait GetterSetterClusteringStageConfiguration extends ClusteringStageConfiguration {
+
+}
+
 object GetterSetterClusteringStage {
 
-    def apply(): GetterSetterClusteringStage = new GetterSetterClusteringStage
+    def apply(c: GetterSetterClusteringStageConfiguration): GetterSetterClusteringStage =
+        new { override val configuration = c } with GetterSetterClusteringStage
 
 }

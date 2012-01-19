@@ -35,7 +35,9 @@ package pipeline
 
 import scala.collection.mutable.Map
 import framework.pipeline.ClusteringStage
+import framework.pipeline.ClusteringStageConfiguration
 import framework.pipeline.SameNeighborClusteringStage
+import framework.pipeline.SameNeighborClusteringStageConfiguration
 import framework.structure.Cluster
 import framework.structure.Node
 import framework.structure.Edge
@@ -46,24 +48,37 @@ import de.tud.cs.st.bat.resolved.dependency._
  * @author Thomas Schlosser
  *
  */
-trait ClassClusteringStage extends ClusteringStage {
+trait ClassClusteringStage[C <: ClassClusteringStageConfiguration] extends ClusteringStage[C] {
 
 }
 
-class InternalClassClusteringStage extends ClassClusteringStage with SameNeighborClusteringStage {
+trait ClassClusteringStageConfiguration extends ClusteringStageConfiguration {
+
+}
+
+trait InternalClassClusteringStage
+        extends ClassClusteringStage[InternalClassClusteringStageConfiguration]
+        with SameNeighborClusteringStage[InternalClassClusteringStageConfiguration] {
 
     override protected def isOfConsideredDependencyType(dType: DependencyType): Boolean =
         dType == DependencyType.IS_INSTANCE_MEMBER_OF || dType == DependencyType.IS_CLASS_MEMBER_OF
 
 }
 
-object InternalClassClusteringStage {
-
-    def apply(): InternalClassClusteringStage = new InternalClassClusteringStage()
+trait InternalClassClusteringStageConfiguration
+        extends ClassClusteringStageConfiguration
+        with SameNeighborClusteringStageConfiguration {
 
 }
 
-class ExternalClassClusteringStage extends ClassClusteringStage {
+object InternalClassClusteringStage {
+
+    def apply(c: InternalClassClusteringStageConfiguration): InternalClassClusteringStage =
+        new { override val configuration = c } with InternalClassClusteringStage
+
+}
+
+trait ExternalClassClusteringStage extends ClassClusteringStage[ExternalClassClusteringStageConfiguration] {
 
     protected override def process(cluster: Cluster): Cluster = {
         val classClustersMap = Map[Int, Set[Node]]()
@@ -94,8 +109,13 @@ class ExternalClassClusteringStage extends ClassClusteringStage {
     }
 }
 
+trait ExternalClassClusteringStageConfiguration extends ClassClusteringStageConfiguration {
+
+}
+
 object ExternalClassClusteringStage {
 
-    def apply(): ExternalClassClusteringStage = new ExternalClassClusteringStage()
+    def apply(c: ExternalClassClusteringStageConfiguration): ExternalClassClusteringStage =
+        new { override val configuration = c } with ExternalClassClusteringStage
 
 }

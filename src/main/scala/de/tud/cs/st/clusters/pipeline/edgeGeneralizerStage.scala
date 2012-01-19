@@ -34,6 +34,7 @@ package de.tud.cs.st.clusters
 package pipeline
 
 import framework.pipeline.ClusteringStage
+import framework.pipeline.ClusteringStageConfiguration
 import framework.structure.Cluster
 import framework.structure.util.ClusterManager
 import framework.structure.SourceElementNode
@@ -43,10 +44,7 @@ import framework.structure.Node
  * @author Thomas Schlosser
  *
  */
-//FIXME fundamental problem with the ClusterBuilder concept for ID->Node lookups,
-// because nodes have been cloned in each step and the nodes in ClusterBuilder represent
-// the state of the root cluster (for each point in time)
-trait EdgeGeneralizerStage extends ClusteringStage {
+trait EdgeGeneralizerStage[C <: EdgeGeneralizerStageConfiguration] extends ClusteringStage[C] {
 
     protected override def process(cluster: Cluster): Cluster = {
         val inputCluster = clusterManager.createDeepCopy(cluster)
@@ -98,13 +96,17 @@ trait EdgeGeneralizerStage extends ClusteringStage {
 
 }
 
-class EdgeSourceGeneralizerStage(val considerOnlyUnclusterableSources: Boolean) extends EdgeGeneralizerStage {
+trait EdgeGeneralizerStageConfiguration extends ClusteringStageConfiguration {
+
+}
+
+trait EdgeSourceGeneralizerStage extends EdgeGeneralizerStage[EdgeSourceGeneralizerStageConfiguration] {
 
     protected override def newSourceID(oldSourceID: Int): Int = {
         val oldNode = clusterManager.getNode(oldSourceID)
         if (oldNode != null
             && oldNode.parent != null
-            && (considerOnlyUnclusterableSources
+            && (configuration.considerOnlyUnclusterableSources
                 || !oldNode.parent.clusterable)) {
             oldNode.parent.uniqueID
         }
@@ -115,24 +117,25 @@ class EdgeSourceGeneralizerStage(val considerOnlyUnclusterableSources: Boolean) 
 
 }
 
+trait EdgeSourceGeneralizerStageConfiguration extends EdgeGeneralizerStageConfiguration {
+    val considerOnlyUnclusterableSources: Boolean
+}
+
 object EdgeSourceGeneralizerStage {
 
-    def apply(): EdgeSourceGeneralizerStage =
-        new EdgeSourceGeneralizerStage(false)
-
-    def apply(considerOnlyUnclusterableSources: Boolean): EdgeSourceGeneralizerStage =
-        new EdgeSourceGeneralizerStage(considerOnlyUnclusterableSources)
+    def apply(c: EdgeSourceGeneralizerStageConfiguration): EdgeSourceGeneralizerStage =
+        new { override val configuration = c } with EdgeSourceGeneralizerStage
 
 }
 
-class EdgeTargetGeneralizerStage(val considerOnlyUnclusterableTargets: Boolean) extends EdgeGeneralizerStage {
+trait EdgeTargetGeneralizerStage extends EdgeGeneralizerStage[EdgeTargetGeneralizerStageConfiguration] {
 
     protected override def newTargetID(oldTargetID: Int): Int = {
         val oldNode = clusterManager.getNode(oldTargetID)
         //if (oldNode != null && oldNode.parent != null) {
         if (oldNode != null
             && oldNode.parent != null
-            && (!considerOnlyUnclusterableTargets
+            && (!configuration.considerOnlyUnclusterableTargets
                 || !oldNode.parent.clusterable)) {
             oldNode.parent.uniqueID
         }
@@ -143,12 +146,45 @@ class EdgeTargetGeneralizerStage(val considerOnlyUnclusterableTargets: Boolean) 
 
 }
 
+trait EdgeTargetGeneralizerStageConfiguration extends EdgeGeneralizerStageConfiguration {
+    val considerOnlyUnclusterableTargets: Boolean
+}
+
 object EdgeTargetGeneralizerStage {
 
-    def apply(): EdgeTargetGeneralizerStage =
-        new EdgeTargetGeneralizerStage(false)
-
-    def apply(considerOnlyUnclusterableTargets: Boolean): EdgeTargetGeneralizerStage =
-        new EdgeTargetGeneralizerStage(considerOnlyUnclusterableTargets)
+    def apply(c: EdgeTargetGeneralizerStageConfiguration): EdgeTargetGeneralizerStage =
+        new { override val configuration = c } with EdgeTargetGeneralizerStage
 
 }
+
+//TODO: how to fix this without generalization of EdgeSourceGeneralizerStage and EdgeTargetGeneralizerStage?
+//trait AllEdgesGeneralizerStage
+//        extends EdgeGeneralizerStage[AllEdgesGeneralizerStageConfiguration]
+//        with EdgeSourceGeneralizerStage
+//        with EdgeTargetGeneralizerStage {
+//
+//}
+//
+trait AllEdgesGeneralizerStageConfiguration
+        extends EdgeGeneralizerStageConfiguration
+        with EdgeSourceGeneralizerStageConfiguration
+        with EdgeTargetGeneralizerStageConfiguration {
+}
+
+//object AllEdgesGeneralizerStage {
+//
+//    def apply(): AllEdgesGeneralizerStage =
+//        new AllEdgesGeneralizerStage {
+//            override val onlyUnclusterableSources = false
+//            override val onlyUnclusterableTargets = false
+//        }
+//
+//    def apply(
+//        considerOnlyUnclusterableSources: Boolean,
+//        considerOnlyUnclusterableTargets: Boolean): AllEdgesGeneralizerStage =
+//        new AllEdgesGeneralizerStage {
+//            override val onlyUnclusterableSources = considerOnlyUnclusterableSources
+//            override val onlyUnclusterableTargets = considerOnlyUnclusterableTargets
+//        }
+//
+//}

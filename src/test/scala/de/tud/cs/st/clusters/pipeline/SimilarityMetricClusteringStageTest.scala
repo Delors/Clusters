@@ -45,8 +45,10 @@ import framework.pipeline.ClusteringStage
 @RunWith(classOf[JUnitRunner])
 class SimilarityMetricClusteringStageTest extends AbstractClusteringTest {
 
-    implicit val clusterings: Array[ClusteringStage] = Array(
-        SimilarityMetricClusteringStage()
+    val configuration = new SimilarityMetricClusteringStageConfiguration {}
+
+    implicit val clusteringStages: Array[ClusteringStage[_]] = Array(
+        SimilarityMetricClusteringStage(configuration)
     )
 
     test("testSimilarityMetricClusteringStage [cocome-printercontroller]") {

@@ -45,8 +45,10 @@ import framework.pipeline.ClusteringStage
 @RunWith(classOf[JUnitRunner])
 class LayerClusteringStageTest extends AbstractClusteringTest {
 
-    implicit val clusteringStages: Array[ClusteringStage] = Array(
-        LayerClusteringStage(true)
+    val configuration = new { override val performRecursion = true } with LayerClusteringStageConfiguration
+
+    implicit val clusteringStages: Array[ClusteringStage[_]] = Array(
+        LayerClusteringStage(configuration)
     )
 
     test("testLayerClusteringStage [getterSetterTestClass]") {

@@ -45,10 +45,18 @@ import framework.pipeline.ClusteringStage
 @RunWith(classOf[JUnitRunner])
 class EdgeGeneralizerStageTest extends AbstractClusteringTest {
 
-    implicit val clusteringStages: Array[ClusteringStage] = Array(
-        InternalExternalClusteringStage(),
-        EdgeTargetGeneralizerStage(),
-        EdgeSourceGeneralizerStage()
+    val intExtConfiguration = new InternalExternalClusteringStageConfiguration {}
+    val edgeTargetGeneralizerConfiguration = new {
+        override val considerOnlyUnclusterableTargets = false
+    } with EdgeTargetGeneralizerStageConfiguration
+    val edgeSourceGeneralizerConfiguration = new {
+        override val considerOnlyUnclusterableSources = false
+    } with EdgeSourceGeneralizerStageConfiguration
+
+    implicit val clusteringStages: Array[ClusteringStage[_]] = Array(
+        InternalExternalClusteringStage(intExtConfiguration),
+        EdgeTargetGeneralizerStage(edgeTargetGeneralizerConfiguration),
+        EdgeSourceGeneralizerStage(edgeSourceGeneralizerConfiguration)
     )
 
     test("testEdgeGeneralizerStage [getterSetterTestClass]") {

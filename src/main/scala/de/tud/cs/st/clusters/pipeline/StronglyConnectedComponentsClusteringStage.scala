@@ -35,6 +35,7 @@ package pipeline
 
 import scala.collection.mutable.Map
 import framework.pipeline.ClusteringStage
+import framework.pipeline.ClusteringStageConfiguration
 import framework.structure.Cluster
 import framework.structure.Node
 import framework.structure.util.ClusterManager
@@ -45,7 +46,7 @@ import graphscan.GraphScanningAlgorithms
  * @author Thomas Schlosser
  *
  */
-class StronglyConnectedComponentsClusteringStage extends ClusteringStage {
+trait StronglyConnectedComponentsClusteringStage extends ClusteringStage[StronglyConnectedComponentsClusteringStageConfiguration] {
 
     protected override def process(cluster: Cluster): Cluster = {
         // calculate finishing times of all nodes using depth first search
@@ -79,8 +80,13 @@ class StronglyConnectedComponentsClusteringStage extends ClusteringStage {
     }
 }
 
+trait StronglyConnectedComponentsClusteringStageConfiguration extends ClusteringStageConfiguration {
+
+}
+
 object StronglyConnectedComponentsClusteringStage {
 
-    def apply(): StronglyConnectedComponentsClusteringStage = new StronglyConnectedComponentsClusteringStage
+    def apply(c: StronglyConnectedComponentsClusteringStageConfiguration): StronglyConnectedComponentsClusteringStage =
+        new { override val configuration = c } with StronglyConnectedComponentsClusteringStage
 
 }
