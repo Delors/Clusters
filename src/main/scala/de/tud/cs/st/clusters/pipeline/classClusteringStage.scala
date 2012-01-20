@@ -80,7 +80,7 @@ object InternalClassClusteringStage {
 
 trait ExternalClassClusteringStage extends ClassClusteringStage[ExternalClassClusteringStageConfiguration] {
 
-    protected override def process(cluster: Cluster): Cluster = {
+    override def performClustering(cluster: Cluster): Cluster = {
         val classClustersMap = Map[Int, Set[Node]]()
 
         for (node ← cluster.getNodes) {

@@ -46,7 +46,7 @@ import framework.structure.Node
  */
 trait EdgeGeneralizerStage[C <: EdgeGeneralizerStageConfiguration] extends ClusteringStage[C] {
 
-    protected override def process(cluster: Cluster): Cluster = {
+    override def performClustering(cluster: Cluster): Cluster = {
         val inputCluster = clusterManager.createDeepCopy(cluster)
         cluster.clearEdges()
         removeAllOriginalEdges(cluster)
@@ -158,12 +158,12 @@ object EdgeTargetGeneralizerStage {
 }
 
 //TODO: how to fix this without generalization of EdgeSourceGeneralizerStage and EdgeTargetGeneralizerStage?
-trait AllEdgesGeneralizerStage
-        extends EdgeGeneralizerStage[AllEdgesGeneralizerStageConfiguration]
-        with EdgeSourceGeneralizerStage
-        with EdgeTargetGeneralizerStage {
-
-}
+//trait AllEdgesGeneralizerStage
+//        extends EdgeGeneralizerStage[AllEdgesGeneralizerStageConfiguration]
+//        with EdgeSourceGeneralizerStage
+//        with EdgeTargetGeneralizerStage {
+//
+//}
 
 trait AllEdgesGeneralizerStageConfiguration
         extends EdgeGeneralizerStageConfiguration

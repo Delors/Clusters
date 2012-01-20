@@ -45,7 +45,7 @@ import framework.structure.SourceElementNode
  */
 trait SingleElementClusterRemoverStage extends ClusteringStage[SingleElementClusterRemoverStageConfiguration] {
 
-    protected def process(cluster: Cluster): Cluster = {
+    def performClustering(cluster: Cluster): Cluster = {
         cluster.getNodes foreach {
             case c: Cluster ⇒
                 if (c.numberOfNodes == 1) {

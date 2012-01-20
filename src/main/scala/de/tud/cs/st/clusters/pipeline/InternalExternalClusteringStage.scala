@@ -57,7 +57,7 @@ import framework.structure.util.ClusterManager
  */
 trait InternalExternalClusteringStage extends ClusteringStage[InternalExternalClusteringStageConfiguration] {
 
-    protected override def process(cluster: Cluster): Cluster = {
+    override def performClustering(cluster: Cluster): Cluster = {
         // create list that contains all names of internal packages
         var internalPackages: Set[String] = Set()
         for (node ← cluster.getNodes) {

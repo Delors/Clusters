@@ -46,7 +46,7 @@ import de.tud.cs.st.bat.resolved.dependency._
  */
 trait SameNeighborClusteringStage[C <: SameNeighborClusteringStageConfiguration] extends ClusteringStage[C] {
 
-    protected override def process(cluster: Cluster): Cluster = {
+    override def performClustering(cluster: Cluster): Cluster = {
         def getConsideredEdge(node: Node): Option[Edge] = {
             node.getEdges.find(edge ⇒ isOfConsideredDependencyType(edge.dType))
         }

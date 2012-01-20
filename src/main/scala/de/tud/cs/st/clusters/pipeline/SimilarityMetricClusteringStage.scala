@@ -52,7 +52,7 @@ import de.tud.cs.st.bat.resolved.dependency._
  */
 trait SimilarityMetricClusteringStage extends ClusteringStage[SimilarityMetricClusteringStageConfiguration] {
 
-    protected override def process(cluster: Cluster): Cluster = {
+    override def performClustering(cluster: Cluster): Cluster = {
         val inputNodes = cluster.getNodes.toArray
 
         val weightMatrix: Map[(Int, Int), Long] = Map()

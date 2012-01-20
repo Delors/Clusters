@@ -55,7 +55,7 @@ trait GetterSetterClusteringStage extends ClusteringStage[GetterSetterClustering
     val getterPrefix: Option[String] = Some("get")
     val setterPrefix: Option[String] = Some("set")
 
-    protected override def process(cluster: Cluster): Cluster = {
+    override def performClustering(cluster: Cluster): Cluster = {
         println("GETTER_SETTER_CLUSTERING_STAGE # START")
         def checkGetterSetterCluster(node: Node, field: Field): Option[GetterSetterClusterBean] = {
             var gscBean = new GetterSetterClusterBean

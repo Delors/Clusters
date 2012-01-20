@@ -113,9 +113,11 @@ trait ClusteringPipeline extends PerformanceEvaluation {
     }
 
     private def cluster(clusterManager: ClusterManager): Cluster = {
+        //TODO: this method should be moved into a new ClusteringStage
+        // that defines an "abstract override performClustering"
         def clusterStructure(cluster: Cluster, stage: ClusteringStage[_]) {
             if (cluster.clusterable) {
-                stage.cluster(cluster)
+                stage.performClustering(cluster)
             }
             else {
                 cluster.getNodes foreach {

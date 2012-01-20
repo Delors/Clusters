@@ -46,7 +46,7 @@ import framework.structure.util.ClusterManager
  */
 trait PackageClusteringStage extends ClusteringStage[PackageClusteringStageConfiguration] {
 
-    protected override def process(cluster: Cluster): Cluster = {
+    override def performClustering(cluster: Cluster): Cluster = {
         def getMatchingPrefix(value: String, prefixes: Array[String]): String = {
             prefixes.foreach(prfx ⇒ if (value.startsWith(prfx)) { return prfx })
             sys.error("No matching prefix found for \""+value+"\" in prefixes: "+prefixes.mkString("\n"))

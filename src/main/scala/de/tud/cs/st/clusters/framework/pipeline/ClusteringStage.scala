@@ -39,10 +39,11 @@ import structure.util.ClusterManager
 
 /**
  * Trait that represents a stage in the clustering pipeline. It defines an abstract method
- * 'process' which is called from the [[de.tud.cs.st.clusters.framework.pipeline.ClusteringPipeline]]
- * to start the clustering process or a part of the whole clustering process, respectively.
- * Implementations of this trait/method define the way how the root cluster or parts of it
- * are passed to the cluster stage.
+ * 'performClustering' which is called from the [[de.tud.cs.st.clusters.framework.pipeline.ClusteringPipeline]]
+ * to start the clustering process. The parameter is initially set to the root cluster.
+ * Implementations of this trait/method define the way the clustering is performed OR
+ * the way the cluster structure is being traversed before the clustering of parts of
+ * the structure is performed.
  *
  * @author Thomas Schlosser
  */
@@ -55,10 +56,7 @@ trait ClusteringStage[C <: ClusteringStageConfiguration] {
     def clusterManager_=(cm: ClusterManager) { this.cm = cm }
 
     //TODO: make this method public; comment intension
-    protected def process(cluster: Cluster): Cluster
-
-    private[pipeline] def cluster(cluster: Cluster): Cluster =
-        process(cluster)
+    def performClustering(cluster: Cluster): Cluster
 
 }
 

@@ -48,7 +48,7 @@ import graphscan.GraphScanningAlgorithms
  */
 trait StronglyConnectedComponentsClusteringStage extends ClusteringStage[StronglyConnectedComponentsClusteringStageConfiguration] {
 
-    protected override def process(cluster: Cluster): Cluster = {
+    override def performClustering(cluster: Cluster): Cluster = {
         // calculate finishing times of all nodes using depth first search
         var result = GraphScanningAlgorithms.graphScanComplete(
             cluster, null, true, null)

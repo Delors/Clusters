@@ -48,7 +48,7 @@ import framework.structure.util.ClusterManager
  */
 trait LayerClusteringStage extends ClusteringStage[LayerClusteringStageConfiguration] {
 
-    protected override def process(cluster: Cluster): Cluster = {
+    override def performClustering(cluster: Cluster): Cluster = {
         var layer = 0
 
         def createLayers(nodes: Set[Node]) {
