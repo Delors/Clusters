@@ -46,11 +46,9 @@ import framework.pipeline.ClusteringStage
 class StronglyConnectedComponentsClusteringStageTest extends AbstractClusteringTest {
 
     val sccConfiguration = new StronglyConnectedComponentsClusteringStageConfiguration {}
-    val removerConfiguration = new SingleElementClusterRemoverStageConfiguration {}
 
     implicit val clusteringStages: Array[ClusteringStage[_]] = Array(
-        StronglyConnectedComponentsClusteringStage(sccConfiguration),
-        SingleElementClusterRemoverStage(removerConfiguration)
+        StronglyConnectedComponentsClusteringStage(sccConfiguration)
     )
 
     test("testSCCClusteringStage [sccTestClass]") {

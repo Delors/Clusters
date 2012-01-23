@@ -61,6 +61,10 @@ trait StronglyConnectedComponentsClusteringStage extends ClusteringStage[Strongl
         // create resulting clusters
         val inputNodes = cluster.getNodes.toArray
         cluster.clearNodes()
+        // The first element of a cluster is buffered in this map.
+        // If it remains the only element in that "cluster", no new cluster will be created.
+        // As soon as the second element of that cluster occurs, the cluster will be created. 
+        var newClusterMinSizeBuffer = Map[Int, Node]()
         var resultMap = Map[Int, Cluster]()
         for (node ← inputNodes) {
             val sccID = result.color(node.uniqueID) - 2
@@ -69,12 +73,22 @@ trait StronglyConnectedComponentsClusteringStage extends ClusteringStage[Strongl
                     case Some(c) ⇒
                         c.addNode(node)
                     case None ⇒
-                        val c = clusterManager.createCluster("SCC_"+System.nanoTime()) //sccID)
-                        c.addNode(node)
-                        resultMap(sccID) = c
-                        cluster.addNode(c)
+                        newClusterMinSizeBuffer.get(sccID) match {
+                            case Some(firstElement) ⇒
+                                val c = clusterManager.createCluster("SCC_"+System.nanoTime()) //sccID)
+                                c.addNode(firstElement)
+                                c.addNode(node)
+                                resultMap(sccID) = c
+                                cluster.addNode(c)
+                                newClusterMinSizeBuffer.remove(sccID)
+                            case None ⇒
+                                newClusterMinSizeBuffer(sccID) = node
+                        }
                 }
             }
+        }
+        newClusterMinSizeBuffer.values foreach {
+            cluster.addNode(_)
         }
         cluster
     }
