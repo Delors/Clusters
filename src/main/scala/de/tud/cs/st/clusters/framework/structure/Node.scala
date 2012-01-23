@@ -49,6 +49,8 @@ trait Node {
 
     var parent: Cluster = _
 
+    val isCluster: Boolean = false
+
     protected var edges: List[Edge] = Nil
     //    protected val edgesMap: Map[(Int, DependencyType), Int] = Map()
     protected val edgesMap: Map[(Int, Object), Edge] = Map()

@@ -50,6 +50,8 @@ import _root_.de.tud.cs.st.util.perf.PerformanceEvaluation
 import pipeline.ClusteringResultWriter
 import pipeline.DOTClusteringResultWriter
 import pipeline.GMLClusteringResultWriter
+import pipeline.GraphmlClusteringResultWriter
+import pipeline.GraphmlClusteringResultWriterConfiguration
 
 /**
  * @author Thomas Schlosser
@@ -62,18 +64,28 @@ trait AbstractClusteringTest extends FunSuite
 
     protected def testClustering(testName: String,
                                  extractDependencies: (DependencyExtractor) ⇒ Unit,
-                                 dotFileName: Option[String] = None,
+                                 outputFileName: Option[String] = None,
                                  includeSingleNodes: Boolean = true,
                                  includeEdges: Boolean = true)(implicit clusteringStages: Array[ClusteringStage[_]]): Cluster = {
         println(testName+" - START")
 
         var clusteringPipeline: ClusteringPipeline = null
-        if (dotFileName.isDefined) {
-            //            clusteringPipeline = ClusteringPipeline(clusterings, extractDependencies, DOTClusteringResultWriter(dotFileName.get+".dot", includeSingleNodes, includeEdges))
+        if (outputFileName.isDefined) {
+            //            clusteringPipeline = ClusteringPipeline(clusterings, extractDependencies, DOTClusteringResultWriter(outputFileName.get, includeSingleNodes, includeEdges))
+            //            clusteringPipeline = ClusteringPipeline(
+            //                clusteringStages,
+            //                extractDependencies,
+            //                GMLClusteringResultWriter(outputFileName.get))
+
+            val writerConfiguration = new {
+                override val aggregateEdges = true
+                override val showEdgeLabels = false
+                override val showSourceElementNodes = false
+            } with GraphmlClusteringResultWriterConfiguration
             clusteringPipeline = ClusteringPipeline(
                 clusteringStages,
                 extractDependencies,
-                GMLClusteringResultWriter(dotFileName.get+".gml"))
+                nodeStore ⇒ new GraphmlClusteringResultWriter(outputFileName.get, nodeStore, writerConfiguration))
         }
         else {
             clusteringPipeline = ClusteringPipeline(clusteringStages, extractDependencies)

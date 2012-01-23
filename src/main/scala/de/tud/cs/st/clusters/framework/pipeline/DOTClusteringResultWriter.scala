@@ -48,7 +48,7 @@ class DOTClusteringResultWriter private (
     val dotFileName: String,
     val includeSingleNodes: Boolean,
     val includeEdges: Boolean)
-        extends ClusteringResultWriter(dotFileName) {
+        extends ClusteringResultWriter(dotFileName, "dot") {
 
     override protected def writeHeader() {
         write("digraph G {\n")

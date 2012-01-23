@@ -2,5 +2,6 @@ bin
 .cache
 *.dot
 *.gml
+*.graphml
 build
 build.properties

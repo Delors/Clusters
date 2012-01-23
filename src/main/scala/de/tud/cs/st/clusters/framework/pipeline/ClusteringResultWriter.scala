@@ -43,7 +43,12 @@ import java.io.FileWriter
  * @author Thomas Schlosser
  *
  */
-abstract class ClusteringResultWriter(val fileName: String) extends FileWriter(fileName) {
+abstract class ClusteringResultWriter(
+    val fileName: String, val fileExtension: String)
+        extends FileWriter(
+            if (fileName.contains('.'))
+                fileName
+            else fileName + '.' + fileExtension) {
 
     private[pipeline] def write(clusteringResult: Cluster) {
         writeHeader()

@@ -95,13 +95,6 @@ trait ClusterManager
 
 }
 
-//object ClusterManager
-//    extends DependencyExtractor
-//    with SourceElementIDsMap
-//    with ClusterIDsMap
-//    with ClusterManager
-//    with UseIDOfBaseTypeForArrayTypes
-
 object ClusterManager {
     def apply() = {
         new DependencyExtractor with SourceElementIDsMap with ClusterIDsMap with ClusterManager with UseIDOfBaseTypeForArrayTypes

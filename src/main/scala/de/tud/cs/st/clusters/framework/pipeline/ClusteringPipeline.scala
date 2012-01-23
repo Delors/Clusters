@@ -38,6 +38,7 @@ import scala.collection.mutable.Queue
 import structure.Cluster
 import structure.SourceElementNode
 import structure.util.ClusterManager
+import structure.util.NodeStore
 import structure.util.DefaultDependencyExtractor
 import de.tud.cs.st.bat.resolved.dependency.DependencyExtractor
 import de.tud.cs.st.util.perf.PerformanceEvaluation
@@ -143,13 +144,13 @@ object ClusteringPipeline {
     def apply(
         clusteringStageArray: Array[ClusteringStage[_]],
         extractDependenciesFunktion: (DependencyExtractor) ⇒ Unit,
-        clusteringResultWriter: ClusteringResultWriter = null): ClusteringPipeline =
+        clusteringResultWriter: NodeStore ⇒ ClusteringResultWriter = null): ClusteringPipeline =
         new ClusteringPipeline {
             if (clusteringStageArray != null) {
                 clusteringStageArray foreach { addClusteringStage(_) }
             }
             extractDependencies = extractDependenciesFunktion
-            resultWriter = clusteringResultWriter
+            resultWriter = clusteringResultWriter(clusterManager)
         }
 
 }
