@@ -67,6 +67,7 @@ class SimilarityMetricClusteringStageTest extends AbstractClusteringTest {
 
     test("testSimilarityMetricClusteringStage [hibernate]") {
         testClustering("testSimilarityMetricClusteringStage [hibernate]",
-            hibernateDependencyExtractor)
+            hibernateDependencyExtractor,
+            Some("simMetricClust_hibernate"))
     }
 }

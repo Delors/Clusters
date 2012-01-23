@@ -48,7 +48,7 @@ trait SameNeighborClusteringStage[C <: SameNeighborClusteringStageConfiguration]
 
     override def performClustering(cluster: Cluster): Cluster = {
         def getConsideredEdge(node: Node): Option[Edge] = {
-            node.getEdges.find(edge ⇒ isOfConsideredDependencyType(edge.dType))
+            node.getOutgoingEdges.find(edge ⇒ isOfConsideredDependencyType(edge.dType))
         }
 
         val clustersMap = Map[Int, Set[Node]]()

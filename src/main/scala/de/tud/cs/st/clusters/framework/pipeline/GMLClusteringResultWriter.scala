@@ -124,7 +124,7 @@ class GMLClusteringResultWriter(
         //		label   "AB"
         //	]
         // add egdes
-        for (e ← node.getEdges) {
+        for (e ← node.getOwnEdges) {
             edgeBuffer.append("\tedge\n")
             edgeBuffer.append("\t[\n")
             edgeBuffer.append("\t\tsource\t")

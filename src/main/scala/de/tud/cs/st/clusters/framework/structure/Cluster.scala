@@ -58,7 +58,7 @@ class Cluster(
         this(uniqueID, identifier, false)
     }
 
-    def addNode(node: Node) {
+    override def addNode(node: Node) {
         nodeMap.put(node.uniqueID, node)
         if (node.parent != null && node.parent != this) {
             node.parent match {
@@ -68,67 +68,77 @@ class Cluster(
         node.parent = this
     }
 
-    def removeNode(id: Int) {
+    override def removeNode(id: Int) {
         val removedNode = nodeMap.remove(id)
         if (removedNode.isDefined && removedNode.get.parent == this)
             removedNode.get.parent = null
     }
 
-    def clearNodes() =
+    override def clearNodes() =
         nodeMap.clear
 
-    def getNode(id: Int): Node = {
+    override def containsNode(id: Int): Boolean =
+        nodeMap.contains(id) || nodeMap.values.exists(n ⇒ n.containsNode(id))
+
+    override def getNode(id: Int): Node = {
         nodeMap.getOrElse(id, sys.error("Node with ID["+id+"] was not found"))
     }
 
-    def getNodes: Iterable[Node] = {
+    override def getNodes: Iterable[Node] = {
         nodeMap.values
     }
 
-    def numberOfNodes: Int =
+    override def numberOfNodes: Int =
         nodeMap.size
 
-    //TODO remove if not needed
-    //    override def getEdges: List[Edge] = {
-    //        var edges = super.getEdges
-    //        if (!edges.isEmpty)
-    //            return edges
-    //
-    //        // fetch edges from cluster elements
-    //        edges = List[Edge]()
-    //        nodeMap.values foreach {
-    //            node ⇒
-    //                node.getEdges foreach {
-    //                    edge ⇒
-    //                        val containsSource = nodeMap.contains(edge.sourceID)
-    //                        val containsTarget = nodeMap.contains(edge.targetID)
-    //                        if (containsSource && !containsTarget) {
-    //                            edges = edge :: edges
-    //                        }
-    //                }
-    //        }
-    //        edges
-    //    }
+    //TODO: re-check these new methods...
+    override def getOutgoingEdges(): Set[Edge] = {
+        // fetch edges from cluster elements
+        var edges = Set[Edge]()
+        nodeMap.values foreach {
+            _.getOutgoingEdges foreach { edge ⇒
+                val containsSource = containsNode(edge.sourceID)
+                val containsTarget = containsNode(edge.targetID)
+                if (containsSource && !containsTarget) {
+                    edges = edges + edge
+                }
+            }
+        }
+        edges ++ super.getOutgoingEdges()
+    }
 
-    //    override def getTransposedEdges: List[Edge] = {
-    //        var edges = super.getTransposedEdges
-    //        if (!edges.isEmpty)
-    //            return edges
-    //
-    //        // fetch transposed edges from cluster elements
-    //        edges = List[Edge]()
-    //        nodeMap.values foreach {
-    //            node ⇒
-    //                node.getEdges foreach {
-    //                    edge ⇒
-    //                        val containsSource = nodeMap.contains(edge.sourceID)
-    //                        val containsTarget = nodeMap.contains(edge.targetID)
-    //                        if (!containsSource && containsTarget) {
-    //                            edges = edge :: edges
-    //                        }
-    //                }
-    //        }
-    //        edges
-    //    }
+    override def getIncomingEdges(): Set[Edge] = {
+        // fetch transposed edges from cluster elements
+        var edges = Set[Edge]()
+        nodeMap.values foreach {
+            _.getIncomingEdges foreach { edge ⇒
+                val containsSource = containsNode(edge.sourceID)
+                val containsTarget = containsNode(edge.targetID)
+                if (!containsSource && containsTarget) {
+                    edges = edges + edge
+                }
+            }
+        }
+        edges ++ super.getIncomingEdges()
+    }
+
+    override def getInnerEdges(): Set[Edge] = {
+        // fetch inner edges from cluster elements
+        var edges = Set[Edge]()
+        nodeMap.values foreach {
+            _.getOutgoingEdges foreach { edge ⇒
+                val containsSource = containsNode(edge.sourceID)
+                val containsTarget = containsNode(edge.targetID)
+                if (containsSource && containsTarget) {
+                    edges = edges + edge
+                }
+            }
+        }
+        edges ++ super.getInnerEdges()
+    }
+
+    override def getAllEdges(): Set[Edge] =
+        // fetch all edges from cluster elements and from cluster itself
+        super.getAllEdges() ++ { for (node ← nodeMap.values; edge ← node.getAllEdges) yield edge }
 
 }

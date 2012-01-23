@@ -128,8 +128,7 @@ object GraphScanningAlgorithms {
         // CALCULATION
         while (!q.isEmpty) {
             var u = q.getNext
-            //graph.nodes(u) has to be replaced with hm... something :-)
-            var current = getNextWhiteNode({ if (useTransposedEdges) cluster.getNode(u).getTransposedEdges else cluster.getNode(u).getEdges })
+            var current = getNextWhiteNode({ if (useTransposedEdges) cluster.getNode(u).getTransposedEdges else cluster.getNode(u).getOutgoingEdges.toList })
             if (current != null) {
                 // found white neighbor node
                 resultBean.color(current.targetID) = BLUE

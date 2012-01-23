@@ -79,10 +79,56 @@ trait Node {
         transposedEdges = Nil
     }
 
-    def getEdges: List[Edge] =
+    def getOwnEdges: List[Edge] =
         edges
 
     def getTransposedEdges: List[Edge] =
         transposedEdges
+
+    //TODO: re-check these new methods...
+    def getOutgoingEdges(): Set[Edge] = {
+        edges.toSet
+    }
+
+    def getIncomingEdges(): Set[Edge] = {
+        transposedEdges.toSet
+    }
+
+    def getInnerEdges(): Set[Edge] =
+        Set()
+
+    def getAllEdges(): Set[Edge] = {
+        getOutgoingEdges() ++ getIncomingEdges()
+    }
+
+    /////////////////////////////////////////////
+    // methods to add and access children (nodes)
+    /////////////////////////////////////////////
+
+    def addNode(node: Node) {
+        sys.error("This method call is not allowed on this kind of node!")
+    }
+
+    def removeNode(id: Int) {
+        sys.error("This method call is not allowed on this kind of node!")
+    }
+
+    def clearNodes() {
+        sys.error("This method call is not allowed on this kind of node!")
+    }
+
+    def containsNode(id: Int): Boolean =
+        false
+
+    def getNode(id: Int): Node = {
+        sys.error("This method call is not allowed on this kind of node!")
+    }
+
+    def getNodes: Iterable[Node] = {
+        Iterable()
+    }
+
+    def numberOfNodes: Int =
+        0
 
 }

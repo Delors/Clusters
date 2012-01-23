@@ -80,7 +80,7 @@ trait EdgeGeneralizerStage[C <: EdgeGeneralizerStageConfiguration] extends Clust
     }
 
     protected def convertEdges(node: Node) {
-        for (edge ← node.getEdges) {
+        for (edge ← node.getOwnEdges) {
             val newSource = clusterManager.getNode(newSourceID(edge.sourceID))
             val newTarget = clusterManager.getNode(newTargetID(edge.targetID))
             newSource.addEdge(newSource.uniqueID, newTarget.uniqueID, edge.dType, edge.count)

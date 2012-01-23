@@ -91,7 +91,7 @@ trait NodeCloner {
     private def copyEdges(
         node: Node,
         copiedNode: Node) {
-        for (edge ← node.getEdges) {
+        for (edge ← node.getOwnEdges) {
             copiedNode.addEdge(edge.sourceID, edge.targetID, edge.dType, edge.count)
         }
         for (transposedEdge ← node.getTransposedEdges) {

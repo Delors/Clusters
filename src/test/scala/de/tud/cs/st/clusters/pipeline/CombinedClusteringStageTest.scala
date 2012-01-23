@@ -50,14 +50,14 @@ class CombinedClusteringStageTest extends AbstractClusteringTest {
         override val considerOnlyUnclusterableTargets = true
     } with EdgeTargetGeneralizerStageConfiguration
     val getterSetterConfiguration = new GetterSetterClusteringStageConfiguration {}
-
     val similarityMetricConfiguration = new SimilarityMetricClusteringStageConfiguration {}
+    val sccConfiguration = new StronglyConnectedComponentsClusteringStageConfiguration {}
 
     implicit val clusteringStages: Array[ClusteringStage[_]] = Array(
         InternalExternalClusteringStage(intExtConfiguration),
-        EdgeTargetGeneralizerStage(edgeTargetGeneralizerConfiguration),
-        SimilarityMetricClusteringStage(similarityMetricConfiguration)
-    //        StronglyConnectedComponentsClusteringStage(),
+        //        EdgeTargetGeneralizerStage(edgeTargetGeneralizerConfiguration),
+        SimilarityMetricClusteringStage(similarityMetricConfiguration),
+        StronglyConnectedComponentsClusteringStage(sccConfiguration) //,
     //GetterSetterClusteringStage(getterSetterConfiguration) //,
     //        InternalClassClusteringStage()
     )

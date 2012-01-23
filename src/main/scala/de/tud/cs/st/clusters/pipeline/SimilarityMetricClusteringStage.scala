@@ -57,16 +57,12 @@ trait SimilarityMetricClusteringStage extends ClusteringStage[SimilarityMetricCl
 
         val weightMatrix: Map[(Int, Int), Long] = Map()
 
-        inputNodes foreach {
-            _.getEdges foreach { edge ⇒
-                if (inputNodes.exists(n ⇒ n.uniqueID == edge.targetID)) { //TODO: refactor this for better performance
-                    val key = (edge.sourceID, edge.targetID)
-                    val oldWeight: Long = weightMatrix.getOrElse(key, 0)
-                    val newWeight = oldWeight + (getWeight(edge.dType) * edge.count)
-                    if (newWeight != 0)
-                        weightMatrix(key) = newWeight
-                }
-            }
+        cluster.getInnerEdges foreach { edge ⇒
+            val key = (edge.sourceID, edge.targetID)
+            val oldWeight: Long = weightMatrix.getOrElse(key, 0)
+            val newWeight = oldWeight + (getWeight(edge.dType) * edge.count)
+            if (newWeight != 0)
+                weightMatrix(key) = newWeight
         }
 
         //        println(weightMatrix.mkString("\n"))

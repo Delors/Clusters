@@ -119,7 +119,7 @@ class DOTClusteringResultWriter private (
     private def writeEdges(node: Node, edgeBuffer: StringBuffer) {
         // add egdes
         if (includeEdges)
-            for (e ← node.getEdges) {
+            for (e ← node.getOwnEdges) {
                 edgeBuffer.append("\t")
                 edgeBuffer.append(e.sourceID)
                 edgeBuffer.append(" -> ")

@@ -144,7 +144,7 @@ object ClusteringPipeline {
     def apply(
         clusteringStageArray: Array[ClusteringStage[_]],
         extractDependenciesFunktion: (DependencyExtractor) ⇒ Unit,
-        clusteringResultWriter: NodeStore ⇒ ClusteringResultWriter = null): ClusteringPipeline =
+        clusteringResultWriter: NodeStore ⇒ ClusteringResultWriter = n ⇒ null): ClusteringPipeline =
         new ClusteringPipeline {
             if (clusteringStageArray != null) {
                 clusteringStageArray foreach { addClusteringStage(_) }

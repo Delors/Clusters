@@ -217,7 +217,7 @@ class GraphmlClusteringResultWriter(
         //      </data>
         //    </edge>
         // add egdes
-        for (e ← node.getEdges) {
+        for (e ← node.getOwnEdges) {
             val sourceID = if (configuration.showSourceElementNodes) {
                 e.sourceID
             }
