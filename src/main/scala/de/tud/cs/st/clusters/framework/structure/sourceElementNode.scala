@@ -57,14 +57,14 @@ case class TypeNode private (
     var clazz: Option[ClassFile])
         extends SourceElementNode {
 
-}
+    def this(id: Int, identifierFun: () ⇒ String, clazz: ClassFile) {
+        this(id, identifierFun, Some(clazz))
+    }
 
-object TypeNode {
-    def apply(id: Int, identifierFun: () ⇒ String, clazz: ClassFile): TypeNode =
-        new TypeNode(id, identifierFun, Some(clazz))
+    def this(id: Int, identifierFun: () ⇒ String) {
+        this(id, identifierFun, None)
+    }
 
-    def apply(id: Int, identifierFun: () ⇒ String): TypeNode =
-        new TypeNode(id, identifierFun, None)
 }
 
 case class FieldNode private (
@@ -73,14 +73,14 @@ case class FieldNode private (
     var field: Option[Field])
         extends SourceElementNode {
 
-}
+    def this(id: Int, identifierFun: () ⇒ String, field: Field) {
+        this(id, identifierFun, Some(field))
+    }
 
-object FieldNode {
-    def apply(id: Int, identifierFun: () ⇒ String, field: Field): FieldNode =
-        new FieldNode(id, identifierFun, Some(field))
+    def this(id: Int, identifierFun: () ⇒ String) {
+        this(id, identifierFun, None)
+    }
 
-    def apply(id: Int, identifierFun: () ⇒ String): FieldNode =
-        new FieldNode(id, identifierFun, None)
 }
 
 case class MethodNode private (
@@ -89,12 +89,12 @@ case class MethodNode private (
     var method: Option[Method])
         extends SourceElementNode {
 
-}
+    def this(id: Int, identifierFun: () ⇒ String, method: Method) {
+        this(id, identifierFun, Some(method))
+    }
 
-object MethodNode {
-    def apply(id: Int, identifierFun: () ⇒ String, method: Method): MethodNode =
-        new MethodNode(id, identifierFun, Some(method))
+    def this(id: Int, identifierFun: () ⇒ String) {
+        this(id, identifierFun, None)
+    }
 
-    def apply(id: Int, identifierFun: () ⇒ String): MethodNode =
-        new MethodNode(id, identifierFun, None)
 }

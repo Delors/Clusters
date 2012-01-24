@@ -55,7 +55,15 @@ trait ClusteringStage[C <: ClusteringStageConfiguration] {
     def clusterManager: ClusterManager = cm
     def clusterManager_=(cm: ClusterManager) { this.cm = cm }
 
-    //TODO: make this method public; comment intension
+    /**
+     * Performs the stage-specific clustering algorithm on the given cluster.<br/>
+     * NOTE: This method is only intended to be implemented by clients.
+     * Clients should not call this method from the outside of clustering stages.
+     * The clustering pipeline of the framework uses this method to perform the stage's clustering.
+     *
+     * @param cluster
+     * @return
+     */
     def performClustering(cluster: Cluster): Cluster
 
 }

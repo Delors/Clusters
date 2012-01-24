@@ -139,8 +139,3 @@ class GMLClusteringResultWriter(
         }
     }
 }
-
-object GMLClusteringResultWriter {
-    def apply(dotFileName: String): GMLClusteringResultWriter =
-        new GMLClusteringResultWriter(dotFileName)
-}

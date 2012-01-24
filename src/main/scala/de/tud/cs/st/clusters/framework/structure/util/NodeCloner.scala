@@ -40,21 +40,21 @@ trait NodeCloner {
 
     def createCopy(typeNode: TypeNode): TypeNode =
         if (typeNode.clazz.isDefined)
-            TypeNode(typeNode.uniqueID, typeNode.identifierFun, typeNode.clazz.get)
+            new TypeNode(typeNode.uniqueID, typeNode.identifierFun, typeNode.clazz.get)
         else
-            TypeNode(typeNode.uniqueID, typeNode.identifierFun)
+            new TypeNode(typeNode.uniqueID, typeNode.identifierFun)
 
     def createCopy(fieldNode: FieldNode): FieldNode =
         if (fieldNode.field.isDefined)
-            FieldNode(fieldNode.uniqueID, fieldNode.identifierFun, fieldNode.field.get)
+            new FieldNode(fieldNode.uniqueID, fieldNode.identifierFun, fieldNode.field.get)
         else
-            FieldNode(fieldNode.uniqueID, fieldNode.identifierFun)
+            new FieldNode(fieldNode.uniqueID, fieldNode.identifierFun)
 
     def createCopy(methodNode: MethodNode): MethodNode =
         if (methodNode.method.isDefined)
-            MethodNode(methodNode.uniqueID, methodNode.identifierFun, methodNode.method.get)
+            new MethodNode(methodNode.uniqueID, methodNode.identifierFun, methodNode.method.get)
         else
-            MethodNode(methodNode.uniqueID, methodNode.identifierFun)
+            new MethodNode(methodNode.uniqueID, methodNode.identifierFun)
 
     def createCopy(node: Node): Node =
         node match {

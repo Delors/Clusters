@@ -41,6 +41,7 @@ import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
 import pipeline.ClusteringStage
 import pipeline.ClusteringPipeline
+import pipeline.DefaultClusteringPipeline
 import structure.Cluster
 import structure.util.ClusterManager
 import _root_.de.tud.cs.st.bat.resolved.ClassFile
@@ -71,24 +72,31 @@ trait AbstractClusteringTest extends FunSuite
 
         var clusteringPipeline: ClusteringPipeline = null
         if (outputFileName.isDefined) {
-            //            clusteringPipeline = ClusteringPipeline(clusterings, extractDependencies, DOTClusteringResultWriter(outputFileName.get, includeSingleNodes, includeEdges))
             //            clusteringPipeline = ClusteringPipeline(
             //                clusteringStages,
             //                extractDependencies,
-            //                GMLClusteringResultWriter(outputFileName.get))
+            //                nodeStore ⇒ new DOTClusteringResultWriter(
+            //                    outputFileName.get,
+            //                    includeSingleNodes,
+            //                    includeEdges))
+
+            //            clusteringPipeline = ClusteringPipeline(
+            //                clusteringStages,
+            //                extractDependencies,
+            //                nodeStore ⇒ new GMLClusteringResultWriter(outputFileName.get))
 
             val writerConfiguration = new {
                 override val aggregateEdges = true
                 override val showEdgeLabels = false
                 override val showSourceElementNodes = false
             } with GraphmlClusteringResultWriterConfiguration
-            clusteringPipeline = ClusteringPipeline(
+            clusteringPipeline = new DefaultClusteringPipeline(
                 clusteringStages,
                 extractDependencies,
                 nodeStore ⇒ new GraphmlClusteringResultWriter(outputFileName.get, nodeStore, writerConfiguration))
         }
         else {
-            clusteringPipeline = ClusteringPipeline(clusteringStages, extractDependencies)
+            clusteringPipeline = new DefaultClusteringPipeline(clusteringStages, extractDependencies)
         }
         //TODO add pipeline configuration
 

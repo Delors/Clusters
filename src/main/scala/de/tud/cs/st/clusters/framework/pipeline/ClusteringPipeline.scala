@@ -139,18 +139,13 @@ trait ClusteringPipeline extends PerformanceEvaluation {
 
 }
 
-object ClusteringPipeline {
+class DefaultClusteringPipeline(
+    val clusteringStages: Array[ClusteringStage[_]],
+    val extractDependenciesFunktion: (DependencyExtractor) ⇒ Unit,
+    val clusteringResultWriter: NodeStore ⇒ ClusteringResultWriter)
+        extends ClusteringPipeline {
 
-    def apply(
-        clusteringStageArray: Array[ClusteringStage[_]],
-        extractDependenciesFunktion: (DependencyExtractor) ⇒ Unit,
-        clusteringResultWriter: NodeStore ⇒ ClusteringResultWriter = n ⇒ null): ClusteringPipeline =
-        new ClusteringPipeline {
-            if (clusteringStageArray != null) {
-                clusteringStageArray foreach { addClusteringStage(_) }
-            }
-            extractDependencies = extractDependenciesFunktion
-            resultWriter = clusteringResultWriter(clusterManager)
-        }
-
+    def this(clusteringStages: Array[ClusteringStage[_]], extractDependenciesFunktion: (DependencyExtractor) ⇒ Unit) {
+        this(clusteringStages, extractDependenciesFunktion, n ⇒ null)
+    }
 }

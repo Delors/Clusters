@@ -44,7 +44,7 @@ import de.tud.cs.st.clusters.framework.structure.Node
  * @author Thomas Schlosser
  *
  */
-class DOTClusteringResultWriter private (
+class DOTClusteringResultWriter(
     val dotFileName: String,
     val includeSingleNodes: Boolean,
     val includeEdges: Boolean)
@@ -131,11 +131,4 @@ class DOTClusteringResultWriter private (
                 edgeBuffer.append("]\"];\n")
             }
     }
-}
-
-object DOTClusteringResultWriter {
-    def apply(dotFileName: String,
-              includeSingleNodes: Boolean,
-              includeEdges: Boolean): DOTClusteringResultWriter =
-        new DOTClusteringResultWriter(dotFileName, includeSingleNodes, includeEdges)
 }

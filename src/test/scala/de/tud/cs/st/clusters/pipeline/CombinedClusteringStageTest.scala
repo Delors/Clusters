@@ -56,8 +56,9 @@ class CombinedClusteringStageTest extends AbstractClusteringTest {
     implicit val clusteringStages: Array[ClusteringStage[_]] = Array(
         InternalExternalClusteringStage(intExtConfiguration),
         //        EdgeTargetGeneralizerStage(edgeTargetGeneralizerConfiguration),
-        SimilarityMetricClusteringStage(similarityMetricConfiguration),
-        StronglyConnectedComponentsClusteringStage(sccConfiguration) //,
+        //        SimilarityMetricClusteringStage(similarityMetricConfiguration),
+        SimilarityMetricClusteringStage(similarityMetricConfiguration) //,
+    //        StronglyConnectedComponentsClusteringStage(sccConfiguration) //,
     //GetterSetterClusteringStage(getterSetterConfiguration) //,
     //        InternalClassClusteringStage()
     )
