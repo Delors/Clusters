@@ -73,8 +73,3 @@ trait ClusterFactory
         }
     }
 }
-
-object ClusterFactory {
-    def apply(_store: NodeStore): ClusterFactory =
-        new ClusterFactory { val store = _store }
-}

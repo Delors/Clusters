@@ -105,8 +105,3 @@ trait NodeFactory extends PrettyPrint with NodeStore {
         }
     }
 }
-
-object NodeFactory {
-    def apply(_store: NodeStore): NodeFactory =
-        new NodeFactory { val store = _store }
-}

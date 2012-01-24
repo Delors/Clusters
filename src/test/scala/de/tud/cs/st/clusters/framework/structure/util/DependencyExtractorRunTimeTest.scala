@@ -81,7 +81,7 @@ class DepExtractorRunTimeTest extends AbstractClusteringTest {
         var min = Long.MaxValue
         var max = Long.MinValue
         for (i ← 1 to 10) {
-            val depExtractor = ClusterManager()
+            val depExtractor = new DefaultClusterManager()
             time(duration ⇒ { min = Ordering[Long].min(duration, min); max = Ordering[Long].max(duration, max) }) {
                 for (classFile ← testClasses) {
                     depExtractor.process(classFile)

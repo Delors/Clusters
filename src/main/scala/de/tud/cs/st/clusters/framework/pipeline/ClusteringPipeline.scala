@@ -39,7 +39,7 @@ import structure.Cluster
 import structure.SourceElementNode
 import structure.util.ClusterManager
 import structure.util.NodeStore
-import structure.util.DefaultDependencyExtractor
+import structure.util.DefaultClusterManager
 import de.tud.cs.st.bat.resolved.dependency.DependencyExtractor
 import de.tud.cs.st.util.perf.PerformanceEvaluation
 
@@ -53,7 +53,7 @@ trait ClusteringPipeline extends PerformanceEvaluation {
 
     private val clusteringStages = new Queue[ClusteringStage[_]]()
 
-    private val clusterManager = new DefaultDependencyExtractor()
+    private val clusterManager = new DefaultClusterManager()
 
     private var extractDependencies: (DependencyExtractor) ⇒ Unit = null
 
