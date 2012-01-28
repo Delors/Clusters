@@ -50,7 +50,7 @@ class Cluster(
 
     override val isCluster: Boolean = true
 
-    var clusterable = true
+    override var clusterable = true
 
     val nodeMap = Map[Int, Node]()
 

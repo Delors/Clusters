@@ -125,7 +125,7 @@ trait SimilarityMetricClusteringStage extends ClusteringStage[SimilarityMetricCl
         val result = new Array[Cluster](clusterset.size)
         var i = 0
         clusterset foreach { nodes ⇒
-            val cluster = clusterManager.createCluster("simMetricCluster"+i)
+            val cluster = clusterManager.createCluster("simMetricCluster"+i, this.getClass)
             nodes foreach { node ⇒
                 cluster.addNode(clusterManager.getNode(node))
             }

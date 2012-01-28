@@ -66,7 +66,7 @@ trait SameNeighborClusteringStage[C <: SameNeighborClusteringStageConfiguration]
         cluster.clearNodes()
         for ((neighborNodeID, nodeSet) ← clustersMap) {
             val neighborNode = clusterManager.getNode(neighborNodeID)
-            val sameNeighborCluster = clusterManager.createCluster(neighborNode.identifier)
+            val sameNeighborCluster = clusterManager.createCluster(neighborNode.identifier, this.getClass)
             sameNeighborCluster.addNode(neighborNode)
             nodeSet foreach {
                 sameNeighborCluster.addNode(_)

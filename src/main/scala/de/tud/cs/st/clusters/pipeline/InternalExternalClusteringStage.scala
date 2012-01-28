@@ -84,8 +84,8 @@ trait InternalExternalClusteringStage extends ClusteringStage[InternalExternalCl
         val inputNodes = cluster.getNodes.toArray
         cluster.clearNodes()
         cluster.clusterable = false
-        val internal = clusterManager.createCluster("internal")
-        val external = clusterManager.createCluster("external")
+        val internal = clusterManager.createCluster("internal", this.getClass)
+        val external = clusterManager.createCluster("external", this.getClass)
         //TODO: remove
         external.clusterable = false
         cluster.addNode(internal)

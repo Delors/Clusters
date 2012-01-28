@@ -112,7 +112,7 @@ trait GetterSetterClusteringStage extends ClusteringStage[GetterSetterClustering
                         case Some(clusterBean) ⇒
                             // create setter/getter cluster
                             println("GETTER_SETTER_CLUSTER")
-                            val gsCluster = clusterManager.createCluster("Getter_Setter_"+clusterBean.field.identifier)
+                            val gsCluster = clusterManager.createCluster("Getter_Setter_"+clusterBean.field.identifier, this.getClass)
                             gsCluster.addNode(clusterBean.field)
                             clusterBean.methods foreach { gsCluster.addNode(_) }
                             gsCluster.clusterable = false

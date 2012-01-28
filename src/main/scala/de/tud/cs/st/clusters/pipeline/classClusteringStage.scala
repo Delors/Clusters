@@ -97,7 +97,7 @@ trait ExternalClassClusteringStage extends ClassClusteringStage[ExternalClassClu
         cluster.clearNodes()
         for ((classNodeID, nodeSet) ← classClustersMap) {
             val classNode = clusterManager.getNode(classNodeID)
-            val classCluster = clusterManager.createCluster(classNode.identifier)
+            val classCluster = clusterManager.createCluster(classNode.identifier, this.getClass)
             classCluster.addNode(classNode)
             nodeSet foreach {
                 classCluster.addNode(_)

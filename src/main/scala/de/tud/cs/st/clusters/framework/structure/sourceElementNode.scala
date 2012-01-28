@@ -46,8 +46,11 @@ import de.tud.cs.st.bat.resolved.Method
 sealed trait SourceElementNode extends Node {
 
     val uniqueID: Int
+
     lazy val identifier = identifierFun()
     def identifierFun: () ⇒ String
+
+    override var clusterable = false
 
 }
 

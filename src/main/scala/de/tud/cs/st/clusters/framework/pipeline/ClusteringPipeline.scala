@@ -118,6 +118,7 @@ trait ClusteringPipeline extends PerformanceEvaluation {
         def clusterStructure(cluster: Cluster, stage: ClusteringStage[_]) {
             if (cluster.clusterable) {
                 stage.performClustering(cluster)
+                cluster.metaInfo("lastAppliedStage") = stage.getClass.getCanonicalName
             }
             else {
                 cluster.getNodes foreach {

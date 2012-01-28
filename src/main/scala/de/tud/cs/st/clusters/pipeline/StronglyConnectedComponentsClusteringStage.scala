@@ -75,7 +75,7 @@ trait StronglyConnectedComponentsClusteringStage extends ClusteringStage[Strongl
                     case None ⇒
                         newClusterMinSizeBuffer.get(sccID) match {
                             case Some(firstElement) ⇒
-                                val c = clusterManager.createCluster("SCC_"+System.nanoTime()) //sccID)
+                                val c = clusterManager.createCluster("SCC_"+System.nanoTime(), this.getClass) //sccID, this.getClass)
                                 c.addNode(firstElement)
                                 c.addNode(node)
                                 resultMap(sccID) = c

@@ -53,7 +53,7 @@ trait LayerClusteringStage extends ClusteringStage[LayerClusteringStageConfigura
 
         def createLayers(nodes: Set[Node]) {
             def createNewLayerCluster(): Cluster = {
-                val layerCluster = clusterManager.createCluster("layer_"+layer)
+                val layerCluster = clusterManager.createCluster("layer_"+layer, this.getClass)
                 layer += 1
                 cluster.addNode(layerCluster)
                 layerCluster

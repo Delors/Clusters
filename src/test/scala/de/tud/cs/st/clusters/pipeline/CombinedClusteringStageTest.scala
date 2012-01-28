@@ -55,8 +55,8 @@ class CombinedClusteringStageTest extends AbstractClusteringTest {
         //TODO: check why SCC and GetterSetter ClusteringStages do not work correctly
         StronglyConnectedComponentsClusteringStage(sccConfiguration),
         GetterSetterClusteringStage(getterSetterConfiguration),
-        SimilarityMetricClusteringStage(similarityMetricConfiguration),
-        SimilarityMetricClusteringStage(similarityMetricConfiguration),
+        //        SimilarityMetricClusteringStage(similarityMetricConfiguration),
+        //        SimilarityMetricClusteringStage(similarityMetricConfiguration),
         SimilarityMetricClusteringStage(similarityMetricConfiguration) //,
     //        InternalClassClusteringStage()
     )

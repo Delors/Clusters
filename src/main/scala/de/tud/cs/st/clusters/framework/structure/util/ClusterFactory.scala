@@ -41,6 +41,7 @@ import de.tud.cs.st.bat.resolved.Method
 import de.tud.cs.st.bat.resolved.ClassFile
 import de.tud.cs.st.bat.resolved.ObjectType
 import de.tud.cs.st.bat.resolved.MethodDescriptor
+import pipeline.ClusteringStage
 
 /**
  * @author Thomas Schlosser
@@ -51,11 +52,14 @@ trait ClusterFactory
         with ClusterIDsMap
         with NodeStore {
 
-    def createCluster(clusterIdentifier: String): Cluster =
-        createCluster(
+    def createCluster(clusterIdentifier: String, creatorStage: java.lang.Class[_ <: ClusteringStage[_]]): Cluster = {
+        val cluster = createCluster(
             clusterID(clusterIdentifier + System.nanoTime()),
             (c: Cluster) ⇒ Unit,
             (id) ⇒ new Cluster(id, clusterIdentifier))
+        cluster.metaInfo("creatorStage") = creatorStage.getCanonicalName
+        cluster
+    }
 
     private def createCluster[N <: Node](
         id: Int,

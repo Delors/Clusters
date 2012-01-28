@@ -36,6 +36,7 @@ package structure
 
 import de.tud.cs.st.bat.resolved.dependency._
 import scala.collection.mutable.Map
+import scala.collection.mutable.HashMap
 
 /**
  * @author Thomas Schlosser
@@ -46,6 +47,10 @@ trait Node {
     def identifier: String
 
     def uniqueID: Int
+
+    var clusterable: Boolean
+
+    val metaInfo: Map[String, String] = HashMap()
 
     var parent: Cluster = _
 
