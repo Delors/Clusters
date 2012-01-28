@@ -47,6 +47,8 @@ import de.tud.cs.st.bat.resolved.VoidType
 import de.tud.cs.st.bat.resolved.Field
 
 /**
+ * //allow more than one getter/setter...some inner classes define the same getter- setter-method as their outer class.
+ *
  * @author Thomas Schlosser
  *
  */
@@ -63,7 +65,6 @@ trait GetterSetterClusteringStage extends ClusteringStage[GetterSetterClustering
             //TODO: test and refine this algorithm with more complex classes...
             //add mechanism to algorithms that allows to specify/configure that a cluster is as fine granular as required
             var checkedNodes = Set[Int]()
-            //TODO: edge count should be considered...have to be equal to one
             for (tEdge ← node.getOwnTransposedEdges) {
                 if (!checkedNodes.contains(tEdge.target.uniqueID)) {
                     tEdge.dType match {
@@ -74,11 +75,8 @@ trait GetterSetterClusteringStage extends ClusteringStage[GetterSetterClustering
                                         val descriptor = method.descriptor
                                         if (descriptor.parameterTypes.isEmpty &&
                                             descriptor.returnType.equals(field.fieldType)) {
-                                            //TODO: allow more than one getter/setter...some inner classes define the same getter- setter-method as their outer class.
-                                            if (gscBean.hasGetter)
-                                                sys.error("only one getter is allowed: current["+gscBean.getter.identifier+"], new["+identifier()+"]")
                                             gscBean.field = node
-                                            gscBean.getter = tEdge.target
+                                            gscBean.methods = tEdge.target :: gscBean.methods
                                         }
                                     }
                                 case _ ⇒ Nil
@@ -90,10 +88,8 @@ trait GetterSetterClusteringStage extends ClusteringStage[GetterSetterClustering
                                         val descriptor = method.descriptor
                                         if (descriptor.parameterTypes.size == 1 && descriptor.parameterTypes(0).equals(field.fieldType) &&
                                             descriptor.returnType.isVoidType) {
-                                            if (gscBean.hasSetter)
-                                                sys.error("only one setter is allowed: current["+gscBean.setter.identifier+"], new["+identifier+"]")
                                             gscBean.field = node
-                                            gscBean.setter = tEdge.target
+                                            gscBean.methods = tEdge.target :: gscBean.methods
                                         }
                                     }
                                 case _ ⇒ Nil
@@ -103,8 +99,7 @@ trait GetterSetterClusteringStage extends ClusteringStage[GetterSetterClustering
                     checkedNodes += tEdge.target.uniqueID
                 }
             }
-            //            if (gscBean.field == null) None else Some(gscBean)
-            if (gscBean.hasGetter || gscBean.hasSetter) Some(gscBean) else None
+            if (gscBean.field == null) None else Some(gscBean)
         }
         // TODO: cluster needs methods that return only type/field/method nodes => performance improvement
         val inputNodes = cluster.getNodes.toArray
@@ -119,12 +114,7 @@ trait GetterSetterClusteringStage extends ClusteringStage[GetterSetterClustering
                             println("GETTER_SETTER_CLUSTER")
                             val gsCluster = clusterManager.createCluster("Getter_Setter_"+clusterBean.field.identifier)
                             gsCluster.addNode(clusterBean.field)
-                            if (clusterBean.hasGetter) {
-                                gsCluster.addNode(clusterBean.getter)
-                            }
-                            if (clusterBean.hasSetter) {
-                                gsCluster.addNode(clusterBean.setter)
-                            }
+                            clusterBean.methods foreach { gsCluster.addNode(_) }
                             gsCluster.clusterable = false
                             cluster.addNode(gsCluster)
                         case None ⇒
@@ -139,10 +129,7 @@ trait GetterSetterClusteringStage extends ClusteringStage[GetterSetterClustering
 
     class GetterSetterClusterBean {
         var field: Node = _
-        var getter: Node = _
-        var setter: Node = _
-        def hasSetter: Boolean = setter != null
-        def hasGetter: Boolean = getter != null
+        var methods: List[Node] = Nil
 
         // setter
         // WRITES_FIELD
