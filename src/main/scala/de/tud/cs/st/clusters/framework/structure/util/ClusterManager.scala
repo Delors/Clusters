@@ -86,8 +86,7 @@ trait ClusterManager
     }
 
     def processDependency(sourceID: Int, targetID: Int, dType: DependencyType) {
-        getNode(sourceID).addEdge(sourceID, targetID, dType)
-        getNode(targetID).addEdge(sourceID, targetID, dType)
+        getNode(sourceID).addEdge(getNode(targetID), dType)
     }
 
     def getRootCluster: Cluster =

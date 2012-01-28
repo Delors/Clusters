@@ -89,16 +89,16 @@ trait AbstractClusteringTest extends FunSuite
                 override val aggregateEdges = true
                 override val showEdgeLabels = false
                 override val showSourceElementNodes = false
+                override val maxNumberOfLevels = None //Some(4)
             } with GraphmlClusteringResultWriterConfiguration
             clusteringPipeline = new DefaultClusteringPipeline(
                 clusteringStages,
                 extractDependencies,
-                nodeStore ⇒ new GraphmlClusteringResultWriter(outputFileName.get, nodeStore, writerConfiguration))
+                new GraphmlClusteringResultWriter(outputFileName.get, writerConfiguration))
         }
         else {
             clusteringPipeline = new DefaultClusteringPipeline(clusteringStages, extractDependencies)
         }
-        //TODO add pipeline configuration
 
         val cluster = clusteringPipeline.runPipeline(true)
 

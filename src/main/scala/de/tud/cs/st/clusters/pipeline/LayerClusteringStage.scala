@@ -77,8 +77,8 @@ trait LayerClusteringStage extends ClusteringStage[LayerClusteringStageConfigura
                 // only edges to nodes in 'nodes' should be considered for degree calculation
                 // each edge group (edges with same source, target and dependency type are grouped together)
                 // is only counted once.
-                val groupedInDegree = node.getTransposedEdges.filter(edge ⇒ nodeIDs contains edge.targetID).length
-                val groupedOutDegree = node.getOutgoingEdges.filter(edge ⇒ nodeIDs contains edge.targetID).size
+                val groupedInDegree = node.getOwnTransposedEdges.filter(edge ⇒ nodeIDs contains edge.target.uniqueID).length
+                val groupedOutDegree = node.getOutgoingEdges.filter(edge ⇒ nodeIDs contains edge.target.uniqueID).size
                 if (groupedInDegree == 0 && groupedOutDegree > 0)
                     topLayerNodes = topLayerNodes + node
                 else if (groupedInDegree > 0 && groupedOutDegree > 0)

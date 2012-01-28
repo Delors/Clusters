@@ -37,7 +37,6 @@ package pipeline
 import structure.Node
 import structure.Cluster
 import structure.SourceElementNode
-import structure.util.NodeStore
 import org.apache.commons.lang3.StringEscapeUtils
 
 /**
@@ -46,7 +45,6 @@ import org.apache.commons.lang3.StringEscapeUtils
  */
 class GraphmlClusteringResultWriter(
     val graphmlFileName: String,
-    val nodeStore: NodeStore,
     val configuration: GraphmlClusteringResultWriterConfiguration)
         extends ClusteringResultWriter(graphmlFileName, "graphml") {
 
@@ -112,49 +110,63 @@ class GraphmlClusteringResultWriter(
         //      </graph>
         //    </node>
 
-        write("    <node id=\""+cluster.uniqueID+"\" yfiles.foldertype=\"group\">\n")
-        if (configuration.showSourceElementNodes) {
-            write("      <data key=\"d5\"/>\n")
-        }
-        else {
-            write("      <data key=\"d5\"><![CDATA[")
-            cluster.getNodes foreach { child ⇒
-                if (!child.isCluster) {
-                    write(child.identifier+"\n")
-                }
+        if (isVisibleLevel(cluster.level)) {
+            write("    <node id=\""+cluster.uniqueID+"\" yfiles.foldertype=\"group\">\n")
+            // add description in all cases where the next level is not visible
+            // OR the next (intermediate) level contains source element nodes that
+            // will not be shown in the resulting graph
+            if (configuration.showSourceElementNodes && (
+                configuration.maxNumberOfLevels.isEmpty ||
+                configuration.maxNumberOfLevels.get != cluster.level)) {
+                write("      <data key=\"d5\"/>\n")
             }
-            write("]]></data>\n")
+            else {
+                write("      <data key=\"d5\"><![CDATA[")
+                if (configuration.maxNumberOfLevels.isDefined &&
+                    configuration.maxNumberOfLevels.get == cluster.level) {
+                    // write identifiers of all child nodes (also these of the grandchildren)
+                    writeAllChildNodeIdentifiers(cluster)
+                }
+                else {
+                    cluster.getNodes foreach { child ⇒
+                        if (!child.isCluster) {
+                            write(child.identifier+"\n")
+                        }
+                    }
+                }
+                write("]]></data>\n")
+            }
+            write("      <data key=\"d6\">\n")
+            write("        <y:ProxyAutoBoundsNode>\n")
+            write("          <y:Realizers active=\"0\">\n")
+            write("            <y:GroupNode>\n")
+            write("              <y:Fill color=\"#F8ECC9\" transparent=\"false\"/>\n")
+            write("              <y:BorderStyle color=\"#000000\" type=\"line\" width=\"1.0\"/>\n")
+            write("              <y:NodeLabel alignment=\"right\" autoSizePolicy=\"node_width\" backgroundColor=\"#404040\" borderDistance=\"0.0\" fontFamily=\"Dialog\" fontSize=\"16\" fontStyle=\"plain\" hasLineColor=\"false\" height=\"22.625\" modelName=\"internal\" modelPosition=\"t\" textColor=\"#FFFFFF\" visible=\"true\" width=\"3260.63639027429\" x=\"0.0\" y=\"0.0\">")
+            write(StringEscapeUtils.escapeXml(cluster.identifier))
+            write("</y:NodeLabel>\n")
+            write("              <y:Shape type=\"rectangle3d\"/>\n")
+            write("              <y:State closed=\"false\" innerGraphDisplayEnabled=\"false\"/>\n")
+            write("              <y:Insets bottom=\"15\" bottomF=\"15.0\" left=\"15\" leftF=\"15.0\" right=\"15\" rightF=\"15.0\" top=\"15\" topF=\"15.0\"/>\n")
+            write("              <y:BorderInsets bottom=\"1\" bottomF=\"1.0\" left=\"0\" leftF=\"0.0\" right=\"1\" rightF=\"1.0\" top=\"0\" topF=\"0.0\"/>\n")
+            write("            </y:GroupNode>\n")
+            write("            <y:GroupNode>\n")
+            write("              <y:Fill color=\"#F8ECC9\" transparent=\"false\"/>\n")
+            write("              <y:BorderStyle color=\"#000000\" type=\"line\" width=\"1.0\"/>\n")
+            write("              <y:NodeLabel alignment=\"right\" autoSizePolicy=\"node_width\" backgroundColor=\"#404040\" borderDistance=\"0.0\" fontFamily=\"Dialog\" fontSize=\"16\" fontStyle=\"plain\" hasLineColor=\"false\" height=\"22.625\" modelName=\"internal\" modelPosition=\"t\" textColor=\"#FFFFFF\" visible=\"true\" width=\"3263.636474609375\" x=\"0.0\" y=\"0.0\">")
+            write(StringEscapeUtils.escapeXml(cluster.identifier))
+            write("</y:NodeLabel>\n")
+            write("              <y:Shape type=\"rectangle3d\"/>\n")
+            write("              <y:State closed=\"true\" innerGraphDisplayEnabled=\"false\"/>\n")
+            write("              <y:Insets bottom=\"15\" bottomF=\"15.0\" left=\"15\" leftF=\"15.0\" right=\"15\" rightF=\"15.0\" top=\"15\" topF=\"15.0\"/>\n")
+            write("              <y:BorderInsets bottom=\"0\" bottomF=\"0.0\" left=\"0\" leftF=\"0.0\" right=\"0\" rightF=\"0.0\" top=\"0\" topF=\"0.0\"/>\n")
+            write("            </y:GroupNode>\n")
+            write("          </y:Realizers>\n")
+            write("        </y:ProxyAutoBoundsNode>\n")
+            write("      </data>\n")
+            write("      <graph edgedefault=\"directed\" id=\""+nextSubgraphID+"\">\n")
+            nextSubgraphID += 1
         }
-        write("      <data key=\"d6\">\n")
-        write("        <y:ProxyAutoBoundsNode>\n")
-        write("          <y:Realizers active=\"0\">\n")
-        write("            <y:GroupNode>\n")
-        write("              <y:Fill color=\"#F8ECC9\" transparent=\"false\"/>\n")
-        write("              <y:BorderStyle color=\"#000000\" type=\"line\" width=\"1.0\"/>\n")
-        write("              <y:NodeLabel alignment=\"right\" autoSizePolicy=\"node_width\" backgroundColor=\"#404040\" borderDistance=\"0.0\" fontFamily=\"Dialog\" fontSize=\"16\" fontStyle=\"plain\" hasLineColor=\"false\" height=\"22.625\" modelName=\"internal\" modelPosition=\"t\" textColor=\"#FFFFFF\" visible=\"true\" width=\"3260.63639027429\" x=\"0.0\" y=\"0.0\">")
-        write(StringEscapeUtils.escapeXml(cluster.identifier))
-        write("</y:NodeLabel>\n")
-        write("              <y:Shape type=\"rectangle3d\"/>\n")
-        write("              <y:State closed=\"false\" innerGraphDisplayEnabled=\"false\"/>\n")
-        write("              <y:Insets bottom=\"15\" bottomF=\"15.0\" left=\"15\" leftF=\"15.0\" right=\"15\" rightF=\"15.0\" top=\"15\" topF=\"15.0\"/>\n")
-        write("              <y:BorderInsets bottom=\"1\" bottomF=\"1.0\" left=\"0\" leftF=\"0.0\" right=\"1\" rightF=\"1.0\" top=\"0\" topF=\"0.0\"/>\n")
-        write("            </y:GroupNode>\n")
-        write("            <y:GroupNode>\n")
-        write("              <y:Fill color=\"#F8ECC9\" transparent=\"false\"/>\n")
-        write("              <y:BorderStyle color=\"#000000\" type=\"line\" width=\"1.0\"/>\n")
-        write("              <y:NodeLabel alignment=\"right\" autoSizePolicy=\"node_width\" backgroundColor=\"#404040\" borderDistance=\"0.0\" fontFamily=\"Dialog\" fontSize=\"16\" fontStyle=\"plain\" hasLineColor=\"false\" height=\"22.625\" modelName=\"internal\" modelPosition=\"t\" textColor=\"#FFFFFF\" visible=\"true\" width=\"3263.636474609375\" x=\"0.0\" y=\"0.0\">")
-        write(StringEscapeUtils.escapeXml(cluster.identifier))
-        write("</y:NodeLabel>\n")
-        write("              <y:Shape type=\"rectangle3d\"/>\n")
-        write("              <y:State closed=\"true\" innerGraphDisplayEnabled=\"false\"/>\n")
-        write("              <y:Insets bottom=\"15\" bottomF=\"15.0\" left=\"15\" leftF=\"15.0\" right=\"15\" rightF=\"15.0\" top=\"15\" topF=\"15.0\"/>\n")
-        write("              <y:BorderInsets bottom=\"0\" bottomF=\"0.0\" left=\"0\" leftF=\"0.0\" right=\"0\" rightF=\"0.0\" top=\"0\" topF=\"0.0\"/>\n")
-        write("            </y:GroupNode>\n")
-        write("          </y:Realizers>\n")
-        write("        </y:ProxyAutoBoundsNode>\n")
-        write("      </data>\n")
-        write("      <graph edgedefault=\"directed\" id=\""+nextSubgraphID+"\">\n")
-        nextSubgraphID += 1
 
         // write child nodes
         cluster.getNodes foreach {
@@ -164,10 +176,23 @@ class GraphmlClusteringResultWriter(
                 writeSourceElementNode(sen, nodeBuffer, edgeBuffer)
         }
 
-        write("      </graph>\n")
-        write("  </node>\n")
+        if (isVisibleLevel(cluster.level)) {
+            write("      </graph>\n")
+            write("  </node>\n")
+        }
 
         writeEdges(cluster, edgeBuffer)
+    }
+
+    private def writeAllChildNodeIdentifiers(node: Node) {
+        node.getNodes foreach { child ⇒
+            if (!child.isCluster) {
+                write(child.identifier+"\n")
+            }
+            else {
+                writeAllChildNodeIdentifiers(child)
+            }
+        }
     }
 
     override protected def writeSourceElementNode(node: SourceElementNode, nodeBuffer: StringBuffer, edgeBuffer: StringBuffer) {
@@ -184,7 +209,7 @@ class GraphmlClusteringResultWriter(
         //     </data>
         //   </node>
 
-        if (configuration.showSourceElementNodes) {
+        if (configuration.showSourceElementNodes && isVisibleLevel(node.level)) {
             write("  <node id=\""+node.uniqueID+"\">\n")
             write("    <data key=\"d5\"/>\n")
             write("    <data key=\"d6\">\n")
@@ -218,19 +243,33 @@ class GraphmlClusteringResultWriter(
         //    </edge>
         // add egdes
         for (e ← node.getOwnEdges) {
-            val sourceID = if (configuration.showSourceElementNodes) {
-                e.sourceID
+            val sourceID = if (configuration.showSourceElementNodes || e.source.isCluster) {
+                if (isVisibleLevel(e.source.level))
+                    e.source.uniqueID
+                else
+                    e.source.getNodeOfLevel(configuration.maxNumberOfLevels.get).uniqueID
             }
             else {
-                val node = nodeStore.getNode(e.sourceID)
-                if (node.isCluster) e.sourceID else node.parent.uniqueID
+                if (isVisibleLevel(e.source.level - 1)) {
+                    e.source.parent.uniqueID
+                }
+                else {
+                    e.source.getNodeOfLevel(configuration.maxNumberOfLevels.get).uniqueID
+                }
             }
-            val targetID = if (configuration.showSourceElementNodes) {
-                e.targetID
+            val targetID = if (configuration.showSourceElementNodes || e.target.isCluster) {
+                if (isVisibleLevel(e.target.level))
+                    e.target.uniqueID
+                else
+                    e.target.getNodeOfLevel(configuration.maxNumberOfLevels.get).uniqueID
             }
             else {
-                val node = nodeStore.getNode(e.targetID)
-                if (node.isCluster) e.targetID else node.parent.uniqueID
+                if (isVisibleLevel(e.target.level - 1)) {
+                    e.target.parent.uniqueID
+                }
+                else {
+                    e.target.getNodeOfLevel(configuration.maxNumberOfLevels.get).uniqueID
+                }
             }
             if (!configuration.aggregateEdges || !aggregatedEdgesSet.contains((sourceID, targetID))) {
                 edgeBuffer.append("    <edge id=\""+nextEdgeID+"\" source=\"")
@@ -265,10 +304,14 @@ class GraphmlClusteringResultWriter(
             }
         }
     }
+
+    private def isVisibleLevel(level: Int): Boolean =
+        configuration.maxNumberOfLevels.isEmpty || configuration.maxNumberOfLevels.get >= level
 }
 
 trait GraphmlClusteringResultWriterConfiguration {
     val aggregateEdges: Boolean = false
     val showEdgeLabels: Boolean = true
     val showSourceElementNodes: Boolean = true
+    val maxNumberOfLevels: Option[Int] = None
 }

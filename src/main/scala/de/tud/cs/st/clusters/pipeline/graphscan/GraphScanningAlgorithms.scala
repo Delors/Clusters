@@ -86,7 +86,7 @@ object GraphScanningAlgorithms {
         def getNextWhiteNode(edges: List[Edge]): Edge = {
             for (edge ← edges)
                 // TODO remove the contains check, rather implement a mechanism to handle cluster cutting concerns
-                if (resultBean.color.contains(edge.targetID) && resultBean.color(edge.targetID) == WHITE)
+                if (resultBean.color.contains(edge.target.uniqueID) && resultBean.color(edge.target.uniqueID) == WHITE)
                     return edge
             return null
         }
@@ -128,15 +128,15 @@ object GraphScanningAlgorithms {
         // CALCULATION
         while (!q.isEmpty) {
             var u = q.getNext
-            var current = getNextWhiteNode({ if (useTransposedEdges) cluster.getNode(u).getTransposedEdges else cluster.getNode(u).getOutgoingEdges.toList })
+            var current = getNextWhiteNode({ if (useTransposedEdges) cluster.getNode(u).getOwnTransposedEdges else cluster.getNode(u).getOutgoingEdges.toList })
             if (current != null) {
                 // found white neighbor node
-                resultBean.color(current.targetID) = BLUE
-                resultBean.evenDist(current.targetID) = !resultBean
+                resultBean.color(current.target.uniqueID) = BLUE
+                resultBean.evenDist(current.target.uniqueID) = !resultBean
                     .evenDist(u)
-                q.add(current.targetID)
-                resultBean.discoveryTime(current.targetID) = t
-                resultBean.pi(current.targetID) = u
+                q.add(current.target.uniqueID)
+                resultBean.discoveryTime(current.target.uniqueID) = t
+                resultBean.pi(current.target.uniqueID) = u
             }
             else {
                 // no white neighbor node was found

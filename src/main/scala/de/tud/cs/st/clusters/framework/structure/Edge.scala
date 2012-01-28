@@ -40,9 +40,9 @@ import de.tud.cs.st.bat.resolved.dependency._
  * @author Thomas Schlosser
  *
  */
-class Edge(val sourceID: Int, val targetID: Int, val dType: DependencyType, var count: Int) {
+class Edge(val source: Node, val target: Node, val dType: DependencyType, var count: Int) {
 
-    def this(sourceID: Int, targetID: Int, dType: DependencyType) {
-        this(sourceID, targetID, dType, 1)
+    def this(source: Node, target: Node, dType: DependencyType) {
+        this(source, target, dType, 1)
     }
 }

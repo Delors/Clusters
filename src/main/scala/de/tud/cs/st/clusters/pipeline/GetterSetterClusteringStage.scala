@@ -64,52 +64,50 @@ trait GetterSetterClusteringStage extends ClusteringStage[GetterSetterClustering
             //add mechanism to algorithms that allows to specify/configure that a cluster is as fine granular as required
             var checkedNodes = Set[Int]()
             //TODO: edge count should be considered...have to be equal to one
-            for (tEdge ← node.getTransposedEdges) {
-                val target = clusterManager.getNode(tEdge.targetID)
-                if (!checkedNodes.contains(tEdge.targetID)) {
+            for (tEdge ← node.getOwnTransposedEdges) {
+                if (!checkedNodes.contains(tEdge.target.uniqueID)) {
                     tEdge.dType match {
                         case READS_FIELD ⇒
-                            target match {
+                            tEdge.target match {
                                 case MethodNode(_, identifier, Some(method)) ⇒
-                                    if (getterPrefix == None || method.name.startsWith(getterPrefix.get)) {
+                                    if (getterPrefix == None || method.name.equalsIgnoreCase(getterPrefix.get + field.name)) {
                                         val descriptor = method.descriptor
                                         if (descriptor.parameterTypes.isEmpty &&
                                             descriptor.returnType.equals(field.fieldType)) {
-                                            if (gscBean.getter != null)
+                                            //TODO: allow more than one getter/setter...some inner classes define the same getter- setter-method as their outer class.
+                                            if (gscBean.hasGetter)
                                                 sys.error("only one getter is allowed: current["+gscBean.getter.identifier+"], new["+identifier()+"]")
                                             gscBean.field = node
-                                            gscBean.getter = target
-                                            gscBean.hasGetter = true
+                                            gscBean.getter = tEdge.target
                                         }
                                     }
                                 case _ ⇒ Nil
                             }
                         case WRITES_FIELD ⇒
-                            target match {
+                            tEdge.target match {
                                 case MethodNode(_, identifier, Some(method)) ⇒
-                                    if (setterPrefix == None || method.name.startsWith(setterPrefix.get)) {
+                                    if (setterPrefix == None || method.name.equalsIgnoreCase(setterPrefix.get + field.name)) {
                                         val descriptor = method.descriptor
                                         if (descriptor.parameterTypes.size == 1 && descriptor.parameterTypes(0).equals(field.fieldType) &&
                                             descriptor.returnType.isVoidType) {
-                                            if (gscBean.setter != null)
+                                            if (gscBean.hasSetter)
                                                 sys.error("only one setter is allowed: current["+gscBean.setter.identifier+"], new["+identifier+"]")
                                             gscBean.field = node
-                                            gscBean.setter = target
-                                            gscBean.hasSetter = true
+                                            gscBean.setter = tEdge.target
                                         }
                                     }
                                 case _ ⇒ Nil
                             }
-                        //          case a => println(a.toString) //return None //this node is out
+                        case a ⇒ println(a.toString) //return None //this node is out
                     }
-                    checkedNodes += tEdge.targetID
+                    checkedNodes += tEdge.target.uniqueID
                 }
             }
-            if (gscBean.field == null) None else Some(gscBean)
+            //            if (gscBean.field == null) None else Some(gscBean)
+            if (gscBean.hasGetter || gscBean.hasSetter) Some(gscBean) else None
         }
         // TODO: cluster needs methods that return only type/field/method nodes => performance improvement
         val inputNodes = cluster.getNodes.toArray
-        cluster.clearNodes()
         println(inputNodes.size)
         for (node ← inputNodes) {
             node match {
@@ -130,10 +128,10 @@ trait GetterSetterClusteringStage extends ClusteringStage[GetterSetterClustering
                             gsCluster.clusterable = false
                             cluster.addNode(gsCluster)
                         case None ⇒
-                            cluster.addNode(node)
+                        // nothing to do if no getter-setter cluster was found
                     }
                 case _ ⇒
-                    cluster.addNode(node)
+                // nothing to do with non-field nodes
             }
         }
         cluster
@@ -143,8 +141,8 @@ trait GetterSetterClusteringStage extends ClusteringStage[GetterSetterClustering
         var field: Node = _
         var getter: Node = _
         var setter: Node = _
-        var hasSetter: Boolean = false
-        var hasGetter: Boolean = false
+        def hasSetter: Boolean = setter != null
+        def hasGetter: Boolean = getter != null
 
         // setter
         // WRITES_FIELD

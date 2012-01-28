@@ -121,9 +121,9 @@ class DOTClusteringResultWriter(
         if (includeEdges)
             for (e ← node.getOwnEdges) {
                 edgeBuffer.append("\t")
-                edgeBuffer.append(e.sourceID)
+                edgeBuffer.append(e.source.uniqueID)
                 edgeBuffer.append(" -> ")
-                edgeBuffer.append(e.targetID)
+                edgeBuffer.append(e.target.uniqueID)
                 edgeBuffer.append("[label=\"")
                 edgeBuffer.append(e.dType.toString)
                 edgeBuffer.append(" [")

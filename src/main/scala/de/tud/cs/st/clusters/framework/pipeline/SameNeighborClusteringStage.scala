@@ -56,7 +56,7 @@ trait SameNeighborClusteringStage[C <: SameNeighborClusteringStageConfiguration]
         for (node ← cluster.getNodes) {
             getConsideredEdge(node) match {
                 case Some(edge) ⇒
-                    val neighborNodeID = edge.targetID
+                    val neighborNodeID = edge.target.uniqueID
                     val clusterSet = clustersMap.getOrElse(neighborNodeID, Set())
                     clustersMap(neighborNodeID) = clusterSet + node
                 case None ⇒

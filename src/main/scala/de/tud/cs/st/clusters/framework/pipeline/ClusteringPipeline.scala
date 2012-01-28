@@ -49,15 +49,14 @@ import de.tud.cs.st.util.perf.PerformanceEvaluation
  */
 trait ClusteringPipeline extends PerformanceEvaluation {
 
-    // Configurations
-
-    private val clusteringStages = new Queue[ClusteringStage[_]]()
-
     private val clusterManager = new DefaultClusterManager()
 
-    private var extractDependencies: (DependencyExtractor) ⇒ Unit = null
+    // Configurations
+    protected val clusteringStages = new Queue[ClusteringStage[_]]()
 
-    private var resultWriter: ClusteringResultWriter = null
+    protected val extractDependencies: (DependencyExtractor) ⇒ Unit = null
+
+    protected val resultWriter: ClusteringResultWriter = null
 
     def addClusteringStage(clusteringStage: ClusteringStage[_]) {
         clusteringStages += clusteringStage
@@ -140,12 +139,15 @@ trait ClusteringPipeline extends PerformanceEvaluation {
 }
 
 class DefaultClusteringPipeline(
-    val clusteringStages: Array[ClusteringStage[_]],
-    val extractDependenciesFunktion: (DependencyExtractor) ⇒ Unit,
-    val clusteringResultWriter: NodeStore ⇒ ClusteringResultWriter)
+    val initialClusteringStages: Array[ClusteringStage[_]],
+    override val extractDependencies: (DependencyExtractor) ⇒ Unit,
+    override val resultWriter: ClusteringResultWriter)
         extends ClusteringPipeline {
 
-    def this(clusteringStages: Array[ClusteringStage[_]], extractDependenciesFunktion: (DependencyExtractor) ⇒ Unit) {
-        this(clusteringStages, extractDependenciesFunktion, n ⇒ null)
+    // constructor code...
+    initialClusteringStages foreach { addClusteringStage(_) }
+
+    def this(clusteringStages: Array[ClusteringStage[_]], extractDependencies: (DependencyExtractor) ⇒ Unit) {
+        this(clusteringStages, extractDependencies, null)
     }
 }

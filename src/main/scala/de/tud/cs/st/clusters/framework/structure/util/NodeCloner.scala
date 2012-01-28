@@ -34,69 +34,65 @@ package de.tud.cs.st.clusters
 package framework
 package structure
 
+/**
+ * Creates copies of nodes that contain copies of all child nodes.
+ * Edges are not considered during the copy process. All copied
+ * nodes do not contain edges.
+ *
+ * @author Thomas Schlosser
+ *
+ */
 trait NodeCloner {
-    def createCopy(cluster: Cluster): Cluster =
+
+    def cloneNodeStructure(
+        cluster: Cluster): Cluster = {
+        val copy = createCopy(cluster)
+        // add copies of cluster elements to the cluster's copy
+        cluster.getNodes map {
+            cloneNodeStructure(_)
+        } map { node ⇒
+            copy.addNode(node)
+        }
+        copy
+    }
+
+    def cloneNodeStructure(node: Node): Node = {
+        node match {
+            case c: Cluster ⇒
+                cloneNodeStructure(c)
+            case sen: SourceElementNode ⇒
+                val copy = createCopy(node)
+                copy
+        }
+    }
+
+    private def createCopy(cluster: Cluster): Cluster =
         new Cluster(cluster.uniqueID, cluster.identifier, cluster.isRootCluster)
 
-    def createCopy(typeNode: TypeNode): TypeNode =
+    private def createCopy(typeNode: TypeNode): TypeNode =
         if (typeNode.clazz.isDefined)
             new TypeNode(typeNode.uniqueID, typeNode.identifierFun, typeNode.clazz.get)
         else
             new TypeNode(typeNode.uniqueID, typeNode.identifierFun)
 
-    def createCopy(fieldNode: FieldNode): FieldNode =
+    private def createCopy(fieldNode: FieldNode): FieldNode =
         if (fieldNode.field.isDefined)
             new FieldNode(fieldNode.uniqueID, fieldNode.identifierFun, fieldNode.field.get)
         else
             new FieldNode(fieldNode.uniqueID, fieldNode.identifierFun)
 
-    def createCopy(methodNode: MethodNode): MethodNode =
+    private def createCopy(methodNode: MethodNode): MethodNode =
         if (methodNode.method.isDefined)
             new MethodNode(methodNode.uniqueID, methodNode.identifierFun, methodNode.method.get)
         else
             new MethodNode(methodNode.uniqueID, methodNode.identifierFun)
 
-    def createCopy(node: Node): Node =
+    private def createCopy(node: Node): Node =
         node match {
             case c: Cluster    ⇒ createCopy(c)
             case t: TypeNode   ⇒ createCopy(t)
             case f: FieldNode  ⇒ createCopy(f)
             case m: MethodNode ⇒ createCopy(m)
         }
-
-    def createDeepCopy(
-        cluster: Cluster): Cluster = {
-        val copy = createCopy(cluster)
-        // add copies of cluster elements to the cluster's copy
-        cluster.getNodes map {
-            createDeepCopy(_)
-        } map { node ⇒
-            copy.addNode(node)
-        }
-        copyEdges(cluster, copy)
-        copy
-    }
-
-    def createDeepCopy(node: Node): Node = {
-        node match {
-            case c: Cluster ⇒
-                createDeepCopy(c)
-            case sen: SourceElementNode ⇒
-                val copy = createCopy(node)
-                copyEdges(node, copy)
-                copy
-        }
-    }
-
-    private def copyEdges(
-        node: Node,
-        copiedNode: Node) {
-        for (edge ← node.getOwnEdges) {
-            copiedNode.addEdge(edge.sourceID, edge.targetID, edge.dType, edge.count)
-        }
-        for (transposedEdge ← node.getTransposedEdges) {
-            copiedNode.addEdge(transposedEdge.targetID, transposedEdge.sourceID, transposedEdge.dType, transposedEdge.count)
-        }
-    }
 
 }

@@ -113,6 +113,7 @@ trait ExternalClassClusteringStageConfiguration extends ClassClusteringStageConf
 
 }
 
+// TODO: remove unnecessary object definitions (all stages' objects)
 object ExternalClassClusteringStage {
 
     def apply(c: ExternalClassClusteringStageConfiguration): ExternalClassClusteringStage =

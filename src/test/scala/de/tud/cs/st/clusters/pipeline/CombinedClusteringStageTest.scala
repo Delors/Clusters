@@ -46,20 +46,18 @@ import framework.pipeline.ClusteringStage
 class CombinedClusteringStageTest extends AbstractClusteringTest {
 
     val intExtConfiguration = new InternalExternalClusteringStageConfiguration {}
-    val edgeTargetGeneralizerConfiguration = new {
-        override val considerOnlyUnclusterableTargets = true
-    } with EdgeTargetGeneralizerStageConfiguration
     val getterSetterConfiguration = new GetterSetterClusteringStageConfiguration {}
     val similarityMetricConfiguration = new SimilarityMetricClusteringStageConfiguration {}
     val sccConfiguration = new StronglyConnectedComponentsClusteringStageConfiguration {}
 
     implicit val clusteringStages: Array[ClusteringStage[_]] = Array(
         InternalExternalClusteringStage(intExtConfiguration),
-        //        EdgeTargetGeneralizerStage(edgeTargetGeneralizerConfiguration),
-        //        SimilarityMetricClusteringStage(similarityMetricConfiguration),
+        //TODO: check why SCC and GetterSetter ClusteringStages do not work correctly
+        StronglyConnectedComponentsClusteringStage(sccConfiguration),
+        GetterSetterClusteringStage(getterSetterConfiguration),
+        SimilarityMetricClusteringStage(similarityMetricConfiguration),
+        SimilarityMetricClusteringStage(similarityMetricConfiguration),
         SimilarityMetricClusteringStage(similarityMetricConfiguration) //,
-    //        StronglyConnectedComponentsClusteringStage(sccConfiguration) //,
-    //GetterSetterClusteringStage(getterSetterConfiguration) //,
     //        InternalClassClusteringStage()
     )
 
@@ -79,6 +77,13 @@ class CombinedClusteringStageTest extends AbstractClusteringTest {
             Some("combinedClust_cocome"),
             includeSingleNodes = true,
             includeEdges = true)
+    }
+
+    test("testCombinedClusteringStage [hibernate]") {
+        testClustering(
+            "testCombinedClusteringStage [hibernate]",
+            hibernateDependencyExtractor,
+            Some("combinedClust_hibernate"))
     }
 
 }
