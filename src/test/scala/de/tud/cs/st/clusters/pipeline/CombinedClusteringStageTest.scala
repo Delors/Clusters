@@ -122,11 +122,11 @@ class CombinedClusteringStageTest extends AbstractClusteringTest {
             includeEdges = true)
     }
 
-    //    test("testCombinedClusteringStage [hibernate]") {
-    //        testClustering(
-    //            "testCombinedClusteringStage [hibernate]",
-    //            hibernateDependencyExtractor,
-    //            Some("combinedClust_hibernate"))
-    //    }
+    test("testCombinedClusteringStage [hibernate]") {
+        testClustering(
+            "testCombinedClusteringStage [hibernate]",
+            hibernateDependencyExtractor,
+            Some("combinedClust_hibernate"))
+    }
 
 }

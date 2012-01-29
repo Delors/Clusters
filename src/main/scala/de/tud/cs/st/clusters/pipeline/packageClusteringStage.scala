@@ -46,9 +46,6 @@ import framework.structure.util.ClusterManager
  */
 trait PackageClusteringStage extends ClusteringStage[PackageClusteringStageConfiguration] {
 
-    // new clusters should be marked as unclusterable if they are only libraries that should not further be considered
-    val createUnclusterableClusters = true
-
     override def performClustering(cluster: Cluster): Cluster = {
         def getMatchingPrefix(value: String, prefixes: Array[String]): String = {
             prefixes.foreach(prfx ⇒ if (value.startsWith(prfx)) { return prfx })
@@ -69,7 +66,7 @@ trait PackageClusteringStage extends ClusteringStage[PackageClusteringStageConfi
         for (i ← 0 to prfxs.size - 1) {
             val prfx = prfxs(i)
             val cl = clusterManager.createCluster(prfx, this.stageName)
-            //TODO: uncomment: //            cl.clusterable = !createUnclusterableClusters
+            cl.clusterable = !configuration.createUnclusterableClusters
             resultMap(prfx) = cl
             cluster.addNode(cl)
         }
@@ -145,7 +142,8 @@ private trait GreatestCommonPrefixTree[Content] {
 }
 
 trait PackageClusteringStageConfiguration extends ClusteringStageConfiguration {
-
+    // new clusters should be marked as unclusterable if they are only libraries that should not further be considered
+    val createUnclusterableClusters = true
 }
 
 class DefaultPackageClusteringStage(

@@ -52,7 +52,6 @@ trait IdentifierBasedClusterStrategy[C <: ClusteringStageConfiguration] extends 
     abstract override def performClustering(cluster: Cluster): Cluster = {
         val c = clusterManager.getCluster(clusterManager.clusterID(clusterIdentifier))
         if (c != null && (!considerOnlyClusterable || c.clusterable)) {
-            println("IdentifierBasedCluster-Match: "+c.identifier)
             super.performClustering(c)
         }
         cluster
