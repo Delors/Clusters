@@ -54,7 +54,12 @@ trait ClusterFactory
 
     def createCluster(clusterIdentifier: String, creatorStageName: String): Cluster = {
         val cluster = createCluster(
-            clusterID(clusterIdentifier + System.nanoTime()),
+            //TODO: check which variant is better
+            //clusterID(clusterIdentifier + System.nanoTime()),
+            if (clusterIdentifier.startsWith("SCC") || clusterIdentifier.startsWith("simMetric"))
+                clusterID(clusterIdentifier + System.nanoTime())
+            else
+                clusterID(clusterIdentifier),
             (c: Cluster) ⇒ Unit,
             (id) ⇒ new Cluster(id, clusterIdentifier))
         cluster.metaInfo("creatorStage") = creatorStageName

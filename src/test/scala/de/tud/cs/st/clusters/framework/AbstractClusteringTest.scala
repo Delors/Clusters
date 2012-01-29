@@ -94,7 +94,7 @@ trait AbstractClusteringTest extends FunSuite
             clusteringPipeline = new DefaultClusteringPipeline(
                 clusteringStages,
                 extractDependencies,
-                new GraphmlClusteringResultWriter(outputFileName.get, writerConfiguration))
+                () ⇒ new GraphmlClusteringResultWriter(outputFileName.get, writerConfiguration))
         }
         else {
             clusteringPipeline = new DefaultClusteringPipeline(clusteringStages, extractDependencies)

@@ -56,7 +56,7 @@ trait ClusteringPipeline extends PerformanceEvaluation {
 
     protected val extractDependencies: (DependencyExtractor) ⇒ Unit = null
 
-    protected val resultWriter: ClusteringResultWriter = null
+    protected val createConcreteClusteringResultWriter: () ⇒ ClusteringResultWriter
 
     def addClusteringStage(clusteringStage: ClusteringStage[_]) {
         clusteringStages += clusteringStage
@@ -80,10 +80,15 @@ trait ClusteringPipeline extends PerformanceEvaluation {
 
         val result = cluster(clusterManager)
 
-        // export result by calling write method of ClusteringResultWriter trait
+        // export result by calling write method of concrete ClusteringResultWriter trait
+        val resultWriter = createConcreteClusteringResultWriter()
         if (resultWriter != null) {
-            resultWriter.write(result)
-            resultWriter.close() // TODO: check how to handle this on a nice way
+            try {
+                resultWriter.write(result)
+            }
+            finally {
+                resultWriter.close()
+            }
         }
 
         result
@@ -104,9 +109,15 @@ trait ClusteringPipeline extends PerformanceEvaluation {
             cluster(clusterManager)
         }
 
+        // export result by calling write method of concrete ClusteringResultWriter trait
+        val resultWriter = createConcreteClusteringResultWriter()
         if (resultWriter != null) {
-            resultWriter.write(result)
-            resultWriter.close() // TODO: check how to handle this on a nice way
+            try {
+                resultWriter.write(result)
+            }
+            finally {
+                resultWriter.close()
+            }
         }
 
         result
@@ -126,13 +137,13 @@ trait ClusteringPipeline extends PerformanceEvaluation {
 class DefaultClusteringPipeline(
     val initialClusteringStages: Array[ClusteringStage[_]],
     override val extractDependencies: (DependencyExtractor) ⇒ Unit,
-    override val resultWriter: ClusteringResultWriter)
+    override val createConcreteClusteringResultWriter: () ⇒ ClusteringResultWriter)
         extends ClusteringPipeline {
 
     // constructor code...
     initialClusteringStages foreach { addClusteringStage(_) }
 
     def this(clusteringStages: Array[ClusteringStage[_]], extractDependencies: (DependencyExtractor) ⇒ Unit) {
-        this(clusteringStages, extractDependencies, null)
+        this(clusteringStages, extractDependencies, () ⇒ null)
     }
 }

@@ -88,7 +88,7 @@ trait SimilarityMetricClusteringStage extends ClusteringStage[SimilarityMetricCl
         cluster
     }
 
-    private def calcClusters(sortedEdges: List[((Int, Int), Long)], nodes: Iterable[Node]): Array[Cluster] = {
+    private def calcClusters(sortedEdges: List[((Int, Int), Long)], nodes: Iterable[Node]): Array[Node] = {
         val clusters: Map[Int, AlgoNode] = Map()
         for (node ← nodes) {
             val set = scala.collection.mutable.Set.empty[AlgoNode]
@@ -122,14 +122,19 @@ trait SimilarityMetricClusteringStage extends ClusteringStage[SimilarityMetricCl
             clusterset += cl
         }
 
-        val result = new Array[Cluster](clusterset.size)
+        val result = new Array[Node](clusterset.size)
         var i = 0
         clusterset foreach { nodes ⇒
-            val cluster = clusterManager.createCluster("simMetricCluster"+i, this.stageName)
-            nodes foreach { node ⇒
-                cluster.addNode(clusterManager.getNode(node))
+            if (nodes.size > 1) {
+                val cluster = clusterManager.createCluster("simMetricCluster"+i, this.stageName)
+                nodes foreach { node ⇒
+                    cluster.addNode(clusterManager.getNode(node))
+                }
+                result(i) = cluster
             }
-            result(i) = cluster
+            else {
+                result(i) = clusterManager.getNode(nodes.first)
+            }
             i += 1
         }
         result
