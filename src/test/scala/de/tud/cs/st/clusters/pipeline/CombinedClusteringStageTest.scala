@@ -39,6 +39,7 @@ import framework.AbstractClusteringTest
 import framework.pipeline.ClusteringStage
 import strategy.ClusterFirstClusterableClusterStrategy
 import de.tud.cs.st.clusters.pipeline.strategy.IdentifierBasedClusterStrategy
+import de.tud.cs.st.clusters.pipeline.strategy.MinClusterSizeClusterStrategy
 
 /**
  * @author Thomas Schlosser
@@ -54,7 +55,6 @@ class CombinedClusteringStageTest extends AbstractClusteringTest {
     val sccConfiguration = new StronglyConnectedComponentsClusteringStageConfiguration {}
 
     //TODO: implement more strategies and use the metaInfo data;
-    //TODO: add a mechanism to limit the min size of clusters that are used to be clustered. -> introduce a configurable threshold
     //TODO: add a new stage (reuse/rename the package clustering stage) that is beeing able to cluster the external cluster (a specific strategy that allows the unclusterable external cluster to be clustered by this stage has to be implemented)
     //TODO: create some concrete examples with known optimal results and evaluate the current stages and stage combinations.
     // -> e.g. pattern implementations from wikipedia
@@ -92,15 +92,15 @@ class CombinedClusteringStageTest extends AbstractClusteringTest {
     val pkgStage = new { val clusterIdentifier = "external" } with DefaultPackageClusteringStage(pkgConfiguration) with IdentifierBasedClusterStrategy[PackageClusteringStageConfiguration]
     val sccStage = new DefaultStronglyConnectedComponentsClusteringStage(sccConfiguration) with ClusterFirstClusterableClusterStrategy[StronglyConnectedComponentsClusteringStageConfiguration]
     val getterSetterStage = new DefaultGetterSetterClusteringStage(getterSetterConfiguration) with ClusterFirstClusterableClusterStrategy[GetterSetterClusteringStageConfiguration]
-    val simMetricStage = new DefaultSimilarityMetricClusteringStage(similarityMetricConfiguration) with ClusterFirstClusterableClusterStrategy[SimilarityMetricClusteringStageConfiguration]
+    val simMetricStage = new { override val minClusterSizeThreshold: Int = 20 } with DefaultSimilarityMetricClusteringStage(similarityMetricConfiguration) with MinClusterSizeClusterStrategy[SimilarityMetricClusteringStageConfiguration] with ClusterFirstClusterableClusterStrategy[SimilarityMetricClusteringStageConfiguration]
 
     implicit val clusteringStages: Array[ClusteringStage[_]] = Array(
         intExtStage,
         pkgStage,
         sccStage,
         getterSetterStage,
-        //        simMetricStage,
-        //        simMetricStage,
+        simMetricStage,
+        simMetricStage,
         simMetricStage
     )
 
