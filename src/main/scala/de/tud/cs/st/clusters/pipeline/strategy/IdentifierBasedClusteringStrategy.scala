@@ -35,27 +35,23 @@ package pipeline
 package strategy
 
 import framework.pipeline.ClusteringStrategy
-import framework.pipeline.ClusteringStrategyConfiguration
 import framework.structure.Cluster
 
 /**
  *
  * @author Thomas Schlosser
  */
-trait IdentifierBasedClusteringStrategy
-        extends ClusteringStrategy[IdentifierBasedClusteringStrategyConfiguration] {
+trait IdentifierBasedClusteringStrategy extends ClusteringStrategy {
+
+    val clusterIdentifier: String
+
+    val considerOnlyClusterable = false
 
     abstract override def performClustering(cluster: Cluster): Cluster = {
-        val c = clusterManager.getCluster(clusterManager.clusterID(strategyConfig.clusterIdentifier))
-        if (c != null && (!strategyConfig.considerOnlyClusterable || c.clusterable)) {
+        val c = clusterManager.getCluster(clusterManager.clusterID(clusterIdentifier))
+        if (c != null && (!considerOnlyClusterable || c.clusterable)) {
             super.performClustering(c)
         }
         cluster
     }
-}
-
-trait IdentifierBasedClusteringStrategyConfiguration extends ClusteringStrategyConfiguration {
-    val clusterIdentifier: String
-
-    val considerOnlyClusterable = false
 }

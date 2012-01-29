@@ -35,7 +35,6 @@ package pipeline
 package strategy
 
 import framework.pipeline.ClusteringStrategy
-import framework.pipeline.ClusteringStrategyConfiguration
 import framework.structure.Cluster
 
 /**
@@ -43,17 +42,14 @@ import framework.structure.Cluster
  *
  * @author Thomas Schlosser
  */
-trait MinClusterSizeClusteringStrategy
-        extends ClusteringStrategy[MinClusterSizeClusteringStrategyConfiguration] {
+trait MinClusterSizeClusteringStrategy extends ClusteringStrategy {
+
+    val minClusterSizeThreshold: Int = 10
 
     abstract override def performClustering(cluster: Cluster): Cluster = {
-        if (cluster.numberOfNodes >= strategyConfig.minClusterSizeThreshold) {
+        if (cluster.numberOfNodes >= minClusterSizeThreshold) {
             super.performClustering(cluster)
         }
         cluster
     }
-}
-
-trait MinClusterSizeClusteringStrategyConfiguration extends ClusteringStrategyConfiguration {
-    val minClusterSizeThreshold: Int = 10
 }

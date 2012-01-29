@@ -48,11 +48,8 @@ import algorithm.SimilarityMetricClusteringAlgorithmConfiguration
 import algorithm.DefaultStronglyConnectedComponentsClusteringStage
 import algorithm.StronglyConnectedComponentsClusteringAlgorithmConfiguration
 import strategy.FirstClusterablesClusteringStrategy
-import strategy.FirstClusterablesClusteringStrategyConfiguration
 import strategy.IdentifierBasedClusteringStrategy
-import strategy.IdentifierBasedClusteringStrategyConfiguration
 import strategy.MinClusterSizeClusteringStrategy
-import strategy.MinClusterSizeClusteringStrategyConfiguration
 
 /**
  * @author Thomas Schlosser
@@ -66,10 +63,6 @@ class CombinedClusteringStageTest extends AbstractClusteringTest {
     val getterSetterConfiguration = new GetterSetterClusteringAlgorithmConfiguration {}
     val similarityMetricConfiguration = new SimilarityMetricClusteringAlgorithmConfiguration {}
     val sccConfiguration = new StronglyConnectedComponentsClusteringAlgorithmConfiguration {}
-
-    val firstClusterablesConfig = new FirstClusterablesClusteringStrategyConfiguration {}
-    val identifierBasedConfig = new { val clusterIdentifier = "external" } with IdentifierBasedClusteringStrategyConfiguration
-    val minClusterSizeConfig = new { override val minClusterSizeThreshold: Int = 20 } with MinClusterSizeClusteringStrategyConfiguration
 
     //TODO: implement more strategies and use the metaInfo data;
     //TODO: create some concrete examples with known optimal results and evaluate the current stages and stage combinations.
@@ -105,32 +98,23 @@ class CombinedClusteringStageTest extends AbstractClusteringTest {
      */
 
     val intExtStage = new DefaultInternalExternalClusteringStage(intExtConfiguration)
-    //    val pkgStage = new { val clusterIdentifier = "external" } with DefaultPackageClusteringStage(pkgConfiguration) with IdentifierBasedClusteringStrategy
-    //    val sccStage = new DefaultStronglyConnectedComponentsClusteringStage(sccConfiguration) with FirstClusterablesClusteringStrategy
-    //    val getterSetterStage = new DefaultGetterSetterClusteringStage(getterSetterConfiguration) with FirstClusterablesClusteringStrategy
-    //    val simMetricStage = new { override val minClusterSizeThreshold: Int = 20 } with DefaultSimilarityMetricClusteringStage(similarityMetricConfiguration) with MinClusterSizeClusteringStrategy with FirstClusterablesClusteringStrategy
-
     val pkgStage = new {
-        val strategyConfig = identifierBasedConfig
+        val clusterIdentifier = "external"
     } with DefaultPackageClusteringStage(pkgConfiguration) with IdentifierBasedClusteringStrategy
-    val sccStage = new {
-        val strategyConfig = firstClusterablesConfig
-    } with DefaultStronglyConnectedComponentsClusteringStage(sccConfiguration) with FirstClusterablesClusteringStrategy
-    val getterSetterStage = new {
-        val strategyConfig = firstClusterablesConfig
-    } with DefaultGetterSetterClusteringStage(getterSetterConfiguration) with FirstClusterablesClusteringStrategy
-    //    val simMetricStage = new {
-    //        val strategyConfig = firstClusterablesConfig
-    //    } with DefaultSimilarityMetricClusteringStage(similarityMetricConfiguration) with MinClusterSizeClusteringStrategy with FirstClusterablesClusteringStrategy
+    val sccStage = new DefaultStronglyConnectedComponentsClusteringStage(sccConfiguration) with FirstClusterablesClusteringStrategy
+    val getterSetterStage = new DefaultGetterSetterClusteringStage(getterSetterConfiguration) with FirstClusterablesClusteringStrategy
+    val simMetricStage = new {
+        override val minClusterSizeThreshold: Int = 3
+    } with DefaultSimilarityMetricClusteringStage(similarityMetricConfiguration) with MinClusterSizeClusteringStrategy with FirstClusterablesClusteringStrategy
 
     implicit val clusteringStages: Array[ClusteringStage] = Array(
         intExtStage,
         pkgStage,
         sccStage,
-        getterSetterStage //,
-    //        simMetricStage,
-    //        simMetricStage,
-    //        simMetricStage
+        getterSetterStage,
+        simMetricStage,
+        simMetricStage,
+        simMetricStage
     )
 
     test("testCombinedClusteringStage [ClusteringTestProject]") {

@@ -41,12 +41,6 @@ import structure.util.ClusterManager
  *
  * @author Thomas Schlosser
  */
-trait ClusteringStrategy[C <: ClusteringStrategyConfiguration] extends ClusteringStage {
-
-    protected val strategyConfig: C
-
-}
-
-trait ClusteringStrategyConfiguration {
+trait ClusteringStrategy extends ClusteringStage {
 
 }
