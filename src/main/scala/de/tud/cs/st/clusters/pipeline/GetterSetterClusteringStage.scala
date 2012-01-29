@@ -34,7 +34,7 @@ package de.tud.cs.st.clusters
 package pipeline
 
 import scala.collection.mutable.ListBuffer
-import framework.pipeline.ClusteringStage
+import framework.pipeline.ConfigurableClusteringStage
 import framework.pipeline.ClusteringStageConfiguration
 import framework.structure.Cluster
 import framework.structure.Node
@@ -58,7 +58,7 @@ import de.tud.cs.st.bat.resolved.Field
  * @author Thomas Schlosser
  *
  */
-trait GetterSetterClusteringStage extends ClusteringStage[GetterSetterClusteringStageConfiguration] {
+trait GetterSetterClusteringStage extends ConfigurableClusteringStage[GetterSetterClusteringStageConfiguration] {
 
     override def performClustering(cluster: Cluster): Cluster = {
         // TODO: cluster needs methods that return only type/field/method nodes => performance improvement

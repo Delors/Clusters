@@ -33,7 +33,7 @@
 package de.tud.cs.st.clusters
 package pipeline
 
-import framework.pipeline.ClusteringStage
+import framework.pipeline.ConfigurableClusteringStage
 import framework.pipeline.ClusteringStageConfiguration
 import framework.structure.Cluster
 import framework.structure.Node
@@ -46,7 +46,7 @@ import framework.structure.util.ClusterManager
  * @author Thomas Schlosser
  *
  */
-trait LayerClusteringStage extends ClusteringStage[LayerClusteringStageConfiguration] {
+trait LayerClusteringStage extends ConfigurableClusteringStage[LayerClusteringStageConfiguration] {
 
     override def performClustering(cluster: Cluster): Cluster = {
         var layer = 0

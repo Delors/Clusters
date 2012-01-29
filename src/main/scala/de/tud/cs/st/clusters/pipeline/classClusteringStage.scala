@@ -34,7 +34,7 @@ package de.tud.cs.st.clusters
 package pipeline
 
 import scala.collection.mutable.Map
-import framework.pipeline.ClusteringStage
+import framework.pipeline.ConfigurableClusteringStage
 import framework.pipeline.ClusteringStageConfiguration
 import framework.pipeline.SameNeighborClusteringStage
 import framework.pipeline.SameNeighborClusteringStageConfiguration
@@ -48,7 +48,7 @@ import de.tud.cs.st.bat.resolved.dependency._
  * @author Thomas Schlosser
  *
  */
-trait ClassClusteringStage[C <: ClassClusteringStageConfiguration] extends ClusteringStage[C] {
+trait ClassClusteringStage[C <: ClassClusteringStageConfiguration] extends ConfigurableClusteringStage[C] {
 
 }
 

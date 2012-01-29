@@ -55,7 +55,6 @@ class CombinedClusteringStageTest extends AbstractClusteringTest {
     val sccConfiguration = new StronglyConnectedComponentsClusteringStageConfiguration {}
 
     //TODO: implement more strategies and use the metaInfo data;
-    //TODO: add a new stage (reuse/rename the package clustering stage) that is beeing able to cluster the external cluster (a specific strategy that allows the unclusterable external cluster to be clustered by this stage has to be implemented)
     //TODO: create some concrete examples with known optimal results and evaluate the current stages and stage combinations.
     // -> e.g. pattern implementations from wikipedia
     // -> or own class that contains two different kinds of methods that are used from to different (other) classes...
@@ -89,12 +88,12 @@ class CombinedClusteringStageTest extends AbstractClusteringTest {
      */
 
     val intExtStage = new DefaultInternalExternalClusteringStage(intExtConfiguration)
-    val pkgStage = new { val clusterIdentifier = "external" } with DefaultPackageClusteringStage(pkgConfiguration) with IdentifierBasedClusterStrategy[PackageClusteringStageConfiguration]
-    val sccStage = new DefaultStronglyConnectedComponentsClusteringStage(sccConfiguration) with ClusterFirstClusterableClusterStrategy[StronglyConnectedComponentsClusteringStageConfiguration]
-    val getterSetterStage = new DefaultGetterSetterClusteringStage(getterSetterConfiguration) with ClusterFirstClusterableClusterStrategy[GetterSetterClusteringStageConfiguration]
-    val simMetricStage = new { override val minClusterSizeThreshold: Int = 20 } with DefaultSimilarityMetricClusteringStage(similarityMetricConfiguration) with MinClusterSizeClusterStrategy[SimilarityMetricClusteringStageConfiguration] with ClusterFirstClusterableClusterStrategy[SimilarityMetricClusteringStageConfiguration]
+    val pkgStage = new { val clusterIdentifier = "external" } with DefaultPackageClusteringStage(pkgConfiguration) with IdentifierBasedClusterStrategy
+    val sccStage = new DefaultStronglyConnectedComponentsClusteringStage(sccConfiguration) with ClusterFirstClusterableClusterStrategy
+    val getterSetterStage = new DefaultGetterSetterClusteringStage(getterSetterConfiguration) with ClusterFirstClusterableClusterStrategy
+    val simMetricStage = new { override val minClusterSizeThreshold: Int = 20 } with DefaultSimilarityMetricClusteringStage(similarityMetricConfiguration) with MinClusterSizeClusterStrategy with ClusterFirstClusterableClusterStrategy
 
-    implicit val clusteringStages: Array[ClusteringStage[_]] = Array(
+    implicit val clusteringStages: Array[ClusteringStage] = Array(
         intExtStage,
         pkgStage,
         sccStage,

@@ -43,7 +43,7 @@ import framework.structure.SourceElementNode
  *
  * @author Thomas Schlosser
  */
-trait ClusterFirstClusterableClusterStrategy[C <: ClusteringStageConfiguration] extends ClusteringStage[C] {
+trait ClusterFirstClusterableClusterStrategy extends ClusteringStage {
 
     abstract override def performClustering(cluster: Cluster): Cluster = {
         if (cluster.clusterable) {

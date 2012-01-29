@@ -34,7 +34,7 @@ package de.tud.cs.st.clusters
 package pipeline
 
 import scala.collection.mutable.Map
-import framework.pipeline.ClusteringStage
+import framework.pipeline.ConfigurableClusteringStage
 import framework.pipeline.ClusteringStageConfiguration
 import framework.structure.Cluster
 import framework.structure.Node
@@ -46,7 +46,7 @@ import graphscan.GraphScanningAlgorithms
  * @author Thomas Schlosser
  *
  */
-trait StronglyConnectedComponentsClusteringStage extends ClusteringStage[StronglyConnectedComponentsClusteringStageConfiguration] {
+trait StronglyConnectedComponentsClusteringStage extends ConfigurableClusteringStage[StronglyConnectedComponentsClusteringStageConfiguration] {
 
     override def performClustering(cluster: Cluster): Cluster = {
         // calculate finishing times of all nodes using depth first search

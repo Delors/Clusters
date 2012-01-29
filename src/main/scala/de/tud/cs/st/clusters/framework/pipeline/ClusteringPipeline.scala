@@ -52,13 +52,13 @@ trait ClusteringPipeline extends PerformanceEvaluation {
     private val clusterManager = new DefaultClusterManager()
 
     // Configurations
-    protected val clusteringStages = new Queue[ClusteringStage[_]]()
+    protected val clusteringStages = new Queue[ClusteringStage]()
 
     protected val extractDependencies: (DependencyExtractor) ⇒ Unit = null
 
     protected val createConcreteClusteringResultWriter: () ⇒ ClusteringResultWriter
 
-    def addClusteringStage(clusteringStage: ClusteringStage[_]) {
+    def addClusteringStage(clusteringStage: ClusteringStage) {
         clusteringStages += clusteringStage
     }
 
@@ -135,7 +135,7 @@ trait ClusteringPipeline extends PerformanceEvaluation {
 }
 
 class DefaultClusteringPipeline(
-    val initialClusteringStages: Array[ClusteringStage[_]],
+    val initialClusteringStages: Array[ClusteringStage],
     override val extractDependencies: (DependencyExtractor) ⇒ Unit,
     override val createConcreteClusteringResultWriter: () ⇒ ClusteringResultWriter)
         extends ClusteringPipeline {
@@ -143,7 +143,7 @@ class DefaultClusteringPipeline(
     // constructor code...
     initialClusteringStages foreach { addClusteringStage(_) }
 
-    def this(clusteringStages: Array[ClusteringStage[_]], extractDependencies: (DependencyExtractor) ⇒ Unit) {
+    def this(clusteringStages: Array[ClusteringStage], extractDependencies: (DependencyExtractor) ⇒ Unit) {
         this(clusteringStages, extractDependencies, () ⇒ null)
     }
 }

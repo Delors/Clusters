@@ -47,7 +47,7 @@ class StronglyConnectedComponentsClusteringStageTest extends AbstractClusteringT
 
     val sccConfiguration = new StronglyConnectedComponentsClusteringStageConfiguration {}
 
-    implicit val clusteringStages: Array[ClusteringStage[_]] = Array(
+    implicit val clusteringStages: Array[ClusteringStage] = Array(
         new DefaultStronglyConnectedComponentsClusteringStage(sccConfiguration)
     )
 

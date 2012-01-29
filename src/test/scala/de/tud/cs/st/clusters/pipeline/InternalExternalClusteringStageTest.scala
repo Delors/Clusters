@@ -47,7 +47,7 @@ class InternalExternalClusteringStageTest extends AbstractClusteringTest {
 
     val configuration = new InternalExternalClusteringStageConfiguration {}
 
-    implicit val clusteringStages: Array[ClusteringStage[_]] = Array(
+    implicit val clusteringStages: Array[ClusteringStage] = Array(
         new DefaultInternalExternalClusteringStage(configuration)
     )
 

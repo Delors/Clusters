@@ -47,9 +47,7 @@ import structure.util.ClusterManager
  *
  * @author Thomas Schlosser
  */
-trait ClusteringStage[C <: ClusteringStageConfiguration] {
-
-    protected val configuration: C
+trait ClusteringStage {
 
     private[this] var cm: ClusterManager = null
     def clusterManager: ClusterManager = cm
@@ -67,9 +65,5 @@ trait ClusteringStage[C <: ClusteringStageConfiguration] {
      * @return
      */
     def performClustering(cluster: Cluster): Cluster
-
-}
-
-trait ClusteringStageConfiguration {
 
 }

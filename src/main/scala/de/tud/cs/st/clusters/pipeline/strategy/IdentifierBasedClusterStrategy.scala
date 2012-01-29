@@ -43,7 +43,7 @@ import framework.structure.SourceElementNode
  *
  * @author Thomas Schlosser
  */
-trait IdentifierBasedClusterStrategy[C <: ClusteringStageConfiguration] extends ClusteringStage[C] {
+trait IdentifierBasedClusterStrategy extends ClusteringStage {
 
     val clusterIdentifier: String
 

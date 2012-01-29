@@ -34,7 +34,7 @@ package de.tud.cs.st.clusters
 package pipeline
 
 import scala.collection.mutable.Set
-import framework.pipeline.ClusteringStage
+import framework.pipeline.ConfigurableClusteringStage
 import framework.pipeline.ClusteringStageConfiguration
 import framework.structure.Cluster
 import framework.structure.TypeNode
@@ -55,7 +55,7 @@ import framework.structure.util.ClusterManager
  * @author Thomas Schlosser
  *
  */
-trait InternalExternalClusteringStage extends ClusteringStage[InternalExternalClusteringStageConfiguration] {
+trait InternalExternalClusteringStage extends ConfigurableClusteringStage[InternalExternalClusteringStageConfiguration] {
 
     override def performClustering(cluster: Cluster): Cluster = {
         // create list that contains all names of internal packages

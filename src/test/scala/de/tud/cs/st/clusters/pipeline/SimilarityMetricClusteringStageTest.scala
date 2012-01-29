@@ -47,7 +47,7 @@ class SimilarityMetricClusteringStageTest extends AbstractClusteringTest {
 
     val configuration = new SimilarityMetricClusteringStageConfiguration {}
 
-    implicit val clusteringStages: Array[ClusteringStage[_]] = Array(
+    implicit val clusteringStages: Array[ClusteringStage] = Array(
         new DefaultSimilarityMetricClusteringStage(configuration)
     )
 

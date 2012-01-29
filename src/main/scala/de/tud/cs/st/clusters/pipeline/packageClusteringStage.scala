@@ -34,7 +34,7 @@ package de.tud.cs.st.clusters
 package pipeline
 
 import scala.collection.mutable.Map
-import framework.pipeline.ClusteringStage
+import framework.pipeline.ConfigurableClusteringStage
 import framework.pipeline.ClusteringStageConfiguration
 import framework.structure.Cluster
 import framework.structure.util.ClusterManager
@@ -44,7 +44,7 @@ import framework.structure.util.ClusterManager
  * @author Thomas Schlosser
  *
  */
-trait PackageClusteringStage extends ClusteringStage[PackageClusteringStageConfiguration] {
+trait PackageClusteringStage extends ConfigurableClusteringStage[PackageClusteringStageConfiguration] {
 
     override def performClustering(cluster: Cluster): Cluster = {
         def getMatchingPrefix(value: String, prefixes: Array[String]): String = {

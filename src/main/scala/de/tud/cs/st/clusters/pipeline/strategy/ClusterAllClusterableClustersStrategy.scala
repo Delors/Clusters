@@ -45,7 +45,7 @@ import framework.structure.SourceElementNode
  *
  * @author Thomas Schlosser
  */
-trait ClusterAllClusterableClusterStrategy[C <: ClusteringStageConfiguration] extends ClusteringStage[C] {
+trait ClusterAllClusterableClusterStrategy extends ClusteringStage {
 
     abstract override def performClustering(cluster: Cluster): Cluster = {
         cluster.getNodes foreach {

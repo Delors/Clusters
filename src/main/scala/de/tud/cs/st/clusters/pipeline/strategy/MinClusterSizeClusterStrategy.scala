@@ -44,7 +44,7 @@ import framework.structure.SourceElementNode
  *
  * @author Thomas Schlosser
  */
-trait MinClusterSizeClusterStrategy[C <: ClusteringStageConfiguration] extends ClusteringStage[C] {
+trait MinClusterSizeClusterStrategy extends ClusteringStage {
 
     val minClusterSizeThreshold: Int = 10
 

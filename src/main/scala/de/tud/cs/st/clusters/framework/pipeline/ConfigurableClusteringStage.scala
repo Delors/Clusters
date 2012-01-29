@@ -31,31 +31,22 @@
 *  POSSIBILITY OF SUCH DAMAGE.
 */
 package de.tud.cs.st.clusters
+package framework
 package pipeline
 
-import org.junit.runner.RunWith
-import org.scalatest.junit.JUnitRunner
-import framework.AbstractClusteringTest
-import framework.pipeline.ClusteringStage
+import structure.Cluster
+import structure.util.ClusterManager
 
 /**
- * @author Thomas Schlosser
  *
+ * @author Thomas Schlosser
  */
-@RunWith(classOf[JUnitRunner])
-class ClassClusteringStageTest extends AbstractClusteringTest {
+trait ConfigurableClusteringStage[C <: ClusteringStageConfiguration] extends ClusteringStage {
 
-    val configuration = new InternalClassClusteringStageConfiguration {}
+    protected val configuration: C
 
-    implicit val clusteringStages: Array[ClusteringStage] = Array(
-        new InternalClassClusteringStage(configuration)
-    )
+}
 
-    test("testClassClusteringStage [ClusteringTestProject]") {
-        testClustering(
-            "testClassClusteringStage [ClusteringTestProject]",
-            clusteringTestProjectDependencyExtractor,
-            Some("classClust_ClusteringTestProject"))
-    }
+trait ClusteringStageConfiguration {
 
 }

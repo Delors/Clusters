@@ -35,7 +35,7 @@ package pipeline
 
 import scala.collection.mutable.Map
 import scala.collection.mutable.Set
-import framework.pipeline.ClusteringStage
+import framework.pipeline.ConfigurableClusteringStage
 import framework.pipeline.ClusteringStageConfiguration
 import framework.structure.Cluster
 import framework.structure.Node
@@ -50,7 +50,7 @@ import de.tud.cs.st.bat.resolved.dependency._
  * @author Thomas Schlosser
  *
  */
-trait SimilarityMetricClusteringStage extends ClusteringStage[SimilarityMetricClusteringStageConfiguration] {
+trait SimilarityMetricClusteringStage extends ConfigurableClusteringStage[SimilarityMetricClusteringStageConfiguration] {
 
     override def performClustering(cluster: Cluster): Cluster = {
         val inputNodes = cluster.getNodes.toArray
