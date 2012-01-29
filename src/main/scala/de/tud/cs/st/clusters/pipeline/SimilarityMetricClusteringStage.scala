@@ -66,19 +66,7 @@ trait SimilarityMetricClusteringStage extends ClusteringStage[SimilarityMetricCl
                 weightMatrix(key) = newWeight
         }
 
-        //        println(weightMatrix.mkString("\n"))
-
-        // TODO: perform this analysis and try to figure out what the reason is.
-        //        println("search for missing nodes")
-        //        for (((s, t), w) ← weightMatrix.toList) {
-        //            if (!inputNodes.contains(s))
-        //                println("inputNodes does not contain source node with ID: "+s)
-        //            if (!inputNodes.contains(s))
-        //                println("inputNodes does not contain target node with ID: "+t)
-        //        }
-
         val sortedEdges = weightMatrix.toList.sortWith((a, b) ⇒ a._2 > b._2)
-        //        println(sortedEdges.mkString("\n"))
 
         cluster.clearNodes()
         calcClusters(sortedEdges, inputNodes) foreach {
