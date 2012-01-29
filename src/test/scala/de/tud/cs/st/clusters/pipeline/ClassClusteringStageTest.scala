@@ -48,7 +48,7 @@ class ClassClusteringStageTest extends AbstractClusteringTest {
     val configuration = new InternalClassClusteringStageConfiguration {}
 
     implicit val clusteringStages: Array[ClusteringStage[_]] = Array(
-        InternalClassClusteringStage(configuration)
+        new InternalClassClusteringStage(configuration)
     )
 
     test("testClassClusteringStage [ClusteringTestProject]") {

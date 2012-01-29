@@ -125,7 +125,7 @@ trait SimilarityMetricClusteringStage extends ClusteringStage[SimilarityMetricCl
         val result = new Array[Cluster](clusterset.size)
         var i = 0
         clusterset foreach { nodes ⇒
-            val cluster = clusterManager.createCluster("simMetricCluster"+i, this.getClass)
+            val cluster = clusterManager.createCluster("simMetricCluster"+i, this.stageName)
             nodes foreach { node ⇒
                 cluster.addNode(clusterManager.getNode(node))
             }
@@ -193,11 +193,9 @@ trait SimilarityMetricClusteringStageConfiguration extends ClusteringStageConfig
 
 }
 
-object SimilarityMetricClusteringStage {
-
-    def apply(c: SimilarityMetricClusteringStageConfiguration): SimilarityMetricClusteringStage =
-        new { override val configuration = c } with SimilarityMetricClusteringStage
-
+class DefaultSimilarityMetricClusteringStage(
+    val configuration: SimilarityMetricClusteringStageConfiguration)
+        extends SimilarityMetricClusteringStage {
 }
 
 class AlgoNode(val id: Int, var cluster: scala.collection.mutable.Set[AlgoNode]) {

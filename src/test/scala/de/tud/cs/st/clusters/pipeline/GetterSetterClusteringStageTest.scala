@@ -48,7 +48,7 @@ class GetterSetterClusteringStageTest extends AbstractClusteringTest {
     val configuration = new GetterSetterClusteringStageConfiguration {}
 
     implicit val clusteringStages: Array[ClusteringStage[_]] = Array(
-        GetterSetterClusteringStage(configuration)
+        new DefaultGetterSetterClusteringStage(configuration)
     )
 
     test("testGetterSetterClusteringStage [getterSetterTestClass]") {

@@ -52,12 +52,12 @@ trait ClusterFactory
         with ClusterIDsMap
         with NodeStore {
 
-    def createCluster(clusterIdentifier: String, creatorStage: java.lang.Class[_ <: ClusteringStage[_]]): Cluster = {
+    def createCluster(clusterIdentifier: String, creatorStageName: String): Cluster = {
         val cluster = createCluster(
             clusterID(clusterIdentifier + System.nanoTime()),
             (c: Cluster) ⇒ Unit,
             (id) ⇒ new Cluster(id, clusterIdentifier))
-        cluster.metaInfo("creatorStage") = creatorStage.getCanonicalName
+        cluster.metaInfo("creatorStage") = creatorStageName
         cluster
     }
 

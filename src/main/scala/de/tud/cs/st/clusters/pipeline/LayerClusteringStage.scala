@@ -53,7 +53,7 @@ trait LayerClusteringStage extends ClusteringStage[LayerClusteringStageConfigura
 
         def createLayers(nodes: Set[Node]) {
             def createNewLayerCluster(): Cluster = {
-                val layerCluster = clusterManager.createCluster("layer_"+layer, this.getClass)
+                val layerCluster = clusterManager.createCluster("layer_"+layer, this.stageName)
                 layer += 1
                 cluster.addNode(layerCluster)
                 layerCluster
@@ -134,9 +134,8 @@ trait LayerClusteringStageConfiguration extends ClusteringStageConfiguration {
     val performRecursion: Boolean = false
 }
 
-object LayerClusteringStage {
-
-    def apply(c: LayerClusteringStageConfiguration): LayerClusteringStage =
-        new { override val configuration = c } with LayerClusteringStage
+class DefaultLayerClusteringStage(
+    val configuration: LayerClusteringStageConfiguration)
+        extends LayerClusteringStage {
 
 }

@@ -65,7 +65,7 @@ trait PackageClusteringStage extends ClusteringStage[PackageClusteringStageConfi
         var resultMap = Map[String, Cluster]()
         for (i ← 0 to prfxs.size - 1) {
             val prfx = prfxs(i)
-            val cl = clusterManager.createCluster(prfx, this.getClass)
+            val cl = clusterManager.createCluster(prfx, this.stageName)
             resultMap(prfx) = cl
             cluster.addNode(cl)
         }
@@ -144,9 +144,8 @@ trait PackageClusteringStageConfiguration extends ClusteringStageConfiguration {
 
 }
 
-object PackageClusteringStage {
-
-    def apply(c: PackageClusteringStageConfiguration): PackageClusteringStage =
-        new { override val configuration = c } with PackageClusteringStage
+class DefaultPackageClusteringStage(
+    val configuration: PackageClusteringStageConfiguration)
+        extends PackageClusteringStage {
 
 }

@@ -37,6 +37,7 @@ import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import framework.AbstractClusteringTest
 import framework.pipeline.ClusteringStage
+import strategy.ClusterFirstClusterableClusterStrategy
 
 /**
  * @author Thomas Schlosser
@@ -50,15 +51,18 @@ class CombinedClusteringStageTest extends AbstractClusteringTest {
     val similarityMetricConfiguration = new SimilarityMetricClusteringStageConfiguration {}
     val sccConfiguration = new StronglyConnectedComponentsClusteringStageConfiguration {}
 
+    val intExtStage = new DefaultInternalExternalClusteringStage(intExtConfiguration)
+    val sccStage = new DefaultStronglyConnectedComponentsClusteringStage(sccConfiguration) with ClusterFirstClusterableClusterStrategy[StronglyConnectedComponentsClusteringStageConfiguration]
+    val getterSetterStage = new DefaultGetterSetterClusteringStage(getterSetterConfiguration) with ClusterFirstClusterableClusterStrategy[GetterSetterClusteringStageConfiguration]
+    val simMetricStage = new DefaultSimilarityMetricClusteringStage(similarityMetricConfiguration) with ClusterFirstClusterableClusterStrategy[SimilarityMetricClusteringStageConfiguration]
+
     implicit val clusteringStages: Array[ClusteringStage[_]] = Array(
-        InternalExternalClusteringStage(intExtConfiguration),
-        //TODO: check why SCC and GetterSetter ClusteringStages do not work correctly
-        StronglyConnectedComponentsClusteringStage(sccConfiguration),
-        GetterSetterClusteringStage(getterSetterConfiguration),
-        //        SimilarityMetricClusteringStage(similarityMetricConfiguration),
-        //        SimilarityMetricClusteringStage(similarityMetricConfiguration),
-        SimilarityMetricClusteringStage(similarityMetricConfiguration) //,
-    //        InternalClassClusteringStage()
+        intExtStage,
+        sccStage,
+        getterSetterStage,
+        //        simMetricStage,
+        //        simMetricStage,
+        simMetricStage
     )
 
     test("testCombinedClusteringStage [ClusteringTestProject]") {
@@ -79,11 +83,11 @@ class CombinedClusteringStageTest extends AbstractClusteringTest {
             includeEdges = true)
     }
 
-    test("testCombinedClusteringStage [hibernate]") {
-        testClustering(
-            "testCombinedClusteringStage [hibernate]",
-            hibernateDependencyExtractor,
-            Some("combinedClust_hibernate"))
-    }
+    //    test("testCombinedClusteringStage [hibernate]") {
+    //        testClustering(
+    //            "testCombinedClusteringStage [hibernate]",
+    //            hibernateDependencyExtractor,
+    //            Some("combinedClust_hibernate"))
+    //    }
 
 }

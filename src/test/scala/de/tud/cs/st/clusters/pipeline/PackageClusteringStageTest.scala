@@ -48,7 +48,7 @@ class PackageClusteringStageTest extends AbstractClusteringTest {
     val configuration = new PackageClusteringStageConfiguration {}
 
     implicit val clusteringStages: Array[ClusteringStage[_]] = Array(
-        PackageClusteringStage(configuration)
+        new DefaultPackageClusteringStage(configuration)
     )
 
     test("testPackageClusteringStage [cocome]") {

@@ -56,7 +56,8 @@ trait ClassClusteringStageConfiguration extends ClusteringStageConfiguration {
 
 }
 
-trait InternalClassClusteringStage
+class InternalClassClusteringStage(
+    val configuration: InternalClassClusteringStageConfiguration)
         extends ClassClusteringStage[InternalClassClusteringStageConfiguration]
         with SameNeighborClusteringStage[InternalClassClusteringStageConfiguration] {
 
@@ -71,14 +72,9 @@ trait InternalClassClusteringStageConfiguration
 
 }
 
-object InternalClassClusteringStage {
-
-    def apply(c: InternalClassClusteringStageConfiguration): InternalClassClusteringStage =
-        new { override val configuration = c } with InternalClassClusteringStage
-
-}
-
-trait ExternalClassClusteringStage extends ClassClusteringStage[ExternalClassClusteringStageConfiguration] {
+class ExternalClassClusteringStage(
+    val configuration: ExternalClassClusteringStageConfiguration)
+        extends ClassClusteringStage[ExternalClassClusteringStageConfiguration] {
 
     override def performClustering(cluster: Cluster): Cluster = {
         val classClustersMap = Map[Int, Set[Node]]()
@@ -97,7 +93,7 @@ trait ExternalClassClusteringStage extends ClassClusteringStage[ExternalClassClu
         cluster.clearNodes()
         for ((classNodeID, nodeSet) ← classClustersMap) {
             val classNode = clusterManager.getNode(classNodeID)
-            val classCluster = clusterManager.createCluster(classNode.identifier, this.getClass)
+            val classCluster = clusterManager.createCluster(classNode.identifier, this.stageName)
             classCluster.addNode(classNode)
             nodeSet foreach {
                 classCluster.addNode(_)
@@ -110,13 +106,5 @@ trait ExternalClassClusteringStage extends ClassClusteringStage[ExternalClassClu
 }
 
 trait ExternalClassClusteringStageConfiguration extends ClassClusteringStageConfiguration {
-
-}
-
-// TODO: remove unnecessary object definitions (all stages' objects)
-object ExternalClassClusteringStage {
-
-    def apply(c: ExternalClassClusteringStageConfiguration): ExternalClassClusteringStage =
-        new { override val configuration = c } with ExternalClassClusteringStage
 
 }

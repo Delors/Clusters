@@ -55,6 +55,8 @@ trait ClusteringStage[C <: ClusteringStageConfiguration] {
     def clusterManager: ClusterManager = cm
     def clusterManager_=(cm: ClusterManager) { this.cm = cm }
 
+    def stageName: String = this.getClass.getCanonicalName
+
     /**
      * Performs the stage-specific clustering algorithm on the given cluster.<br/>
      * NOTE: This method is only intended to be implemented by clients.

@@ -48,7 +48,7 @@ class LayerClusteringStageTest extends AbstractClusteringTest {
     val configuration = new { override val performRecursion = true } with LayerClusteringStageConfiguration
 
     implicit val clusteringStages: Array[ClusteringStage[_]] = Array(
-        LayerClusteringStage(configuration)
+        new DefaultLayerClusteringStage(configuration)
     )
 
     test("testLayerClusteringStage [getterSetterTestClass]") {

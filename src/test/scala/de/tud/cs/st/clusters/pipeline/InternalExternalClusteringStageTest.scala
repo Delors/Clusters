@@ -48,7 +48,7 @@ class InternalExternalClusteringStageTest extends AbstractClusteringTest {
     val configuration = new InternalExternalClusteringStageConfiguration {}
 
     implicit val clusteringStages: Array[ClusteringStage[_]] = Array(
-        InternalExternalClusteringStage(configuration)
+        new DefaultInternalExternalClusteringStage(configuration)
     )
 
     test("testInternalExternalClusteringStage [cocome-printercontroller]") {

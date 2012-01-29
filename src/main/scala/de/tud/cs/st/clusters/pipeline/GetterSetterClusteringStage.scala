@@ -45,6 +45,7 @@ import de.tud.cs.st.bat.resolved.dependency.DependencyType._
 import de.tud.cs.st.bat.resolved.Type
 import de.tud.cs.st.bat.resolved.VoidType
 import de.tud.cs.st.bat.resolved.Field
+import traversal.ClusterFirstClusterableClusterStrategy
 
 /**
  * //allow more than one getter/setter...some inner classes define the same getter- setter-method as their outer class.
@@ -112,7 +113,7 @@ trait GetterSetterClusteringStage extends ClusteringStage[GetterSetterClustering
                         case Some(clusterBean) ⇒
                             // create setter/getter cluster
                             println("GETTER_SETTER_CLUSTER")
-                            val gsCluster = clusterManager.createCluster("Getter_Setter_"+clusterBean.field.identifier, this.getClass)
+                            val gsCluster = clusterManager.createCluster("Getter_Setter_"+clusterBean.field.identifier, this.stageName)
                             gsCluster.addNode(clusterBean.field)
                             clusterBean.methods foreach { gsCluster.addNode(_) }
                             gsCluster.clusterable = false
@@ -146,9 +147,13 @@ trait GetterSetterClusteringStageConfiguration extends ClusteringStageConfigurat
 
 }
 
-object GetterSetterClusteringStage {
-
-    def apply(c: GetterSetterClusteringStageConfiguration): GetterSetterClusteringStage =
-        new { override val configuration = c } with GetterSetterClusteringStage
-
+class DefaultGetterSetterClusteringStage(
+    val configuration: GetterSetterClusteringStageConfiguration)
+        extends GetterSetterClusteringStage {
 }
+
+//class DefaultGetterSetterClusteringStage(val configuration: GetterSetterClusteringStageConfiguration)
+//        extends ClusteringStage[GetterSetterClusteringStageConfiguration]
+//        with GetterSetterClusteringStage
+//        with ClusterFirstClusterableClusterStrategy[GetterSetterClusteringStageConfiguration] {
+//}

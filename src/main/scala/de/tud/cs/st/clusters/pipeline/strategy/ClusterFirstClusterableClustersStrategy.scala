@@ -32,42 +32,33 @@
 */
 package de.tud.cs.st.clusters
 package pipeline
+package strategy
 
-import org.junit.runner.RunWith
-import org.scalatest.junit.JUnitRunner
-import framework.AbstractClusteringTest
 import framework.pipeline.ClusteringStage
+import framework.pipeline.ClusteringStageConfiguration
+import framework.structure.Cluster
+import framework.structure.SourceElementNode
 
 /**
- * @author Thomas Schlosser
  *
+ * @author Thomas Schlosser
  */
-@RunWith(classOf[JUnitRunner])
-class SimilarityMetricClusteringStageTest extends AbstractClusteringTest {
+trait ClusterFirstClusterableClusterStrategy[C <: ClusteringStageConfiguration] extends ClusteringStage[C] {
 
-    val configuration = new SimilarityMetricClusteringStageConfiguration {}
-
-    implicit val clusteringStages: Array[ClusteringStage[_]] = Array(
-        new DefaultSimilarityMetricClusteringStage(configuration)
-    )
-
-    test("testSimilarityMetricClusteringStage [cocome-printercontroller]") {
-        testClustering(
-            "testSimilarityMetricClusteringStage [cocome-printercontroller]",
-            cocomePrintercontrollerDependencyExtractor,
-            Some("simMetricClust_cocome-printercontroller"))
+    abstract override def performClustering(cluster: Cluster): Cluster = {
+        if (cluster.clusterable) {
+            super.performClustering(cluster)
+            cluster.metaInfo("lastAppliedStage") = this.stageName
+        }
+        else {
+            cluster.getNodes foreach {
+                case subCluster: Cluster ⇒
+                    performClustering(subCluster)
+                case sen: SourceElementNode ⇒ // nothing to do; a single node cannot be clustered
+            }
+        }
+        cluster
     }
 
-    test("testSimilarityMetricClusteringStage [cocome]") {
-        testClustering(
-            "testSimilarityMetricClusteringStage [cocome]",
-            cocomeDependencyExtractor,
-            Some("simMetricClust_cocome"))
-    }
-
-    test("testSimilarityMetricClusteringStage [hibernate]") {
-        testClustering("testSimilarityMetricClusteringStage [hibernate]",
-            hibernateDependencyExtractor,
-            Some("simMetricClust_hibernate"))
-    }
 }
+
