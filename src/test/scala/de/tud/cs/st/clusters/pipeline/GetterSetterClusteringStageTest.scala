@@ -56,7 +56,7 @@ class GetterSetterClusteringStageTest extends AbstractClusteringTest {
     test("testGetterSetterClusteringStage [getterSetterTestClass]") {
         testClustering("testGetterSetterClusteringStage [getterSetterTestClass]",
             getterSetterTestClassDependencyExtractor,
-            Some("getterSetterClust_getterSetterTestClass"))
+            graphmlClusteringResultWriterCreator("getterSetterClust_getterSetterTestClass"))
     }
 
     test("testGetterSetterClusteringStage [hibernate]") {

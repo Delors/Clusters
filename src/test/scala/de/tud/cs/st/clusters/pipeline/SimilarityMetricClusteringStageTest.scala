@@ -57,19 +57,19 @@ class SimilarityMetricClusteringStageTest extends AbstractClusteringTest {
         testClustering(
             "testSimilarityMetricClusteringStage [cocome-printercontroller]",
             cocomePrintercontrollerDependencyExtractor,
-            Some("simMetricClust_cocome-printercontroller"))
+            graphmlClusteringResultWriterCreator("simMetricClust_cocome-printercontroller"))
     }
 
     test("testSimilarityMetricClusteringStage [cocome]") {
         testClustering(
             "testSimilarityMetricClusteringStage [cocome]",
             cocomeDependencyExtractor,
-            Some("simMetricClust_cocome"))
+            graphmlClusteringResultWriterCreator("simMetricClust_cocome"))
     }
 
     test("testSimilarityMetricClusteringStage [hibernate]") {
         testClustering("testSimilarityMetricClusteringStage [hibernate]",
             hibernateDependencyExtractor,
-            Some("simMetricClust_hibernate"))
+            graphmlClusteringResultWriterCreator("simMetricClust_hibernate"))
     }
 }

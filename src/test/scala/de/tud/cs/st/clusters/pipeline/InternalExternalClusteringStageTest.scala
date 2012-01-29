@@ -58,19 +58,19 @@ class InternalExternalClusteringStageTest extends AbstractClusteringTest {
         testClustering(
             "testInternalExternalClusteringStage [cocome-printercontroller]",
             cocomeDependencyExtractor,
-            Some("intExtClust_cocome"))
+            graphmlClusteringResultWriterCreator("intExtClust_cocome"))
     }
 
     test("testInternalExternalClusteringStage [getterSetterTestClass]") {
         testClustering(
             "testInternalExternalClusteringStage [getterSetterTestClass]",
             getterSetterTestClassDependencyExtractor,
-            Some("intExtClust_getterSetterTestClass"))
+            graphmlClusteringResultWriterCreator("intExtClust_getterSetterTestClass"))
     }
 
     test("testInternalExternalClusteringStage [hibernate]") {
         testClustering("testInternalExternalClusteringStage [hibernate]",
             hibernateDependencyExtractor,
-            Some("intExtClust_hibernate"))
+            graphmlClusteringResultWriterCreator("intExtClust_hibernate"))
     }
 }

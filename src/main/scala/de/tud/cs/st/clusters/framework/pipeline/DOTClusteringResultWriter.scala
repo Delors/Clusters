@@ -46,8 +46,7 @@ import de.tud.cs.st.clusters.framework.structure.Node
  */
 class DOTClusteringResultWriter(
     val dotFileName: String,
-    val includeSingleNodes: Boolean,
-    val includeEdges: Boolean)
+    val configuration: DOTClusteringResultWriterConfiguration)
         extends ClusteringResultWriter(dotFileName, "dot") {
 
     override protected def writeHeader() {
@@ -76,7 +75,7 @@ class DOTClusteringResultWriter(
                 }
                 writeCluster(c, nodeBuffer, edgeBuffer)
             case n: SourceElementNode ⇒
-                if (includeSingleNodes && emptyCluster) {
+                if (configuration.includeSingleNodes && emptyCluster) {
                     nodeBuffer.append(subGraphBuffer)
                     emptyCluster = false
                 }
@@ -104,7 +103,7 @@ class DOTClusteringResultWriter(
     }
 
     override protected def writeSourceElementNode(node: SourceElementNode, nodeBuffer: StringBuffer, edgeBuffer: StringBuffer) {
-        if (includeSingleNodes) {
+        if (configuration.includeSingleNodes) {
             nodeBuffer.append("\t")
             nodeBuffer.append(node.uniqueID)
             nodeBuffer.append("[label=\"")
@@ -118,7 +117,7 @@ class DOTClusteringResultWriter(
 
     private def writeEdges(node: Node, edgeBuffer: StringBuffer) {
         // add egdes
-        if (includeEdges)
+        if (configuration.includeEdges)
             for (e ← node.getOwnEdges) {
                 edgeBuffer.append("\t")
                 edgeBuffer.append(e.source.uniqueID)
@@ -131,4 +130,9 @@ class DOTClusteringResultWriter(
                 edgeBuffer.append("]\"];\n")
             }
     }
+}
+
+trait DOTClusteringResultWriterConfiguration {
+    val includeSingleNodes: Boolean = true
+    val includeEdges: Boolean = true
 }

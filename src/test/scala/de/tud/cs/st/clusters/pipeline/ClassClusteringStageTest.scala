@@ -57,7 +57,7 @@ class ClassClusteringStageTest extends AbstractClusteringTest {
         testClustering(
             "testClassClusteringStage [ClusteringTestProject]",
             clusteringTestProjectDependencyExtractor,
-            Some("classClust_ClusteringTestProject"))
+            graphmlClusteringResultWriterCreator("classClust_ClusteringTestProject"))
     }
 
 }

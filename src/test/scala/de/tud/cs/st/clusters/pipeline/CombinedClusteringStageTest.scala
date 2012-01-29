@@ -121,25 +121,21 @@ class CombinedClusteringStageTest extends AbstractClusteringTest {
         testClustering(
             "testCombinedClusteringStage [ClusteringTestProject]",
             clusteringTestProjectDependencyExtractor,
-            Some("combinedClust_ClusteringTestProject"),
-            includeSingleNodes = true,
-            includeEdges = true)
+            graphmlClusteringResultWriterCreator("combinedClust_ClusteringTestProject"))
     }
 
     test("testCombinedClusteringStage [cocome]") {
         testClustering(
             "testCombinedClusteringStage [cocome]",
             cocomeDependencyExtractor,
-            Some("combinedClust_cocome"),
-            includeSingleNodes = true,
-            includeEdges = true)
+            graphmlClusteringResultWriterCreator("combinedClust_cocome"))
     }
 
     test("testCombinedClusteringStage [hibernate]") {
         testClustering(
             "testCombinedClusteringStage [hibernate]",
             hibernateDependencyExtractor,
-            Some("combinedClust_hibernate"))
+            graphmlClusteringResultWriterCreator("combinedClust_hibernate"))
     }
 
 }

@@ -58,21 +58,19 @@ class LayerClusteringStageTest extends AbstractClusteringTest {
         testClustering(
             "testLayerClusteringStage [getterSetterTestClass]",
             getterSetterTestClassDependencyExtractor,
-            Some("layerClust_getterSetterTestClass"))
+            graphmlClusteringResultWriterCreator("layerClust_getterSetterTestClass"))
     }
 
     test("testLayerClusteringStage [cocome]") {
         testClustering(
             "testLayerClusteringStage [cocome]",
             cocomeDependencyExtractor,
-            Some("layerClust_cocome"))
+            graphmlClusteringResultWriterCreator("layerClust_cocome"))
     }
 
     test("testLayerClusteringStage [hibernate]") {
         testClustering("testLayerClusteringStage [hibernate]",
             hibernateDependencyExtractor,
-            Some("layerClust_hibernate"),
-            true,
-            false)
+            graphmlClusteringResultWriterCreator("layerClust_hibernate"))
     }
 }

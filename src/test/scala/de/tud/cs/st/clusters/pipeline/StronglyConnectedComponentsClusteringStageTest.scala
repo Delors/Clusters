@@ -59,7 +59,7 @@ class StronglyConnectedComponentsClusteringStageTest extends AbstractClusteringT
         testClustering(
             "testSCCClusteringStage [sccTestClass]",
             stronglyConnectedComponentsTestClassDependencyExtractor,
-            Some("sccClust_sccTestClass")
+            graphmlClusteringResultWriterCreator("sccClust_sccTestClass")
         )
     }
 

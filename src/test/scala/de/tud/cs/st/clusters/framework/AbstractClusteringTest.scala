@@ -50,6 +50,7 @@ import _root_.de.tud.cs.st.bat.resolved.dependency.DependencyExtractor
 import _root_.de.tud.cs.st.util.perf.PerformanceEvaluation
 import pipeline.ClusteringResultWriter
 import pipeline.DOTClusteringResultWriter
+import pipeline.DOTClusteringResultWriterConfiguration
 import pipeline.GMLClusteringResultWriter
 import pipeline.GraphmlClusteringResultWriter
 import pipeline.GraphmlClusteringResultWriterConfiguration
@@ -65,40 +66,14 @@ trait AbstractClusteringTest extends FunSuite
 
     protected def testClustering(testName: String,
                                  extractDependencies: (DependencyExtractor) ⇒ Unit,
-                                 outputFileName: Option[String] = None,
-                                 includeSingleNodes: Boolean = true,
-                                 includeEdges: Boolean = true)(implicit clusteringStages: Array[ClusteringStage]): Cluster = {
+                                 resultWriterCreator: () ⇒ ClusteringResultWriter = () ⇒ null)(implicit clusteringStages: Array[ClusteringStage]): Cluster = {
         println(testName+" - START")
 
-        var clusteringPipeline: ClusteringPipeline = null
-        if (outputFileName.isDefined) {
-            //            clusteringPipeline = ClusteringPipeline(
-            //                clusteringStages,
-            //                extractDependencies,
-            //                nodeStore ⇒ new DOTClusteringResultWriter(
-            //                    outputFileName.get,
-            //                    includeSingleNodes,
-            //                    includeEdges))
-
-            //            clusteringPipeline = ClusteringPipeline(
-            //                clusteringStages,
-            //                extractDependencies,
-            //                nodeStore ⇒ new GMLClusteringResultWriter(outputFileName.get))
-
-            val writerConfiguration = new {
-                override val aggregateEdges = true
-                override val showEdgeLabels = false
-                override val showSourceElementNodes = false
-                override val maxNumberOfLevels = Some(3) //None //Some(4)
-            } with GraphmlClusteringResultWriterConfiguration
-            clusteringPipeline = new DefaultClusteringPipeline(
+        var clusteringPipeline: ClusteringPipeline =
+            new DefaultClusteringPipeline(
                 clusteringStages,
                 extractDependencies,
-                () ⇒ new GraphmlClusteringResultWriter(outputFileName.get, writerConfiguration))
-        }
-        else {
-            clusteringPipeline = new DefaultClusteringPipeline(clusteringStages, extractDependencies)
-        }
+                resultWriterCreator)
 
         val cluster = clusteringPipeline.runPipeline(true)
 
@@ -108,10 +83,8 @@ trait AbstractClusteringTest extends FunSuite
 
     protected def testDependencyExtraction(testName: String,
                                            extractDependencies: (DependencyExtractor) ⇒ Unit,
-                                           dotFileName: Option[String] = None,
-                                           includeSingleNodes: Boolean = true,
-                                           includeEdges: Boolean = true) {
-        testClustering(testName, extractDependencies, dotFileName, includeSingleNodes, includeSingleNodes)(null)
+                                           resultWriterCreator: () ⇒ ClusteringResultWriter = () ⇒ null) {
+        testClustering(testName, extractDependencies, resultWriterCreator)(null)
     }
 
     protected def extractDependencies(zipFile: String, classFiles: String*): (DependencyExtractor) ⇒ Unit = {
@@ -134,4 +107,39 @@ trait AbstractClusteringTest extends FunSuite
         "org/cocome/tradingsystem/cashdeskline/cashdesk/printercontroller/impl/PrinterController.class",
         "org/cocome/tradingsystem/cashdeskline/cashdesk/printercontroller/impl/PrinterControllerEventHandlerImpl.class",
         "org/cocome/tradingsystem/cashdeskline/cashdesk/printercontroller/impl/PrinterStates.class")
+
+    // #############
+    // Result writer utility methods
+    // #############
+
+    protected def dotClusteringResultWriterCreator(
+        fileName: String,
+        _includeSingleNodes: Boolean = true,
+        _includeEdges: Boolean = true) = {
+        val configuration = new {
+            override val includeSingleNodes = _includeSingleNodes
+            override val includeEdges = _includeEdges
+        } with DOTClusteringResultWriterConfiguration
+        () ⇒
+            new DOTClusteringResultWriter(fileName, configuration)
+    }
+
+    protected def gmlClusteringResultWriterCreator(fileName: String) = {
+        () ⇒ new GMLClusteringResultWriter(fileName)
+    }
+
+    protected def graphmlClusteringResultWriterCreator(
+        fileName: String,
+        _aggregateEdges: Boolean = true,
+        _showEdgeLabels: Boolean = false,
+        _showSourceElementNodes: Boolean = false,
+        _maxNumberOfLevels: Option[Int] = None) = {
+        val writerConfiguration = new {
+            override val aggregateEdges = _aggregateEdges
+            override val showEdgeLabels = _showEdgeLabels
+            override val showSourceElementNodes = _showSourceElementNodes
+            override val maxNumberOfLevels = _maxNumberOfLevels
+        } with GraphmlClusteringResultWriterConfiguration
+        () ⇒ new GraphmlClusteringResultWriter(fileName, writerConfiguration)
+    }
 }

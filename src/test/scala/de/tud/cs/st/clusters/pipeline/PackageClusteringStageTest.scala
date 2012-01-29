@@ -56,7 +56,7 @@ class PackageClusteringStageTest extends AbstractClusteringTest {
     test("testPackageClusteringStage [cocome]") {
         testClustering("testPackageClusteringStage [cocome]",
             cocomeDependencyExtractor,
-            Some("pckgClust_cocome"))
+            graphmlClusteringResultWriterCreator("pckgClust_cocome"))
     }
 
     test("testPackageClusteringStage [hibernate]") {

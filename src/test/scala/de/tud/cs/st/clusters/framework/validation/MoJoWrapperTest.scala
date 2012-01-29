@@ -59,7 +59,7 @@ class MoJoWrapperTest extends AbstractClusteringTest {
         val clustersA = testClustering(
             "testInternalClassClusteringStage [ClusteringTestProject.zip]",
             extractDependencies("test/classfiles/ClusteringTestProject.zip"),
-            Some("clusterA"))(clusteringA)
+            graphmlClusteringResultWriterCreator("clusterA"))(clusteringA)
 
         val intExtConfiguration = new InternalExternalClusteringAlgorithmConfiguration {}
         val clusteringB: Array[ClusteringStage] = Array(new DefaultInternalExternalClusteringStage(intExtConfiguration))
@@ -67,7 +67,7 @@ class MoJoWrapperTest extends AbstractClusteringTest {
         val clustersB = testClustering(
             "testInternalExternalClusteringStage [ClusteringTestProject.zip]",
             extractDependencies("test/classfiles/ClusteringTestProject.zip"),
-            Some("clusterB"))(clusteringB)
+            graphmlClusteringResultWriterCreator("clusterB"))(clusteringB)
 
         println("MoJo:")
         var mjw = new MoJoWrapper(clustersA, clustersB)
