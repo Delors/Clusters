@@ -32,10 +32,11 @@
 */
 package de.tud.cs.st.clusters
 package pipeline
+package algorithm
 
 import scala.collection.mutable.Set
-import framework.pipeline.ConfigurableClusteringStage
-import framework.pipeline.ClusteringStageConfiguration
+import framework.pipeline.ClusteringAlgorithm
+import framework.pipeline.ClusteringAlgorithmConfiguration
 import framework.structure.Cluster
 import framework.structure.TypeNode
 import framework.structure.FieldNode
@@ -55,7 +56,7 @@ import framework.structure.util.ClusterManager
  * @author Thomas Schlosser
  *
  */
-trait InternalExternalClusteringStage extends ConfigurableClusteringStage[InternalExternalClusteringStageConfiguration] {
+trait InternalExternalClusteringStage extends ClusteringAlgorithm[InternalExternalClusteringAlgorithmConfiguration] {
 
     override def performClustering(cluster: Cluster): Cluster = {
         // create list that contains all names of internal packages
@@ -86,7 +87,7 @@ trait InternalExternalClusteringStage extends ConfigurableClusteringStage[Intern
         cluster.clusterable = false
         val internal = clusterManager.createCluster("internal", this.stageName)
         val external = clusterManager.createCluster("external", this.stageName)
-        external.clusterable = !configuration.markExternalAsUnclusterable
+        external.clusterable = !algorithmConfig.markExternalAsUnclusterable
         cluster.addNode(internal)
         cluster.addNode(external)
         for (node ← inputNodes) {
@@ -102,11 +103,11 @@ trait InternalExternalClusteringStage extends ConfigurableClusteringStage[Intern
     }
 }
 
-trait InternalExternalClusteringStageConfiguration extends ClusteringStageConfiguration {
+trait InternalExternalClusteringAlgorithmConfiguration extends ClusteringAlgorithmConfiguration {
     val markExternalAsUnclusterable = true
 }
 
 class DefaultInternalExternalClusteringStage(
-    val configuration: InternalExternalClusteringStageConfiguration)
+    val algorithmConfig: InternalExternalClusteringAlgorithmConfiguration)
         extends InternalExternalClusteringStage {
 }

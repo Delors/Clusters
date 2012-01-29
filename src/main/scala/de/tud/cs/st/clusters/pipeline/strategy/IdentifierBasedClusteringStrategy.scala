@@ -34,31 +34,28 @@ package de.tud.cs.st.clusters
 package pipeline
 package strategy
 
-import framework.pipeline.ClusteringStage
-import framework.pipeline.ClusteringStageConfiguration
+import framework.pipeline.ClusteringStrategy
+import framework.pipeline.ClusteringStrategyConfiguration
 import framework.structure.Cluster
-import framework.structure.SourceElementNode
 
 /**
  *
- * bottom-up
- *
  * @author Thomas Schlosser
  */
-trait ClusterAllClusterableClusterStrategy extends ClusteringStage {
+trait IdentifierBasedClusteringStrategy
+        extends ClusteringStrategy[IdentifierBasedClusteringStrategyConfiguration] {
 
     abstract override def performClustering(cluster: Cluster): Cluster = {
-        cluster.getNodes foreach {
-            case subCluster: Cluster ⇒
-                performClustering(subCluster)
-            case sen: SourceElementNode ⇒ // nothing to do; a single node cannot be clustered
-        }
-        if (cluster.clusterable) {
-            super.performClustering(cluster)
-            cluster.metaInfo("lastAppliedStage") = this.stageName
+        val c = clusterManager.getCluster(clusterManager.clusterID(strategyConfig.clusterIdentifier))
+        if (c != null && (!strategyConfig.considerOnlyClusterable || c.clusterable)) {
+            super.performClustering(c)
         }
         cluster
     }
-
 }
 
+trait IdentifierBasedClusteringStrategyConfiguration extends ClusteringStrategyConfiguration {
+    val clusterIdentifier: String
+
+    val considerOnlyClusterable = false
+}

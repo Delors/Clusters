@@ -32,28 +32,60 @@
 */
 package de.tud.cs.st.clusters
 package pipeline
-package strategy
+package algorithm
+package graphscan
 
-import framework.pipeline.ClusteringStage
-import framework.pipeline.ClusteringStageConfiguration
-import framework.structure.Cluster
-import framework.structure.SourceElementNode
+import java.util.ArrayDeque
 
 /**
- * Provides a mechanism that enforces a minimum cluster size for clusters that are used as input for the clustering procedure.
+ * NodeSet is a structure to store IDs of nodes.
+ * This structure can either be used as as stack or queue
+ *
+ * @param isStack Signals whether the internal structure is a stack or queue.
  *
  * @author Thomas Schlosser
+ *
  */
-trait MinClusterSizeClusterStrategy extends ClusteringStage {
+class NodeSet(val isStack: Boolean) {
 
-    val minClusterSizeThreshold: Int = 10
+    private val content = new ArrayDeque[Int];
 
-    abstract override def performClustering(cluster: Cluster): Cluster = {
-        if (cluster.numberOfNodes >= minClusterSizeThreshold) {
-            super.performClustering(cluster)
-        }
-        cluster
+    /**
+     * Adds the given Value to the {@link NodeSet}.
+     *
+     * @param value The value that should be added.
+     */
+    def add(value: Int) {
+        if (isStack)
+            content.push(value);
+        else
+            content.add(value);
     }
 
-}
+    /**
+     * Gets the next (first) element.
+     *
+     * @return value of the next element or <code>-1</code> if the {@link NodeSet} is empty.
+     */
+    def getNext: Int = {
+        if (content.isEmpty())
+            return -1;
+        return content.peek();
+    }
 
+    /**
+     * Removes the first value of the {@link NodeSet}.
+     */
+    def remove {
+        content.remove();
+    }
+
+    /**
+     * Signals whether the {@link NodeSet} is empty.
+     *
+     * @return <code>true</code> if it is empty.<br/>
+     *         <code>false</code> if it is not empty.
+     */
+    def isEmpty: Boolean =
+        content.isEmpty();
+}

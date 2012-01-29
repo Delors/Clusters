@@ -37,9 +37,22 @@ import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import framework.AbstractClusteringTest
 import framework.pipeline.ClusteringStage
-import strategy.ClusterFirstClusterableClusterStrategy
-import de.tud.cs.st.clusters.pipeline.strategy.IdentifierBasedClusterStrategy
-import de.tud.cs.st.clusters.pipeline.strategy.MinClusterSizeClusterStrategy
+import algorithm.DefaultInternalExternalClusteringStage
+import algorithm.InternalExternalClusteringAlgorithmConfiguration
+import algorithm.DefaultPackageClusteringStage
+import algorithm.PackageClusteringAlgorithmConfiguration
+import algorithm.DefaultGetterSetterClusteringStage
+import algorithm.GetterSetterClusteringAlgorithmConfiguration
+import algorithm.DefaultSimilarityMetricClusteringStage
+import algorithm.SimilarityMetricClusteringAlgorithmConfiguration
+import algorithm.DefaultStronglyConnectedComponentsClusteringStage
+import algorithm.StronglyConnectedComponentsClusteringAlgorithmConfiguration
+import strategy.FirstClusterablesClusteringStrategy
+import strategy.FirstClusterablesClusteringStrategyConfiguration
+import strategy.IdentifierBasedClusteringStrategy
+import strategy.IdentifierBasedClusteringStrategyConfiguration
+import strategy.MinClusterSizeClusteringStrategy
+import strategy.MinClusterSizeClusteringStrategyConfiguration
 
 /**
  * @author Thomas Schlosser
@@ -48,11 +61,15 @@ import de.tud.cs.st.clusters.pipeline.strategy.MinClusterSizeClusterStrategy
 @RunWith(classOf[JUnitRunner])
 class CombinedClusteringStageTest extends AbstractClusteringTest {
 
-    val intExtConfiguration = new InternalExternalClusteringStageConfiguration {}
-    val pkgConfiguration = new PackageClusteringStageConfiguration {}
-    val getterSetterConfiguration = new GetterSetterClusteringStageConfiguration {}
-    val similarityMetricConfiguration = new SimilarityMetricClusteringStageConfiguration {}
-    val sccConfiguration = new StronglyConnectedComponentsClusteringStageConfiguration {}
+    val intExtConfiguration = new InternalExternalClusteringAlgorithmConfiguration {}
+    val pkgConfiguration = new PackageClusteringAlgorithmConfiguration {}
+    val getterSetterConfiguration = new GetterSetterClusteringAlgorithmConfiguration {}
+    val similarityMetricConfiguration = new SimilarityMetricClusteringAlgorithmConfiguration {}
+    val sccConfiguration = new StronglyConnectedComponentsClusteringAlgorithmConfiguration {}
+
+    val firstClusterablesConfig = new FirstClusterablesClusteringStrategyConfiguration {}
+    val identifierBasedConfig = new { val clusterIdentifier = "external" } with IdentifierBasedClusteringStrategyConfiguration
+    val minClusterSizeConfig = new { override val minClusterSizeThreshold: Int = 20 } with MinClusterSizeClusteringStrategyConfiguration
 
     //TODO: implement more strategies and use the metaInfo data;
     //TODO: create some concrete examples with known optimal results and evaluate the current stages and stage combinations.
@@ -88,19 +105,32 @@ class CombinedClusteringStageTest extends AbstractClusteringTest {
      */
 
     val intExtStage = new DefaultInternalExternalClusteringStage(intExtConfiguration)
-    val pkgStage = new { val clusterIdentifier = "external" } with DefaultPackageClusteringStage(pkgConfiguration) with IdentifierBasedClusterStrategy
-    val sccStage = new DefaultStronglyConnectedComponentsClusteringStage(sccConfiguration) with ClusterFirstClusterableClusterStrategy
-    val getterSetterStage = new DefaultGetterSetterClusteringStage(getterSetterConfiguration) with ClusterFirstClusterableClusterStrategy
-    val simMetricStage = new { override val minClusterSizeThreshold: Int = 20 } with DefaultSimilarityMetricClusteringStage(similarityMetricConfiguration) with MinClusterSizeClusterStrategy with ClusterFirstClusterableClusterStrategy
+    //    val pkgStage = new { val clusterIdentifier = "external" } with DefaultPackageClusteringStage(pkgConfiguration) with IdentifierBasedClusteringStrategy
+    //    val sccStage = new DefaultStronglyConnectedComponentsClusteringStage(sccConfiguration) with FirstClusterablesClusteringStrategy
+    //    val getterSetterStage = new DefaultGetterSetterClusteringStage(getterSetterConfiguration) with FirstClusterablesClusteringStrategy
+    //    val simMetricStage = new { override val minClusterSizeThreshold: Int = 20 } with DefaultSimilarityMetricClusteringStage(similarityMetricConfiguration) with MinClusterSizeClusteringStrategy with FirstClusterablesClusteringStrategy
+
+    val pkgStage = new {
+        val strategyConfig = identifierBasedConfig
+    } with DefaultPackageClusteringStage(pkgConfiguration) with IdentifierBasedClusteringStrategy
+    val sccStage = new {
+        val strategyConfig = firstClusterablesConfig
+    } with DefaultStronglyConnectedComponentsClusteringStage(sccConfiguration) with FirstClusterablesClusteringStrategy
+    val getterSetterStage = new {
+        val strategyConfig = firstClusterablesConfig
+    } with DefaultGetterSetterClusteringStage(getterSetterConfiguration) with FirstClusterablesClusteringStrategy
+    //    val simMetricStage = new {
+    //        val strategyConfig = firstClusterablesConfig
+    //    } with DefaultSimilarityMetricClusteringStage(similarityMetricConfiguration) with MinClusterSizeClusteringStrategy with FirstClusterablesClusteringStrategy
 
     implicit val clusteringStages: Array[ClusteringStage] = Array(
         intExtStage,
         pkgStage,
         sccStage,
-        getterSetterStage,
-        simMetricStage,
-        simMetricStage,
-        simMetricStage
+        getterSetterStage //,
+    //        simMetricStage,
+    //        simMetricStage,
+    //        simMetricStage
     )
 
     test("testCombinedClusteringStage [ClusteringTestProject]") {

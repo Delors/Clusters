@@ -32,10 +32,11 @@
 */
 package de.tud.cs.st.clusters
 package pipeline
+package algorithm
 
 import scala.collection.mutable.ListBuffer
-import framework.pipeline.ConfigurableClusteringStage
-import framework.pipeline.ClusteringStageConfiguration
+import framework.pipeline.ClusteringAlgorithm
+import framework.pipeline.ClusteringAlgorithmConfiguration
 import framework.structure.Cluster
 import framework.structure.Node
 import framework.structure.FieldNode
@@ -58,7 +59,7 @@ import de.tud.cs.st.bat.resolved.Field
  * @author Thomas Schlosser
  *
  */
-trait GetterSetterClusteringStage extends ConfigurableClusteringStage[GetterSetterClusteringStageConfiguration] {
+trait GetterSetterClusteringStage extends ClusteringAlgorithm[GetterSetterClusteringAlgorithmConfiguration] {
 
     override def performClustering(cluster: Cluster): Cluster = {
         // TODO: cluster needs methods that return only type/field/method nodes => performance improvement
@@ -95,8 +96,8 @@ trait GetterSetterClusteringStage extends ConfigurableClusteringStage[GetterSett
                     case READS_FIELD ⇒
                         tEdge.target match {
                             case MethodNode(_, identifier, Some(method)) ⇒
-                                if (!configuration.checkGetterNameMatching ||
-                                    configuration.getterPrefixes.exists(prefix ⇒ method.name.equalsIgnoreCase(prefix + field.name))) {
+                                if (!algorithmConfig.checkGetterNameMatching ||
+                                    algorithmConfig.getterPrefixes.exists(prefix ⇒ method.name.equalsIgnoreCase(prefix + field.name))) {
                                     val descriptor = method.descriptor
                                     if (descriptor.parameterTypes.isEmpty &&
                                         descriptor.returnType.equals(field.fieldType)) {
@@ -109,8 +110,8 @@ trait GetterSetterClusteringStage extends ConfigurableClusteringStage[GetterSett
                     case WRITES_FIELD ⇒
                         tEdge.target match {
                             case MethodNode(_, identifier, Some(method)) ⇒
-                                if (!configuration.checkSetterNameMatching ||
-                                    configuration.setterPrefixes.exists(prefix ⇒ method.name.equalsIgnoreCase(prefix + field.name))) {
+                                if (!algorithmConfig.checkSetterNameMatching ||
+                                    algorithmConfig.setterPrefixes.exists(prefix ⇒ method.name.equalsIgnoreCase(prefix + field.name))) {
                                     val descriptor = method.descriptor
                                     if (descriptor.parameterTypes.size == 1 && descriptor.parameterTypes(0).equals(field.fieldType) &&
                                         descriptor.returnType.isVoidType) {
@@ -135,7 +136,7 @@ trait GetterSetterClusteringStage extends ConfigurableClusteringStage[GetterSett
 
 }
 
-trait GetterSetterClusteringStageConfiguration extends ClusteringStageConfiguration {
+trait GetterSetterClusteringAlgorithmConfiguration extends ClusteringAlgorithmConfiguration {
     val checkGetterNameMatching = true
     val checkSetterNameMatching = true
     val getterPrefixes: List[String] = List("get", "is")
@@ -143,12 +144,12 @@ trait GetterSetterClusteringStageConfiguration extends ClusteringStageConfigurat
 }
 
 class DefaultGetterSetterClusteringStage(
-    val configuration: GetterSetterClusteringStageConfiguration)
+    val algorithmConfig: GetterSetterClusteringAlgorithmConfiguration)
         extends GetterSetterClusteringStage {
 }
 
-//class DefaultGetterSetterClusteringStage(val configuration: GetterSetterClusteringStageConfiguration)
-//        extends ClusteringStage[GetterSetterClusteringStageConfiguration]
+//class DefaultGetterSetterClusteringStage(val configuration: GetterSetterClusteringAlgorithmConfiguration)
+//        extends ClusteringStage[GetterSetterClusteringAlgorithmConfiguration]
 //        with GetterSetterClusteringStage
-//        with ClusterFirstClusterableClusterStrategy[GetterSetterClusteringStageConfiguration] {
+//        with ClusterFirstClusterableClusterStrategy[GetterSetterClusteringAlgorithmConfiguration] {
 //}

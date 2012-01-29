@@ -31,36 +31,22 @@
 *  POSSIBILITY OF SUCH DAMAGE.
 */
 package de.tud.cs.st.clusters
+package framework
 package pipeline
 
-import org.junit.runner.RunWith
-import org.scalatest.junit.JUnitRunner
-import framework.AbstractClusteringTest
-import framework.pipeline.ClusteringStage
-import algorithm.DefaultPackageClusteringStage
-import algorithm.PackageClusteringAlgorithmConfiguration
+import structure.Cluster
+import structure.util.ClusterManager
 
 /**
- * @author Thomas Schlosser
  *
+ * @author Thomas Schlosser
  */
-@RunWith(classOf[JUnitRunner])
-class PackageClusteringStageTest extends AbstractClusteringTest {
+trait ClusteringAlgorithm[C <: ClusteringAlgorithmConfiguration] extends ClusteringStage {
 
-    val configuration = new PackageClusteringAlgorithmConfiguration {}
+    protected val algorithmConfig: C
 
-    implicit val clusteringStages: Array[ClusteringStage] = Array(
-        new DefaultPackageClusteringStage(configuration)
-    )
+}
 
-    test("testPackageClusteringStage [cocome]") {
-        testClustering("testPackageClusteringStage [cocome]",
-            cocomeDependencyExtractor,
-            Some("pckgClust_cocome"))
-    }
+trait ClusteringAlgorithmConfiguration {
 
-    test("testPackageClusteringStage [hibernate]") {
-        testClustering("testPackageClusteringStage [hibernate]",
-            hibernateDependencyExtractor)
-    }
 }

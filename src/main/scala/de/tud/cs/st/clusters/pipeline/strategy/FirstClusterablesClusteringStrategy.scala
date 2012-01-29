@@ -34,8 +34,8 @@ package de.tud.cs.st.clusters
 package pipeline
 package strategy
 
-import framework.pipeline.ClusteringStage
-import framework.pipeline.ClusteringStageConfiguration
+import framework.pipeline.ClusteringStrategy
+import framework.pipeline.ClusteringStrategyConfiguration
 import framework.structure.Cluster
 import framework.structure.SourceElementNode
 
@@ -43,7 +43,8 @@ import framework.structure.SourceElementNode
  *
  * @author Thomas Schlosser
  */
-trait ClusterFirstClusterableClusterStrategy extends ClusteringStage {
+trait FirstClusterablesClusteringStrategy
+        extends ClusteringStrategy[FirstClusterablesClusteringStrategyConfiguration] {
 
     abstract override def performClustering(cluster: Cluster): Cluster = {
         if (cluster.clusterable) {
@@ -59,6 +60,8 @@ trait ClusterFirstClusterableClusterStrategy extends ClusteringStage {
         }
         cluster
     }
-
 }
 
+trait FirstClusterablesClusteringStrategyConfiguration extends ClusteringStrategyConfiguration {
+
+}

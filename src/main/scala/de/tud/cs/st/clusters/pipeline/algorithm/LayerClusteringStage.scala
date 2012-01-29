@@ -32,9 +32,10 @@
 */
 package de.tud.cs.st.clusters
 package pipeline
+package algorithm
 
-import framework.pipeline.ConfigurableClusteringStage
-import framework.pipeline.ClusteringStageConfiguration
+import framework.pipeline.ClusteringAlgorithm
+import framework.pipeline.ClusteringAlgorithmConfiguration
 import framework.structure.Cluster
 import framework.structure.Node
 import framework.structure.TypeNode
@@ -46,7 +47,7 @@ import framework.structure.util.ClusterManager
  * @author Thomas Schlosser
  *
  */
-trait LayerClusteringStage extends ConfigurableClusteringStage[LayerClusteringStageConfiguration] {
+trait LayerClusteringStage extends ClusteringAlgorithm[LayerClusteringAlgorithmConfiguration] {
 
     override def performClustering(cluster: Cluster): Cluster = {
         var layer = 0
@@ -109,7 +110,7 @@ trait LayerClusteringStage extends ConfigurableClusteringStage[LayerClusteringSt
             }
 
             if (!middleLayerNodes.isEmpty) {
-                if (configuration.performRecursion && furtherLayers)
+                if (algorithmConfig.performRecursion && furtherLayers)
                     createLayers(middleLayerNodes)
                 else
                     // create middle layer
@@ -130,12 +131,12 @@ trait LayerClusteringStage extends ConfigurableClusteringStage[LayerClusteringSt
     }
 }
 
-trait LayerClusteringStageConfiguration extends ClusteringStageConfiguration {
+trait LayerClusteringAlgorithmConfiguration extends ClusteringAlgorithmConfiguration {
     val performRecursion: Boolean = false
 }
 
 class DefaultLayerClusteringStage(
-    val configuration: LayerClusteringStageConfiguration)
+    val algorithmConfig: LayerClusteringAlgorithmConfiguration)
         extends LayerClusteringStage {
 
 }

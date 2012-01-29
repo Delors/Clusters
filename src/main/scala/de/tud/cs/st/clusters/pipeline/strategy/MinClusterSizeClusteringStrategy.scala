@@ -34,28 +34,26 @@ package de.tud.cs.st.clusters
 package pipeline
 package strategy
 
-import framework.pipeline.ClusteringStage
-import framework.pipeline.ClusteringStageConfiguration
+import framework.pipeline.ClusteringStrategy
+import framework.pipeline.ClusteringStrategyConfiguration
 import framework.structure.Cluster
-import framework.structure.SourceElementNode
 
 /**
+ * Provides a mechanism that enforces a minimum cluster size for clusters that are used as input for the clustering procedure.
  *
  * @author Thomas Schlosser
  */
-trait IdentifierBasedClusterStrategy extends ClusteringStage {
-
-    val clusterIdentifier: String
-
-    val considerOnlyClusterable = false
+trait MinClusterSizeClusteringStrategy
+        extends ClusteringStrategy[MinClusterSizeClusteringStrategyConfiguration] {
 
     abstract override def performClustering(cluster: Cluster): Cluster = {
-        val c = clusterManager.getCluster(clusterManager.clusterID(clusterIdentifier))
-        if (c != null && (!considerOnlyClusterable || c.clusterable)) {
-            super.performClustering(c)
+        if (cluster.numberOfNodes >= strategyConfig.minClusterSizeThreshold) {
+            super.performClustering(cluster)
         }
         cluster
     }
-
 }
 
+trait MinClusterSizeClusteringStrategyConfiguration extends ClusteringStrategyConfiguration {
+    val minClusterSizeThreshold: Int = 10
+}

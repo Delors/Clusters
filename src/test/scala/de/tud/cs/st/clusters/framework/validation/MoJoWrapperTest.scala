@@ -39,10 +39,10 @@ import org.scalatest.junit.JUnitRunner
 import structure.Cluster
 import structure.SourceElementNode
 import mojo.MoJoCalculator
-import de.tud.cs.st.clusters.pipeline.InternalClassClusteringStage
-import de.tud.cs.st.clusters.pipeline.InternalClassClusteringStageConfiguration
-import de.tud.cs.st.clusters.pipeline.DefaultInternalExternalClusteringStage
-import de.tud.cs.st.clusters.pipeline.InternalExternalClusteringStageConfiguration
+import de.tud.cs.st.clusters.pipeline.algorithm.InternalClassClusteringStage
+import de.tud.cs.st.clusters.pipeline.algorithm.InternalClassClusteringAlgorithmConfiguration
+import de.tud.cs.st.clusters.pipeline.algorithm.DefaultInternalExternalClusteringStage
+import de.tud.cs.st.clusters.pipeline.algorithm.InternalExternalClusteringAlgorithmConfiguration
 import framework.pipeline.ClusteringStage
 
 /**
@@ -53,7 +53,7 @@ import framework.pipeline.ClusteringStage
 class MoJoWrapperTest extends AbstractClusteringTest {
 
     test("calculate double direction MojoFM quality value") {
-        val intClassConfiguration = new InternalClassClusteringStageConfiguration {}
+        val intClassConfiguration = new InternalClassClusteringAlgorithmConfiguration {}
         val clusteringA: Array[ClusteringStage] = Array(new InternalClassClusteringStage(intClassConfiguration))
 
         val clustersA = testClustering(
@@ -61,7 +61,7 @@ class MoJoWrapperTest extends AbstractClusteringTest {
             extractDependencies("test/classfiles/ClusteringTestProject.zip"),
             Some("clusterA"))(clusteringA)
 
-        val intExtConfiguration = new InternalExternalClusteringStageConfiguration {}
+        val intExtConfiguration = new InternalExternalClusteringAlgorithmConfiguration {}
         val clusteringB: Array[ClusteringStage] = Array(new DefaultInternalExternalClusteringStage(intExtConfiguration))
 
         val clustersB = testClustering(

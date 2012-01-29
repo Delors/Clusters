@@ -32,75 +32,36 @@
 */
 package de.tud.cs.st.clusters
 package pipeline
-package graphscan
+package strategy
 
-import scala.collection.mutable.Map
+import framework.pipeline.ClusteringStrategy
+import framework.pipeline.ClusteringStrategyConfiguration
+import framework.structure.Cluster
+import framework.structure.SourceElementNode
 
 /**
- * @author Thomas Schlosser
  *
+ * bottom-up
+ *
+ * @author Thomas Schlosser
  */
-class GraphScanResultBean {
-    /**
-     * Graph's nodes discovery time.
-     */
-    var discoveryTime: Map[Int, Int] = _
+trait AllClusterablesClusteringStrategy
+        extends ClusteringStrategy[AllClusterableClusteringStrategyConfiguration] {
 
-    /**
-     * Graph's nodes finishing time.
-     */
-    var finishingTime: Map[Int, Int] = _
-
-    /**
-     * Graph's nodes predecessor nodes.
-     */
-    var pi: Map[Int, Int] = _
-
-    /**
-     * Graph's nodes color.
-     */
-    var color: Map[Int, Int] = _
-
-    /**
-     * Graph's nodes finishing times sorted in descending order.
-     */
-    var order: Array[Int] = _
-
-    /**
-     * Signals, whether a node has an even or uneven distance to the start (root) node.
-     */
-    var evenDist: Map[Int, Boolean] = _
-
-    /**
-     * The number of unfinished nodes (relating to the nodes' sorting).
-     */
-    var unfinishedNodes = 0
-
-    /**
-     * The time, the algorithm was finished.
-     */
-    var time: Int = _
-
-    /**
-     * Creates and sets all relevant data, that are relevant for sorting of the finishing times.
-     *
-     * @param size
-     *            Maximum number of nodes.
-     */
-    def createOrderElements(size: Int) {
-        order = new Array(size)
-        unfinishedNodes = size
+    abstract override def performClustering(cluster: Cluster): Cluster = {
+        cluster.getNodes foreach {
+            case subCluster: Cluster ⇒
+                performClustering(subCluster)
+            case sen: SourceElementNode ⇒ // nothing to do; a single node cannot be clustered
+        }
+        if (cluster.clusterable) {
+            super.performClustering(cluster)
+            cluster.metaInfo("lastAppliedStage") = this.stageName
+        }
+        cluster
     }
+}
 
-    /**
-     * Decreases the number of unfinished nodes and returns this result.<br/>
-     * <b style="color:red">NOTE:</b> Before using this method, you should call method
-     * {@link #createOrderElements(int)} to create the required structure.
-     *
-     * @return The number of unfinished nodes.
-     */
-    def decreaseUnfinishedNodes(): Int = {
-        unfinishedNodes -= 1
-        unfinishedNodes
-    }
+trait AllClusterableClusteringStrategyConfiguration extends ClusteringStrategyConfiguration {
+
 }

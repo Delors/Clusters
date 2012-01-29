@@ -37,6 +37,8 @@ import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import framework.AbstractClusteringTest
 import framework.pipeline.ClusteringStage
+import algorithm.DefaultSimilarityMetricClusteringStage
+import algorithm.SimilarityMetricClusteringAlgorithmConfiguration
 
 /**
  * @author Thomas Schlosser
@@ -45,7 +47,7 @@ import framework.pipeline.ClusteringStage
 @RunWith(classOf[JUnitRunner])
 class SimilarityMetricClusteringStageTest extends AbstractClusteringTest {
 
-    val configuration = new SimilarityMetricClusteringStageConfiguration {}
+    val configuration = new SimilarityMetricClusteringAlgorithmConfiguration {}
 
     implicit val clusteringStages: Array[ClusteringStage] = Array(
         new DefaultSimilarityMetricClusteringStage(configuration)

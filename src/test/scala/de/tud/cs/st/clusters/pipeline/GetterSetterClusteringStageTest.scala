@@ -37,6 +37,8 @@ import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import framework.AbstractClusteringTest
 import framework.pipeline.ClusteringStage
+import algorithm.DefaultGetterSetterClusteringStage
+import algorithm.GetterSetterClusteringAlgorithmConfiguration
 
 /**
  * @author Thomas Schlosser
@@ -45,7 +47,7 @@ import framework.pipeline.ClusteringStage
 @RunWith(classOf[JUnitRunner])
 class GetterSetterClusteringStageTest extends AbstractClusteringTest {
 
-    val configuration = new GetterSetterClusteringStageConfiguration {}
+    val configuration = new GetterSetterClusteringAlgorithmConfiguration {}
 
     implicit val clusteringStages: Array[ClusteringStage] = Array(
         new DefaultGetterSetterClusteringStage(configuration)

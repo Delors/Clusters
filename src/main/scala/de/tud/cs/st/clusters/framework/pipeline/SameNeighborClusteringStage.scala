@@ -44,7 +44,7 @@ import de.tud.cs.st.bat.resolved.dependency._
  * @author Thomas Schlosser
  *
  */
-trait SameNeighborClusteringStage[C <: SameNeighborClusteringStageConfiguration] extends ConfigurableClusteringStage[C] {
+trait SameNeighborClusteringStage[C <: SameNeighborClusteringAlgorithmConfiguration] extends ClusteringAlgorithm[C] {
 
     override def performClustering(cluster: Cluster): Cluster = {
         def getConsideredEdge(node: Node): Option[Edge] = {
@@ -80,6 +80,6 @@ trait SameNeighborClusteringStage[C <: SameNeighborClusteringStageConfiguration]
     protected def isOfConsideredDependencyType(dType: DependencyType): Boolean
 }
 
-trait SameNeighborClusteringStageConfiguration extends ClusteringStageConfiguration {
+trait SameNeighborClusteringAlgorithmConfiguration extends ClusteringAlgorithmConfiguration {
 
 }

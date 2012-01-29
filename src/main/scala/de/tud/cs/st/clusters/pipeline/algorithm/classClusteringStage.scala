@@ -32,12 +32,13 @@
 */
 package de.tud.cs.st.clusters
 package pipeline
+package algorithm
 
 import scala.collection.mutable.Map
-import framework.pipeline.ConfigurableClusteringStage
-import framework.pipeline.ClusteringStageConfiguration
+import framework.pipeline.ClusteringAlgorithm
+import framework.pipeline.ClusteringAlgorithmConfiguration
 import framework.pipeline.SameNeighborClusteringStage
-import framework.pipeline.SameNeighborClusteringStageConfiguration
+import framework.pipeline.SameNeighborClusteringAlgorithmConfiguration
 import framework.structure.Cluster
 import framework.structure.Node
 import framework.structure.Edge
@@ -48,33 +49,33 @@ import de.tud.cs.st.bat.resolved.dependency._
  * @author Thomas Schlosser
  *
  */
-trait ClassClusteringStage[C <: ClassClusteringStageConfiguration] extends ConfigurableClusteringStage[C] {
+trait ClassClusteringStage[C <: ClassClusteringAlgorithmConfiguration] extends ClusteringAlgorithm[C] {
 
 }
 
-trait ClassClusteringStageConfiguration extends ClusteringStageConfiguration {
+trait ClassClusteringAlgorithmConfiguration extends ClusteringAlgorithmConfiguration {
 
 }
 
 class InternalClassClusteringStage(
-    val configuration: InternalClassClusteringStageConfiguration)
-        extends ClassClusteringStage[InternalClassClusteringStageConfiguration]
-        with SameNeighborClusteringStage[InternalClassClusteringStageConfiguration] {
+    val algorithmConfig: InternalClassClusteringAlgorithmConfiguration)
+        extends ClassClusteringStage[InternalClassClusteringAlgorithmConfiguration]
+        with SameNeighborClusteringStage[InternalClassClusteringAlgorithmConfiguration] {
 
     override protected def isOfConsideredDependencyType(dType: DependencyType): Boolean =
         dType == DependencyType.IS_INSTANCE_MEMBER_OF || dType == DependencyType.IS_CLASS_MEMBER_OF
 
 }
 
-trait InternalClassClusteringStageConfiguration
-        extends ClassClusteringStageConfiguration
-        with SameNeighborClusteringStageConfiguration {
+trait InternalClassClusteringAlgorithmConfiguration
+        extends ClassClusteringAlgorithmConfiguration
+        with SameNeighborClusteringAlgorithmConfiguration {
 
 }
 
 class ExternalClassClusteringStage(
-    val configuration: ExternalClassClusteringStageConfiguration)
-        extends ClassClusteringStage[ExternalClassClusteringStageConfiguration] {
+    val algorithmConfig: ExternalClassClusteringAlgorithmConfiguration)
+        extends ClassClusteringStage[ExternalClassClusteringAlgorithmConfiguration] {
 
     override def performClustering(cluster: Cluster): Cluster = {
         val classClustersMap = Map[Int, Set[Node]]()
@@ -105,6 +106,6 @@ class ExternalClassClusteringStage(
     }
 }
 
-trait ExternalClassClusteringStageConfiguration extends ClassClusteringStageConfiguration {
+trait ExternalClassClusteringAlgorithmConfiguration extends ClassClusteringAlgorithmConfiguration {
 
 }

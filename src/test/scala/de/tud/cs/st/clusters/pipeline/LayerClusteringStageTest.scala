@@ -35,8 +35,11 @@ package pipeline
 
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
+
 import framework.AbstractClusteringTest
 import framework.pipeline.ClusteringStage
+import algorithm.DefaultLayerClusteringStage
+import algorithm.LayerClusteringAlgorithmConfiguration
 
 /**
  * @author Thomas Schlosser
@@ -45,7 +48,7 @@ import framework.pipeline.ClusteringStage
 @RunWith(classOf[JUnitRunner])
 class LayerClusteringStageTest extends AbstractClusteringTest {
 
-    val configuration = new { override val performRecursion = true } with LayerClusteringStageConfiguration
+    val configuration = new { override val performRecursion = true } with LayerClusteringAlgorithmConfiguration
 
     implicit val clusteringStages: Array[ClusteringStage] = Array(
         new DefaultLayerClusteringStage(configuration)

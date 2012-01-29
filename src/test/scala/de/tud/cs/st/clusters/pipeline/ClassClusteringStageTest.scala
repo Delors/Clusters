@@ -37,6 +37,8 @@ import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import framework.AbstractClusteringTest
 import framework.pipeline.ClusteringStage
+import algorithm.InternalClassClusteringStage
+import algorithm.InternalClassClusteringAlgorithmConfiguration
 
 /**
  * @author Thomas Schlosser
@@ -45,7 +47,7 @@ import framework.pipeline.ClusteringStage
 @RunWith(classOf[JUnitRunner])
 class ClassClusteringStageTest extends AbstractClusteringTest {
 
-    val configuration = new InternalClassClusteringStageConfiguration {}
+    val configuration = new InternalClassClusteringAlgorithmConfiguration {}
 
     implicit val clusteringStages: Array[ClusteringStage] = Array(
         new InternalClassClusteringStage(configuration)

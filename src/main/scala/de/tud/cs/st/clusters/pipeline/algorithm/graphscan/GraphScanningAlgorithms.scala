@@ -32,6 +32,7 @@
 */
 package de.tud.cs.st.clusters
 package pipeline
+package algorithm
 package graphscan
 
 import scala.collection.mutable.Map
