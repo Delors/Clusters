@@ -84,8 +84,6 @@ class CombinedClusteringStageTest extends AbstractClusteringTest {
         pkgStage,
         sccStage,
         getterSetterStage,
-        //        simMetricStage,
-        //        simMetricStage,
         simMetricStage
     )
 

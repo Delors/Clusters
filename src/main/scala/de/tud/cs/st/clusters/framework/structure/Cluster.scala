@@ -97,9 +97,8 @@ class Cluster(
         var edges = Set[Edge]()
         nodeMap.values foreach {
             _.getOutgoingEdges foreach { edge ⇒
-                //TODO revert checks...check if source/target isChildOf...this should be a lot more efficient
-                val containsSource = containsNode(edge.source.uniqueID)
-                val containsTarget = containsNode(edge.target.uniqueID)
+                val containsSource = edge.source.isChildOf(this.uniqueID)
+                val containsTarget = edge.target.isChildOf(this.uniqueID)
                 if (containsSource && !containsTarget) {
                     edges = edges + edge
                 }
@@ -113,9 +112,8 @@ class Cluster(
         var edges = Set[Edge]()
         nodeMap.values foreach {
             _.getIncomingEdges foreach { edge ⇒
-                //TODO reverse checks...check if source/target isChildOf...this should be a lot more efficient
-                val containsSource = containsNode(edge.source.uniqueID)
-                val containsTarget = containsNode(edge.target.uniqueID)
+                val containsSource = edge.source.isChildOf(this.uniqueID)
+                val containsTarget = edge.target.isChildOf(this.uniqueID)
                 if (!containsSource && containsTarget) {
                     edges = edges + edge
                 }
@@ -129,9 +127,8 @@ class Cluster(
         var edges = Set[Edge]()
         nodeMap.values foreach {
             _.getOutgoingEdges foreach { edge ⇒
-                //TODO reverse checks...check if source/target isChildOf...this should be a lot more efficient
-                val containsSource = containsNode(edge.source.uniqueID)
-                val containsTarget = containsNode(edge.target.uniqueID)
+                val containsSource = edge.source.isChildOf(this.uniqueID)
+                val containsTarget = edge.target.isChildOf(this.uniqueID)
                 if (containsSource && containsTarget) {
                     edges = edges + edge
                 }
@@ -149,9 +146,8 @@ class Cluster(
             var edges = Set[Edge]()
             nodeMap.values foreach {
                 _.getOutgoingEdges foreach { edge ⇒
-                    //TODO reverse checks...check if source/target isChildOf...this should be a lot more efficient
-                    val containsSource = edge.source.isChildOf(parentID)
-                    val containsTarget = edge.target.isChildOf(parentID)
+                    val containsSource = edge.source.isChildOf(this.uniqueID)
+                    val containsTarget = edge.target.isChildOf(this.uniqueID)
                     if (containsSource && containsTarget) {
                         edges = edges + new Edge(edge.source.getDirectChild(parentID), edge.target.getDirectChild(parentID), edge.dType, edge.count)
                     }
