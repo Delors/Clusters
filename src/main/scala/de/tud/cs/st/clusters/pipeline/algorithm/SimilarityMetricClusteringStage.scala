@@ -53,8 +53,62 @@ import de.tud.cs.st.bat.resolved.dependency._
  */
 trait SimilarityMetricClusteringStage extends ClusteringAlgorithm[SimilarityMetricClusteringAlgorithmConfiguration] {
 
-    override def performClustering(cluster: Cluster): Cluster = {
+    override def performClustering(cluster: Cluster): Boolean = {
+        var createdNewCluster = false
         val inputNodes = cluster.getNodes.toArray
+
+        def calcClusters(sortedEdges: List[((Int, Int), Long)], nodes: Iterable[Node]): Array[Node] = {
+            val clusters: Map[Int, AlgoNode] = Map()
+            for (node ← nodes) {
+                val set = scala.collection.mutable.Set.empty[AlgoNode]
+                val n = new AlgoNode(node.uniqueID, set)
+                set += n
+                n.cluster = set
+                clusters(n.id) = n
+            }
+
+            val clusteredNodes: Set[Int] = Set()
+
+            for (((src, trg), wgt) ← sortedEdges) {
+                if (!clusteredNodes.contains(src) || !clusteredNodes.contains(trg)) {
+                    var trgSet = clusters(trg).cluster
+                    var srcSet = clusters(src).cluster
+                    trgSet ++= srcSet
+                    for (n ← srcSet) {
+                        n.cluster = trgSet
+                    }
+                    clusteredNodes.add(src)
+                    clusteredNodes.add(trg)
+                }
+            }
+
+            val clusterset = scala.collection.mutable.Set.empty[Set[Int]]
+            for (c ← clusters.values) {
+                var cl = Set.empty[Int]
+                for (n ← c.cluster) {
+                    cl += n.id
+                }
+                clusterset += cl
+            }
+
+            val result = new Array[Node](clusterset.size)
+            var i = 0
+            clusterset foreach { nodes ⇒
+                if (nodes.size > 1) {
+                    val cluster = clusterManager.createCluster("simMetricCluster"+i, this.stageName)
+                    createdNewCluster = true
+                    nodes foreach { node ⇒
+                        cluster.addNode(clusterManager.getNode(node))
+                    }
+                    result(i) = cluster
+                }
+                else {
+                    result(i) = clusterManager.getNode(nodes.first)
+                }
+                i += 1
+            }
+            result
+        }
 
         val weightMatrix: Map[(Int, Int), Long] = Map()
 
@@ -74,62 +128,11 @@ trait SimilarityMetricClusteringStage extends ClusteringAlgorithm[SimilarityMetr
             cluster.addNode(_)
         }
 
-        cluster
-    }
-
-    private def calcClusters(sortedEdges: List[((Int, Int), Long)], nodes: Iterable[Node]): Array[Node] = {
-        val clusters: Map[Int, AlgoNode] = Map()
-        for (node ← nodes) {
-            val set = scala.collection.mutable.Set.empty[AlgoNode]
-            val n = new AlgoNode(node.uniqueID, set)
-            set += n
-            n.cluster = set
-            clusters(n.id) = n
-        }
-
-        val clusteredNodes: Set[Int] = Set()
-
-        for (((src, trg), wgt) ← sortedEdges) {
-            if (!clusteredNodes.contains(src) || !clusteredNodes.contains(trg)) {
-                var trgSet = clusters(trg).cluster
-                var srcSet = clusters(src).cluster
-                trgSet ++= srcSet
-                for (n ← srcSet) {
-                    n.cluster = trgSet
-                }
-                clusteredNodes.add(src)
-                clusteredNodes.add(trg)
-            }
-        }
-
-        val clusterset = scala.collection.mutable.Set.empty[Set[Int]]
-        for (c ← clusters.values) {
-            var cl = Set.empty[Int]
-            for (n ← c.cluster) {
-                cl += n.id
-            }
-            clusterset += cl
-        }
-
-        val result = new Array[Node](clusterset.size)
-        var i = 0
-        clusterset foreach { nodes ⇒
-            if (nodes.size > 1) {
-                val cluster = clusterManager.createCluster("simMetricCluster"+i, this.stageName)
-                nodes foreach { node ⇒
-                    cluster.addNode(clusterManager.getNode(node))
-                }
-                result(i) = cluster
-            }
-            else {
-                result(i) = clusterManager.getNode(nodes.first)
-            }
-            i += 1
-        }
-        result
+        createdNewCluster
     }
 
     private def getWeight(dType: DependencyType): Long = {
+        // TODO: check which configuration creates the best results...
         dType match {
             // class/method/field definition related dependency types
             case DependencyType.EXTENDS                            ⇒ return 150
@@ -162,8 +165,8 @@ trait SimilarityMetricClusteringStage extends ClusteringAlgorithm[SimilarityMetr
             case DependencyType.USES_PARAMETER_TYPE                ⇒
             case DependencyType.USES_RETURN_TYPE                   ⇒
             case DependencyType.USES_METHOD_DECLARING_TYPE         ⇒
-            case DependencyType.CALLS_METHOD                       ⇒ return 50
-            case DependencyType.CALLS_INTERFACE_METHOD             ⇒ return 40
+            case DependencyType.CALLS_METHOD                       ⇒ return 90 //return 50
+            case DependencyType.CALLS_INTERFACE_METHOD             ⇒ return 80 //return 40
             case DependencyType.USES_TYPE                          ⇒
 
             // annotation related dependency types

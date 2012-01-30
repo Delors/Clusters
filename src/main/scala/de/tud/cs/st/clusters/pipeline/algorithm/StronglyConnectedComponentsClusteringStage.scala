@@ -49,7 +49,7 @@ import graphscan.GraphScanningAlgorithms
  */
 trait StronglyConnectedComponentsClusteringStage extends ClusteringAlgorithm[StronglyConnectedComponentsClusteringAlgorithmConfiguration] {
 
-    override def performClustering(cluster: Cluster): Cluster = {
+    override def performClustering(cluster: Cluster): Boolean = {
         // calculate finishing times of all nodes using depth first search
         var result = GraphScanningAlgorithms.graphScanComplete(
             cluster, null, true, null)
@@ -65,6 +65,7 @@ trait StronglyConnectedComponentsClusteringStage extends ClusteringAlgorithm[Str
         // The first element of a cluster is buffered in this map.
         // If it remains the only element in that "cluster", no new cluster will be created.
         // As soon as the second element of that cluster occurs, the cluster will be created. 
+        var createdNewCluster = false
         var newClusterMinSizeBuffer = Map[Int, Node]()
         var resultMap = Map[Int, Cluster]()
         for (node ← inputNodes) {
@@ -77,6 +78,7 @@ trait StronglyConnectedComponentsClusteringStage extends ClusteringAlgorithm[Str
                         newClusterMinSizeBuffer.get(sccID) match {
                             case Some(firstElement) ⇒
                                 val c = clusterManager.createCluster("SCC_"+System.nanoTime(), this.stageName) //sccID, this.stageName)
+                                createdNewCluster = true
                                 c.addNode(firstElement)
                                 c.addNode(node)
                                 resultMap(sccID) = c
@@ -91,7 +93,7 @@ trait StronglyConnectedComponentsClusteringStage extends ClusteringAlgorithm[Str
         newClusterMinSizeBuffer.values foreach {
             cluster.addNode(_)
         }
-        cluster
+        createdNewCluster
     }
 }
 

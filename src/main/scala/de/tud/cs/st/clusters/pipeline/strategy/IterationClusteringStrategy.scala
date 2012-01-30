@@ -31,39 +31,25 @@
 *  POSSIBILITY OF SUCH DAMAGE.
 */
 package de.tud.cs.st.clusters
-package framework
 package pipeline
+package strategy
 
-import structure.Cluster
-import structure.util.ClusterManager
+import framework.pipeline.ClusteringStrategy
+import framework.structure.Cluster
 
 /**
- * Trait that represents a stage in the clustering pipeline. It defines an abstract method
- * 'performClustering' which is called from the [[de.tud.cs.st.clusters.framework.pipeline.ClusteringPipeline]]
- * to start the clustering process. The parameter is initially set to the root cluster.
- * Implementations of this trait/method define the way the clustering is performed OR
- * the way the cluster structure is being traversed before the clustering of parts of
- * the structure is performed.
  *
  * @author Thomas Schlosser
  */
-trait ClusteringStage {
+trait IterationClusteringStrategy extends ClusteringStrategy {
 
-    private[this] var cm: ClusterManager = null
-    def clusterManager: ClusterManager = cm
-    def clusterManager_=(cm: ClusterManager) { this.cm = cm }
+    val numberOfIterations: Int
 
-    def stageName: String = this.getClass.getCanonicalName
-
-    /**
-     * Performs the stage-specific clustering algorithm on the given cluster.<br/>
-     * NOTE: This method is only intended to be implemented by clients.
-     * Clients should not call this method from the outside of clustering stages.
-     * The clustering pipeline of the framework uses this method to perform the stage's clustering.
-     *
-     * @param cluster
-     * @return
-     */
-    def performClustering(cluster: Cluster): Boolean
-
+    abstract override def performClustering(cluster: Cluster): Boolean = {
+        var createdAtLeastOneCluster = false
+        1 to numberOfIterations foreach { _ ⇒
+            createdAtLeastOneCluster |= super.performClustering(cluster)
+        }
+        createdAtLeastOneCluster
+    }
 }

@@ -61,7 +61,8 @@ import de.tud.cs.st.bat.resolved.Field
  */
 trait GetterSetterClusteringStage extends ClusteringAlgorithm[GetterSetterClusteringAlgorithmConfiguration] {
 
-    override def performClustering(cluster: Cluster): Cluster = {
+    override def performClustering(cluster: Cluster): Boolean = {
+        var createdNewCluster = false
         // TODO: cluster needs methods that return only type/field/method nodes => performance improvement
         val inputNodes = cluster.getNodes.toArray
         for (node ← inputNodes) {
@@ -76,6 +77,7 @@ trait GetterSetterClusteringStage extends ClusteringAlgorithm[GetterSetterCluste
                             clusterBean.methods foreach { gsCluster.addNode(_) }
                             gsCluster.clusterable = false // a getter-setter cluster is treated as a primitive unit 
                             cluster.addNode(gsCluster)
+                            createdNewCluster = true
                         case None ⇒
                         // nothing to do if no getter-setter cluster was found
                     }
@@ -83,7 +85,7 @@ trait GetterSetterClusteringStage extends ClusteringAlgorithm[GetterSetterCluste
                 // nothing to do with non-field nodes
             }
         }
-        cluster
+        createdNewCluster
     }
 
     private def checkGetterSetterCluster(node: Node, field: Field): Option[GetterSetterClusterBean] = {

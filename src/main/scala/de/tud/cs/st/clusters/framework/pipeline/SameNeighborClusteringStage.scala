@@ -46,11 +46,12 @@ import de.tud.cs.st.bat.resolved.dependency._
  */
 trait SameNeighborClusteringStage[C <: SameNeighborClusteringAlgorithmConfiguration] extends ClusteringAlgorithm[C] {
 
-    override def performClustering(cluster: Cluster): Cluster = {
+    override def performClustering(cluster: Cluster): Boolean = {
         def getConsideredEdge(node: Node): Option[Edge] = {
             node.getOutgoingEdges.find(edge ⇒ isOfConsideredDependencyType(edge.dType))
         }
 
+        var createdNewCluster = false
         val clustersMap = Map[Int, Set[Node]]()
 
         for (node ← cluster.getNodes) {
@@ -67,6 +68,7 @@ trait SameNeighborClusteringStage[C <: SameNeighborClusteringAlgorithmConfigurat
         for ((neighborNodeID, nodeSet) ← clustersMap) {
             val neighborNode = clusterManager.getNode(neighborNodeID)
             val sameNeighborCluster = clusterManager.createCluster(neighborNode.identifier, this.stageName)
+            createdNewCluster = true
             sameNeighborCluster.addNode(neighborNode)
             nodeSet foreach {
                 sameNeighborCluster.addNode(_)
@@ -74,7 +76,7 @@ trait SameNeighborClusteringStage[C <: SameNeighborClusteringAlgorithmConfigurat
             cluster.addNode(sameNeighborCluster)
         }
 
-        cluster
+        createdNewCluster
     }
 
     protected def isOfConsideredDependencyType(dType: DependencyType): Boolean

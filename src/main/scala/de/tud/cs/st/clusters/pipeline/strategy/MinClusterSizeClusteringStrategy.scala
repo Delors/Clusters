@@ -46,10 +46,12 @@ trait MinClusterSizeClusteringStrategy extends ClusteringStrategy {
 
     val minClusterSizeThreshold: Int = 10
 
-    abstract override def performClustering(cluster: Cluster): Cluster = {
+    abstract override def performClustering(cluster: Cluster): Boolean = {
         if (cluster.numberOfNodes >= minClusterSizeThreshold) {
             super.performClustering(cluster)
         }
-        cluster
+        else {
+            false
+        }
     }
 }

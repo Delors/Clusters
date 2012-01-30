@@ -47,7 +47,7 @@ import framework.structure.util.ClusterManager
  */
 trait PackageClusteringStage extends ClusteringAlgorithm[PackageClusteringAlgorithmConfiguration] {
 
-    override def performClustering(cluster: Cluster): Cluster = {
+    override def performClustering(cluster: Cluster): Boolean = {
         def getMatchingPrefix(value: String, prefixes: Array[String]): String = {
             prefixes.foreach(prfx ⇒ if (value.startsWith(prfx)) { return prfx })
             sys.error("No matching prefix found for \""+value+"\" in prefixes: "+prefixes.mkString("\n"))
@@ -63,10 +63,12 @@ trait PackageClusteringStage extends ClusteringAlgorithm[PackageClusteringAlgori
         cluster.clearNodes()
 
         // create resulting clusters
+        var createdNewCluster = false
         var resultMap = Map[String, Cluster]()
         for (i ← 0 to prfxs.size - 1) {
             val prfx = prfxs(i)
             val cl = clusterManager.createCluster(prfx, this.stageName)
+            createdNewCluster = true
             cl.clusterable = !algorithmConfig.createUnclusterableClusters
             resultMap(prfx) = cl
             cluster.addNode(cl)
@@ -75,7 +77,7 @@ trait PackageClusteringStage extends ClusteringAlgorithm[PackageClusteringAlgori
             val c = resultMap(getMatchingPrefix(node.identifier, prfxs))
             c.addNode(node)
         }
-        cluster
+        createdNewCluster
     }
 }
 

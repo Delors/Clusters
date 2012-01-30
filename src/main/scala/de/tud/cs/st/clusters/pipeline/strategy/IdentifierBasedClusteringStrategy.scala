@@ -47,11 +47,13 @@ trait IdentifierBasedClusteringStrategy extends ClusteringStrategy {
 
     val considerOnlyClusterable = false
 
-    abstract override def performClustering(cluster: Cluster): Cluster = {
+    abstract override def performClustering(cluster: Cluster): Boolean = {
         val c = clusterManager.getCluster(clusterManager.clusterID(clusterIdentifier))
         if (c != null && (!considerOnlyClusterable || c.clusterable)) {
             super.performClustering(c)
         }
-        cluster
+        else {
+            false
+        }
     }
 }

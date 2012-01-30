@@ -77,7 +77,8 @@ class ExternalClassClusteringStage(
     val algorithmConfig: ExternalClassClusteringAlgorithmConfiguration)
         extends ClassClusteringStage[ExternalClassClusteringAlgorithmConfiguration] {
 
-    override def performClustering(cluster: Cluster): Cluster = {
+    override def performClustering(cluster: Cluster): Boolean = {
+        var createdNewCluster = false
         val classClustersMap = Map[Int, Set[Node]]()
 
         for (node ← cluster.getNodes) {
@@ -95,6 +96,7 @@ class ExternalClassClusteringStage(
         for ((classNodeID, nodeSet) ← classClustersMap) {
             val classNode = clusterManager.getNode(classNodeID)
             val classCluster = clusterManager.createCluster(classNode.identifier, this.stageName)
+            createdNewCluster = true
             classCluster.addNode(classNode)
             nodeSet foreach {
                 classCluster.addNode(_)
@@ -102,7 +104,7 @@ class ExternalClassClusteringStage(
             cluster.addNode(classCluster)
         }
 
-        cluster
+        createdNewCluster
     }
 }
 

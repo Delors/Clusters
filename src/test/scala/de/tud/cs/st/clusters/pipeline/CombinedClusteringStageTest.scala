@@ -48,6 +48,7 @@ import algorithm.SimilarityMetricClusteringAlgorithmConfiguration
 import algorithm.DefaultStronglyConnectedComponentsClusteringStage
 import algorithm.StronglyConnectedComponentsClusteringAlgorithmConfiguration
 import strategy.FirstClusterablesClusteringStrategy
+import strategy.FixedPointIterationClusteringStrategy
 import strategy.IdentifierBasedClusteringStrategy
 import strategy.MinClusterSizeClusteringStrategy
 
@@ -64,38 +65,9 @@ class CombinedClusteringStageTest extends AbstractClusteringTest {
     val similarityMetricConfiguration = new SimilarityMetricClusteringAlgorithmConfiguration {}
     val sccConfiguration = new StronglyConnectedComponentsClusteringAlgorithmConfiguration {}
 
-    //TODO: implement more strategies and use the metaInfo data;
+    //TODO: implement more strategies and make use of the metaInfo data;
     //TODO: create some concrete examples with known optimal results and evaluate the current stages and stage combinations.
     // -> e.g. pattern implementations from wikipedia
-    // -> or own class that contains two different kinds of methods that are used from to different (other) classes...
-    /*
-     * class A{
-     *   m1
-     *   m2
-     *   m3
-     *   m4
-     * }
-     * 
-     * class B{
-     *   b1{
-     *     m1
-     *   }
-     *   
-     *   b2{
-     *     m3
-     *   }
-     * }
-     * 
-     * class C{
-     *   c1{
-     *     m2
-     *   }
-     *   
-     *   c2{
-     *     m4
-     *   }
-     * }
-     */
 
     val intExtStage = new DefaultInternalExternalClusteringStage(intExtConfiguration)
     val pkgStage = new {
@@ -105,15 +77,15 @@ class CombinedClusteringStageTest extends AbstractClusteringTest {
     val getterSetterStage = new DefaultGetterSetterClusteringStage(getterSetterConfiguration) with FirstClusterablesClusteringStrategy
     val simMetricStage = new {
         override val minClusterSizeThreshold: Int = 3
-    } with DefaultSimilarityMetricClusteringStage(similarityMetricConfiguration) with MinClusterSizeClusteringStrategy with FirstClusterablesClusteringStrategy
+    } with DefaultSimilarityMetricClusteringStage(similarityMetricConfiguration) with MinClusterSizeClusteringStrategy with FirstClusterablesClusteringStrategy with FixedPointIterationClusteringStrategy
 
     implicit val clusteringStages: Array[ClusteringStage] = Array(
         intExtStage,
         pkgStage,
         sccStage,
         getterSetterStage,
-        simMetricStage,
-        simMetricStage,
+        //        simMetricStage,
+        //        simMetricStage,
         simMetricStage
     )
 

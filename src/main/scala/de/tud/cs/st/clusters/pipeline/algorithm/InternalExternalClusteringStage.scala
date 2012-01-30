@@ -58,7 +58,7 @@ import framework.structure.util.ClusterManager
  */
 trait InternalExternalClusteringStage extends ClusteringAlgorithm[InternalExternalClusteringAlgorithmConfiguration] {
 
-    override def performClustering(cluster: Cluster): Cluster = {
+    override def performClustering(cluster: Cluster): Boolean = {
         // create list that contains all names of internal packages
         var internalPackages: Set[String] = Set()
         for (node ← cluster.getNodes) {
@@ -99,7 +99,7 @@ trait InternalExternalClusteringStage extends ClusteringAlgorithm[InternalExtern
             }
         }
 
-        cluster
+        true
     }
 }
 
