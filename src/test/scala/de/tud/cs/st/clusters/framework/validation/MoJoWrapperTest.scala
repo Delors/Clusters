@@ -41,8 +41,8 @@ import structure.SourceElementNode
 import mojo.MoJoCalculator
 import de.tud.cs.st.clusters.pipeline.algorithm.InternalClassClusteringStage
 import de.tud.cs.st.clusters.pipeline.algorithm.InternalClassClusteringAlgorithmConfiguration
-import de.tud.cs.st.clusters.pipeline.algorithm.DefaultInternalExternalClusteringStage
-import de.tud.cs.st.clusters.pipeline.algorithm.InternalExternalClusteringAlgorithmConfiguration
+import de.tud.cs.st.clusters.pipeline.algorithm.ApplicationLibrariesSeparatorStage
+import de.tud.cs.st.clusters.pipeline.algorithm.ApplicationLibrariesSeparatorStageConfiguration
 import framework.pipeline.ClusteringStage
 
 /**
@@ -61,8 +61,8 @@ class MoJoWrapperTest extends AbstractClusteringTest {
             extractDependencies("test/classfiles/ClusteringTestProject.zip"),
             graphmlClusteringResultWriterCreator("clusterA"))(clusteringA)
 
-        val intExtConfiguration = new InternalExternalClusteringAlgorithmConfiguration {}
-        val clusteringB: Array[ClusteringStage] = Array(new DefaultInternalExternalClusteringStage(intExtConfiguration))
+        val libConfiguration = new ApplicationLibrariesSeparatorStageConfiguration {}
+        val clusteringB: Array[ClusteringStage] = Array(new ApplicationLibrariesSeparatorStage(libConfiguration))
 
         val clustersB = testClustering(
             "testInternalExternalClusteringStage [ClusteringTestProject.zip]",

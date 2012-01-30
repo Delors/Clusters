@@ -37,8 +37,8 @@ import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import framework.AbstractClusteringTest
 import framework.pipeline.ClusteringStage
-import algorithm.DefaultInternalExternalClusteringStage
-import algorithm.InternalExternalClusteringAlgorithmConfiguration
+import algorithm.ApplicationLibrariesSeparatorStage
+import algorithm.ApplicationLibrariesSeparatorStageConfiguration
 import algorithm.DefaultPackageClusteringStage
 import algorithm.PackageClusteringAlgorithmConfiguration
 import algorithm.DefaultGetterSetterClusteringStage
@@ -59,7 +59,7 @@ import strategy.MinClusterSizeClusteringStrategy
 @RunWith(classOf[JUnitRunner])
 class CombinedClusteringStageTest extends AbstractClusteringTest {
 
-    val intExtConfiguration = new InternalExternalClusteringAlgorithmConfiguration {}
+    val libConfiguration = new ApplicationLibrariesSeparatorStageConfiguration {}
     val pkgConfiguration = new PackageClusteringAlgorithmConfiguration {}
     val getterSetterConfiguration = new GetterSetterClusteringAlgorithmConfiguration {}
     val similarityMetricConfiguration = new SimilarityMetricClusteringAlgorithmConfiguration {}
@@ -69,7 +69,7 @@ class CombinedClusteringStageTest extends AbstractClusteringTest {
     //TODO: create some concrete examples with known optimal results and evaluate the current stages and stage combinations.
     // -> e.g. pattern implementations from wikipedia
 
-    val intExtStage = new DefaultInternalExternalClusteringStage(intExtConfiguration)
+    val libStage = new ApplicationLibrariesSeparatorStage(libConfiguration)
     val pkgStage = new {
         val clusterIdentifier = "external"
     } with DefaultPackageClusteringStage(pkgConfiguration) with IdentifierBasedClusteringStrategy
@@ -80,7 +80,7 @@ class CombinedClusteringStageTest extends AbstractClusteringTest {
     } with DefaultSimilarityMetricClusteringStage(similarityMetricConfiguration) with MinClusterSizeClusteringStrategy with FirstClusterablesClusteringStrategy with FixedPointIterationClusteringStrategy
 
     implicit val clusteringStages: Array[ClusteringStage] = Array(
-        intExtStage,
+        libStage,
         pkgStage,
         sccStage,
         getterSetterStage,

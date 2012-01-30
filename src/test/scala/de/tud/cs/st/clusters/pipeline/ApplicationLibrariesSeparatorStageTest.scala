@@ -38,39 +38,39 @@ import org.scalatest.junit.JUnitRunner
 
 import framework.AbstractClusteringTest
 import framework.pipeline.ClusteringStage
-import algorithm.DefaultInternalExternalClusteringStage
-import algorithm.InternalExternalClusteringAlgorithmConfiguration
+import algorithm.ApplicationLibrariesSeparatorStage
+import algorithm.ApplicationLibrariesSeparatorStageConfiguration
 
 /**
  * @author Thomas Schlosser
  *
  */
 @RunWith(classOf[JUnitRunner])
-class InternalExternalClusteringStageTest extends AbstractClusteringTest {
+class ApplicationLibrariesSeparatorStageTest extends AbstractClusteringTest {
 
-    val configuration = new InternalExternalClusteringAlgorithmConfiguration {}
+    val configuration = new ApplicationLibrariesSeparatorStageConfiguration {}
 
     implicit val clusteringStages: Array[ClusteringStage] = Array(
-        new DefaultInternalExternalClusteringStage(configuration)
+        new ApplicationLibrariesSeparatorStage(configuration)
     )
 
-    test("testInternalExternalClusteringStage [cocome-printercontroller]") {
+    test("testApplicationLibrariesSeparatorStage [cocome]") {
         testClustering(
-            "testInternalExternalClusteringStage [cocome-printercontroller]",
+            "testApplicationLibrariesSeparatorStage [cocome]",
             cocomeDependencyExtractor,
-            graphmlClusteringResultWriterCreator("intExtClust_cocome"))
+            graphmlClusteringResultWriterCreator("appLibClust_cocome"))
     }
 
-    test("testInternalExternalClusteringStage [getterSetterTestClass]") {
+    test("testApplicationLibrariesSeparatorStage [getterSetterTestClass]") {
         testClustering(
-            "testInternalExternalClusteringStage [getterSetterTestClass]",
+            "testApplicationLibrariesSeparatorStage [getterSetterTestClass]",
             getterSetterTestClassDependencyExtractor,
-            graphmlClusteringResultWriterCreator("intExtClust_getterSetterTestClass"))
+            graphmlClusteringResultWriterCreator("appLibClust_getterSetterTestClass"))
     }
 
-    test("testInternalExternalClusteringStage [hibernate]") {
-        testClustering("testInternalExternalClusteringStage [hibernate]",
+    test("testApplicationLibrariesSeparatorStage [hibernate]") {
+        testClustering("testApplicationLibrariesSeparatorStage [hibernate]",
             hibernateDependencyExtractor,
-            graphmlClusteringResultWriterCreator("intExtClust_hibernate"))
+            graphmlClusteringResultWriterCreator("appLibClust_hibernate"))
     }
 }

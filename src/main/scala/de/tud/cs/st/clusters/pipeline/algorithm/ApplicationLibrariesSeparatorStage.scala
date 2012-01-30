@@ -44,27 +44,25 @@ import framework.structure.MethodNode
 import framework.structure.util.ClusterManager
 
 /**
- * Splits the nodes into internal and external cluster.
- * A node is added to the internal cluster if a type with a package that prefixes the package
- * of that node exists. A package prefixes another package only if every sub-package matches as a whole.
- * All other nodes are added to the external cluster.
- *
- * The <code>newClusterClustering</code> parameter is not needed/used in this class, because
- * a more specific configuration can be done by using <code>internalClustering</code> and
- * <code>externalClustering</code>.
+ * Splits the nodes into application and libraries cluster.
+ * A node is added to the application cluster if a type with a package exists, that prefixes the package
+ * of that node. A package prefixes another package only if every sub-package matches as a whole.
+ * All other nodes are added to the libraries cluster.
  *
  * @author Thomas Schlosser
  *
  */
-trait InternalExternalClusteringStage extends ClusteringAlgorithm[InternalExternalClusteringAlgorithmConfiguration] {
+class ApplicationLibrariesSeparatorStage(
+    val algorithmConfig: ApplicationLibrariesSeparatorStageConfiguration)
+        extends ClusteringAlgorithm[ApplicationLibrariesSeparatorStageConfiguration] {
 
     override def performClustering(cluster: Cluster): Boolean = {
-        // create list that contains all names of internal packages
-        var internalPackages: Set[String] = Set()
+        // create list that contains all names of the application packages
+        var applicationPackages: Set[String] = Set()
         for (node ← cluster.getNodes) {
             node match {
                 case TypeNode(_, _, Some(t)) ⇒
-                    internalPackages = internalPackages + (t.thisClass.packageName.replace('/', '.') + '.')
+                    applicationPackages = applicationPackages + (t.thisClass.packageName.replace('/', '.') + '.')
                 case _ ⇒
                 // nothing to do in this case, because the node is not associated with a classFile object
                 // fields and methods can be omitted, since their packages will be added to the list
@@ -74,28 +72,28 @@ trait InternalExternalClusteringStage extends ClusteringAlgorithm[InternalExtern
 
         // reduce set to unique prefixes
         def removeLongerPackagePrefix(pkg: String) {
-            for (pkg2 ← internalPackages if (pkg != pkg2 && pkg.startsWith(pkg2))) {
-                internalPackages = internalPackages - pkg
+            for (pkg2 ← applicationPackages if (pkg != pkg2 && pkg.startsWith(pkg2))) {
+                applicationPackages = applicationPackages - pkg
                 return
             }
         }
 
-        internalPackages foreach { removeLongerPackagePrefix(_) }
+        applicationPackages foreach { removeLongerPackagePrefix(_) }
 
         val inputNodes = cluster.getNodes.toArray
         cluster.clearNodes()
         cluster.clusterable = false
-        val internal = clusterManager.createCluster("internal", this.stageName)
-        val external = clusterManager.createCluster("external", this.stageName)
-        external.clusterable = !algorithmConfig.markExternalAsUnclusterable
-        cluster.addNode(internal)
-        cluster.addNode(external)
+        val applicationCluster = clusterManager.createCluster("application", this.stageName)
+        val librariesCluster = clusterManager.createCluster("libraries", this.stageName)
+        librariesCluster.clusterable = !algorithmConfig.markLibrariesAsUnclusterable
+        cluster.addNode(applicationCluster)
+        cluster.addNode(librariesCluster)
         for (node ← inputNodes) {
-            if (internalPackages exists (node.identifier.startsWith(_))) {
-                internal.addNode(node)
+            if (applicationPackages exists (node.identifier.startsWith(_))) {
+                applicationCluster.addNode(node)
             }
             else {
-                external.addNode(node)
+                librariesCluster.addNode(node)
             }
         }
 
@@ -103,11 +101,6 @@ trait InternalExternalClusteringStage extends ClusteringAlgorithm[InternalExtern
     }
 }
 
-trait InternalExternalClusteringAlgorithmConfiguration extends ClusteringAlgorithmConfiguration {
-    val markExternalAsUnclusterable = true
-}
-
-class DefaultInternalExternalClusteringStage(
-    val algorithmConfig: InternalExternalClusteringAlgorithmConfiguration)
-        extends InternalExternalClusteringStage {
+trait ApplicationLibrariesSeparatorStageConfiguration extends ClusteringAlgorithmConfiguration {
+    val markLibrariesAsUnclusterable = true
 }
