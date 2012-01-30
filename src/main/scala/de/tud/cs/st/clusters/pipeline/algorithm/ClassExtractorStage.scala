@@ -46,68 +46,21 @@ import framework.structure.util.ClusterManager
 import de.tud.cs.st.bat.resolved.dependency._
 
 /**
+ *
+ * NOTE: This stage is only (usefully) applicable on the application cluster or any of its sub clusters.
+ *
  * @author Thomas Schlosser
  *
  */
-trait ClassClusteringStage[C <: ClassClusteringAlgorithmConfiguration] extends ClusteringAlgorithm[C] {
-
-}
-
-trait ClassClusteringAlgorithmConfiguration extends ClusteringAlgorithmConfiguration {
-
-}
-
-class InternalClassClusteringStage(
-    val algorithmConfig: InternalClassClusteringAlgorithmConfiguration)
-        extends ClassClusteringStage[InternalClassClusteringAlgorithmConfiguration]
-        with SameNeighborClusteringStage[InternalClassClusteringAlgorithmConfiguration] {
+class ClassExtractorStage(
+    val algorithmConfig: ClassExtractorStageConfiguration)
+        extends SameNeighborClusteringStage[ClassExtractorStageConfiguration] {
 
     override protected def isOfConsideredDependencyType(dType: DependencyType): Boolean =
         dType == DependencyType.IS_INSTANCE_MEMBER_OF || dType == DependencyType.IS_CLASS_MEMBER_OF
 
 }
 
-trait InternalClassClusteringAlgorithmConfiguration
-        extends ClassClusteringAlgorithmConfiguration
-        with SameNeighborClusteringAlgorithmConfiguration {
-
-}
-
-class ExternalClassClusteringStage(
-    val algorithmConfig: ExternalClassClusteringAlgorithmConfiguration)
-        extends ClassClusteringStage[ExternalClassClusteringAlgorithmConfiguration] {
-
-    override def performClustering(cluster: Cluster): Boolean = {
-        var createdNewCluster = false
-        val classClustersMap = Map[Int, Set[Node]]()
-
-        for (node ← cluster.getNodes) {
-            //TODO implement based on nodes' identifiers 
-            //            getClassMemberEdge(node) match {
-            //                case Some(edge) ⇒
-            //                    val classNodeID = edge.targetID
-            //                    val clusterSet = classClustersMap.getOrElse(classNodeID, Set())
-            //                    classClustersMap(classNodeID) = clusterSet + node
-            //                case None ⇒
-            //            }
-        }
-
-        cluster.clearNodes()
-        for ((classNodeID, nodeSet) ← classClustersMap) {
-            val classNode = clusterManager.getNode(classNodeID)
-            val classCluster = clusterManager.createCluster(classNode.identifier, this.stageName)
-            createdNewCluster = true
-            classCluster.addNode(classNode)
-            nodeSet foreach {
-                classCluster.addNode(_)
-            }
-            cluster.addNode(classCluster)
-        }
-
-        createdNewCluster
-    }
-}
-
-trait ExternalClassClusteringAlgorithmConfiguration extends ClassClusteringAlgorithmConfiguration {
+trait ClassExtractorStageConfiguration extends SameNeighborClusteringAlgorithmConfiguration {
 
 }

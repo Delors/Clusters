@@ -14,7 +14,7 @@ class ClustersSuite extends Suites(
 
     // Clustering tests...
     new pipeline.ApplicationLibrariesSeparatorStageTest,
-    new pipeline.ClassClusteringStageTest,
+    new pipeline.ClassExtractorStageTest,
     new pipeline.CombinedClusteringStageTest,
     new pipeline.GetterSetterClusteringStageTest,
     new pipeline.LayerClusteringStageTest,

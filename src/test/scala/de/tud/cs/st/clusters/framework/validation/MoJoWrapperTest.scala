@@ -39,8 +39,8 @@ import org.scalatest.junit.JUnitRunner
 import structure.Cluster
 import structure.SourceElementNode
 import mojo.MoJoCalculator
-import de.tud.cs.st.clusters.pipeline.algorithm.InternalClassClusteringStage
-import de.tud.cs.st.clusters.pipeline.algorithm.InternalClassClusteringAlgorithmConfiguration
+import de.tud.cs.st.clusters.pipeline.algorithm.ClassExtractorStage
+import de.tud.cs.st.clusters.pipeline.algorithm.ClassExtractorStageConfiguration
 import de.tud.cs.st.clusters.pipeline.algorithm.ApplicationLibrariesSeparatorStage
 import de.tud.cs.st.clusters.pipeline.algorithm.ApplicationLibrariesSeparatorStageConfiguration
 import framework.pipeline.ClusteringStage
@@ -53,8 +53,8 @@ import framework.pipeline.ClusteringStage
 class MoJoWrapperTest extends AbstractClusteringTest {
 
     test("calculate double direction MojoFM quality value") {
-        val intClassConfiguration = new InternalClassClusteringAlgorithmConfiguration {}
-        val clusteringA: Array[ClusteringStage] = Array(new InternalClassClusteringStage(intClassConfiguration))
+        val classConfiguration = new ClassExtractorStageConfiguration {}
+        val clusteringA: Array[ClusteringStage] = Array(new ClassExtractorStage(classConfiguration))
 
         val clustersA = testClustering(
             "testInternalClassClusteringStage [ClusteringTestProject.zip]",

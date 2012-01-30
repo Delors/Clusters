@@ -37,25 +37,25 @@ import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import framework.AbstractClusteringTest
 import framework.pipeline.ClusteringStage
-import algorithm.InternalClassClusteringStage
-import algorithm.InternalClassClusteringAlgorithmConfiguration
+import algorithm.ClassExtractorStage
+import algorithm.ClassExtractorStageConfiguration
 
 /**
  * @author Thomas Schlosser
  *
  */
 @RunWith(classOf[JUnitRunner])
-class ClassClusteringStageTest extends AbstractClusteringTest {
+class ClassExtractorStageTest extends AbstractClusteringTest {
 
-    val configuration = new InternalClassClusteringAlgorithmConfiguration {}
+    val configuration = new ClassExtractorStageConfiguration {}
 
     implicit val clusteringStages: Array[ClusteringStage] = Array(
-        new InternalClassClusteringStage(configuration)
+        new ClassExtractorStage(configuration)
     )
 
-    test("testClassClusteringStage [ClusteringTestProject]") {
+    test("testClassExtractorStage [ClusteringTestProject]") {
         testClustering(
-            "testClassClusteringStage [ClusteringTestProject]",
+            "testClassExtractorStage [ClusteringTestProject]",
             clusteringTestProjectDependencyExtractor,
             graphmlClusteringResultWriterCreator("classClust_ClusteringTestProject"))
     }
