@@ -51,7 +51,9 @@ import de.tud.cs.st.bat.resolved.dependency._
  * @author Thomas Schlosser
  *
  */
-trait SimilarityMetricClusteringStage extends ClusteringAlgorithm[SimilarityMetricClusteringAlgorithmConfiguration] {
+class SimilarityMetricClusteringStage(
+    val algorithmConfig: SimilarityMetricClusteringAlgorithmConfiguration)
+        extends ClusteringAlgorithm[SimilarityMetricClusteringAlgorithmConfiguration] {
 
     override def performClustering(cluster: Cluster): Boolean = {
         var createdNewCluster = false
@@ -95,7 +97,7 @@ trait SimilarityMetricClusteringStage extends ClusteringAlgorithm[SimilarityMetr
             var i = 0
             clusterset foreach { nodes ⇒
                 if (nodes.size > 1) {
-                    val cluster = clusterManager.createCluster("simMetricCluster"+i, this.stageName)
+                    val cluster = clusterManager.createCluster(algorithmConfig.clusterIdentifierPrefix + i, this.stageName)
                     createdNewCluster = true
                     nodes foreach { node ⇒
                         cluster.addNode(clusterManager.getNode(node))
@@ -187,12 +189,7 @@ trait SimilarityMetricClusteringStage extends ClusteringAlgorithm[SimilarityMetr
 }
 
 trait SimilarityMetricClusteringAlgorithmConfiguration extends ClusteringAlgorithmConfiguration {
-
-}
-
-class DefaultSimilarityMetricClusteringStage(
-    val algorithmConfig: SimilarityMetricClusteringAlgorithmConfiguration)
-        extends SimilarityMetricClusteringStage {
+    val clusterIdentifierPrefix = "simMetricCluster_"
 }
 
 class AlgoNode(val id: Int, var cluster: scala.collection.mutable.Set[AlgoNode]) {

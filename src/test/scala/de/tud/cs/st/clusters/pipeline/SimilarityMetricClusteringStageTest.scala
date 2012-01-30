@@ -37,7 +37,7 @@ import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import framework.AbstractClusteringTest
 import framework.pipeline.ClusteringStage
-import algorithm.DefaultSimilarityMetricClusteringStage
+import algorithm.SimilarityMetricClusteringStage
 import algorithm.SimilarityMetricClusteringAlgorithmConfiguration
 
 /**
@@ -50,7 +50,7 @@ class SimilarityMetricClusteringStageTest extends AbstractClusteringTest {
     val configuration = new SimilarityMetricClusteringAlgorithmConfiguration {}
 
     implicit val clusteringStages: Array[ClusteringStage] = Array(
-        new DefaultSimilarityMetricClusteringStage(configuration)
+        new SimilarityMetricClusteringStage(configuration)
     )
 
     test("testSimilarityMetricClusteringStage [cocome-printercontroller]") {

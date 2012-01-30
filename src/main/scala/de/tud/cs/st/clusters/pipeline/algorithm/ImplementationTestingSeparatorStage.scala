@@ -57,6 +57,7 @@ class ImplementationTestingSeparatorStage(
         extends ClusteringAlgorithm[ImplementationTestingSeparatorStageConfiguration] {
 
     override def performClustering(cluster: Cluster): Boolean = {
+        //TODO: Consider inner classes, too.
         val directlyTestRelatedNodes = extractDirectlyTestRelatedNodes(cluster)
 
         var allTestRelatedNodes: List[Node] = Nil
@@ -87,8 +88,8 @@ class ImplementationTestingSeparatorStage(
             val inputNodes = cluster.getNodes.toSet
             cluster.clearNodes()
             cluster.clusterable = false
-            val implementationCluster = clusterManager.createCluster("implementation", this.stageName)
-            val testingCluster = clusterManager.createCluster("testing", this.stageName)
+            val implementationCluster = clusterManager.createCluster(algorithmConfig.implementationClusterIdentifier, this.stageName)
+            val testingCluster = clusterManager.createCluster(algorithmConfig.testingClusterIdentifier, this.stageName)
             testingCluster.clusterable = !algorithmConfig.markTestClusterAsUnclusterable
             cluster.addNode(implementationCluster)
             cluster.addNode(testingCluster)
@@ -132,6 +133,9 @@ class ImplementationTestingSeparatorStage(
 }
 
 trait ImplementationTestingSeparatorStageConfiguration extends ClusteringAlgorithmConfiguration {
+    val implementationClusterIdentifier = "implemenation"
+    val testingClusterIdentifier = "testing"
+
     val testLibrariesPackagePrefixes = List("org.junit.", "org.scalatest.")
     val markTestClusterAsUnclusterable = true
 }

@@ -39,15 +39,15 @@ import framework.AbstractClusteringTest
 import framework.pipeline.ClusteringStage
 import algorithm.ApplicationLibrariesSeparatorStage
 import algorithm.ApplicationLibrariesSeparatorStageConfiguration
-import algorithm.DefaultPackageClusteringStage
+import algorithm.PackageClusteringStage
 import algorithm.PackageClusteringAlgorithmConfiguration
 import algorithm.ImplementationTestingSeparatorStage
 import algorithm.ImplementationTestingSeparatorStageConfiguration
-import algorithm.DefaultGetterSetterClusteringStage
+import algorithm.GetterSetterClusteringStage
 import algorithm.GetterSetterClusteringAlgorithmConfiguration
-import algorithm.DefaultSimilarityMetricClusteringStage
+import algorithm.SimilarityMetricClusteringStage
 import algorithm.SimilarityMetricClusteringAlgorithmConfiguration
-import algorithm.DefaultStronglyConnectedComponentsClusteringStage
+import algorithm.StronglyConnectedComponentsClusteringStage
 import algorithm.StronglyConnectedComponentsClusteringAlgorithmConfiguration
 import strategy.FirstClusterablesClusteringStrategy
 import strategy.FixedPointIterationClusteringStrategy
@@ -75,13 +75,13 @@ class CombinedClusteringStageTest extends AbstractClusteringTest {
     val libStage = new ApplicationLibrariesSeparatorStage(appLibConfiguration)
     val pkgStage = new {
         val clusterIdentifier = "libraries"
-    } with DefaultPackageClusteringStage(pkgConfiguration) with IdentifierBasedClusteringStrategy
+    } with PackageClusteringStage(pkgConfiguration) with IdentifierBasedClusteringStrategy
     val implTestStage = new ImplementationTestingSeparatorStage(implTestConfiguration) with FirstClusterablesClusteringStrategy
-    val sccStage = new DefaultStronglyConnectedComponentsClusteringStage(sccConfiguration) with FirstClusterablesClusteringStrategy
-    val getterSetterStage = new DefaultGetterSetterClusteringStage(getterSetterConfiguration) with FirstClusterablesClusteringStrategy
+    val sccStage = new StronglyConnectedComponentsClusteringStage(sccConfiguration) with FirstClusterablesClusteringStrategy
+    val getterSetterStage = new GetterSetterClusteringStage(getterSetterConfiguration) with FirstClusterablesClusteringStrategy
     val simMetricStage = new {
         override val minClusterSizeThreshold: Int = 3
-    } with DefaultSimilarityMetricClusteringStage(similarityMetricConfiguration) with MinClusterSizeClusteringStrategy with FirstClusterablesClusteringStrategy with FixedPointIterationClusteringStrategy
+    } with SimilarityMetricClusteringStage(similarityMetricConfiguration) with MinClusterSizeClusteringStrategy with FirstClusterablesClusteringStrategy with FixedPointIterationClusteringStrategy
 
     implicit val clusteringStages: Array[ClusteringStage] = Array(
         libStage,

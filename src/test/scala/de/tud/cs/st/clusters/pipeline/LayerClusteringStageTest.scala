@@ -38,7 +38,7 @@ import org.scalatest.junit.JUnitRunner
 
 import framework.AbstractClusteringTest
 import framework.pipeline.ClusteringStage
-import algorithm.DefaultLayerClusteringStage
+import algorithm.LayerClusteringStage
 import algorithm.LayerClusteringAlgorithmConfiguration
 
 /**
@@ -51,7 +51,7 @@ class LayerClusteringStageTest extends AbstractClusteringTest {
     val configuration = new { override val performRecursion = true } with LayerClusteringAlgorithmConfiguration
 
     implicit val clusteringStages: Array[ClusteringStage] = Array(
-        new DefaultLayerClusteringStage(configuration)
+        new LayerClusteringStage(configuration)
     )
 
     test("testLayerClusteringStage [getterSetterTestClass]") {

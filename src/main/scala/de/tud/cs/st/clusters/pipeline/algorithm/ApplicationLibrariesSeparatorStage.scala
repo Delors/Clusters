@@ -83,8 +83,8 @@ class ApplicationLibrariesSeparatorStage(
         val inputNodes = cluster.getNodes.toArray
         cluster.clearNodes()
         cluster.clusterable = false
-        val applicationCluster = clusterManager.createCluster("application", this.stageName)
-        val librariesCluster = clusterManager.createCluster("libraries", this.stageName)
+        val applicationCluster = clusterManager.createCluster(algorithmConfig.applicationClusterIdentifier, this.stageName)
+        val librariesCluster = clusterManager.createCluster(algorithmConfig.librariesClusterIdentifier, this.stageName)
         librariesCluster.clusterable = !algorithmConfig.markLibrariesAsUnclusterable
         cluster.addNode(applicationCluster)
         cluster.addNode(librariesCluster)
@@ -102,5 +102,8 @@ class ApplicationLibrariesSeparatorStage(
 }
 
 trait ApplicationLibrariesSeparatorStageConfiguration extends ClusteringAlgorithmConfiguration {
+    val applicationClusterIdentifier = "application"
+    val librariesClusterIdentifier = "libraries"
+
     val markLibrariesAsUnclusterable = true
 }

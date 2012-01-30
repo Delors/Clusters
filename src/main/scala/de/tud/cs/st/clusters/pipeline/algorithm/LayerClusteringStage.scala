@@ -47,7 +47,9 @@ import framework.structure.util.ClusterManager
  * @author Thomas Schlosser
  *
  */
-trait LayerClusteringStage extends ClusteringAlgorithm[LayerClusteringAlgorithmConfiguration] {
+class LayerClusteringStage(
+    val algorithmConfig: LayerClusteringAlgorithmConfiguration)
+        extends ClusteringAlgorithm[LayerClusteringAlgorithmConfiguration] {
 
     override def performClustering(cluster: Cluster): Boolean = {
         var createdNewCluster = false
@@ -55,7 +57,7 @@ trait LayerClusteringStage extends ClusteringAlgorithm[LayerClusteringAlgorithmC
 
         def createLayers(nodes: Set[Node]) {
             def createNewLayerCluster(): Cluster = {
-                val layerCluster = clusterManager.createCluster("layer_"+layer, this.stageName)
+                val layerCluster = clusterManager.createCluster(algorithmConfig.clusterIdentifierPrefix + layer, this.stageName)
                 createdNewCluster = true
                 layer += 1
                 cluster.addNode(layerCluster)
@@ -134,11 +136,7 @@ trait LayerClusteringStage extends ClusteringAlgorithm[LayerClusteringAlgorithmC
 }
 
 trait LayerClusteringAlgorithmConfiguration extends ClusteringAlgorithmConfiguration {
+    val clusterIdentifierPrefix = "layer_"
+
     val performRecursion: Boolean = false
-}
-
-class DefaultLayerClusteringStage(
-    val algorithmConfig: LayerClusteringAlgorithmConfiguration)
-        extends LayerClusteringStage {
-
 }

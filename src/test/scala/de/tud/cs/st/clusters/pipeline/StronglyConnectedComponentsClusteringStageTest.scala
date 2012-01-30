@@ -36,10 +36,9 @@ package pipeline
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 
-import de.tud.cs.st.clusters.pipeline.algorithm.DefaultStronglyConnectedComponentsClusteringStage;
 import framework.AbstractClusteringTest
 import framework.pipeline.ClusteringStage
-import algorithm.DefaultStronglyConnectedComponentsClusteringStage
+import algorithm.StronglyConnectedComponentsClusteringStage
 import algorithm.StronglyConnectedComponentsClusteringAlgorithmConfiguration
 
 /**
@@ -52,7 +51,7 @@ class StronglyConnectedComponentsClusteringStageTest extends AbstractClusteringT
     val sccConfiguration = new StronglyConnectedComponentsClusteringAlgorithmConfiguration {}
 
     implicit val clusteringStages: Array[ClusteringStage] = Array(
-        new DefaultStronglyConnectedComponentsClusteringStage(sccConfiguration)
+        new StronglyConnectedComponentsClusteringStage(sccConfiguration)
     )
 
     test("testSCCClusteringStage [sccTestClass]") {

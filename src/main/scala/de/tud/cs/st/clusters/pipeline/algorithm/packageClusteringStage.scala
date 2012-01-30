@@ -45,7 +45,9 @@ import framework.structure.util.ClusterManager
  * @author Thomas Schlosser
  *
  */
-trait PackageClusteringStage extends ClusteringAlgorithm[PackageClusteringAlgorithmConfiguration] {
+class PackageClusteringStage(
+    val algorithmConfig: PackageClusteringAlgorithmConfiguration)
+        extends ClusteringAlgorithm[PackageClusteringAlgorithmConfiguration] {
 
     override def performClustering(cluster: Cluster): Boolean = {
         def getMatchingPrefix(value: String, prefixes: Array[String]): String = {
@@ -147,10 +149,4 @@ private trait GreatestCommonPrefixTree[Content] {
 trait PackageClusteringAlgorithmConfiguration extends ClusteringAlgorithmConfiguration {
     // new clusters should be marked as unclusterable if they are only libraries that should not further be considered
     val createUnclusterableClusters = true
-}
-
-class DefaultPackageClusteringStage(
-    val algorithmConfig: PackageClusteringAlgorithmConfiguration)
-        extends PackageClusteringStage {
-
 }

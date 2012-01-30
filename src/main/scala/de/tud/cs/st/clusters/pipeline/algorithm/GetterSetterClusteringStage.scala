@@ -59,7 +59,9 @@ import de.tud.cs.st.bat.resolved.Field
  * @author Thomas Schlosser
  *
  */
-trait GetterSetterClusteringStage extends ClusteringAlgorithm[GetterSetterClusteringAlgorithmConfiguration] {
+class GetterSetterClusteringStage(
+    val algorithmConfig: GetterSetterClusteringAlgorithmConfiguration)
+        extends ClusteringAlgorithm[GetterSetterClusteringAlgorithmConfiguration] {
 
     override def performClustering(cluster: Cluster): Boolean = {
         var createdNewCluster = false
@@ -72,7 +74,7 @@ trait GetterSetterClusteringStage extends ClusteringAlgorithm[GetterSetterCluste
                     optClusterBean match {
                         case Some(clusterBean) ⇒
                             // create setter/getter cluster
-                            val gsCluster = clusterManager.createCluster("Getter_Setter_"+clusterBean.field.identifier, this.stageName)
+                            val gsCluster = clusterManager.createCluster(algorithmConfig.clusterIdentifierPrefix + clusterBean.field.identifier, this.stageName)
                             gsCluster.addNode(clusterBean.field)
                             clusterBean.methods foreach { gsCluster.addNode(_) }
                             gsCluster.clusterable = false // a getter-setter cluster is treated as a primitive unit 
@@ -139,19 +141,10 @@ trait GetterSetterClusteringStage extends ClusteringAlgorithm[GetterSetterCluste
 }
 
 trait GetterSetterClusteringAlgorithmConfiguration extends ClusteringAlgorithmConfiguration {
+    val clusterIdentifierPrefix = "Getter_Setter_"
+
     val checkGetterNameMatching = true
     val checkSetterNameMatching = true
     val getterPrefixes: List[String] = List("get", "is")
     val setterPrefixes: List[String] = List("set")
 }
-
-class DefaultGetterSetterClusteringStage(
-    val algorithmConfig: GetterSetterClusteringAlgorithmConfiguration)
-        extends GetterSetterClusteringStage {
-}
-
-//class DefaultGetterSetterClusteringStage(val configuration: GetterSetterClusteringAlgorithmConfiguration)
-//        extends ClusteringStage[GetterSetterClusteringAlgorithmConfiguration]
-//        with GetterSetterClusteringStage
-//        with ClusterFirstClusterableClusterStrategy[GetterSetterClusteringAlgorithmConfiguration] {
-//}

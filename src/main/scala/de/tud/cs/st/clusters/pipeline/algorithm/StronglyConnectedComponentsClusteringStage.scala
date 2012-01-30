@@ -47,7 +47,9 @@ import graphscan.GraphScanningAlgorithms
  * @author Thomas Schlosser
  *
  */
-trait StronglyConnectedComponentsClusteringStage extends ClusteringAlgorithm[StronglyConnectedComponentsClusteringAlgorithmConfiguration] {
+class StronglyConnectedComponentsClusteringStage(
+    val algorithmConfig: StronglyConnectedComponentsClusteringAlgorithmConfiguration)
+        extends ClusteringAlgorithm[StronglyConnectedComponentsClusteringAlgorithmConfiguration] {
 
     override def performClustering(cluster: Cluster): Boolean = {
         // calculate finishing times of all nodes using depth first search
@@ -77,7 +79,7 @@ trait StronglyConnectedComponentsClusteringStage extends ClusteringAlgorithm[Str
                     case None ⇒
                         newClusterMinSizeBuffer.get(sccID) match {
                             case Some(firstElement) ⇒
-                                val c = clusterManager.createCluster("SCC_"+System.nanoTime(), this.stageName) //sccID, this.stageName)
+                                val c = clusterManager.createCluster(algorithmConfig.clusterIdentifierPrefix + System.nanoTime(), this.stageName) //sccID, this.stageName)
                                 createdNewCluster = true
                                 c.addNode(firstElement)
                                 c.addNode(node)
@@ -98,10 +100,5 @@ trait StronglyConnectedComponentsClusteringStage extends ClusteringAlgorithm[Str
 }
 
 trait StronglyConnectedComponentsClusteringAlgorithmConfiguration extends ClusteringAlgorithmConfiguration {
-
-}
-
-class DefaultStronglyConnectedComponentsClusteringStage(
-    val algorithmConfig: StronglyConnectedComponentsClusteringAlgorithmConfiguration)
-        extends StronglyConnectedComponentsClusteringStage {
+    val clusterIdentifierPrefix = "SCC_"
 }

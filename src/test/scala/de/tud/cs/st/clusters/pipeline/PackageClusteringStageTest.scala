@@ -37,7 +37,7 @@ import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import framework.AbstractClusteringTest
 import framework.pipeline.ClusteringStage
-import algorithm.DefaultPackageClusteringStage
+import algorithm.PackageClusteringStage
 import algorithm.PackageClusteringAlgorithmConfiguration
 
 /**
@@ -50,7 +50,7 @@ class PackageClusteringStageTest extends AbstractClusteringTest {
     val configuration = new PackageClusteringAlgorithmConfiguration {}
 
     implicit val clusteringStages: Array[ClusteringStage] = Array(
-        new DefaultPackageClusteringStage(configuration)
+        new PackageClusteringStage(configuration)
     )
 
     test("testPackageClusteringStage [cocome]") {
