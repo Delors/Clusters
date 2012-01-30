@@ -41,6 +41,8 @@ import algorithm.ApplicationLibrariesSeparatorStage
 import algorithm.ApplicationLibrariesSeparatorStageConfiguration
 import algorithm.DefaultPackageClusteringStage
 import algorithm.PackageClusteringAlgorithmConfiguration
+import algorithm.ImplementationTestingSeparatorStage
+import algorithm.ImplementationTestingSeparatorStageConfiguration
 import algorithm.DefaultGetterSetterClusteringStage
 import algorithm.GetterSetterClusteringAlgorithmConfiguration
 import algorithm.DefaultSimilarityMetricClusteringStage
@@ -59,8 +61,9 @@ import strategy.MinClusterSizeClusteringStrategy
 @RunWith(classOf[JUnitRunner])
 class CombinedClusteringStageTest extends AbstractClusteringTest {
 
-    val libConfiguration = new ApplicationLibrariesSeparatorStageConfiguration {}
+    val appLibConfiguration = new ApplicationLibrariesSeparatorStageConfiguration {}
     val pkgConfiguration = new PackageClusteringAlgorithmConfiguration {}
+    val implTestConfiguration = new ImplementationTestingSeparatorStageConfiguration {}
     val getterSetterConfiguration = new GetterSetterClusteringAlgorithmConfiguration {}
     val similarityMetricConfiguration = new SimilarityMetricClusteringAlgorithmConfiguration {}
     val sccConfiguration = new StronglyConnectedComponentsClusteringAlgorithmConfiguration {}
@@ -69,10 +72,11 @@ class CombinedClusteringStageTest extends AbstractClusteringTest {
     //TODO: create some concrete examples with known optimal results and evaluate the current stages and stage combinations.
     // -> e.g. pattern implementations from wikipedia
 
-    val libStage = new ApplicationLibrariesSeparatorStage(libConfiguration)
+    val libStage = new ApplicationLibrariesSeparatorStage(appLibConfiguration)
     val pkgStage = new {
-        val clusterIdentifier = "external"
+        val clusterIdentifier = "libraries"
     } with DefaultPackageClusteringStage(pkgConfiguration) with IdentifierBasedClusteringStrategy
+    val implTestStage = new ImplementationTestingSeparatorStage(implTestConfiguration) with FirstClusterablesClusteringStrategy
     val sccStage = new DefaultStronglyConnectedComponentsClusteringStage(sccConfiguration) with FirstClusterablesClusteringStrategy
     val getterSetterStage = new DefaultGetterSetterClusteringStage(getterSetterConfiguration) with FirstClusterablesClusteringStrategy
     val simMetricStage = new {
@@ -82,6 +86,7 @@ class CombinedClusteringStageTest extends AbstractClusteringTest {
     implicit val clusteringStages: Array[ClusteringStage] = Array(
         libStage,
         pkgStage,
+        implTestStage,
         sccStage,
         getterSetterStage,
         simMetricStage
