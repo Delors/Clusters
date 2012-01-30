@@ -60,28 +60,28 @@ trait ClusterManager
         with NodeCloner
         with NodeStore {
 
-    protected val ROOT_CLUSTER_NAME = "ROOT"
+    protected val PROJECT_CLUSTER_NAME = "project"
 
-    private val rootCluster = new Cluster(clusterID(ROOT_CLUSTER_NAME), ROOT_CLUSTER_NAME, true)
+    private val projectCluster = new Cluster(clusterID(PROJECT_CLUSTER_NAME), PROJECT_CLUSTER_NAME, true)
 
     abstract override def sourceElementID(t: Type): Int = {
         val id = super.sourceElementID(t)
         val node = createTypeNode(id, t)
-        rootCluster.addNode(node)
+        projectCluster.addNode(node)
         id
     }
 
     abstract override def sourceElementID(definingObjectType: ObjectType, fieldName: String): Int = {
         val id = super.sourceElementID(definingObjectType, fieldName)
         val node = createFieldNode(id, definingObjectType, fieldName)
-        rootCluster.addNode(node)
+        projectCluster.addNode(node)
         id
     }
 
     abstract override def sourceElementID(definingObjectType: ObjectType, methodName: String, methodDescriptor: MethodDescriptor): Int = {
         val id = super.sourceElementID(definingObjectType, methodName, methodDescriptor)
         val node = createMethodNode(id, definingObjectType, methodName, methodDescriptor)
-        rootCluster.addNode(node)
+        projectCluster.addNode(node)
         id
     }
 
@@ -89,8 +89,8 @@ trait ClusterManager
         getNode(sourceID).addEdge(getNode(targetID), dType)
     }
 
-    def getRootCluster: Cluster =
-        rootCluster
+    def getProjectCluster: Cluster =
+        projectCluster
 
 }
 

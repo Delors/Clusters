@@ -59,7 +59,7 @@ class DOTClusteringResultWriter(
 
     override protected def writeCluster(cluster: Cluster, nodeBuffer: StringBuffer, edgeBuffer: StringBuffer) {
         val subGraphBuffer = new StringBuffer()
-        if (!cluster.isRootCluster) {
+        if (!cluster.isProjectCluster) {
             subGraphBuffer.append("subgraph cluster_")
             subGraphBuffer.append(cluster.uniqueID)
             subGraphBuffer.append(" {\n")
@@ -90,7 +90,7 @@ class DOTClusteringResultWriter(
             nodeBuffer.append(cluster.uniqueID)
             nodeBuffer.append("\"[shape=box, label=\""+cluster.identifier+"\"];\n")
         }
-        else if (!cluster.isRootCluster) {
+        else if (!cluster.isProjectCluster) {
             nodeBuffer.append("\tnode [style=filled,fillcolor=white,color=black];\n")
             nodeBuffer.append("\tstyle=filled;\n")
             nodeBuffer.append("\tfillcolor=lightgrey;\n")

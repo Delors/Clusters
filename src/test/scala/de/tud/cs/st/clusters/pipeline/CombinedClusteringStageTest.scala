@@ -98,7 +98,7 @@ class CombinedClusteringStageTest extends AbstractClusteringTest {
         testClustering(
             "testCombinedClusteringStage [cocome]",
             cocomeDependencyExtractor,
-            graphmlClusteringResultWriterCreator("combinedClust_cocome"))
+            graphmlClusteringResultWriterCreator("combinedClust_cocome", _maxNumberOfLevels = Some(4)))
     }
 
     test("testCombinedClusteringStage [hibernate]") {

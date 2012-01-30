@@ -67,7 +67,7 @@ trait NodeCloner {
     }
 
     private def createCopy(cluster: Cluster): Cluster =
-        new Cluster(cluster.uniqueID, cluster.identifier, cluster.isRootCluster)
+        new Cluster(cluster.uniqueID, cluster.identifier, cluster.isProjectCluster)
 
     private def createCopy(typeNode: TypeNode): TypeNode =
         if (typeNode.clazz.isDefined)

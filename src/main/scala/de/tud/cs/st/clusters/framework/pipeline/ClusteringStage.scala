@@ -40,7 +40,7 @@ import structure.util.ClusterManager
 /**
  * Trait that represents a stage in the clustering pipeline. It defines an abstract method
  * 'performClustering' which is called from the [[de.tud.cs.st.clusters.framework.pipeline.ClusteringPipeline]]
- * to start the clustering process. The parameter is initially set to the root cluster.
+ * to start the clustering process. The parameter is initially set to the project cluster.
  * Implementations of this trait/method define the way the clustering is performed OR
  * the way the cluster structure is being traversed before the clustering of parts of
  * the structure is performed.

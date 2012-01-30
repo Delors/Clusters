@@ -45,7 +45,7 @@ import de.tud.cs.st.bat.resolved.dependency._
 class Cluster(
     val uniqueID: Int,
     val identifier: String,
-    val isRootCluster: Boolean)
+    val isProjectCluster: Boolean)
         extends Node {
 
     override val isCluster: Boolean = true

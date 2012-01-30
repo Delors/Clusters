@@ -87,7 +87,7 @@ class GraphmlClusteringResultWriter(
         //            <y:GroupNode>
         //              <y:Fill color="#F8ECC9" transparent="false"/>
         //              <y:BorderStyle color="#000000" type="line" width="1.0"/>
-        //              <y:NodeLabel alignment="right" autoSizePolicy="node_width" backgroundColor="#404040" borderDistance="0.0" fontFamily="Dialog" fontSize="16" fontStyle="plain" hasLineColor="false" height="22.625" modelName="internal" modelPosition="t" textColor="#FFFFFF" visible="true" width="3260.63639027429" x="0.0" y="0.0">ROOT</y:NodeLabel>
+        //              <y:NodeLabel alignment="right" autoSizePolicy="node_width" backgroundColor="#404040" borderDistance="0.0" fontFamily="Dialog" fontSize="16" fontStyle="plain" hasLineColor="false" height="22.625" modelName="internal" modelPosition="t" textColor="#FFFFFF" visible="true" width="3260.63639027429" x="0.0" y="0.0">project</y:NodeLabel>
         //              <y:Shape type="rectangle3d"/>
         //              <y:State closed="false" innerGraphDisplayEnabled="false"/>
         //              <y:Insets bottom="15" bottomF="15.0" left="15" leftF="15.0" right="15" rightF="15.0" top="15" topF="15.0"/>
@@ -96,7 +96,7 @@ class GraphmlClusteringResultWriter(
         //            <y:GroupNode>
         //              <y:Fill color="#F8ECC9" transparent="false"/>
         //              <y:BorderStyle color="#000000" type="line" width="1.0"/>
-        //              <y:NodeLabel alignment="right" autoSizePolicy="node_width" backgroundColor="#404040" borderDistance="0.0" fontFamily="Dialog" fontSize="16" fontStyle="plain" hasLineColor="false" height="22.625" modelName="internal" modelPosition="t" textColor="#FFFFFF" visible="true" width="3263.636474609375" x="0.0" y="0.0">ROOT</y:NodeLabel>
+        //              <y:NodeLabel alignment="right" autoSizePolicy="node_width" backgroundColor="#404040" borderDistance="0.0" fontFamily="Dialog" fontSize="16" fontStyle="plain" hasLineColor="false" height="22.625" modelName="internal" modelPosition="t" textColor="#FFFFFF" visible="true" width="3263.636474609375" x="0.0" y="0.0">project</y:NodeLabel>
         //              <y:Shape type="rectangle3d"/>
         //              <y:State closed="true" innerGraphDisplayEnabled="false"/>
         //              <y:Insets bottom="15" bottomF="15.0" left="15" leftF="15.0" right="15" rightF="15.0" top="15" topF="15.0"/>

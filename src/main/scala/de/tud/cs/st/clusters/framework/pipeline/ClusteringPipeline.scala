@@ -103,7 +103,7 @@ trait ClusteringPipeline extends PerformanceEvaluation {
             extractDependencies(clusterManager)
         }
 
-        println("Number of nodes in root cluster: "+clusterManager.getRootCluster.getNodes.size)
+        println("Number of nodes in project cluster: "+clusterManager.getProjectCluster.getNodes.size)
 
         val result = time(duration ⇒ println("time to cluster input: "+nanoSecondsToMilliseconds(duration)+"ms")) {
             cluster(clusterManager)
@@ -124,12 +124,12 @@ trait ClusteringPipeline extends PerformanceEvaluation {
     }
 
     private def cluster(clusterManager: ClusterManager): Cluster = {
-        var rootCluster = clusterManager.getRootCluster
+        var projectCluster = clusterManager.getProjectCluster
         clusteringStages foreach { stage ⇒
             stage.clusterManager = clusterManager
-            stage.performClustering(rootCluster)
+            stage.performClustering(projectCluster)
         }
-        rootCluster
+        projectCluster
     }
 
 }
