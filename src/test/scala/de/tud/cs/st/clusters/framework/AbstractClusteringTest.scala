@@ -41,7 +41,7 @@ import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
 import pipeline.ClusteringStage
 import pipeline.ClusteringPipeline
-import pipeline.DefaultClusteringPipeline
+import evaluation.PerformanceEvaluatedPipeline
 import structure.Cluster
 import structure.util.ClusterManager
 import _root_.de.tud.cs.st.bat.resolved.ClassFile
@@ -72,12 +72,12 @@ trait AbstractClusteringTest extends FunSuite
         println(testName+" - START")
 
         var clusteringPipeline: ClusteringPipeline =
-            new DefaultClusteringPipeline(
+            new ClusteringPipeline(
                 clusteringStages,
                 extractDependencies,
-                resultWriterCreator)
+                resultWriterCreator) with PerformanceEvaluatedPipeline
 
-        val cluster = clusteringPipeline.runPipeline(true)
+        val cluster = clusteringPipeline.runPipeline()
 
         println(testName+" - END")
         cluster
