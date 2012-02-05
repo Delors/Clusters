@@ -82,7 +82,7 @@ class LayerClusteringStage(
                 // only edges to nodes in 'nodes' should be considered for degree calculation
                 // each edge group (edges with same source, target and dependency type are grouped together)
                 // is only counted once.
-                val groupedInDegree = node.getOwnTransposedEdges.filter(edge ⇒ nodeIDs contains edge.target.uniqueID).length
+                val groupedInDegree = node.getIncomingEdges.filter(edge ⇒ nodeIDs contains edge.target.uniqueID).size
                 val groupedOutDegree = node.getOutgoingEdges.filter(edge ⇒ nodeIDs contains edge.target.uniqueID).size
                 if (groupedInDegree == 0 && groupedOutDegree > 0)
                     topLayerNodes = topLayerNodes + node
@@ -94,10 +94,7 @@ class LayerClusteringStage(
                     sparatedNodes = sparatedNodes + node
             }
 
-            var furtherLayers = true
-            if (bottomLayerNodes.isEmpty && topLayerNodes.isEmpty) {
-                furtherLayers = false
-            }
+            var furtherLayers = !(bottomLayerNodes.isEmpty && topLayerNodes.isEmpty)
 
             if (!sparatedNodes.isEmpty) {
                 if (layer == 0)
@@ -129,6 +126,7 @@ class LayerClusteringStage(
 
         val inputNodes = cluster.getNodes.toSet
         cluster.clearNodes()
+        cluster.clusterable = false
         createLayers(inputNodes)
 
         createdNewCluster

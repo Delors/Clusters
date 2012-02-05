@@ -60,16 +60,16 @@ class SimilarityMetricClusteringStage(
         val inputNodes = cluster.getNodes.toArray
 
         def calcClusters(sortedEdges: List[((Int, Int), Long)], nodes: Iterable[Node]): Array[Node] = {
-            val clusters: Map[Int, AlgoNode] = Map()
+            val clusters = Map[Int, SimilarityMetricNode]()
             for (node ← nodes) {
-                val set = scala.collection.mutable.Set.empty[AlgoNode]
-                val n = new AlgoNode(node.uniqueID, set)
+                val set = scala.collection.mutable.Set.empty[SimilarityMetricNode]
+                val n = new SimilarityMetricNode(node.uniqueID, set)
                 set += n
                 n.cluster = set
                 clusters(n.id) = n
             }
 
-            val clusteredNodes: Set[Int] = Set()
+            val clusteredNodes = Set[Int]()
 
             for (((src, trg), wgt) ← sortedEdges) {
                 if (!clusteredNodes.contains(src) || !clusteredNodes.contains(trg)) {
@@ -84,9 +84,9 @@ class SimilarityMetricClusteringStage(
                 }
             }
 
-            val clusterset = scala.collection.mutable.Set.empty[Set[Int]]
+            val clusterset = scala.collection.mutable.Set[Set[Int]]()
             for (c ← clusters.values) {
-                var cl = Set.empty[Int]
+                var cl = Set[Int]()
                 for (n ← c.cluster) {
                     cl += n.id
                 }
@@ -114,7 +114,6 @@ class SimilarityMetricClusteringStage(
 
         val weightMatrix: Map[(Int, Int), Long] = Map()
 
-        // cluster.getInnerEdges foreach { edge ⇒
         cluster.getSpecialEdgesBetweenDirectChildren foreach { edge ⇒
             val key = (edge.source.uniqueID, edge.target.uniqueID)
             val oldWeight: Long = weightMatrix.getOrElse(key, 0)
@@ -126,6 +125,8 @@ class SimilarityMetricClusteringStage(
         val sortedEdges = weightMatrix.toList.sortWith((a, b) ⇒ a._2 > b._2)
 
         cluster.clearNodes()
+        cluster.clusterable = !createdNewCluster
+
         calcClusters(sortedEdges, inputNodes) foreach {
             cluster.addNode(_)
         }
@@ -186,12 +187,12 @@ class SimilarityMetricClusteringStage(
         }
         0
     }
+
+    private class SimilarityMetricNode(val id: Int, var cluster: scala.collection.mutable.Set[SimilarityMetricNode]) {
+        override def toString: String = String.valueOf(id)
+    }
 }
 
 trait SimilarityMetricClusteringAlgorithmConfiguration extends ClusteringAlgorithmConfiguration {
     val clusterIdentifierPrefix = "simMetricCluster_"
-}
-
-class AlgoNode(val id: Int, var cluster: scala.collection.mutable.Set[AlgoNode]) {
-    override def toString: String = String.valueOf(id)
 }

@@ -34,15 +34,8 @@ package de.tud.cs.st.clusters
 package pipeline
 package algorithm
 
-import scala.collection.mutable.Map
-import framework.pipeline.ClusteringAlgorithm
-import framework.pipeline.ClusteringAlgorithmConfiguration
 import framework.pipeline.SameNeighborClusteringStage
 import framework.pipeline.SameNeighborClusteringAlgorithmConfiguration
-import framework.structure.Cluster
-import framework.structure.Node
-import framework.structure.Edge
-import framework.structure.util.ClusterManager
 import de.tud.cs.st.bat.resolved.dependency._
 
 /**

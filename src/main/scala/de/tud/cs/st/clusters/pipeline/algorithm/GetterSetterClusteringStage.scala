@@ -34,17 +34,13 @@ package de.tud.cs.st.clusters
 package pipeline
 package algorithm
 
-import scala.collection.mutable.ListBuffer
 import framework.pipeline.ClusteringAlgorithm
 import framework.pipeline.ClusteringAlgorithmConfiguration
 import framework.structure.Cluster
 import framework.structure.Node
 import framework.structure.FieldNode
 import framework.structure.MethodNode
-import framework.structure.util.ClusterManager
 import de.tud.cs.st.bat.resolved.dependency.DependencyType._
-import de.tud.cs.st.bat.resolved.Type
-import de.tud.cs.st.bat.resolved.VoidType
 import de.tud.cs.st.bat.resolved.Field
 
 /**

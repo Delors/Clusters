@@ -42,6 +42,7 @@ import framework.structure.util.ClusterManager
 
 /**
  * Creates hyper clusters based on greatest common prefix of classes' package names
+ *
  * @author Thomas Schlosser
  *
  */
@@ -63,6 +64,7 @@ class PackageClusteringStage(
 
         val inputNodes = cluster.getNodes.toArray
         cluster.clearNodes()
+        cluster.clusterable = false
 
         // create resulting clusters
         var createdNewCluster = false

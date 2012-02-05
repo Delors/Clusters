@@ -39,9 +39,6 @@ import framework.pipeline.ClusteringAlgorithm
 import framework.pipeline.ClusteringAlgorithmConfiguration
 import framework.structure.Cluster
 import framework.structure.TypeNode
-import framework.structure.FieldNode
-import framework.structure.MethodNode
-import framework.structure.util.ClusterManager
 
 /**
  * Splits the nodes into application and libraries cluster.
@@ -77,7 +74,6 @@ class ApplicationLibrariesSeparatorStage(
                 return
             }
         }
-
         applicationPackages foreach { removeLongerPackagePrefix(_) }
 
         val inputNodes = cluster.getNodes.toArray

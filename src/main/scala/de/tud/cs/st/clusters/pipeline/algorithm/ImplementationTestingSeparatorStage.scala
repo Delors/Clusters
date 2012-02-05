@@ -41,7 +41,6 @@ import framework.structure.Cluster
 import framework.structure.Node
 import framework.structure.TypeNode
 import framework.structure.SourceElementNode
-import framework.structure.util.ClusterManager
 import de.tud.cs.st.bat.resolved.dependency._
 
 /**
@@ -69,7 +68,6 @@ class ImplementationTestingSeparatorStage(
                     testRelatedTypes = testRelatedTypes + mostOuterType
                 }
             }
-
             case fn: SourceElementNode ⇒ { // this case matches for FieldNodes and MethodNodes
                 val testType = fn.getOutgoingEdges.find(edge ⇒ edge.dType == DependencyType.IS_INSTANCE_MEMBER_OF || edge.dType == DependencyType.IS_CLASS_MEMBER_OF)
                 if (testType.isDefined) {
@@ -87,11 +85,14 @@ class ImplementationTestingSeparatorStage(
 
         if (!allTestRelatedNodes.isEmpty) {
             val inputNodes = cluster.getNodes.toSet
+
             cluster.clearNodes()
             cluster.clusterable = false
+
             val implementationCluster = clusterManager.createCluster(algorithmConfig.implementationClusterIdentifier, this.stageName)
             val testingCluster = clusterManager.createCluster(algorithmConfig.testingClusterIdentifier, this.stageName)
             testingCluster.clusterable = !algorithmConfig.markTestClusterAsUnclusterable
+
             cluster.addNode(implementationCluster)
             cluster.addNode(testingCluster)
 

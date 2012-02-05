@@ -77,6 +77,7 @@ class StronglyConnectedComponentsClusteringStage(
                     case Some(c) ⇒
                         c.addNode(node)
                     case None ⇒
+                        // handling to ensure that only clusters with more than one element will be created
                         newClusterMinSizeBuffer.get(sccID) match {
                             case Some(firstElement) ⇒
                                 val c = clusterManager.createCluster(algorithmConfig.clusterIdentifierPrefix + sccID, this.stageName, true)
