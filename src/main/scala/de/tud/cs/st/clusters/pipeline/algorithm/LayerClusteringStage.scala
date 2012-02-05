@@ -57,7 +57,7 @@ class LayerClusteringStage(
 
         def createLayers(nodes: Set[Node]) {
             def createNewLayerCluster(): Cluster = {
-                val layerCluster = clusterManager.createCluster(algorithmConfig.clusterIdentifierPrefix + layer, this.stageName)
+                val layerCluster = clusterManager.createCluster(algorithmConfig.clusterIdentifierPrefix + layer, this.stageName, true)
                 createdNewCluster = true
                 layer += 1
                 cluster.addNode(layerCluster)

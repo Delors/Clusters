@@ -79,7 +79,7 @@ class StronglyConnectedComponentsClusteringStage(
                     case None ⇒
                         newClusterMinSizeBuffer.get(sccID) match {
                             case Some(firstElement) ⇒
-                                val c = clusterManager.createCluster(algorithmConfig.clusterIdentifierPrefix + System.nanoTime(), this.stageName) //sccID, this.stageName)
+                                val c = clusterManager.createCluster(algorithmConfig.clusterIdentifierPrefix + sccID, this.stageName, true)
                                 createdNewCluster = true
                                 c.addNode(firstElement)
                                 c.addNode(node)

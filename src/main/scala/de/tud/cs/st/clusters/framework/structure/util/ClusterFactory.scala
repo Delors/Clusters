@@ -52,20 +52,24 @@ trait ClusterFactory
         with ClusterIDsMap
         with NodeStore {
 
-    def createCluster(clusterIdentifier: String, creatorStageName: String): Cluster = {
-        val cluster = createCluster(
-            //TODO: the uniqueness problem should be solved in a better way
-            if (clusterIdentifier.startsWith("SCC") || clusterIdentifier.startsWith("simMetric"))
+    def createCluster(clusterIdentifier: String, creatorStageName: String, makeUnique: Boolean = false): Cluster = {
+        val cluster = createClusterInStore(
+            if (makeUnique)
                 clusterID(clusterIdentifier + System.nanoTime())
             else
                 clusterID(clusterIdentifier),
             (c: Cluster) ⇒ Unit,
             (id) ⇒ new Cluster(id, clusterIdentifier))
-        cluster.metaInfo("creatorStage") = creatorStageName
+        if (cluster.metaInfo.isDefinedAt("creatorStage")) {
+            cluster.metaInfo("lastExplicitUpdaterStage") = creatorStageName
+        }
+        else {
+            cluster.metaInfo("creatorStage") = creatorStageName
+        }
         cluster
     }
 
-    private def createCluster[N <: Node](
+    private def createClusterInStore[N <: Node](
         id: Int,
         nodeExistsAction: (N) ⇒ Unit = (n: N) ⇒ Unit,
         newNode: (Int) ⇒ N): N = {

@@ -97,7 +97,7 @@ class SimilarityMetricClusteringStage(
             var i = 0
             clusterset foreach { nodes ⇒
                 if (nodes.size > 1) {
-                    val cluster = clusterManager.createCluster(algorithmConfig.clusterIdentifierPrefix + i, this.stageName)
+                    val cluster = clusterManager.createCluster(algorithmConfig.clusterIdentifierPrefix + i, this.stageName, true)
                     createdNewCluster = true
                     nodes foreach { node ⇒
                         cluster.addNode(clusterManager.getNode(node))
