@@ -48,10 +48,15 @@ trait Node {
 
     def uniqueID: Int
 
+    val isCluster: Boolean = false
+
     var clusterable: Boolean
 
     val metaInfo: Map[String, String] = HashMap()
 
+    /////////////////////////////////////////////
+    // parent-related stuff
+    /////////////////////////////////////////////
     var parent: Cluster = _
 
     def level: Int =
@@ -73,8 +78,26 @@ trait Node {
             }
         }
 
-    val isCluster: Boolean = false
+    def getDirectChild(parentID: Int): Node = {
+        if (this.parent != null) {
+            if (this.parent.uniqueID == parentID)
+                return this
+            else
+                return parent.getDirectChild(parentID)
+        }
+        else {
+            sys.error("")
+        }
+    }
 
+    def isChildOf(parentID: Int): Boolean =
+        this.parent != null && (
+            this.parent.uniqueID == parentID ||
+            this.parent.isChildOf(parentID))
+
+    /////////////////////////////////////////////
+    // edges-related stuff
+    /////////////////////////////////////////////
     protected var edges: List[Edge] = Nil
     protected var transposedEdges: List[Edge] = Nil
     protected val edgesMap: Map[(Node, Object), Edge] = Map() // Map[(Int, DependencyType), Int]
@@ -114,59 +137,59 @@ trait Node {
         transposedEdgesMap.clear()
     }
 
+    /**
+     * Gets all edges whose source is this node.
+     */
     def getOwnEdges: List[Edge] =
         edges
 
+    /**
+     * Gets all transposed edges whose target is this node.
+     */
     def getOwnTransposedEdges: List[Edge] =
         transposedEdges
 
-    //TODO: re-check these new methods...
+    /**
+     * Gets all edges whose source is this node or any of its children
+     * and whose target is neither this node nor any of its children.
+     */
     def getOutgoingEdges(): Set[Edge] = {
-        edges.toSet
+        edges.filter(e ⇒ !(e.target == this || e.target.isChildOf(this.uniqueID))).toSet
     }
 
+    /**
+     * Gets all transposed edges whose target is this node or any of its children
+     * and whose source is neither this node nor any of its children.
+     */
     def getIncomingEdges(): Set[Edge] = {
-        transposedEdges.toSet
+        transposedEdges.filter(e ⇒ !(e.source == this || e.source.isChildOf(this.uniqueID))).toSet
     }
 
+    /**
+     * Gets all edges whose source and target are children of this node.
+     */
     def getInnerEdges(): Set[Edge] =
         Set()
 
+    /**
+     * Gets all edges that are somehow related to this node or its children.
+     */
     def getAllEdges(): Set[Edge] = {
-        getOutgoingEdges() ++ getIncomingEdges()
+        getOutgoingEdges() ++ getIncomingEdges() ++ getInnerEdges()
     }
 
-    def getOutgoingEdgesOfLevel(parentID: Int = this.parent.uniqueID): Set[Edge] = {
-        if (this.parent != null && this.parent.uniqueID == parentID) {
-            for (e ← getOutgoingEdges() if e.target.isChildOf(parentID))
-                yield new Edge(e.source, e.target.getDirectChild(parentID), e.dType, e.count)
-        }
-        else {
-            Set()
-        }
+    /**
+     * Gets all outgoing edges of nodes whose parent is this node and whose target
+     * is also a child of this node. The target of the returned (special) edges is
+     * set to the direct child -- on the path to the original target -- of this node.
+     */
+    def getSpecialEdgesBetweenDirectChildren(): Set[Edge] = {
+        Set()
     }
-
-    def getDirectChild(parentID: Int): Node = {
-        if (this.parent != null) {
-            if (this.parent.uniqueID == parentID)
-                return this
-            else
-                return parent.getDirectChild(parentID)
-        }
-        else {
-            sys.error("")
-        }
-    }
-
-    def isChildOf(parentID: Int): Boolean =
-        this.parent != null && (
-            this.parent.uniqueID == parentID ||
-            parent.isChildOf(parentID))
 
     /////////////////////////////////////////////
-    // methods to add and access children (nodes)
+    // children(nodes)-related stuff
     /////////////////////////////////////////////
-
     def addNode(node: Node) {
         sys.error("This method call is not allowed on this kind of node!")
     }

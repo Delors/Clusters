@@ -48,15 +48,18 @@ class Cluster(
     val isProjectCluster: Boolean)
         extends Node {
 
+    def this(uniqueID: Int, identifier: String) {
+        this(uniqueID, identifier, false)
+    }
+
     override val isCluster: Boolean = true
 
     override var clusterable = true
 
+    /////////////////////////////////////////////
+    // children(nodes)-related stuff
+    /////////////////////////////////////////////
     val nodeMap = Map[Int, Node]()
-
-    def this(uniqueID: Int, identifier: String) {
-        this(uniqueID, identifier, false)
-    }
 
     override def addNode(node: Node) {
         nodeMap.put(node.uniqueID, node)
@@ -91,19 +94,22 @@ class Cluster(
     override def numberOfNodes: Int =
         nodeMap.size
 
-    //TODO: re-check these new methods...
+    /////////////////////////////////////////////
+    // edges-related stuff
+    /////////////////////////////////////////////
     override def getOutgoingEdges(): Set[Edge] = {
         // fetch edges from cluster elements
         var edges = Set[Edge]()
         nodeMap.values foreach {
             _.getOutgoingEdges foreach { edge ⇒
-                val containsSource = edge.source.isChildOf(this.uniqueID)
-                val containsTarget = edge.target.isChildOf(this.uniqueID)
+                val containsSource = edge.source == this || edge.source.isChildOf(this.uniqueID)
+                val containsTarget = edge.target == this || edge.target.isChildOf(this.uniqueID)
                 if (containsSource && !containsTarget) {
                     edges = edges + edge
                 }
             }
         }
+        // add own outgoing edges to the result
         edges ++ super.getOutgoingEdges()
     }
 
@@ -112,13 +118,14 @@ class Cluster(
         var edges = Set[Edge]()
         nodeMap.values foreach {
             _.getIncomingEdges foreach { edge ⇒
-                val containsSource = edge.source.isChildOf(this.uniqueID)
-                val containsTarget = edge.target.isChildOf(this.uniqueID)
+                val containsSource = edge.source == this || edge.source.isChildOf(this.uniqueID)
+                val containsTarget = edge.target == this || edge.target.isChildOf(this.uniqueID)
                 if (!containsSource && containsTarget) {
                     edges = edges + edge
                 }
             }
         }
+        // add own incoming edges to the result
         edges ++ super.getIncomingEdges()
     }
 
@@ -127,8 +134,8 @@ class Cluster(
         var edges = Set[Edge]()
         nodeMap.values foreach {
             _.getOutgoingEdges foreach { edge ⇒
-                val containsSource = edge.source.isChildOf(this.uniqueID)
-                val containsTarget = edge.target.isChildOf(this.uniqueID)
+                val containsSource = edge.source == this || edge.source.isChildOf(this.uniqueID)
+                val containsTarget = edge.target == this || edge.target.isChildOf(this.uniqueID)
                 if (containsSource && containsTarget) {
                     edges = edges + edge
                 }
@@ -141,26 +148,18 @@ class Cluster(
         // fetch all edges from cluster elements and from cluster itself
         super.getAllEdges() ++ { for (node ← nodeMap.values; edge ← node.getAllEdges) yield edge }
 
-    override def getOutgoingEdgesOfLevel(parentID: Int = this.uniqueID): Set[Edge] = {
-        if (this.uniqueID == parentID) {
-            var edges = Set[Edge]()
-            nodeMap.values foreach {
-                _.getOutgoingEdges foreach { edge ⇒
-                    val containsSource = edge.source.isChildOf(this.uniqueID)
-                    val containsTarget = edge.target.isChildOf(this.uniqueID)
-                    if (containsSource && containsTarget) {
-                        edges = edges + new Edge(edge.source.getDirectChild(parentID), edge.target.getDirectChild(parentID), edge.dType, edge.count)
-                    }
+    override def getSpecialEdgesBetweenDirectChildren(): Set[Edge] = {
+        var edges = Set[Edge]()
+        nodeMap.values foreach {
+            _.getOutgoingEdges foreach { edge ⇒
+                val childrenContainsSource = edge.source.isChildOf(this.uniqueID)
+                val childrenContainsTarget = edge.target.isChildOf(this.uniqueID)
+                if (childrenContainsSource && childrenContainsTarget) {
+                    edges = edges + new Edge(edge.source.getDirectChild(this.uniqueID), edge.target.getDirectChild(this.uniqueID), edge.dType, edge.count)
                 }
             }
-            edges
-            //            for (e ← getOutgoingEdges() if e.target.isChildOf(parentID))
-            //                yield new Edge(e.source, e.target.getDirectChild(parentID), e.dType, e.count)
         }
-        else {
-            //TODO: check what to do in this case
-            Set()
-        }
+        edges
     }
 
 }

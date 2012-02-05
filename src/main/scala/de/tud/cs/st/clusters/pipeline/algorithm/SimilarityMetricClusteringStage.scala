@@ -115,7 +115,7 @@ class SimilarityMetricClusteringStage(
         val weightMatrix: Map[(Int, Int), Long] = Map()
 
         // cluster.getInnerEdges foreach { edge ⇒
-        cluster.getOutgoingEdgesOfLevel(cluster.uniqueID) foreach { edge ⇒
+        cluster.getSpecialEdgesBetweenDirectChildren foreach { edge ⇒
             val key = (edge.source.uniqueID, edge.target.uniqueID)
             val oldWeight: Long = weightMatrix.getOrElse(key, 0)
             val newWeight = oldWeight + (getWeight(edge.dType) * edge.count)
