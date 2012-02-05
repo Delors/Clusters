@@ -57,16 +57,16 @@ class ImplementationTestingSeparatorStage(
         extends ClusteringAlgorithm[ImplementationTestingSeparatorStageConfiguration] {
 
     override def performClustering(cluster: Cluster): Boolean = {
-        //TODO: Consider inner classes, too.
         val directlyTestRelatedNodes = extractDirectlyTestRelatedNodes(cluster)
 
         var allTestRelatedNodes: List[Node] = Nil
         var testRelatedTypes: Set[Node] = Set()
         directlyTestRelatedNodes foreach {
             case tn: TypeNode ⇒ {
-                if (!testRelatedTypes.contains(tn)) {
-                    allTestRelatedNodes = getClassRelatedNodes(tn) ::: allTestRelatedNodes
-                    testRelatedTypes = testRelatedTypes + tn
+                val mostOuterType = getMostOuterType(tn)
+                if (!testRelatedTypes.contains(mostOuterType)) {
+                    allTestRelatedNodes = getClassRelatedNodes(mostOuterType) ::: allTestRelatedNodes
+                    testRelatedTypes = testRelatedTypes + mostOuterType
                 }
             }
 
@@ -74,9 +74,10 @@ class ImplementationTestingSeparatorStage(
                 val testType = fn.getOutgoingEdges.find(edge ⇒ edge.dType == DependencyType.IS_INSTANCE_MEMBER_OF || edge.dType == DependencyType.IS_CLASS_MEMBER_OF)
                 if (testType.isDefined) {
                     val typeNode = testType.get.target
-                    if (!testRelatedTypes.contains(typeNode)) {
-                        allTestRelatedNodes = getClassRelatedNodes(typeNode) ::: allTestRelatedNodes
-                        testRelatedTypes = testRelatedTypes + typeNode
+                    val mostOuterType = getMostOuterType(typeNode)
+                    if (!testRelatedTypes.contains(mostOuterType)) {
+                        allTestRelatedNodes = getClassRelatedNodes(mostOuterType) ::: allTestRelatedNodes
+                        testRelatedTypes = testRelatedTypes + mostOuterType
                     }
                 }
             }
@@ -111,33 +112,54 @@ class ImplementationTestingSeparatorStage(
         }
     }
 
-    def extractDirectlyTestRelatedNodes(cluster: Cluster): List[Node] = {
+    protected def getMostOuterType(typeNode: Node): Node = {
+        typeNode.getOutgoingEdges.find(edge ⇒ edge.dType == DependencyType.IS_INNER_CLASS_OF) match {
+            case Some(edge) ⇒
+                getMostOuterType(edge.target) // return most outer type of the outer class
+            case None ⇒ // given type is no inner type; return the type itself
+                typeNode
+        }
+    }
+
+    protected def extractDirectlyTestRelatedNodes(cluster: Cluster): List[Node] = {
         var result: List[Node] = Nil
         cluster.getNodes foreach { node ⇒
-            node.getOwnEdges foreach { edge ⇒
-                if (algorithmConfig.testLibrariesPackagePrefixes.exists(prfx ⇒ edge.target.identifier.startsWith(prfx))) {
-                    result = node :: result
+            // a node with an identifier that starts with a test library package prefix is considered as directly test related
+            if (algorithmConfig.testLibrariesPackagePrefixes.exists(prfx ⇒ node.identifier.startsWith(prfx))) {
+                result = node :: result
+            }
+            else {
+                // check whether the current node has a direct dependency to a test library
+                node.getOwnEdges foreach { edge ⇒
+                    if (algorithmConfig.testLibrariesPackagePrefixes.exists(prfx ⇒ edge.target.identifier.startsWith(prfx))) {
+                        result = node :: result
+                    }
                 }
             }
         }
         result
     }
 
-    def getClassRelatedNodes(typeNode: Node): List[Node] =
-        typeNode :: {
-            for (
-                tEdge ← typeNode.getOwnTransposedEdges if tEdge.dType == DependencyType.IS_INSTANCE_MEMBER_OF ||
-                    tEdge.dType == DependencyType.IS_CLASS_MEMBER_OF
-            ) yield tEdge.target
+    protected def getClassRelatedNodes(typeNode: Node): List[Node] = {
+        var result = List(typeNode)
+        for (tEdge ← typeNode.getOwnTransposedEdges) {
+            if (tEdge.dType == DependencyType.IS_INSTANCE_MEMBER_OF ||
+                tEdge.dType == DependencyType.IS_CLASS_MEMBER_OF) {
+                result = tEdge.target :: result
+            }
+            else if (tEdge.dType == DependencyType.IS_INNER_CLASS_OF) {
+                result = tEdge.target :: result
+                result = getClassRelatedNodes(tEdge.target) ::: result
+            }
         }
+        result
+    }
 }
 
 trait ImplementationTestingSeparatorStageConfiguration extends ClusteringAlgorithmConfiguration {
     val implementationClusterIdentifier = "implemenation"
     val testingClusterIdentifier = "testing"
 
-    //TODO: make use of http://en.wikipedia.org/wiki/List_of_unit_testing_frameworks#Java
-    // put this enhanced list in a new Configuration file 
     val testLibrariesPackagePrefixes = List("org.junit.", "org.scalatest.")
     val markTestClusterAsUnclusterable = true
 }
