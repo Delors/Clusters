@@ -32,42 +32,42 @@
 */
 package de.tud.cs.st.clusters
 package framework
-package validation
+package util
 
-import org.junit.runner.RunWith
-import org.scalatest.junit.JUnitRunner
-import structure.Cluster
-import structure.SourceElementNode
-import mojo.MoJoCalculator
-import de.tud.cs.st.clusters.pipeline.algorithm.ClassExtractorStage
-import de.tud.cs.st.clusters.pipeline.algorithm.ClassExtractorStageConfiguration
-import de.tud.cs.st.clusters.pipeline.algorithm.ApplicationLibrariesSeparatorStage
-import de.tud.cs.st.clusters.pipeline.algorithm.ApplicationLibrariesSeparatorStageConfiguration
-import pipeline.ClusteringStage
-import util.ReferenceClusterCreator
+import java.io.File
+import structure.util.DefaultClusterManager
+import de.tud.cs.st.bat.resolved.dependency.DependencyExtractor
+import de.tud.cs.st.bat.resolved.reader.Java6Framework
+import de.tud.cs.st.bat.resolved.DoNothingSourceElementsVisitor
+import java.io.FileWriter
+import java.io.BufferedWriter
 
 /**
  * @author Thomas Schlosser
  *
  */
-@RunWith(classOf[JUnitRunner])
-class MoJoWrapperTest extends AbstractClusteringTest {
+trait SourceElementIdentifiersToFile
+        extends DependencyExtractionUtils {
 
-    test("calculate double direction MojoFM quality value") {
-        val referenceClusters = ReferenceClusterCreator.readReferenceCluster(
-            "test/classfiles/ClusteringTestProject.zip",
-            new java.io.File("test/referenceCluster/ClusteringTestProject.sei"))
+    def writeSourceElementsToFile(sourceInputFilePath: String, outputFile: File) {
+        val clusterManager = new DefaultClusterManager()
+        extractDependencies(sourceInputFilePath)(clusterManager)
+        val projectCluster = clusterManager.getProjectCluster
 
-        val libConfiguration = new ApplicationLibrariesSeparatorStageConfiguration {}
-        val clusteringStages: Array[ClusteringStage] = Array(
-            new ApplicationLibrariesSeparatorStage(libConfiguration))
-
-        val extractedClusters = testClustering(
-            "testInternalExternalClusteringStage [ClusteringTestProject.zip]",
-            extractDependencies("test/classfiles/ClusteringTestProject.zip"))(clusteringStages)
-
-        println("MoJo:")
-        var mjw = new MoJoWrapper(referenceClusters, extractedClusters)
-        println(mjw.doubleDirectionMojoFM)
+        val fw = new FileWriter(outputFile)
+        val bw = new BufferedWriter(fw)
+        bw.write("[\n")
+        var identifierList: List[String] = Nil
+        projectCluster.getNodes foreach { node ⇒
+            identifierList = node.identifier :: identifierList
+        }
+        identifierList = identifierList.sortWith(_.toLowerCase < _.toLowerCase)
+        identifierList foreach { identifier ⇒
+            bw.write(identifier)
+            bw.write("\n")
+        }
+        bw.write("]")
+        bw.close()
     }
+
 }

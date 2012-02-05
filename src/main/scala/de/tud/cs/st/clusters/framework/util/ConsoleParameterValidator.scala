@@ -32,42 +32,41 @@
 */
 package de.tud.cs.st.clusters
 package framework
-package validation
+package util
 
-import org.junit.runner.RunWith
-import org.scalatest.junit.JUnitRunner
-import structure.Cluster
-import structure.SourceElementNode
-import mojo.MoJoCalculator
-import de.tud.cs.st.clusters.pipeline.algorithm.ClassExtractorStage
-import de.tud.cs.st.clusters.pipeline.algorithm.ClassExtractorStageConfiguration
-import de.tud.cs.st.clusters.pipeline.algorithm.ApplicationLibrariesSeparatorStage
-import de.tud.cs.st.clusters.pipeline.algorithm.ApplicationLibrariesSeparatorStageConfiguration
-import pipeline.ClusteringStage
-import util.ReferenceClusterCreator
+import java.io.File
+import structure.util.DefaultClusterManager
+import de.tud.cs.st.bat.resolved.dependency.DependencyExtractor
+import de.tud.cs.st.bat.resolved.reader.Java6Framework
+import de.tud.cs.st.bat.resolved.DoNothingSourceElementsVisitor
+import java.io.FileWriter
+import java.io.BufferedWriter
 
 /**
  * @author Thomas Schlosser
  *
  */
-@RunWith(classOf[JUnitRunner])
-class MoJoWrapperTest extends AbstractClusteringTest {
+trait ConsoleParameterValidator {
 
-    test("calculate double direction MojoFM quality value") {
-        val referenceClusters = ReferenceClusterCreator.readReferenceCluster(
-            "test/classfiles/ClusteringTestProject.zip",
-            new java.io.File("test/referenceCluster/ClusteringTestProject.sei"))
+    protected def validateOutputFileParameter(outputFile: java.io.File, parameterName: String) {
+        if (!outputFile.exists)
+            outputFile.createNewFile()
+        else if (outputFile.isDirectory)
+            println("Output can not be written to a directory! Please choose a file as '"+parameterName+"'.")
+        else if (!outputFile.canWrite)
+            println("It is not allowed to write to the given output file! Please choose a writable file as '"+parameterName+"'.")
+        else return
+        sys.exit(1)
+    }
 
-        val libConfiguration = new ApplicationLibrariesSeparatorStageConfiguration {}
-        val clusteringStages: Array[ClusteringStage] = Array(
-            new ApplicationLibrariesSeparatorStage(libConfiguration))
-
-        val extractedClusters = testClustering(
-            "testInternalExternalClusteringStage [ClusteringTestProject.zip]",
-            extractDependencies("test/classfiles/ClusteringTestProject.zip"))(clusteringStages)
-
-        println("MoJo:")
-        var mjw = new MoJoWrapper(referenceClusters, extractedClusters)
-        println(mjw.doubleDirectionMojoFM)
+    protected def validateInputFileParameter(inputFile: java.io.File, parameterName: String) {
+        if (!inputFile.exists)
+            println("Input file does not exist! Please choose an existing file as '"+parameterName+"'.")
+        else if (inputFile.isDirectory)
+            println("Given input is a directory! Please choose a file as '"+parameterName+"'.")
+        else if (!inputFile.canRead)
+            println("It is not allowed to read from the given file! Please choose a readable file as '"+parameterName+"'.")
+        else return
+        sys.exit(1)
     }
 }

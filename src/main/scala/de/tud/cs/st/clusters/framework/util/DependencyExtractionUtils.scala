@@ -32,42 +32,21 @@
 */
 package de.tud.cs.st.clusters
 package framework
-package validation
+package util
 
-import org.junit.runner.RunWith
-import org.scalatest.junit.JUnitRunner
-import structure.Cluster
-import structure.SourceElementNode
-import mojo.MoJoCalculator
-import de.tud.cs.st.clusters.pipeline.algorithm.ClassExtractorStage
-import de.tud.cs.st.clusters.pipeline.algorithm.ClassExtractorStageConfiguration
-import de.tud.cs.st.clusters.pipeline.algorithm.ApplicationLibrariesSeparatorStage
-import de.tud.cs.st.clusters.pipeline.algorithm.ApplicationLibrariesSeparatorStageConfiguration
-import pipeline.ClusteringStage
-import util.ReferenceClusterCreator
+import de.tud.cs.st.bat.resolved.dependency.DependencyExtractor
+import de.tud.cs.st.bat.resolved.reader.Java6Framework
 
 /**
  * @author Thomas Schlosser
  *
  */
-@RunWith(classOf[JUnitRunner])
-class MoJoWrapperTest extends AbstractClusteringTest {
+trait DependencyExtractionUtils {
+    protected def extractDependencies(zipFile: String, classFiles: String*): (DependencyExtractor) ⇒ Unit = {
+        dependencyExtractor ⇒ for (classFile ← classFiles) dependencyExtractor.process(Java6Framework.ClassFile(zipFile, classFile))
+    }
 
-    test("calculate double direction MojoFM quality value") {
-        val referenceClusters = ReferenceClusterCreator.readReferenceCluster(
-            "test/classfiles/ClusteringTestProject.zip",
-            new java.io.File("test/referenceCluster/ClusteringTestProject.sei"))
-
-        val libConfiguration = new ApplicationLibrariesSeparatorStageConfiguration {}
-        val clusteringStages: Array[ClusteringStage] = Array(
-            new ApplicationLibrariesSeparatorStage(libConfiguration))
-
-        val extractedClusters = testClustering(
-            "testInternalExternalClusteringStage [ClusteringTestProject.zip]",
-            extractDependencies("test/classfiles/ClusteringTestProject.zip"))(clusteringStages)
-
-        println("MoJo:")
-        var mjw = new MoJoWrapper(referenceClusters, extractedClusters)
-        println(mjw.doubleDirectionMojoFM)
+    protected def extractDependencies(zipFile: String): (DependencyExtractor) ⇒ Unit = {
+        dependencyExtractor ⇒ for (cf ← Java6Framework.ClassFiles(zipFile)) dependencyExtractor.process(cf)
     }
 }

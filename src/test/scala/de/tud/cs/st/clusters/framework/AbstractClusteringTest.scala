@@ -54,12 +54,14 @@ import pipeline.DOTClusteringResultWriterConfiguration
 import pipeline.GMLClusteringResultWriter
 import pipeline.GraphmlClusteringResultWriter
 import pipeline.GraphmlClusteringResultWriterConfiguration
+import util.DependencyExtractionUtils
 
 /**
  * @author Thomas Schlosser
  *
  */
 trait AbstractClusteringTest extends FunSuite
+        with DependencyExtractionUtils
         with PerformanceEvaluation {
 
     type BaseDependencyExtractor = ClusterManager
@@ -85,14 +87,6 @@ trait AbstractClusteringTest extends FunSuite
                                            extractDependencies: (DependencyExtractor) ⇒ Unit,
                                            resultWriterCreator: () ⇒ ClusteringResultWriter = () ⇒ null) {
         testClustering(testName, extractDependencies, resultWriterCreator)(null)
-    }
-
-    protected def extractDependencies(zipFile: String, classFiles: String*): (DependencyExtractor) ⇒ Unit = {
-        dependencyExtractor ⇒ for (classFile ← classFiles) dependencyExtractor.process(Java6Framework.ClassFile(zipFile, classFile))
-    }
-
-    protected def extractDependencies(zipFile: String): (DependencyExtractor) ⇒ Unit = {
-        dependencyExtractor ⇒ for (cf ← Java6Framework.ClassFiles(zipFile)) dependencyExtractor.process(cf)
     }
 
     protected val clusteringTestProjectDependencyExtractor = extractDependencies("test/classfiles/ClusteringTestProject.zip")

@@ -50,7 +50,7 @@ abstract class ClusteringResultWriter(
                 fileName
             else fileName + '.' + fileExtension) {
 
-    private[pipeline] def write(clusteringResult: Cluster) {
+    def write(clusteringResult: Cluster) {
         writeHeader()
         implicit val nodeBuffer = new StringBuffer()
         implicit val edgeBuffer = new StringBuffer()

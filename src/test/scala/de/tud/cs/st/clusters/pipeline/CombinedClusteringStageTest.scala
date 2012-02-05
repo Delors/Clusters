@@ -53,6 +53,8 @@ import strategy.FirstClusterablesClusteringStrategy
 import strategy.FixedPointIterationClusteringStrategy
 import strategy.IdentifierBasedClusteringStrategy
 import strategy.MinClusterSizeClusteringStrategy
+import framework.util.ReferenceClusterCreator
+import framework.validation.MoJoWrapper
 
 /**
  * @author Thomas Schlosser
@@ -93,24 +95,32 @@ class CombinedClusteringStageTest extends AbstractClusteringTest {
     )
 
     test("testCombinedClusteringStage [ClusteringTestProject]") {
-        testClustering(
+        val extractedCluster = testClustering(
             "testCombinedClusteringStage [ClusteringTestProject]",
             clusteringTestProjectDependencyExtractor,
             graphmlClusteringResultWriterCreator("combinedClust_ClusteringTestProject"))
+
+        val referenceClusters = ReferenceClusterCreator.readReferenceCluster(
+            "test/classfiles/ClusteringTestProject.zip",
+            new java.io.File("test/referenceCluster/ClusteringTestProject.sei"))
+
+        println("MoJo:")
+        var mjw = new MoJoWrapper(referenceClusters, extractedCluster)
+        println(mjw.doubleDirectionMojoFM)
     }
 
-    test("testCombinedClusteringStage [cocome]") {
-        testClustering(
-            "testCombinedClusteringStage [cocome]",
-            cocomeDependencyExtractor,
-            graphmlClusteringResultWriterCreator("combinedClust_cocome", _maxNumberOfLevels = Some(4)))
-    }
-
-    test("testCombinedClusteringStage [hibernate]") {
-        testClustering(
-            "testCombinedClusteringStage [hibernate]",
-            hibernateDependencyExtractor,
-            graphmlClusteringResultWriterCreator("combinedClust_hibernate"))
-    }
+    //    test("testCombinedClusteringStage [cocome]") {
+    //        testClustering(
+    //            "testCombinedClusteringStage [cocome]",
+    //            cocomeDependencyExtractor,
+    //            graphmlClusteringResultWriterCreator("combinedClust_cocome", _maxNumberOfLevels = Some(4)))
+    //    }
+    //
+    //    test("testCombinedClusteringStage [hibernate]") {
+    //        testClustering(
+    //            "testCombinedClusteringStage [hibernate]",
+    //            hibernateDependencyExtractor,
+    //            graphmlClusteringResultWriterCreator("combinedClust_hibernate"))
+    //    }
 
 }

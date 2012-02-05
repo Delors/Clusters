@@ -136,6 +136,8 @@ trait ImplementationTestingSeparatorStageConfiguration extends ClusteringAlgorit
     val implementationClusterIdentifier = "implemenation"
     val testingClusterIdentifier = "testing"
 
+    //TODO: make use of http://en.wikipedia.org/wiki/List_of_unit_testing_frameworks#Java
+    // put this enhanced list in a new Configuration file 
     val testLibrariesPackagePrefixes = List("org.junit.", "org.scalatest.")
     val markTestClusterAsUnclusterable = true
 }
