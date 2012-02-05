@@ -71,8 +71,6 @@ class CombinedClusteringStageTest extends AbstractClusteringTest {
     val sccConfiguration = new StronglyConnectedComponentsClusteringAlgorithmConfiguration {}
 
     //TODO: implement more strategies and make use of the metaInfo data;
-    //TODO: create some concrete examples with known optimal results and evaluate the current stages and stage combinations.
-    // -> e.g. pattern implementations from wikipedia
 
     val libStage = new ApplicationLibrariesSeparatorStage(appLibConfiguration)
     val pkgStage = new {
