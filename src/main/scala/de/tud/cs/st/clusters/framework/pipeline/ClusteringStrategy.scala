@@ -38,6 +38,7 @@ import structure.Cluster
 import structure.util.ClusterManager
 
 /**
+ * Marker trait for clustering strategies.
  *
  * @author Thomas Schlosser
  */

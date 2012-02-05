@@ -63,54 +63,63 @@ trait ReferenceClusterCreator
         }
         projectCluster.clearNodes();
 
-        val fr = new FileReader(referenceClusterInputFile)
-        val br = new BufferedReader(fr)
-        var line: String = br.readLine()
-        var lineCounter = 1
-        var currentParent: Node = null
-        var currentNode: Node = null
-        var clusterCounter = 1
-        while (line != null) {
-            line = line.trim()
-            if (line == "[") {
-                if (currentParent == null)
-                    currentParent = projectCluster
+        var fr: FileReader = null
+        var br: BufferedReader = null
+        try {
+            fr = new FileReader(referenceClusterInputFile)
+            br = new BufferedReader(fr)
+            var line: String = br.readLine()
+            var lineCounter = 1
+            var currentParent: Node = null
+            var currentNode: Node = null
+            var clusterCounter = 1
+            while (line != null) {
+                line = line.trim()
+                if (line == "[") {
+                    if (currentParent == null)
+                        currentParent = projectCluster
+                    else {
+                        val newParent = clusterManager.createCluster("cluster_"+clusterCounter, "")
+                        clusterCounter += 1
+                        currentParent.addNode(newParent)
+                        currentParent = newParent
+                    }
+                }
+                else if (line == "]") {
+                    if (currentParent == null) {
+                        sys.error("Cluster end marker is not allowed in line "+lineCounter+". There is no cluster to close. Please re-check the cluster hierarchy!")
+                    }
+                    currentParent = currentParent.parent
+                }
                 else {
-                    val newParent = clusterManager.createCluster("cluster_"+clusterCounter, "")
-                    clusterCounter += 1
-                    currentParent.addNode(newParent)
-                    currentParent = newParent
-                }
-            }
-            else if (line == "]") {
-                if (currentParent == null) {
-                    sys.error("Cluster end marker is not allowed in line "+lineCounter+". There is no cluster to close. Please re-check the cluster hierarchy!")
-                }
-                currentParent = currentParent.parent
-            }
-            else {
-                //line is an identifier
-                identifierMap.get(line) match {
-                    case Some(node) ⇒ {
-                        currentNode = node
-                        if (currentParent == null) {
-                            sys.error("A cluster has to be started before node '"+line+"' in line "+lineCounter+" can be added.")
+                    //line is an identifier
+                    identifierMap.get(line) match {
+                        case Some(node) ⇒ {
+                            currentNode = node
+                            if (currentParent == null) {
+                                sys.error("A cluster has to be started before node '"+line+"' in line "+lineCounter+" can be added.")
+                            }
+                            else
+                                currentParent.addNode(currentNode)
                         }
-                        else
-                            currentParent.addNode(currentNode)
-                    }
-                    case None ⇒ {
-                        sys.error("Line "+lineCounter+" '"+line+"' is not a valid identifier for the given 'sourceInputFile'. Please re-check this line and try it again.")
+                        case None ⇒ {
+                            sys.error("Line "+lineCounter+" '"+line+"' is not a valid identifier for the given 'sourceInputFile'. Please re-check this line and try it again.")
+                        }
                     }
                 }
+                line = br.readLine()
+                lineCounter += 1
             }
-            line = br.readLine()
-            lineCounter += 1
+            if (currentParent != null) {
+                sys.error("Reached end of file and not all clusters are closed correctly. Please re-check the cluster hierarchy!")
+            }
         }
-        if (currentParent != null) {
-            sys.error("Reached end of file and not all clusters are closed correctly. Please re-check the cluster hierarchy!")
+        finally {
+            if (br != null)
+                br.close()
+            else if (fr != null)
+                fr.close()
         }
-        br.close()
         projectCluster
     }
 }

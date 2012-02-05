@@ -41,9 +41,6 @@ import pipeline.GraphmlClusteringResultWriterConfiguration
 /**
  * @author Thomas Schlosser
  *
- * @param sourceInputFilePath
- * @param referenceClusterInputFile
- * @return
  */
 object ReferenceClusterApp
         extends ConsoleParameterValidator
@@ -51,9 +48,9 @@ object ReferenceClusterApp
         with ReferenceClusterCreator
         with SourceElementIdentifiersToFile {
 
-    val defaultOutputFileExtension = ".sei"
+    private val defaultOutputFileExtension = ".sei"
 
-    val usage = """
+    private val usage = """
 Usage: ReferenceClusterApp [-mode [write|read|default]] -binaryFile <binaryFile> [-options]
    or  ReferenceClusterApp -h | --help | -?
            (to print this help message)
@@ -95,7 +92,7 @@ where options include:
                   ]
 """
 
-    val modeMap = Map("default" -> 0, "write" -> 1, "read" -> 2)
+    private val modeMap = Map("default" -> 0, "write" -> 1, "read" -> 2)
 
     def main(args: Array[String]) {
         if (args.length == 0 ||
@@ -176,10 +173,11 @@ where options include:
         mode match {
             case 0 ⇒ { // default
                 val concreteOutputFile = getConcreteFile(binaryFilePath, outputFile, defaultOutputFileExtension)
+                val concreteGraphmlFile = getConcreteFile(binaryFilePath, graphmlFile, "graphml", false)
                 runWriteMode(binaryFilePath, concreteOutputFile)
                 println("Please press enter to continue after you have finished modifications of the 'outputFile' (\""+concreteOutputFile.getAbsolutePath()+"\").")
                 System.in.read
-                runReadMode(binaryFilePath, concreteOutputFile)
+                runReadMode(binaryFilePath, concreteOutputFile, concreteGraphmlFile)
             }
             case 1 ⇒ { // write
                 runWriteMode(binaryFilePath, getConcreteFile(binaryFilePath, outputFile, defaultOutputFileExtension))
@@ -192,7 +190,7 @@ where options include:
 
                 val concreteGraphmlFile = getConcreteFile(binaryFilePath, graphmlFile, "graphml", false)
 
-                runReadMode(binaryFilePath, referenceClusterFile.get)
+                runReadMode(binaryFilePath, referenceClusterFile.get, concreteGraphmlFile)
             }
         }
     }
@@ -201,7 +199,7 @@ where options include:
         writeSourceElementsToFile(binaryFilePath, outputFile)
     }
 
-    private def runReadMode(binaryFilePath: String, referenceClusterFile: File) {
+    private def runReadMode(binaryFilePath: String, referenceClusterFile: File, graphmlFile: File) {
         try {
             val cluster = readReferenceCluster(binaryFilePath, referenceClusterFile)
 
@@ -211,9 +209,14 @@ where options include:
                 override val showSourceElementNodes: Boolean = false
                 override val maxNumberOfLevels: Option[Int] = None
             } with GraphmlClusteringResultWriterConfiguration
-            val clusterWriter = new GraphmlClusteringResultWriter("output.graphml", writerConfig)
-            clusterWriter.write(cluster)
-            clusterWriter.close()
+
+            val clusterWriter = new GraphmlClusteringResultWriter(graphmlFile.getAbsolutePath(), writerConfig)
+            try {
+                clusterWriter.write(cluster)
+            }
+            finally {
+                clusterWriter.close()
+            }
         }
         catch {
             case e: Exception ⇒

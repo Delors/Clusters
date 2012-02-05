@@ -35,21 +35,12 @@ package framework
 package structure
 package util
 
-import de.tud.cs.st.bat.resolved.Type
-import de.tud.cs.st.bat.resolved.Field
-import de.tud.cs.st.bat.resolved.Method
-import de.tud.cs.st.bat.resolved.ClassFile
-import de.tud.cs.st.bat.resolved.ObjectType
-import de.tud.cs.st.bat.resolved.MethodDescriptor
-import pipeline.ClusteringStage
-
 /**
  * @author Thomas Schlosser
  *
  */
 trait ClusterFactory
-        extends PrettyPrint
-        with ClusterIDsMap
+        extends ClusterIDs
         with NodeStore {
 
     def createCluster(clusterIdentifier: String, creatorStageName: String, makeUnique: Boolean = false): Cluster = {

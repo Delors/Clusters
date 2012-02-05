@@ -49,9 +49,7 @@ import structure.util.ClusterManager
  */
 trait ClusteringStage {
 
-    private[this] var cm: ClusterManager = null
-    def clusterManager: ClusterManager = cm
-    def clusterManager_=(cm: ClusterManager) { this.cm = cm }
+    var clusterManager: ClusterManager = null
 
     def stageName: String = this.getClass.getCanonicalName
 

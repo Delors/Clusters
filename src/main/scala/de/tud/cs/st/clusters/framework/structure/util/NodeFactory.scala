@@ -45,7 +45,7 @@ import de.tud.cs.st.bat.resolved.dependency.SourceElementIDsMap
 import de.tud.cs.st.bat.resolved.dependency.UseIDOfBaseTypeForArrayTypes
 
 /**
- * @author thomas
+ * @author Thomas Schlosser
  *
  */
 trait NodeFactory extends PrettyPrint with NodeStore {

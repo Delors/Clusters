@@ -39,7 +39,7 @@ import scala.collection.mutable.Map
 import de.tud.cs.st.bat.resolved.dependency.SourceElementIDsMap
 
 /**
- * @author thomas
+ * @author Thomas Schlosser
  *
  */
 trait NodeStore extends SourceElementIDsMap with ClusterIDsMap {

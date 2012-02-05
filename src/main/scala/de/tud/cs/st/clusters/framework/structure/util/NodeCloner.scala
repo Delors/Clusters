@@ -35,8 +35,8 @@ package framework
 package structure
 
 /**
- * Creates copies of nodes that contain copies of all child nodes.
- * Edges are not considered during the copy process. All copied
+ * Creates clones of nodes that contain clones of all child nodes.
+ * Edges are not considered during the clone process. All cloned
  * nodes do not contain edges.
  *
  * @author Thomas Schlosser
@@ -46,14 +46,14 @@ trait NodeCloner {
 
     def cloneNodeStructure(
         cluster: Cluster): Cluster = {
-        val copy = createCopy(cluster)
-        // add copies of cluster elements to the cluster's copy
+        val clone = cloneNode(cluster)
+        // add clones of cluster elements to the cluster's clone
         cluster.getNodes map {
             cloneNodeStructure(_)
         } map { node ⇒
-            copy.addNode(node)
+            clone.addNode(node)
         }
-        copy
+        clone
     }
 
     def cloneNodeStructure(node: Node): Node = {
@@ -61,38 +61,37 @@ trait NodeCloner {
             case c: Cluster ⇒
                 cloneNodeStructure(c)
             case sen: SourceElementNode ⇒
-                val copy = createCopy(node)
-                copy
+                cloneNode(node)
         }
     }
 
-    private def createCopy(cluster: Cluster): Cluster =
+    private def cloneNode(cluster: Cluster): Cluster =
         new Cluster(cluster.uniqueID, cluster.identifier, cluster.isProjectCluster)
 
-    private def createCopy(typeNode: TypeNode): TypeNode =
+    private def cloneNode(typeNode: TypeNode): TypeNode =
         if (typeNode.clazz.isDefined)
             new TypeNode(typeNode.uniqueID, typeNode.identifierFun, typeNode.clazz.get)
         else
             new TypeNode(typeNode.uniqueID, typeNode.identifierFun)
 
-    private def createCopy(fieldNode: FieldNode): FieldNode =
+    private def cloneNode(fieldNode: FieldNode): FieldNode =
         if (fieldNode.field.isDefined)
             new FieldNode(fieldNode.uniqueID, fieldNode.identifierFun, fieldNode.field.get)
         else
             new FieldNode(fieldNode.uniqueID, fieldNode.identifierFun)
 
-    private def createCopy(methodNode: MethodNode): MethodNode =
+    private def cloneNode(methodNode: MethodNode): MethodNode =
         if (methodNode.method.isDefined)
             new MethodNode(methodNode.uniqueID, methodNode.identifierFun, methodNode.method.get)
         else
             new MethodNode(methodNode.uniqueID, methodNode.identifierFun)
 
-    private def createCopy(node: Node): Node =
+    private def cloneNode(node: Node): Node =
         node match {
-            case c: Cluster    ⇒ createCopy(c)
-            case t: TypeNode   ⇒ createCopy(t)
-            case f: FieldNode  ⇒ createCopy(f)
-            case m: MethodNode ⇒ createCopy(m)
+            case c: Cluster    ⇒ cloneNode(c)
+            case t: TypeNode   ⇒ cloneNode(t)
+            case f: FieldNode  ⇒ cloneNode(f)
+            case m: MethodNode ⇒ cloneNode(m)
         }
 
 }

@@ -54,20 +54,31 @@ trait SourceElementIdentifiersToFile
         extractDependencies(sourceInputFilePath)(clusterManager)
         val projectCluster = clusterManager.getProjectCluster
 
-        val fw = new FileWriter(outputFile)
-        val bw = new BufferedWriter(fw)
-        bw.write("[\n")
-        var identifierList: List[String] = Nil
-        projectCluster.getNodes foreach { node ⇒
-            identifierList = node.identifier :: identifierList
+        var fw: FileWriter = null
+        var bw: BufferedWriter = null
+        try {
+            fw = new FileWriter(outputFile)
+            bw = new BufferedWriter(fw)
+            bw.write("[\n")
+            var identifierList: List[String] = Nil
+            projectCluster.getNodes foreach { node ⇒
+                identifierList = node.identifier :: identifierList
+            }
+            identifierList = identifierList.sortWith(_.toLowerCase < _.toLowerCase)
+            identifierList foreach { identifier ⇒
+                bw.write(identifier)
+                bw.write("\n")
+            }
+            bw.write("]")
         }
-        identifierList = identifierList.sortWith(_.toLowerCase < _.toLowerCase)
-        identifierList foreach { identifier ⇒
-            bw.write(identifier)
-            bw.write("\n")
+        finally {
+            if (bw != null)
+                bw.close()
+            else if (fw != null)
+                fw.close()
         }
-        bw.write("]")
-        bw.close()
     }
 
 }
+
+object SourceElementIdentifiersToFile extends SourceElementIdentifiersToFile

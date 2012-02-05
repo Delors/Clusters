@@ -35,7 +35,6 @@ package framework
 package structure
 package util
 
-import scala.collection.mutable.ArrayBuffer
 import de.tud.cs.st.bat.resolved.SourceElementsVisitor
 import de.tud.cs.st.bat.resolved.ClassFile
 import de.tud.cs.st.bat.resolved.Method
@@ -52,8 +51,7 @@ import de.tud.cs.st.bat.resolved.dependency.SourceElementIDs
  */
 trait NodeMappingSourceElementsVisitor extends SourceElementsVisitor[Unit]
         with SourceElementIDs
-        with NodeFactory
-        with PrettyPrint {
+        with NodeFactory {
 
     override def visit(classFile: ClassFile) {
         createTypeNode(super.sourceElementID(classFile), classFile)

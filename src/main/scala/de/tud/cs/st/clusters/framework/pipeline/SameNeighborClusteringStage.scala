@@ -60,7 +60,7 @@ trait SameNeighborClusteringStage[C <: SameNeighborClusteringAlgorithmConfigurat
                     val neighborNodeID = edge.target.uniqueID
                     val clusterSet = clustersMap.getOrElse(neighborNodeID, Set())
                     clustersMap(neighborNodeID) = clusterSet + node
-                case None ⇒
+                case None ⇒ // Nothing to do if the current node has no edge of the considered type.
             }
         }
 

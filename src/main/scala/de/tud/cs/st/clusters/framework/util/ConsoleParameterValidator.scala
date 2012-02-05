@@ -49,7 +49,9 @@ import java.io.BufferedWriter
 trait ConsoleParameterValidator {
 
     protected def validateOutputFileParameter(outputFile: java.io.File, parameterName: String) {
-        if (!outputFile.exists)
+        if (outputFile == null)
+            println("Parameter '"+parameterName+"' is not allowed to be empty in this case. Please choose a file as '"+parameterName+"'.")
+        else if (!outputFile.exists)
             outputFile.createNewFile()
         else if (outputFile.isDirectory)
             println("Output can not be written to a directory! Please choose a file as '"+parameterName+"'.")
@@ -60,7 +62,9 @@ trait ConsoleParameterValidator {
     }
 
     protected def validateInputFileParameter(inputFile: java.io.File, parameterName: String) {
-        if (!inputFile.exists)
+        if (inputFile == null)
+            println("Parameter '"+parameterName+"' is not allowed to be empty in this case. Please choose a file as '"+parameterName+"'.")
+        else if (!inputFile.exists)
             println("Input file does not exist! Please choose an existing file as '"+parameterName+"'.")
         else if (inputFile.isDirectory)
             println("Given input is a directory! Please choose a file as '"+parameterName+"'.")
