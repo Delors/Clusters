@@ -48,7 +48,7 @@ import java.util.ArrayDeque
  */
 class NodeSet(val isStack: Boolean) {
 
-    private val content = new ArrayDeque[Int];
+    private val content = new ArrayDeque[Int]
 
     /**
      * Adds the given Value to the {@link NodeSet}.
@@ -57,9 +57,9 @@ class NodeSet(val isStack: Boolean) {
      */
     def add(value: Int) {
         if (isStack)
-            content.push(value);
+            content.push(value)
         else
-            content.add(value);
+            content.add(value)
     }
 
     /**
@@ -69,15 +69,15 @@ class NodeSet(val isStack: Boolean) {
      */
     def getNext: Int = {
         if (content.isEmpty())
-            return -1;
-        return content.peek();
+            return -1
+        return content.peek()
     }
 
     /**
      * Removes the first value of the {@link NodeSet}.
      */
-    def remove {
-        content.remove();
+    def remove() {
+        content.remove()
     }
 
     /**
@@ -87,5 +87,5 @@ class NodeSet(val isStack: Boolean) {
      *         <code>false</code> if it is not empty.
      */
     def isEmpty: Boolean =
-        content.isEmpty();
+        content.isEmpty
 }

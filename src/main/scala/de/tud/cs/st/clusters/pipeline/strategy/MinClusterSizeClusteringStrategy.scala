@@ -38,7 +38,8 @@ import framework.pipeline.ClusteringStrategy
 import framework.structure.Cluster
 
 /**
- * Provides a mechanism that enforces a minimum cluster size for clusters that are used as input for the clustering procedure.
+ * Provides a mechanism that enforces a minimum cluster size for
+ * clusters that are used as input for the clustering procedure.
  *
  * @author Thomas Schlosser
  */

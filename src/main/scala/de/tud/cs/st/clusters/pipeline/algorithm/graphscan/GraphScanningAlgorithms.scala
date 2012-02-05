@@ -60,8 +60,13 @@ object GraphScanningAlgorithms {
      */
     private val RED = 2
 
-    def graphScanComplete(cluster: Cluster,
-                          startNode: java.lang.Integer, dfs: Boolean, order: Array[Int])(implicit useTransposedEdges: Boolean = false): GraphScanResultBean = {
+    def graphScanComplete(
+        cluster: Cluster,
+        startNode: java.lang.Integer,
+        dfs: Boolean,
+        order: Array[Int])(
+            implicit useTransposedEdges: Boolean = false): GraphScanResultBean = {
+
         // number of started searches
         var countStarts = 0
         implicit var resultBean = new GraphScanResultBean()
@@ -82,8 +87,15 @@ object GraphScanningAlgorithms {
         resultBean
     }
 
-    private def graphScanIntern(cluster: Cluster, startNode: Int,
-                                dfs: Boolean, discoveryTime: Int, colorOffset: Int)(implicit resultBean: GraphScanResultBean, useTransposedEdges: Boolean = false) {
+    private def graphScanIntern(
+        cluster: Cluster,
+        startNode: Int,
+        dfs: Boolean,
+        discoveryTime: Int,
+        colorOffset: Int)(
+            implicit resultBean: GraphScanResultBean,
+            useTransposedEdges: Boolean = false) {
+
         def getNextWhiteNode(edges: List[Edge]): Edge = {
             for (edge ← edges)
                 // TODO remove the contains check, rather implement a mechanism to handle cluster cutting concerns
@@ -144,7 +156,7 @@ object GraphScanningAlgorithms {
                 resultBean.color(u) = RED + colorOffset
                 resultBean.finishingTime(u) = t
                 resultBean.order(resultBean.decreaseUnfinishedNodes()) = u
-                q.remove // removes u
+                q.remove() // removes u
             }
             t += 1
         }
