@@ -236,7 +236,7 @@ where options include:
             var createdNewFile = false
             var counter = 0
             while (!createdNewFile) {
-                val defaultFileName = fileNameWithoutExt + { if (counter != 0) "."+counter else "" } + fileExtension
+                val defaultFileName = fileNameWithoutExt + { if (counter != 0) "."+counter else "" }+"."+fileExtension
                 defaultFile = new File(defaultFileName)
                 createdNewFile = defaultFile.createNewFile()
                 createdNewFile ||= !ensureNewFile
