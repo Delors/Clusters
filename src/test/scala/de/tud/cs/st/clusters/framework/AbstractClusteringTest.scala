@@ -33,28 +33,16 @@
 package de.tud.cs.st.clusters
 package framework
 
-import java.io.File
-import java.io.FileWriter
-import java.util.zip.ZipFile
-import org.junit.runner.RunWith
 import org.scalatest.FunSuite
-import org.scalatest.junit.JUnitRunner
 import pipeline.ClusteringStage
 import pipeline.ClusteringPipeline
+import pipeline.ClusteringResultWriter
 import evaluation.PerformanceEvaluatedPipeline
 import structure.Cluster
 import structure.util.ClusterManager
-import _root_.de.tud.cs.st.bat.resolved.ClassFile
-import _root_.de.tud.cs.st.bat.resolved.reader.Java6Framework
+import util.DependencyExtractionUtils
 import _root_.de.tud.cs.st.bat.resolved.dependency.DependencyExtractor
 import _root_.de.tud.cs.st.util.perf.PerformanceEvaluation
-import pipeline.ClusteringResultWriter
-import pipeline.DOTClusteringResultWriter
-import pipeline.DOTClusteringResultWriterConfiguration
-import pipeline.GMLClusteringResultWriter
-import pipeline.GraphmlClusteringResultWriter
-import pipeline.GraphmlClusteringResultWriterConfiguration
-import util.DependencyExtractionUtils
 
 /**
  * @author Thomas Schlosser
@@ -62,6 +50,8 @@ import util.DependencyExtractionUtils
  */
 trait AbstractClusteringTest extends FunSuite
         with DependencyExtractionUtils
+        with TestDependencyExtractors
+        with TestResultWriterCreators
         with PerformanceEvaluation {
 
     type BaseDependencyExtractor = ClusterManager
@@ -87,53 +77,5 @@ trait AbstractClusteringTest extends FunSuite
                                            extractDependencies: (DependencyExtractor) ⇒ Unit,
                                            resultWriterCreator: () ⇒ ClusteringResultWriter = () ⇒ null) {
         testClustering(testName, extractDependencies, resultWriterCreator)(null)
-    }
-
-    protected val clusteringTestProjectDependencyExtractor = extractDependencies("test/classfiles/ClusteringTestProject.zip")
-    protected val getterSetterTestClassDependencyExtractor = extractDependencies("test/classfiles/ClusteringTestProject.zip", "test/GetterSetterTestClass.class")
-    protected val stronglyConnectedComponentsTestClassDependencyExtractor = extractDependencies("test/classfiles/ClusteringTestProject.zip", "test/StronglyConnectedComponentsTestClass.class")
-
-    protected val hibernateDependencyExtractor = extractDependencies("test/classfiles/hibernate-core-3.6.0.Final.jar")
-
-    protected val cocomeDependencyExtractor = extractDependencies("test/classfiles/cocome-impl-classes.jar")
-    protected val cocomePrintercontrollerDependencyExtractor = extractDependencies("test/classfiles/cocome-impl-classes.jar",
-        "org/cocome/tradingsystem/cashdeskline/cashdesk/printercontroller/PrinterControllerEventHandlerIf.class",
-        "org/cocome/tradingsystem/cashdeskline/cashdesk/printercontroller/impl/PrinterController.class",
-        "org/cocome/tradingsystem/cashdeskline/cashdesk/printercontroller/impl/PrinterControllerEventHandlerImpl.class",
-        "org/cocome/tradingsystem/cashdeskline/cashdesk/printercontroller/impl/PrinterStates.class")
-
-    // #############
-    // Result writer utility methods
-    // #############
-
-    protected def dotClusteringResultWriterCreator(
-        fileName: String,
-        _includeSingleNodes: Boolean = true,
-        _includeEdges: Boolean = true) = {
-        val configuration = new {
-            override val includeSingleNodes = _includeSingleNodes
-            override val includeEdges = _includeEdges
-        } with DOTClusteringResultWriterConfiguration
-        () ⇒
-            new DOTClusteringResultWriter(fileName, configuration)
-    }
-
-    protected def gmlClusteringResultWriterCreator(fileName: String) = {
-        () ⇒ new GMLClusteringResultWriter(fileName)
-    }
-
-    protected def graphmlClusteringResultWriterCreator(
-        fileName: String,
-        _aggregateEdges: Boolean = true,
-        _showEdgeLabels: Boolean = false,
-        _showSourceElementNodes: Boolean = false,
-        _maxNumberOfLevels: Option[Int] = None) = {
-        val writerConfiguration = new {
-            override val aggregateEdges = _aggregateEdges
-            override val showEdgeLabels = _showEdgeLabels
-            override val showSourceElementNodes = _showSourceElementNodes
-            override val maxNumberOfLevels = _maxNumberOfLevels
-        } with GraphmlClusteringResultWriterConfiguration
-        () ⇒ new GraphmlClusteringResultWriter(fileName, writerConfiguration)
     }
 }

@@ -32,37 +32,28 @@
 */
 package de.tud.cs.st.clusters
 package framework
-package validation
 
-import org.junit.runner.RunWith
-import org.scalatest.junit.JUnitRunner
-import pipeline.ClusteringStage
-import util.ReferenceClusterCreator
-import de.tud.cs.st.clusters.pipeline.algorithm.ApplicationLibrariesSeparatorStage
-import de.tud.cs.st.clusters.pipeline.algorithm.ApplicationLibrariesSeparatorStageConfiguration
+import util.DependencyExtractionUtils
 
 /**
  * @author Thomas Schlosser
  *
  */
-@RunWith(classOf[JUnitRunner])
-class MoJoWrapperTest extends AbstractClusteringTest {
+trait TestDependencyExtractors extends DependencyExtractionUtils {
 
-    test("test calculation of double direction MojoFM quality value") {
-        val referenceClusters = ReferenceClusterCreator.readReferenceCluster(
-            "test/classfiles/ClusteringTestProject.zip",
-            new java.io.File("test/referenceCluster/ClusteringTestProject.sei"))
+    // whole zip/jar files
+    protected val antDependencyExtractor = extractDependencies("test/classfiles/Apache ANT 1.7.1 - target 1.5.zip")
+    protected val clusteringTestProjectDependencyExtractor = extractDependencies("test/classfiles/ClusteringTestProject.zip")
+    protected val cocomeDependencyExtractor = extractDependencies("test/classfiles/cocome-impl-classes.jar")
+    protected val flashcardsDependencyExtractor = extractDependencies("test/classfiles/Flashcards 0.4 - target 1.6.zip")
+    protected val hibernateDependencyExtractor = extractDependencies("test/classfiles/hibernate-core-3.6.0.Final.jar")
 
-        val libConfiguration = new ApplicationLibrariesSeparatorStageConfiguration {}
-        val clusteringStages: Array[ClusteringStage] = Array(
-            new ApplicationLibrariesSeparatorStage(libConfiguration))
-
-        val extractedClusters = testClustering(
-            "testMoJoWrapper-ApplicationLibrariesSeparatorStage [ClusteringTestProject.zip]",
-            clusteringTestProjectDependencyExtractor)(clusteringStages)
-
-        println("MoJo:")
-        var mjw = new MoJoWrapper(referenceClusters, extractedClusters)
-        println(mjw.doubleDirectionMojoFM)
-    }
+    // only selected classes
+    protected val getterSetterTestClassDependencyExtractor = extractDependencies("test/classfiles/ClusteringTestProject.zip", "test/GetterSetterTestClass.class")
+    protected val stronglyConnectedComponentsTestClassDependencyExtractor = extractDependencies("test/classfiles/ClusteringTestProject.zip", "test/StronglyConnectedComponentsTestClass.class")
+    protected val cocomePrintercontrollerDependencyExtractor = extractDependencies("test/classfiles/cocome-impl-classes.jar",
+        "org/cocome/tradingsystem/cashdeskline/cashdesk/printercontroller/PrinterControllerEventHandlerIf.class",
+        "org/cocome/tradingsystem/cashdeskline/cashdesk/printercontroller/impl/PrinterController.class",
+        "org/cocome/tradingsystem/cashdeskline/cashdesk/printercontroller/impl/PrinterControllerEventHandlerImpl.class",
+        "org/cocome/tradingsystem/cashdeskline/cashdesk/printercontroller/impl/PrinterStates.class")
 }

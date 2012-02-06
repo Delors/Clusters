@@ -17,9 +17,12 @@ class ClustersSuite extends Suites(
     new pipeline.ClassExtractorStageTest,
     new pipeline.CombinedClusteringStageTest,
     new pipeline.GetterSetterClusteringStageTest,
+    new pipeline.ImplementationTestingSeparatorStageTest,
     new pipeline.LayerClusteringStageTest,
     new pipeline.PackageClusteringStageTest,
+    new pipeline.SimilarityMetricClusteringStageTest,
     new pipeline.StronglyConnectedComponentsClusteringStageTest,
 
     // Framework tests
+    new framework.validation.MoJoWrapperTest,
     new framework.structure.util.DependencyExtractorTest)

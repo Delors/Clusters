@@ -35,49 +35,40 @@ package framework
 package structure
 package util
 
-import java.io.File
-import java.io.FileWriter
-import java.io.DataInputStream
-import java.util.zip.ZipFile
-import java.util.zip.ZipEntry
 import org.junit.runner.RunWith
-import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
-import de.tud.cs.st.bat.resolved.reader.Java6Framework
-import de.tud.cs.st.bat.resolved.dependency.DependencyExtractor
-import de.tud.cs.st.bat.resolved.ClassFile
-import de.tud.cs.st.util.perf.PerformanceEvaluation
+import de.tud.cs.st.clusters.framework.AbstractClusteringTest
 
 /**
  * @author Thomas Schlosser
  *
  */
 @RunWith(classOf[JUnitRunner])
-class DependencyExtractorTest extends AbstractClusteringTest with PerformanceEvaluation {
+class DependencyExtractorTest extends AbstractClusteringTest {
 
     test("testDependencyExtraction - Apache ANT 1.7.1 - target 1.5.zip") {
         testDependencyExtraction("testDependencyExtraction - Apache ANT 1.7.1 - target 1.5.zip",
-            extractDependencies("test/classfiles/Apache ANT 1.7.1 - target 1.5.zip"))
+            antDependencyExtractor)
     }
 
     test("testDependencyExtraction - ClusteringTestProject.zip") {
         testDependencyExtraction("testDependencyExtraction - ClusteringTestProject.zip",
-            extractDependencies("test/classfiles/ClusteringTestProject.zip"))
+            clusteringTestProjectDependencyExtractor)
     }
 
     test("testDependencyExtraction - Flashcards 0.4 - target 1.6.zip") {
         testDependencyExtraction("testDependencyExtraction - Flashcards 0.4 - target 1.6.zip",
-            extractDependencies("test/classfiles/Flashcards 0.4 - target 1.6.zip"))
+            flashcardsDependencyExtractor)
     }
 
     test("testDependencyExtraction - hibernate-core-3.6.0.Final.jar") {
         testDependencyExtraction("testDependencyExtraction - hibernate-core-3.6.0.Final.jar",
-            extractDependencies("test/classfiles/hibernate-core-3.6.0.Final.jar"))
+            hibernateDependencyExtractor)
     }
 
     test("testDependencyExtraction - cocome-impl-classes.jar") {
         testDependencyExtraction("testDependencyExtraction - cocome-impl-classes.jar",
-            extractDependencies("test/classfiles/cocome-impl-classes.jar"))
+            cocomeDependencyExtractor)
     }
 
 }

@@ -107,18 +107,18 @@ class CombinedClusteringStageTest extends AbstractClusteringTest {
         println(mjw.doubleDirectionMojoFM)
     }
 
-    //    test("testCombinedClusteringStage [cocome]") {
-    //        testClustering(
-    //            "testCombinedClusteringStage [cocome]",
-    //            cocomeDependencyExtractor,
-    //            graphmlClusteringResultWriterCreator("combinedClust_cocome", _maxNumberOfLevels = Some(4)))
-    //    }
-    //
-    //    test("testCombinedClusteringStage [hibernate]") {
-    //        testClustering(
-    //            "testCombinedClusteringStage [hibernate]",
-    //            hibernateDependencyExtractor,
-    //            graphmlClusteringResultWriterCreator("combinedClust_hibernate"))
-    //    }
+    test("testCombinedClusteringStage [cocome]") {
+        testClustering(
+            "testCombinedClusteringStage [cocome]",
+            cocomeDependencyExtractor,
+            graphmlClusteringResultWriterCreator("combinedClust_cocome", _maxNumberOfLevels = Some(4)))
+    }
+
+    test("testCombinedClusteringStage [hibernate]") {
+        testClustering(
+            "testCombinedClusteringStage [hibernate]",
+            hibernateDependencyExtractor,
+            graphmlClusteringResultWriterCreator("combinedClust_hibernate"))
+    }
 
 }

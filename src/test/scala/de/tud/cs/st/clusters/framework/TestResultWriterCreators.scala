@@ -32,37 +32,47 @@
 */
 package de.tud.cs.st.clusters
 package framework
-package validation
 
-import org.junit.runner.RunWith
-import org.scalatest.junit.JUnitRunner
-import pipeline.ClusteringStage
-import util.ReferenceClusterCreator
-import de.tud.cs.st.clusters.pipeline.algorithm.ApplicationLibrariesSeparatorStage
-import de.tud.cs.st.clusters.pipeline.algorithm.ApplicationLibrariesSeparatorStageConfiguration
+import pipeline.DOTClusteringResultWriter
+import pipeline.DOTClusteringResultWriterConfiguration
+import pipeline.GMLClusteringResultWriter
+import pipeline.GraphmlClusteringResultWriter
+import pipeline.GraphmlClusteringResultWriterConfiguration
 
 /**
  * @author Thomas Schlosser
  *
  */
-@RunWith(classOf[JUnitRunner])
-class MoJoWrapperTest extends AbstractClusteringTest {
+trait TestResultWriterCreators {
 
-    test("test calculation of double direction MojoFM quality value") {
-        val referenceClusters = ReferenceClusterCreator.readReferenceCluster(
-            "test/classfiles/ClusteringTestProject.zip",
-            new java.io.File("test/referenceCluster/ClusteringTestProject.sei"))
+    protected def dotClusteringResultWriterCreator(
+        fileName: String,
+        _includeSingleNodes: Boolean = true,
+        _includeEdges: Boolean = true) = {
+        val configuration = new {
+            override val includeSingleNodes = _includeSingleNodes
+            override val includeEdges = _includeEdges
+        } with DOTClusteringResultWriterConfiguration
+        () ⇒
+            new DOTClusteringResultWriter(fileName, configuration)
+    }
 
-        val libConfiguration = new ApplicationLibrariesSeparatorStageConfiguration {}
-        val clusteringStages: Array[ClusteringStage] = Array(
-            new ApplicationLibrariesSeparatorStage(libConfiguration))
+    protected def gmlClusteringResultWriterCreator(fileName: String) = {
+        () ⇒ new GMLClusteringResultWriter(fileName)
+    }
 
-        val extractedClusters = testClustering(
-            "testMoJoWrapper-ApplicationLibrariesSeparatorStage [ClusteringTestProject.zip]",
-            clusteringTestProjectDependencyExtractor)(clusteringStages)
-
-        println("MoJo:")
-        var mjw = new MoJoWrapper(referenceClusters, extractedClusters)
-        println(mjw.doubleDirectionMojoFM)
+    protected def graphmlClusteringResultWriterCreator(
+        fileName: String,
+        _aggregateEdges: Boolean = true,
+        _showEdgeLabels: Boolean = false,
+        _showSourceElementNodes: Boolean = false,
+        _maxNumberOfLevels: Option[Int] = None) = {
+        val writerConfiguration = new {
+            override val aggregateEdges = _aggregateEdges
+            override val showEdgeLabels = _showEdgeLabels
+            override val showSourceElementNodes = _showSourceElementNodes
+            override val maxNumberOfLevels = _maxNumberOfLevels
+        } with GraphmlClusteringResultWriterConfiguration
+        () ⇒ new GraphmlClusteringResultWriter(fileName, writerConfiguration)
     }
 }

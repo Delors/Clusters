@@ -35,17 +35,11 @@ package framework
 package structure
 package util
 
-import java.io.File
-import java.io.FileWriter
-import java.util.zip.ZipFile
-import java.util.zip.ZipEntry
 import scala.math.Ordering
 import org.junit.runner.RunWith
-import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
 import _root_.de.tud.cs.st.bat.resolved.reader.Java6Framework
 import _root_.de.tud.cs.st.bat.resolved.ClassFile
-import _root_.de.tud.cs.st.bat.resolved.dependency._
 
 /**
  * @author Thomas Schlosser
