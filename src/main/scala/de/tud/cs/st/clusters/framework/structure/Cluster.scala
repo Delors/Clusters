@@ -13,9 +13,9 @@
 *  - Redistributions in binary form must reproduce the above copyright notice,
 *    this list of conditions and the following disclaimer in the documentation
 *    and/or other materials provided with the distribution.
-*  - Neither the name of the Software Technology Group or Technische 
-*    Universität Darmstadt nor the names of its contributors may be used to 
-*    endorse or promote products derived from this software without specific 
+*  - Neither the name of the Software Technology Group or Technische
+*    Universität Darmstadt nor the names of its contributors may be used to
+*    endorse or promote products derived from this software without specific
 *    prior written permission.
 *
 *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -45,9 +45,10 @@ import de.tud.cs.st.bat.resolved.dependency._
 class Cluster(
     val uniqueID: Int,
     val identifier: String,
-    val isProjectCluster: Boolean)
+    val isProjectCluster: Boolean) // TODO Why is this field required? Is a cluster not already identified as being a ProjectCluster by being the ProjectCluster in a pipeline's configuration?
         extends Node {
 
+    // TODO
     def this(uniqueID: Int, identifier: String) {
         this(uniqueID, identifier, false)
     }
@@ -102,8 +103,8 @@ class Cluster(
         var edges = Set[Edge]()
         nodeMap.values foreach {
             _.getOutgoingEdges foreach { edge ⇒
-                val containsSource = edge.source == this || edge.source.isChildOf(this.uniqueID)
-                val containsTarget = edge.target == this || edge.target.isChildOf(this.uniqueID)
+                val containsSource : Boolean = edge.source == this || edge.source.isChildOf(this.uniqueID)
+                val containsTarget : Boolean = edge.target == this || edge.target.isChildOf(this.uniqueID)
                 if (containsSource && !containsTarget) {
                     edges = edges + edge
                 }

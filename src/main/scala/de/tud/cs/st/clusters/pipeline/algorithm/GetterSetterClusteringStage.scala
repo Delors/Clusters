@@ -13,9 +13,9 @@
 *  - Redistributions in binary form must reproduce the above copyright notice,
 *    this list of conditions and the following disclaimer in the documentation
 *    and/or other materials provided with the distribution.
-*  - Neither the name of the Software Technology Group or Technische 
-*    Universität Darmstadt nor the names of its contributors may be used to 
-*    endorse or promote products derived from this software without specific 
+*  - Neither the name of the Software Technology Group or Technische
+*    Universität Darmstadt nor the names of its contributors may be used to
+*    endorse or promote products derived from this software without specific
 *    prior written permission.
 *
 *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -73,7 +73,7 @@ class GetterSetterClusteringStage(
                             val gsCluster = clusterManager.createCluster(algorithmConfig.clusterIdentifierPrefix + clusterBean.field.identifier, this.stageName)
                             gsCluster.addNode(clusterBean.field)
                             clusterBean.methods foreach { gsCluster.addNode(_) }
-                            gsCluster.clusterable = false // a getter-setter cluster is treated as a primitive unit 
+                            gsCluster.clusterable = false // a getter-setter cluster is treated as a primitive unit
                             cluster.addNode(gsCluster)
                             createdNewCluster = true
                         case None ⇒
@@ -90,42 +90,41 @@ class GetterSetterClusteringStage(
         var gscBean = new GetterSetterClusterBean
         // use transposed edges to determine nodes that use this field
         var checkedNodes = Set[Int]()
-        for (tEdge ← node.getOwnTransposedEdges) {
-            if (!checkedNodes.contains(tEdge.target.uniqueID)) {
-                tEdge.dType match {
-                    case READS_FIELD ⇒
-                        tEdge.target match {
-                            case MethodNode(_, identifier, Some(method)) ⇒
-                                if (!algorithmConfig.checkGetterNameMatching ||
-                                    algorithmConfig.getterPrefixes.exists(prefix ⇒ method.name.equalsIgnoreCase(prefix + field.name))) {
-                                    val descriptor = method.descriptor
-                                    if (descriptor.parameterTypes.isEmpty &&
-                                        descriptor.returnType.equals(field.fieldType)) {
-                                        gscBean.field = node
-                                        gscBean.methods = tEdge.target :: gscBean.methods
-                                    }
+        for (tEdge ← node.getOwnTransposedEdges if (!checkedNodes.contains(tEdge.target.uniqueID))) {
+            tEdge.dType match {
+                case READS_FIELD ⇒
+                    tEdge.target match {
+                        case MethodNode(_, identifier, Some(method)) ⇒
+                            if (!algorithmConfig.checkGetterNameMatching ||
+                                algorithmConfig.getterPrefixes.exists(prefix ⇒ method.name.equalsIgnoreCase(prefix + field.name))) {
+                                val descriptor = method.descriptor
+                                if (descriptor.parameterTypes.isEmpty &&
+                                    descriptor.returnType.equals(field.fieldType)) {
+                                    gscBean.field = node
+                                    gscBean.methods = tEdge.target :: gscBean.methods
                                 }
-                            case _ ⇒ Nil
-                        }
-                    case WRITES_FIELD ⇒
-                        tEdge.target match {
-                            case MethodNode(_, identifier, Some(method)) ⇒
-                                if (!algorithmConfig.checkSetterNameMatching ||
-                                    algorithmConfig.setterPrefixes.exists(prefix ⇒ method.name.equalsIgnoreCase(prefix + field.name))) {
-                                    val descriptor = method.descriptor
-                                    if (descriptor.parameterTypes.size == 1 && descriptor.parameterTypes(0).equals(field.fieldType) &&
-                                        descriptor.returnType.isVoidType) {
-                                        gscBean.field = node
-                                        gscBean.methods = tEdge.target :: gscBean.methods
-                                    }
+                            }
+                        case _ ⇒ Nil // TOOD why do you return "Nil"?
+                    }
+                case WRITES_FIELD ⇒
+                    tEdge.target match {
+                        case MethodNode(_, identifier, Some(method)) ⇒
+                            if (!algorithmConfig.checkSetterNameMatching ||
+                                algorithmConfig.setterPrefixes.exists(prefix ⇒ method.name.equalsIgnoreCase(prefix + field.name))) {
+                                val descriptor = method.descriptor
+                                if (descriptor.parameterTypes.size == 1 && descriptor.parameterTypes(0).equals(field.fieldType) &&
+                                    descriptor.returnType.isVoidType) {
+                                    gscBean.field = node
+                                    gscBean.methods = tEdge.target :: gscBean.methods
                                 }
-                            case _ ⇒ Nil
-                        }
-                    case _ ⇒ // nothing to do if the type is not a read or write access 
-                }
-                checkedNodes += tEdge.target.uniqueID
+                            }
+                        case _ ⇒ Nil // TOOD why do you return "Nil"?
+                    }
+                case _ ⇒ // nothing to do if the type is not a read or write access
             }
+            checkedNodes += tEdge.target.uniqueID
         }
+
         if (gscBean.field == null) None else Some(gscBean)
     }
 

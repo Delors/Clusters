@@ -42,6 +42,7 @@ package structure
  * @author Thomas Schlosser
  *
  */
+// TODO Currently, I'm not sure why you didn't simply implement the cloning related functionality directly on the relevant types themselves?
 trait NodeCloner {
 
     def cloneNodeStructure(

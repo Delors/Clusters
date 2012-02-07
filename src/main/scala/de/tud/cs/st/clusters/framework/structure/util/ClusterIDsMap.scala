@@ -44,13 +44,13 @@ package util
  */
 trait ClusterIDsMap extends ClusterIDs {
 
+    import scala.collection.mutable.WeakHashMap
+
     //
     // Associates each cluster with an unique ID
     //
 
     def LOWEST_CLUSTER_ID: Int = 1500000000
-
-    import scala.collection.mutable.WeakHashMap
 
     private var nextClusterID = LOWEST_CLUSTER_ID
 

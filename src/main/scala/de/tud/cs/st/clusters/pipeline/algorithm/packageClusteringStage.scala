@@ -13,9 +13,9 @@
 *  - Redistributions in binary form must reproduce the above copyright notice,
 *    this list of conditions and the following disclaimer in the documentation
 *    and/or other materials provided with the distribution.
-*  - Neither the name of the Software Technology Group or Technische 
-*    Universität Darmstadt nor the names of its contributors may be used to 
-*    endorse or promote products derived from this software without specific 
+*  - Neither the name of the Software Technology Group or Technische
+*    Universität Darmstadt nor the names of its contributors may be used to
+*    endorse or promote products derived from this software without specific
 *    prior written permission.
 *
 *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -52,11 +52,12 @@ class PackageClusteringStage(
 
     override def performClustering(cluster: Cluster): Boolean = {
         def getMatchingPrefix(value: String, prefixes: Array[String]): String = {
+            // TODO consider using "find"
             prefixes.foreach(prfx ⇒ if (value.startsWith(prfx)) { return prfx })
             sys.error("No matching prefix found for \""+value+"\" in prefixes: "+prefixes.mkString("\n"))
         }
 
-        var prefixRoot = new GreatestCommonCharPrefixTree('#')
+        var prefixRoot = new GreatestCommonCharPrefixTree('#') // TODO needs to be explained
         for (node ← cluster.getNodes) {
             prefixRoot.addPrefix(node.identifier.toCharArray())
         }
@@ -133,7 +134,7 @@ private trait GreatestCommonPrefixTree[Content] {
     def prefixes(implicit m: ClassManifest[Content]): Array[Array[Content]] = {
         var result: Array[Array[Content]] = Array()
         for ((key, value) ← children) {
-            var subResult: Array[Array[Content]] = value.prefixes.map(prfx ⇒ Array(key) ++ prfx)
+            var subResult: Array[Array[Content]] = /*TODO consider using for(...) yield {} */ value.prefixes.map(prfx ⇒ Array(key) ++ prfx)
             if (subResult.length == 0) {
                 subResult = Array(Array(key))
             }

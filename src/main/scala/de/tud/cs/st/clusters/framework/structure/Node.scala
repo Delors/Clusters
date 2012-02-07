@@ -13,9 +13,9 @@
 *  - Redistributions in binary form must reproduce the above copyright notice,
 *    this list of conditions and the following disclaimer in the documentation
 *    and/or other materials provided with the distribution.
-*  - Neither the name of the Software Technology Group or Technische 
-*    Universität Darmstadt nor the names of its contributors may be used to 
-*    endorse or promote products derived from this software without specific 
+*  - Neither the name of the Software Technology Group or Technische
+*    Universität Darmstadt nor the names of its contributors may be used to
+*    endorse or promote products derived from this software without specific
 *    prior written permission.
 *
 *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -68,24 +68,21 @@ trait Node {
     private def getAncestor(levelDiff: Int): Node =
         if (levelDiff == 0) {
             this
-        }
-        else {
+        } else {
             if (levelDiff > 0 && this.parent != null) {
                 parent.getAncestor(levelDiff - 1)
-            }
-            else {
-                sys.error("node["+this.uniqueID+"] has no ancestor with levelDiff of \""+levelDiff+"\"")
+            } else {
+                sys.error("node[" + this.uniqueID + "] has no ancestor with levelDiff of \"" + levelDiff + "\"")
             }
         }
 
     def getDirectChild(parentID: Int): Node = {
-        if (this.parent != null) {
+        if (this.parent != null) { // TODO use "require"
             if (this.parent.uniqueID == parentID)
                 return this
             else
                 return parent.getDirectChild(parentID)
-        }
-        else {
+        } else {
             sys.error("")
         }
     }
@@ -191,21 +188,27 @@ trait Node {
     // children(nodes)-related stuff
     /////////////////////////////////////////////
     def addNode(node: Node) {
+        // FIXME replace by throw new UnsupportedOperationException
         sys.error("This method call is not allowed on this kind of node!")
     }
 
     def removeNode(id: Int) {
+        // FIXME replace by throw new UnsupportedOperationException
         sys.error("This method call is not allowed on this kind of node!")
     }
 
     def clearNodes() {
+        // FIXME replace by throw new UnsupportedOperationException
         sys.error("This method call is not allowed on this kind of node!")
     }
+
+    // TODO make the following abstract and implement these methods in Cluster and SourceElementNode instead
 
     def containsNode(id: Int): Boolean =
         false
 
     def getNode(id: Int): Node = {
+        // FIXME replace by throw new UnsupportedOperationException
         sys.error("This method call is not allowed on this kind of node!")
     }
 
@@ -213,6 +216,7 @@ trait Node {
         Iterable()
     }
 
+    // ISSUE Consider using "childCount" (if it applies)
     def numberOfNodes: Int =
         0
 

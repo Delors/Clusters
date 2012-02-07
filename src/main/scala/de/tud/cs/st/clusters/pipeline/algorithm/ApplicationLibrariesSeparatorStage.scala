@@ -13,9 +13,9 @@
 *  - Redistributions in binary form must reproduce the above copyright notice,
 *    this list of conditions and the following disclaimer in the documentation
 *    and/or other materials provided with the distribution.
-*  - Neither the name of the Software Technology Group or Technische 
-*    Universität Darmstadt nor the names of its contributors may be used to 
-*    endorse or promote products derived from this software without specific 
+*  - Neither the name of the Software Technology Group or Technische
+*    Universität Darmstadt nor the names of its contributors may be used to
+*    endorse or promote products derived from this software without specific
 *    prior written permission.
 *
 *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -59,11 +59,12 @@ class ApplicationLibrariesSeparatorStage(
         for (node ← cluster.getNodes) {
             node match {
                 case TypeNode(_, _, Some(t)) ⇒
+                	// TODO what is the purpose of the replace?
                     applicationPackages = applicationPackages + (t.thisClass.packageName.replace('/', '.') + '.')
                 case _ ⇒
                 // nothing to do in this case, because the node is not associated with a classFile object
                 // fields and methods can be omitted, since their packages will be added to the list
-                // when their declaring class is analyzed 
+                // when their declaring class is analyzed
             }
         }
 
@@ -74,6 +75,7 @@ class ApplicationLibrariesSeparatorStage(
                 return
             }
         }
+        // TODO do consider using the "map" function ("merge" in the above method)
         applicationPackages foreach { removeLongerPackagePrefix(_) }
 
         val inputNodes = cluster.getNodes.toArray
@@ -93,7 +95,7 @@ class ApplicationLibrariesSeparatorStage(
             }
         }
 
-        true
+        true // TODO suspicious (at least comment!)
     }
 }
 

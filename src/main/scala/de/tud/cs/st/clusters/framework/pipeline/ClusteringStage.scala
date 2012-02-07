@@ -13,9 +13,9 @@
 *  - Redistributions in binary form must reproduce the above copyright notice,
 *    this list of conditions and the following disclaimer in the documentation
 *    and/or other materials provided with the distribution.
-*  - Neither the name of the Software Technology Group or Technische 
-*    Universität Darmstadt nor the names of its contributors may be used to 
-*    endorse or promote products derived from this software without specific 
+*  - Neither the name of the Software Technology Group or Technische
+*    Universität Darmstadt nor the names of its contributors may be used to
+*    endorse or promote products derived from this software without specific
 *    prior written permission.
 *
 *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -49,7 +49,7 @@ import structure.util.ClusterManager
  */
 trait ClusteringStage {
 
-    var clusterManager: ClusterManager = null
+    var clusterManager: ClusterManager = _
 
     def stageName: String = this.getClass.getCanonicalName
 
@@ -59,8 +59,8 @@ trait ClusteringStage {
      * Clients should not call this method from the outside of clustering stages.
      * The clustering pipeline of the framework uses this method to perform the stage's clustering.
      *
-     * @param cluster
-     * @return
+     * @param cluster // TODO …?
+     * @return // TODO …?
      */
     def performClustering(cluster: Cluster): Boolean
 

@@ -46,6 +46,8 @@ trait IterationClusteringStrategy extends ClusteringStrategy {
     val numberOfIterations: Int
 
     abstract override def performClustering(cluster: Cluster): Boolean = {
+        // TODO Consider replacing by a fold: (false /: (1 to numberOfIterations ))(_ | )
+        
         var createdAtLeastOneCluster = false
         1 to numberOfIterations foreach { _ ⇒
             createdAtLeastOneCluster |= super.performClustering(cluster)

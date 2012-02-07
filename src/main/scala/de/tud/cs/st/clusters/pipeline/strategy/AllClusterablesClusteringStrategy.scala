@@ -13,9 +13,9 @@
 *  - Redistributions in binary form must reproduce the above copyright notice,
 *    this list of conditions and the following disclaimer in the documentation
 *    and/or other materials provided with the distribution.
-*  - Neither the name of the Software Technology Group or Technische 
-*    Universität Darmstadt nor the names of its contributors may be used to 
-*    endorse or promote products derived from this software without specific 
+*  - Neither the name of the Software Technology Group or Technische
+*    Universität Darmstadt nor the names of its contributors may be used to
+*    endorse or promote products derived from this software without specific
 *    prior written permission.
 *
 *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -48,7 +48,7 @@ trait AllClusterablesClusteringStrategy extends ClusteringStrategy {
 
     abstract override def performClustering(cluster: Cluster): Boolean = {
         var createdNewCluster = false
-        cluster.getNodes foreach {
+        cluster.getNodes foreach { // TODO rename: getNodes => nodes
             case subCluster: Cluster ⇒
                 createdNewCluster |= performClustering(subCluster)
             case sen: SourceElementNode ⇒ // nothing to do; a single node cannot be clustered

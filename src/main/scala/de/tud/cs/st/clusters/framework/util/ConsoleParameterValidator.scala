@@ -13,9 +13,9 @@
 *  - Redistributions in binary form must reproduce the above copyright notice,
 *    this list of conditions and the following disclaimer in the documentation
 *    and/or other materials provided with the distribution.
-*  - Neither the name of the Software Technology Group or Technische 
-*    Universität Darmstadt nor the names of its contributors may be used to 
-*    endorse or promote products derived from this software without specific 
+*  - Neither the name of the Software Technology Group or Technische
+*    Universität Darmstadt nor the names of its contributors may be used to
+*    endorse or promote products derived from this software without specific
 *    prior written permission.
 *
 *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -48,11 +48,14 @@ import java.io.BufferedWriter
  */
 trait ConsoleParameterValidator {
 
+	// TODO Wrong method name... this method may create a file, which the name however does not tell you and hence is unexpected
     protected def validateOutputFileParameter(outputFile: java.io.File, parameterName: String) {
+    	// TODO refactor "first check that the parameters are valid then perform some action, but do not intermix.
         if (outputFile == null)
             println("Parameter '"+parameterName+"' is not allowed to be empty in this case. Please choose a file as '"+parameterName+"'.")
         else if (!outputFile.exists)
             outputFile.createNewFile()
+            // TODO looks suspicious.. I think an else is missing.
         if (outputFile.isDirectory)
             println("Output can not be written to a directory! Please choose a file as '"+parameterName+"'.")
         else if (!outputFile.canWrite)
