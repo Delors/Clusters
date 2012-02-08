@@ -35,57 +35,35 @@ package framework
 package structure
 package util
 
-import scala.math.Ordering
-import org.junit.runner.RunWith
-import org.scalatest.junit.JUnitRunner
-import _root_.de.tud.cs.st.bat.resolved.reader.Java6Framework
-import _root_.de.tud.cs.st.bat.resolved.ClassFile
-import de.tud.cs.st.util.perf._
+import scala.collection.mutable.Map
+import scala.collection.mutable.ArrayBuffer
+import de.tud.cs.st.bat.resolved.dependency._
+import de.tud.cs.st.bat.resolved.ClassFile
+import de.tud.cs.st.bat.resolved.Field
+import de.tud.cs.st.bat.resolved.Method
+import de.tud.cs.st.bat.resolved.Type
+import de.tud.cs.st.bat.resolved.ObjectType
+import de.tud.cs.st.bat.resolved.MethodDescriptor
+import de.tud.cs.st.bat.resolved.SourceElementIDs
+import de.tud.cs.st.bat.resolved.SourceElementIDsMap
+import de.tud.cs.st.bat.resolved.UseIDOfBaseTypeForArrayTypes
+import de.tud.cs.st.bat.resolved.SourceElementIDsMap
 
 /**
  * @author Thomas Schlosser
  *
  */
-@RunWith(classOf[JUnitRunner])
-class DepExtractorRunTimeTest extends AbstractClusteringTest {
+class ClustersDependencyExtractor(val clusterManager: ClusterManager)
+        extends DependencyExtractor(clusterManager)
+        with DependencyProcessor
+        with NodeMappingSourceElementsVisitor {
 
-    test("testDepExtraction - Apache ANT 1.7.1 - target 1.5.zip") {
-        testDepExtraction("test/classfiles/Apache ANT 1.7.1 - target 1.5.zip")
-    }
+    val nodeStore: NodeStore = clusterManager
+    val nodeFactory: NodeFactory = clusterManager
 
-    test("testDepExtraction - ClusteringTestProject.zip") {
-        testDepExtraction("test/classfiles/ClusteringTestProject.zip")
-    }
-
-    test("testDepExtraction - Flashcards 0.4 - target 1.6.zip") {
-        testDepExtraction("test/classfiles/Flashcards 0.4 - target 1.6.zip")
-    }
-
-    test("testDepExtraction - hibernate-core-3.6.0.Final.jar") {
-        testDepExtraction("test/classfiles/hibernate-core-3.6.0.Final.jar")
-    }
-
-    test("testDepExtraction - cocome-impl-classes.jar") {
-        testDepExtraction("test/classfiles/cocome-impl-classes.jar")
-    }
-
-    private def testDepExtraction(zipFile: String) {
-        println("testDepExtraction["+zipFile+"]")
-
-        var testClasses = Java6Framework.ClassFiles(zipFile)
-        var min = Long.MaxValue
-        var max = Long.MinValue
-        for (i ← 1 to 10) {
-            val depExtractor = new DefaultDependencyExtractor
-            time(duration ⇒ { min = Ordering[Long].min(duration, min); max = Ordering[Long].max(duration, max) }) {
-                for (classFile ← testClasses) {
-                    depExtractor.process(classFile)
-                }
-            }
-        }
-        println("min time to extract dependencies: "+nanoSecondsToMilliseconds(min)+"ms")
-        println("max time to extract dependencies: "+nanoSecondsToMilliseconds(max)+"ms")
-
-        println()
+    def processDependency(sourceID: Int, targetID: Int, dType: DependencyType) {
+        nodeStore.getNode(sourceID).addEdge(nodeStore.getNode(targetID), dType)
     }
 }
+
+class DefaultDependencyExtractor extends ClustersDependencyExtractor(new DefaultClusterManager)

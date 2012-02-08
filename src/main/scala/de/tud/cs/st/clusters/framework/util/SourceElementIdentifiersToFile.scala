@@ -35,10 +35,9 @@ package framework
 package util
 
 import java.io.File
-import structure.util.DefaultClusterManager
+import structure.util.DefaultDependencyExtractor
 import de.tud.cs.st.bat.resolved.dependency.DependencyExtractor
 import de.tud.cs.st.bat.resolved.reader.Java6Framework
-import de.tud.cs.st.bat.resolved.DoNothingSourceElementsVisitor
 import java.io.FileWriter
 import java.io.BufferedWriter
 
@@ -50,8 +49,10 @@ trait SourceElementIdentifiersToFile
         extends DependencyExtractionUtils {
 
     def writeSourceElementsToFile(sourceInputFilePath: String, outputFile: File) {
-        val clusterManager = new DefaultClusterManager()
-        extractDependencies(sourceInputFilePath)(clusterManager)
+        val dependencyExtractor = new DefaultDependencyExtractor()
+        val clusterManager = dependencyExtractor.clusterManager
+
+        extractDependencies(sourceInputFilePath)(dependencyExtractor)
         val projectCluster = clusterManager.getProjectCluster
 
         var fw: FileWriter = null

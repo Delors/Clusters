@@ -39,7 +39,7 @@ import de.tud.cs.st.bat.resolved.SourceElementsVisitor
 import de.tud.cs.st.bat.resolved.ClassFile
 import de.tud.cs.st.bat.resolved.Method
 import de.tud.cs.st.bat.resolved.Field
-import de.tud.cs.st.bat.resolved.dependency.SourceElementIDs
+import de.tud.cs.st.bat.resolved.SourceElementIDs
 
 /**
  * Implementation of the SourceElementsVisitor trait where all source elements
@@ -49,20 +49,23 @@ import de.tud.cs.st.bat.resolved.dependency.SourceElementIDs
  *
  * @author Thomas Schlosser
  */
-trait NodeMappingSourceElementsVisitor extends SourceElementsVisitor[Unit]
-        with SourceElementIDs
-        with NodeFactory {
+trait NodeMappingSourceElementsVisitor extends SourceElementsVisitor[Unit] {
+
+    val sourceElementIDs: SourceElementIDs
+    import sourceElementIDs._
+
+    val nodeFactory: NodeFactory
 
     override def visit(classFile: ClassFile) {
-        createTypeNode(super.sourceElementID(classFile), classFile)
+        nodeFactory.createTypeNode(sourceElementID(classFile), classFile)
     }
 
     override def visit(classFile: ClassFile, method: Method) {
-        createMethodNode(super.sourceElementID(classFile, method), classFile, method)
+        nodeFactory.createMethodNode(sourceElementID(classFile, method), classFile, method)
     }
 
     override def visit(classFile: ClassFile, field: Field) {
-        createFieldNode(super.sourceElementID(classFile, field), classFile, field)
+        nodeFactory.createFieldNode(sourceElementID(classFile, field), classFile, field)
     }
 
 }

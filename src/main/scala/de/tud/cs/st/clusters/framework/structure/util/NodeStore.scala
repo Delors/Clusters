@@ -36,13 +36,13 @@ package structure
 package util
 
 import scala.collection.mutable.Map
-import de.tud.cs.st.bat.resolved.dependency.SourceElementIDsMap
+import de.tud.cs.st.bat.resolved.CategorizedSourceElementIDs
 
 /**
  * @author Thomas Schlosser
  *
  */
-trait NodeStore extends SourceElementIDsMap with ClusterIDsMap {
+trait NodeStore extends CategorizedSourceElementIDs with CategorizedClusterIDs {
 
     protected val INITIAL_ARRAY_SIZE = 100000
 
@@ -79,9 +79,11 @@ trait NodeStore extends SourceElementIDsMap with ClusterIDsMap {
     def getNode(id: Int): Node = {
         if (id >= LOWEST_CLUSTER_ID) {
             return get(id, clusterNodes, LOWEST_CLUSTER_ID)
-        } else if (id >= LOWEST_METHOD_ID) {
+        }
+        else if (id >= LOWEST_METHOD_ID) {
             return get(id, methodNodes, LOWEST_METHOD_ID)
-        } else if (id >= LOWEST_FIELD_ID) {
+        }
+        else if (id >= LOWEST_FIELD_ID) {
             return get(id, fieldNodes, LOWEST_FIELD_ID)
         }
         // TODO document that it is an error to pass in an invalid id
@@ -111,7 +113,7 @@ trait NodeStore extends SourceElementIDsMap with ClusterIDsMap {
         if (id < LOWEST_METHOD_ID && id >= LOWEST_FIELD_ID) {
             return get(id, fieldNodes, LOWEST_FIELD_ID)
         }
-        sys.error("No field node mapping found for ID[" + id + "]")
+        sys.error("No field node mapping found for ID["+id+"]")
     }
 
     def getTypeNode(id: Int): TypeNode = {

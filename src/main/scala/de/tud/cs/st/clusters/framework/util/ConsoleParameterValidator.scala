@@ -35,12 +35,6 @@ package framework
 package util
 
 import java.io.File
-import structure.util.DefaultClusterManager
-import de.tud.cs.st.bat.resolved.dependency.DependencyExtractor
-import de.tud.cs.st.bat.resolved.reader.Java6Framework
-import de.tud.cs.st.bat.resolved.DoNothingSourceElementsVisitor
-import java.io.FileWriter
-import java.io.BufferedWriter
 
 /**
  * @author Thomas Schlosser
@@ -48,14 +42,14 @@ import java.io.BufferedWriter
  */
 trait ConsoleParameterValidator {
 
-	// TODO Wrong method name... this method may create a file, which the name however does not tell you and hence is unexpected
+    // TODO Wrong method name... this method may create a file, which the name however does not tell you and hence is unexpected
     protected def validateOutputFileParameter(outputFile: java.io.File, parameterName: String) {
-    	// TODO refactor "first check that the parameters are valid then perform some action, but do not intermix.
+        // TODO refactor "first check that the parameters are valid then perform some action, but do not intermix.
         if (outputFile == null)
             println("Parameter '"+parameterName+"' is not allowed to be empty in this case. Please choose a file as '"+parameterName+"'.")
         else if (!outputFile.exists)
             outputFile.createNewFile()
-            // TODO looks suspicious.. I think an else is missing.
+        // TODO looks suspicious.. I think an else is missing.
         if (outputFile.isDirectory)
             println("Output can not be written to a directory! Please choose a file as '"+parameterName+"'.")
         else if (!outputFile.canWrite)

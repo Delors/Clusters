@@ -41,10 +41,9 @@ import pipeline.GraphmlClusteringResultWriter
 import pipeline.GraphmlClusteringResultWriterConfiguration
 import structure.Cluster
 import structure.Node
-import structure.util.DefaultClusterManager
+import structure.util.DefaultDependencyExtractor
 import de.tud.cs.st.bat.resolved.dependency.DependencyExtractor
 import de.tud.cs.st.bat.resolved.reader.Java6Framework
-import de.tud.cs.st.bat.resolved.DoNothingSourceElementsVisitor
 
 /**
  * @author Thomas Schlosser
@@ -54,8 +53,10 @@ trait ReferenceClusterCreator
         extends DependencyExtractionUtils {
 
     def readReferenceCluster(sourceInputFilePath: String, referenceClusterInputFile: File): Cluster = {
-        val clusterManager = new DefaultClusterManager()
-        extractDependencies(sourceInputFilePath)(clusterManager)
+        val dependencyExtractor = new DefaultDependencyExtractor()
+        val clusterManager = dependencyExtractor.clusterManager
+
+        extractDependencies(sourceInputFilePath)(dependencyExtractor)
         val projectCluster = clusterManager.getProjectCluster
         var identifierMap = Map[String, Node]()
         projectCluster.getNodes foreach { node ⇒

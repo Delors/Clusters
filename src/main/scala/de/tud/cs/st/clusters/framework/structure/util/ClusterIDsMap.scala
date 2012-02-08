@@ -42,7 +42,7 @@ package util
  *
  * @author Thomas Schlosser
  */
-trait ClusterIDsMap extends ClusterIDs {
+trait ClusterIDsMap extends CategorizedClusterIDs {
 
     import scala.collection.mutable.WeakHashMap
 

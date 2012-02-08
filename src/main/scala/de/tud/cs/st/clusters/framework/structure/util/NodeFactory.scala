@@ -41,8 +41,6 @@ import de.tud.cs.st.bat.resolved.Method
 import de.tud.cs.st.bat.resolved.ClassFile
 import de.tud.cs.st.bat.resolved.ObjectType
 import de.tud.cs.st.bat.resolved.MethodDescriptor
-import de.tud.cs.st.bat.resolved.dependency.SourceElementIDsMap
-import de.tud.cs.st.bat.resolved.dependency.UseIDOfBaseTypeForArrayTypes
 
 /**
  * @author Thomas Schlosser

@@ -44,7 +44,10 @@ import de.tud.cs.st.bat.resolved.Method
 import de.tud.cs.st.bat.resolved.Type
 import de.tud.cs.st.bat.resolved.ObjectType
 import de.tud.cs.st.bat.resolved.MethodDescriptor
-import de.tud.cs.st.bat.resolved.dependency.SourceElementIDsMap
+import de.tud.cs.st.bat.resolved.SourceElementIDs
+import de.tud.cs.st.bat.resolved.SourceElementIDsMap
+import de.tud.cs.st.bat.resolved.UseIDOfBaseTypeForArrayTypes
+import de.tud.cs.st.bat.resolved.SourceElementIDsMap
 
 /**
  * @author Thomas Schlosser
@@ -52,9 +55,7 @@ import de.tud.cs.st.bat.resolved.dependency.SourceElementIDsMap
  */
 trait ClusterManager
         extends SourceElementIDs
-        with DependencyProcessor
         with ClusterIDs
-        with NodeMappingSourceElementsVisitor
         with NodeFactory
         with ClusterFactory
         with NodeCloner
@@ -95,8 +96,7 @@ trait ClusterManager
 }
 
 class DefaultClusterManager
-    extends DependencyExtractor
-    with SourceElementIDsMap
+    extends SourceElementIDsMap
     with ClusterIDsMap
     with ClusterManager
     with UseIDOfBaseTypeForArrayTypes
