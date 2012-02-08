@@ -39,6 +39,7 @@ package util
 import de.tud.cs.st.bat.resolved.Type
 import de.tud.cs.st.bat.resolved.ObjectType
 import de.tud.cs.st.bat.resolved.MethodDescriptor
+import de.tud.cs.st.bat.resolved.ArrayType
 
 /**
  * If you need unique String identifiers for types, fields or methods, this trait can be mixed in.
@@ -50,16 +51,16 @@ trait PrettyPrint {
 
     protected val FIELD_AND_METHOD_SEPARATOR = "."
 
-    def prettyPrint(t: Type): String =
-        t.toJava
+    def prettyPrint(t: Type, useBaseType: Boolean = true): String =
+        { if (useBaseType) ArrayType.baseType(t) else t }.toJava
 
-    def prettyPrint(definingObjectType: ObjectType, fieldName: String): String =
+    def prettyPrint(definingObjectType: Type, fieldName: String): String =
         prettyPrint(definingObjectType) + FIELD_AND_METHOD_SEPARATOR + fieldName
 
-    def prettyPrint(definingObjectType: ObjectType, methodName: String, methodDescriptor: MethodDescriptor): String =
+    def prettyPrint(definingObjectType: Type, methodName: String, methodDescriptor: MethodDescriptor): String =
         prettyPrint(definingObjectType) + FIELD_AND_METHOD_SEPARATOR + prettyPrint(methodName, methodDescriptor)
 
     def prettyPrint(methodName: String, methodDescriptor: MethodDescriptor): String =
-        methodName+"("+methodDescriptor.parameterTypes.map(pT ⇒ prettyPrint(pT)).mkString(", ")+")"
+        methodName+"("+methodDescriptor.parameterTypes.map(pT ⇒ prettyPrint(pT, false)).mkString(", ")+")"
 
 }
