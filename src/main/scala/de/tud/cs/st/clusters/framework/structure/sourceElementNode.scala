@@ -52,52 +52,20 @@ sealed trait SourceElementNode extends Node {
 
 }
 
-// TODO Remove all of the following constructors and instead assign default values
-
-case class TypeNode private (
+case class TypeNode(
     val uniqueID: Int,
     val identifierFun: () ⇒ String,
     var clazz: Option[ClassFile])
-        extends SourceElementNode {
+        extends SourceElementNode
 
-    def this(id: Int, identifierFun: () ⇒ String, clazz: ClassFile) {
-        this(id, identifierFun, Some(clazz))
-    }
-
-    def this(id: Int, identifierFun: () ⇒ String) {
-        this(id, identifierFun, None)
-    }
-
-}
-
-case class FieldNode private (
+case class FieldNode(
     val uniqueID: Int,
     val identifierFun: () ⇒ String,
     var field: Option[Field])
-        extends SourceElementNode {
+        extends SourceElementNode
 
-    def this(id: Int, identifierFun: () ⇒ String, field: Field) {
-        this(id, identifierFun, Some(field))
-    }
-
-    def this(id: Int, identifierFun: () ⇒ String) {
-        this(id, identifierFun, None)
-    }
-
-}
-
-case class MethodNode private (
+case class MethodNode(
     val uniqueID: Int,
     val identifierFun: () ⇒ String,
     var method: Option[Method])
-        extends SourceElementNode {
-
-    def this(id: Int, identifierFun: () ⇒ String, method: Method) {
-        this(id, identifierFun, Some(method))
-    }
-
-    def this(id: Int, identifierFun: () ⇒ String) {
-        this(id, identifierFun, None)
-    }
-
-}
+        extends SourceElementNode

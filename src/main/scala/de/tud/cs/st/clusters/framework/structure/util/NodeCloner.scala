@@ -71,21 +71,21 @@ trait NodeCloner {
 
     private def cloneNode(typeNode: TypeNode): TypeNode =
         if (typeNode.clazz.isDefined)
-            new TypeNode(typeNode.uniqueID, typeNode.identifierFun, typeNode.clazz.get)
+            new TypeNode(typeNode.uniqueID, typeNode.identifierFun, typeNode.clazz)
         else
-            new TypeNode(typeNode.uniqueID, typeNode.identifierFun)
+            new TypeNode(typeNode.uniqueID, typeNode.identifierFun, None)
 
     private def cloneNode(fieldNode: FieldNode): FieldNode =
         if (fieldNode.field.isDefined)
-            new FieldNode(fieldNode.uniqueID, fieldNode.identifierFun, fieldNode.field.get)
+            new FieldNode(fieldNode.uniqueID, fieldNode.identifierFun, fieldNode.field)
         else
-            new FieldNode(fieldNode.uniqueID, fieldNode.identifierFun)
+            new FieldNode(fieldNode.uniqueID, fieldNode.identifierFun, None)
 
     private def cloneNode(methodNode: MethodNode): MethodNode =
         if (methodNode.method.isDefined)
-            new MethodNode(methodNode.uniqueID, methodNode.identifierFun, methodNode.method.get)
+            new MethodNode(methodNode.uniqueID, methodNode.identifierFun, methodNode.method)
         else
-            new MethodNode(methodNode.uniqueID, methodNode.identifierFun)
+            new MethodNode(methodNode.uniqueID, methodNode.identifierFun, None)
 
     private def cloneNode(node: Node): Node =
         node match {
