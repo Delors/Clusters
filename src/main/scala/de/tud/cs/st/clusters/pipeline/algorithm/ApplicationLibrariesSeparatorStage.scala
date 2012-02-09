@@ -59,7 +59,11 @@ class ApplicationLibrariesSeparatorStage(
         for (node ← cluster.nodes) {
             node match {
                 case TypeNode(_, _, Some(t)) ⇒
-                    // TODO what is the purpose of the replace?
+                    // replace all '/'s with '.'s. This has to be done, since the identifiers contain '.'s
+                    // as separators between package names. And the application packages that are collected
+                    // in this loop have to match with the nodes' identifiers. At the end, a '.' is added,
+                    // because sub-packages on the last package level should not match with other sub-packages
+                    // that have this package as prefix.
                     applicationPackages = applicationPackages + (t.thisClass.packageName.replace('/', '.') + '.')
                 case _ ⇒
                 // nothing to do in this case, because the node is not associated with a classFile object
