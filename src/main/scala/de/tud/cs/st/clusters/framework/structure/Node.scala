@@ -79,15 +79,12 @@ trait Node {
         }
 
     def getDirectChild(parentID: Int): Node = {
-        if (this.parent != null) { // TODO use "require"
-            if (this.parent.uniqueID == parentID)
-                return this
-            else
-                return parent.getDirectChild(parentID)
-        }
-        else {
-            sys.error("")
-        }
+        require(this.parent != null, println("parent is null"))
+
+        if (this.parent.uniqueID == parentID)
+            return this
+        else
+            return parent.getDirectChild(parentID)
     }
 
     def isChildOf(parentID: Int): Boolean =
@@ -191,18 +188,15 @@ trait Node {
     // children(nodes)-related stuff
     /////////////////////////////////////////////
     def addNode(node: Node) {
-        // FIXME replace by throw new UnsupportedOperationException
-        sys.error("This method call is not allowed on this kind of node!")
+        throw new UnsupportedOperationException("This method call is not allowed on this kind of node!")
     }
 
     def removeNode(id: Int) {
-        // FIXME replace by throw new UnsupportedOperationException
-        sys.error("This method call is not allowed on this kind of node!")
+        throw new UnsupportedOperationException("This method call is not allowed on this kind of node!")
     }
 
     def clearNodes() {
-        // FIXME replace by throw new UnsupportedOperationException
-        sys.error("This method call is not allowed on this kind of node!")
+        throw new UnsupportedOperationException("This method call is not allowed on this kind of node!")
     }
 
     // TODO make the following abstract and implement these methods in Cluster and SourceElementNode instead
@@ -211,16 +205,14 @@ trait Node {
         false
 
     def getNode(id: Int): Node = {
-        // FIXME replace by throw new UnsupportedOperationException
-        sys.error("This method call is not allowed on this kind of node!")
+        throw new UnsupportedOperationException("This method call is not allowed on this kind of node!")
     }
 
     def nodes: Iterable[Node] = {
         Iterable()
     }
 
-    // ISSUE Consider using "childCount" (if it applies)
-    def numberOfNodes: Int =
+    def childCount: Int =
         0
 
 }

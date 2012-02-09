@@ -44,18 +44,15 @@ import de.tud.cs.st.bat.resolved.dependency._
  */
 class Cluster(
     val uniqueID: Int,
-    val identifier: String,
-    val isProjectCluster: Boolean) // TODO Why is this field required? Is a cluster not already identified as being a ProjectCluster by being the ProjectCluster in a pipeline's configuration?
+    val identifier: String)
         extends Node {
-
-    // TODO
-    def this(uniqueID: Int, identifier: String) {
-        this(uniqueID, identifier, false)
-    }
 
     override val isCluster: Boolean = true
 
     override var clusterable = true
+
+    def isProjectCluster: Boolean =
+        this.parent == null
 
     /////////////////////////////////////////////
     // children(nodes)-related stuff
@@ -68,7 +65,7 @@ class Cluster(
     override def getNode(id: Int): Node =
         nodeMap.getOrElse(id, sys.error("Node with ID["+id+"] was not found"))
 
-    override def numberOfNodes: Int =
+    override def childCount: Int =
         nodeMap.size
 
     override def addNode(node: Node) {

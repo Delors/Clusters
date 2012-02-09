@@ -67,7 +67,7 @@ trait NodeCloner {
     }
 
     private def cloneNode(cluster: Cluster): Cluster =
-        new Cluster(cluster.uniqueID, cluster.identifier, cluster.isProjectCluster)
+        new Cluster(cluster.uniqueID, cluster.identifier)
 
     private def cloneNode(typeNode: TypeNode): TypeNode =
         if (typeNode.clazz.isDefined)

@@ -119,7 +119,7 @@ object GraphScanningAlgorithms {
             resultBean.color = Map()
             resultBean.discoveryTime = Map()
             resultBean.finishingTime = Map()
-            resultBean.createOrderElements(cluster.numberOfNodes)
+            resultBean.createOrderElements(cluster.childCount)
             resultBean.pi = Map()
             resultBean.evenDist = Map()
             for (node ← cluster.nodes) {
