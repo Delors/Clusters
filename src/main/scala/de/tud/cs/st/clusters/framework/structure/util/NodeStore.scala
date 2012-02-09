@@ -76,6 +76,17 @@ trait NodeStore extends CategorizedSourceElementIDs with CategorizedClusterIDs {
         }
     }
 
+    /**
+     * Gets the node with the given ID from the store.
+     * A precondition of this method is, that the given ID has to be a valid node ID.
+     * Valid node IDs have to be greater than [[de.tud.cs.st.bat.resolved.CategorizedSourceElementIDs.LOWEST_TYPE_ID]].
+     * Hence, it is not allowed to pass invalid IDs.
+     *
+     * @param id The ID of the node that should be retrieved from the store.
+     * @return The node with the given ID if the precondition was met and a node
+     *         with the given ID was stored in the store.
+     *         Otherwise, the current implementation returns NULL.
+     */
     def getNode(id: Int): Node = {
         if (id >= LOWEST_CLUSTER_ID) {
             return get(id, clusterNodes, LOWEST_CLUSTER_ID)
@@ -86,43 +97,67 @@ trait NodeStore extends CategorizedSourceElementIDs with CategorizedClusterIDs {
         else if (id >= LOWEST_FIELD_ID) {
             return get(id, fieldNodes, LOWEST_FIELD_ID)
         }
-        // TODO document that it is an error to pass in an invalid id
-        //else if (id >= LOWEST_TYPE_ID) {
         return get(id, typeNodes, LOWEST_TYPE_ID)
-        //}
-        //sys.error("No mapping found for ID["+id+"]")
     }
 
-    def getCluster(id: Int): Cluster = {
-        // TODO document that it is an error to pass in an invalid id
-        //if (id >= LOWEST_CLUSTER_ID) {
-        return get(id, clusterNodes, LOWEST_CLUSTER_ID)
-        // }
-        // sys.error("No cluster mapping found for ID["+id+"]")
-    }
+    /**
+     * Gets the cluster with the given ID from the store.
+     * A precondition of this method is, that the given ID has to be a valid cluster ID.
+     * Valid cluster IDs have to be greater or equal to [[de.tud.cs.st.clusters.framework.structure.util.CategorizedClusterIDs.LOWEST_CLUSTER_ID]].
+     * Hence, it is not allowed to pass invalid IDs.
+     *
+     * @param id The ID of the cluster that should be retrieved from the store.
+     * @return The cluster with the given ID if the precondition was met and a cluster
+     *         with the given ID was stored in the store.
+     *         Otherwise, the current implementation returns NULL.
+     */
+    def getCluster(id: Int): Cluster =
+        get(id, clusterNodes, LOWEST_CLUSTER_ID)
 
-    def getMethodNode(id: Int): MethodNode = {
-        // TODO document that it is an error to pass in an invalid id
-        //if (id < LOWEST_CLUSTER_ID && id >= LOWEST_METHOD_ID) {
-        return get(id, methodNodes, LOWEST_METHOD_ID)
-        //}
-        //sys.error("No methode node mapping found for ID[" + id + "]")
-    }
+    /**
+     * Gets the method node with the given ID from the store.
+     * A precondition of this method is, that the given ID has to be a valid method node ID.
+     * Valid method node IDs have to be greater or equal to [[de.tud.cs.st.bat.resolved.CategorizedSourceElementIDs.LOWEST_METHOD_ID]]
+     * and less than [[de.tud.cs.st.clusters.framework.structure.util.CategorizedClusterIDs.LOWEST_CLUSTER_ID]]
+     * Hence, it is not allowed to pass invalid IDs.
+     *
+     * @param id The ID of the method node that should be retrieved from the store.
+     * @return The method node with the given ID if the precondition was met and
+     *         a method node with the given ID was stored in the store.
+     *         Otherwise, the current implementation returns NULL.
+     */
+    def getMethodNode(id: Int): MethodNode =
+        get(id, methodNodes, LOWEST_METHOD_ID)
 
-    def getFieldNode(id: Int): FieldNode = {
-        if (id < LOWEST_METHOD_ID && id >= LOWEST_FIELD_ID) {
-            return get(id, fieldNodes, LOWEST_FIELD_ID)
-        }
-        sys.error("No field node mapping found for ID["+id+"]")
-    }
+    /**
+     * Gets the field node with the given ID from the store.
+     * A precondition of this method is, that the given ID has to be a valid field node ID.
+     * Valid field node IDs have to be greater or equal to [[de.tud.cs.st.bat.resolved.CategorizedSourceElementIDs.LOWEST_FIELD_ID]]
+     * and less than [[de.tud.cs.st.bat.resolved.CategorizedSourceElementIDs.LOWEST_METHOD_ID]]
+     * Hence, it is not allowed to pass invalid IDs.
+     *
+     * @param id The ID of the field node that should be retrieved from the store.
+     * @return The field node with the given ID if the precondition was met and
+     *         a field node with the given ID was stored in the store.
+     *         Otherwise, the current implementation returns NULL.
+     */
+    def getFieldNode(id: Int): FieldNode =
+        get(id, fieldNodes, LOWEST_FIELD_ID)
 
-    def getTypeNode(id: Int): TypeNode = {
-        // TODO document that it is an error to pass in an invalid id
-        //        if (id < LOWEST_FIELD_ID && id >= LOWEST_TYPE_ID) {
-        return get(id, typeNodes, LOWEST_TYPE_ID)
-        //        }
-        //        sys.error("No type node mapping found for ID[" + id + "]")
-    }
+    /**
+     * Gets the type node with the given ID from the store.
+     * A precondition of this method is, that the given ID has to be a valid type node ID.
+     * Valid type node IDs have to be greater or equal to [[de.tud.cs.st.bat.resolved.CategorizedSourceElementIDs.LOWEST_TYPE_ID]]
+     * and less than [[de.tud.cs.st.bat.resolved.CategorizedSourceElementIDs.LOWEST_FIELD_ID]]
+     * Hence, it is not allowed to pass invalid IDs.
+     *
+     * @param id The ID of the type node that should be retrieved from the store.
+     * @return The type node with the given ID if the precondition was met and
+     *         a type node with the given ID was stored in the store.
+     *         Otherwise, the current implementation returns NULL.
+     */
+    def getTypeNode(id: Int): TypeNode =
+        get(id, typeNodes, LOWEST_TYPE_ID)
 
     private def get[N <: Node](id: Int, nodes: Map[Int, N], lowestID: Int): N = {
         val index = id - lowestID
