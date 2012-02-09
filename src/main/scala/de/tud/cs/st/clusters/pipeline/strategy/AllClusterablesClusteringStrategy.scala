@@ -48,7 +48,7 @@ trait AllClusterablesClusteringStrategy extends ClusteringStrategy {
 
     abstract override def performClustering(cluster: Cluster): Boolean = {
         var createdNewCluster = false
-        cluster.getNodes foreach { // TODO rename: getNodes => nodes
+        cluster.nodes foreach {
             case subCluster: Cluster ⇒
                 createdNewCluster |= performClustering(subCluster)
             case sen: SourceElementNode ⇒ // nothing to do; a single node cannot be clustered

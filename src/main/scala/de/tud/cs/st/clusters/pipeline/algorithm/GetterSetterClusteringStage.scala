@@ -62,7 +62,7 @@ class GetterSetterClusteringStage(
     override def performClustering(cluster: Cluster): Boolean = {
         var createdNewCluster = false
         // TODO: cluster needs methods that return only type/field/method nodes => performance improvement
-        val inputNodes = cluster.getNodes.toArray
+        val inputNodes = cluster.nodes.toArray
         for (node ← inputNodes) {
             node match {
                 case FieldNode(_, _, Some(field)) ⇒

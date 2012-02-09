@@ -52,7 +52,7 @@ trait FirstClusterablesClusteringStrategy extends ClusteringStrategy {
         }
         else {
             // TODO What you want to do seems to be a fold: (createdNewCluster /: cluster.getNodes)((cnc,sc) => {cnc | sc match{case … => performClustering(sc);case _ => false})
-            cluster.getNodes foreach {
+            cluster.nodes foreach {
                 case subCluster: Cluster ⇒
                     createdNewCluster |= performClustering(subCluster)
                 case sen: SourceElementNode ⇒ // nothing to do; a single node cannot be clustered

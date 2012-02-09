@@ -58,12 +58,12 @@ class PackageClusteringStage(
         }
 
         var prefixRoot = new GreatestCommonCharPrefixTree('#') // TODO needs to be explained
-        for (node ← cluster.getNodes) {
+        for (node ← cluster.nodes) {
             prefixRoot.addPrefix(node.identifier.toCharArray())
         }
         var prfxs = prefixRoot.prefixes.map(charArray ⇒ String.copyValueOf(charArray))
 
-        val inputNodes = cluster.getNodes.toArray
+        val inputNodes = cluster.nodes.toArray
         cluster.clearNodes()
         cluster.clusterable = false
 

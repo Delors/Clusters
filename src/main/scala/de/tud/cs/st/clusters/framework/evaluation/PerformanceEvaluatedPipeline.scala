@@ -57,7 +57,7 @@ trait PerformanceEvaluatedPipeline
     }
 
     protected abstract override def runClustering(clusterManager: ClusterManager): Cluster = {
-        println("Number of nodes in project cluster: "+clusterManager.getProjectCluster.getNodes.size)
+        println("Number of nodes in project cluster: "+clusterManager.getProjectCluster.numberOfNodes)
         time(duration ⇒ println("time to cluster input: "+nanoSecondsToMilliseconds(duration)+"ms")) {
             super.runClustering(clusterManager)
         }

@@ -74,12 +74,12 @@ object GraphScanningAlgorithms {
         graphScanIntern(cluster, {
             if (startNode == null) {
                 if (order != null) order(0)
-                else cluster.getNodes.head.uniqueID
+                else cluster.nodes.head.uniqueID
             }
             else startNode
         }, dfs, 0, { countStarts += 1; countStarts - 1 })
         // run algorithm as long as not all nodes have been finished (all node colors!= white)
-        for (index ← { if (order != null) order.iterator else cluster.getNodes.map(_.uniqueID) }) {
+        for (index ← { if (order != null) order.iterator else cluster.nodes.map(_.uniqueID) }) {
             if (resultBean.color(index) == WHITE)
                 graphScanIntern(cluster, index, dfs,
                     resultBean.time, { countStarts += 1; countStarts - 1 })
@@ -122,7 +122,7 @@ object GraphScanningAlgorithms {
             resultBean.createOrderElements(cluster.numberOfNodes)
             resultBean.pi = Map()
             resultBean.evenDist = Map()
-            for (node ← cluster.getNodes) {
+            for (node ← cluster.nodes) {
                 val i = node.uniqueID
                 resultBean.color(i) = WHITE
                 resultBean.discoveryTime(i) = 0

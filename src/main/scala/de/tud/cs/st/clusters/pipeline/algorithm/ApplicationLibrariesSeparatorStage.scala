@@ -56,10 +56,10 @@ class ApplicationLibrariesSeparatorStage(
     override def performClustering(cluster: Cluster): Boolean = {
         // create list that contains all names of the application packages
         var applicationPackages: Set[String] = Set()
-        for (node ← cluster.getNodes) {
+        for (node ← cluster.nodes) {
             node match {
                 case TypeNode(_, _, Some(t)) ⇒
-                	// TODO what is the purpose of the replace?
+                    // TODO what is the purpose of the replace?
                     applicationPackages = applicationPackages + (t.thisClass.packageName.replace('/', '.') + '.')
                 case _ ⇒
                 // nothing to do in this case, because the node is not associated with a classFile object
@@ -78,7 +78,7 @@ class ApplicationLibrariesSeparatorStage(
         // TODO do consider using the "map" function ("merge" in the above method)
         applicationPackages foreach { removeLongerPackagePrefix(_) }
 
-        val inputNodes = cluster.getNodes.toArray
+        val inputNodes = cluster.nodes.toArray
         cluster.clearNodes()
         cluster.clusterable = false
         val applicationCluster = clusterManager.createCluster(algorithmConfig.applicationClusterIdentifier, this.stageName)

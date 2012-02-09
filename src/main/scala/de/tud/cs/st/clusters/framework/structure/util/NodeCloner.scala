@@ -49,7 +49,7 @@ trait NodeCloner {
         cluster: Cluster): Cluster = {
         val clone = cloneNode(cluster)
         // add clones of cluster elements to the cluster's clone
-        cluster.getNodes map {
+        cluster.nodes map {
             cloneNodeStructure(_)
         } map { node ⇒
             clone.addNode(node)

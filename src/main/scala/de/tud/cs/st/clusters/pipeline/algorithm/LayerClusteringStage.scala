@@ -96,7 +96,7 @@ class LayerClusteringStage(
 
             var furtherLayers = !(bottomLayerNodes.isEmpty && topLayerNodes.isEmpty)
 
-            	// TODO replace here and elsewhere: "if(...nonEmpty){...}"
+            // TODO replace here and elsewhere: "if(...nonEmpty){...}"
             if (!sparatedNodes.isEmpty) {
                 if (layer == 0)
                     sparatedNodes foreach { node ⇒
@@ -125,7 +125,7 @@ class LayerClusteringStage(
             }
         }
 
-        val inputNodes = cluster.getNodes.toSet
+        val inputNodes = cluster.nodes.toSet
         cluster.clearNodes()
         cluster.clusterable = false
         createLayers(inputNodes)

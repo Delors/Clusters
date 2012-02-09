@@ -80,7 +80,7 @@ class GMLClusteringResultWriter(
         //        nodeBuffer.append(cluster.identifier)
         //        nodeBuffer.append("\"\n\t\t]\n\t]")
 
-        cluster.getNodes foreach {
+        cluster.nodes foreach {
             case c: Cluster ⇒
                 writeCluster(c, nodeBuffer, edgeBuffer)
             case sen: SourceElementNode ⇒

@@ -84,7 +84,7 @@ class ImplementationTestingSeparatorStage(
         }
 
         if (!allTestRelatedNodes.isEmpty) {
-            val inputNodes = cluster.getNodes.toSet
+            val inputNodes = cluster.nodes.toSet
 
             cluster.clearNodes()
             cluster.clusterable = false
@@ -124,7 +124,7 @@ class ImplementationTestingSeparatorStage(
 
     protected def extractDirectlyTestRelatedNodes(cluster: Cluster): List[Node] = {
         var result: List[Node] = Nil
-        cluster.getNodes foreach { node ⇒
+        cluster.nodes foreach { node ⇒
             // a node with an identifier that starts with a test library package prefix is considered as directly test related
             if (algorithmConfig.testLibrariesPackagePrefixes.exists(prfx ⇒ node.identifier.startsWith(prfx))) {
                 result = node :: result

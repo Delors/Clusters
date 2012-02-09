@@ -54,7 +54,7 @@ trait SameNeighborClusteringStage[C <: SameNeighborClusteringAlgorithmConfigurat
         var createdNewCluster = false
         val clustersMap = Map[Int, Set[Node]]()
 
-        for (node ← cluster.getNodes) {
+        for (node ← cluster.nodes) {
             getConsideredEdge(node) match {
                 case Some(edge) ⇒
                     val neighborNodeID = edge.target.uniqueID

@@ -54,7 +54,7 @@ class GraphmlClusteringResultWriter(
 
     // TODO Why don't you use Scala's native XML support? 
     // Why don't you use multiline strings (If you can't use Scala's native XML support)?
-    
+
     override protected def writeHeader() {
         write("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n"+
             "<graphml xmlns=\"http://graphml.graphdrawing.org/xmlns\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:y=\"http://www.yworks.com/xml/graphml\" xmlns:yed=\"http://www.yworks.com/xml/yed/3\" xsi:schemaLocation=\"http://graphml.graphdrawing.org/xmlns http://www.yworks.com/xml/schema/graphml/1.1/ygraphml.xsd\">\n"+
@@ -131,7 +131,7 @@ class GraphmlClusteringResultWriter(
                     writeAllChildNodeIdentifiers(cluster)
                 }
                 else {
-                    cluster.getNodes foreach { child ⇒
+                    cluster.nodes foreach { child ⇒
                         if (!child.isCluster) {
                             write(child.identifier+"\n")
                         }
@@ -172,7 +172,7 @@ class GraphmlClusteringResultWriter(
         }
 
         // write child nodes
-        cluster.getNodes foreach {
+        cluster.nodes foreach {
             case c: Cluster ⇒
                 writeCluster(c, nodeBuffer, edgeBuffer)
             case sen: SourceElementNode ⇒
@@ -188,7 +188,7 @@ class GraphmlClusteringResultWriter(
     }
 
     private def writeAllChildNodeIdentifiers(node: Node) {
-        node.getNodes foreach { child ⇒
+        node.nodes foreach { child ⇒
             if (!child.isCluster) {
                 write(child.identifier+"\n")
             }

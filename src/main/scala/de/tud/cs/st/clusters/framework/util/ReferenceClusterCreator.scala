@@ -59,7 +59,7 @@ trait ReferenceClusterCreator
         extractDependencies(sourceInputFilePath)(dependencyExtractor)
         val projectCluster = clusterManager.getProjectCluster
         var identifierMap = Map[String, Node]()
-        projectCluster.getNodes foreach { node ⇒
+        projectCluster.nodes foreach { node ⇒
             identifierMap = identifierMap + ((node.identifier, node))
         }
         projectCluster.clearNodes();

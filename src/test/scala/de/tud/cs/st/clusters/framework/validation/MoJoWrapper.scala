@@ -119,7 +119,7 @@ class MoJoWrapper(val authorativeCluster: Cluster, val calculatedCluster: Cluste
         var data: List[String] = Nil
 
         def extractRSFContentFromCluster(cl: Cluster) {
-            cl.getNodes foreach {
+            cl.nodes foreach {
                 case subCluster: Cluster ⇒
                     extractRSFContentFromCluster(subCluster)
                 case sen: SourceElementNode ⇒

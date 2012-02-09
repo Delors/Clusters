@@ -62,7 +62,7 @@ class StronglyConnectedComponentsClusteringStage(
             null, true, result.order)(true)
 
         // create resulting clusters
-        val inputNodes = cluster.getNodes.toArray
+        val inputNodes = cluster.nodes.toArray
         cluster.clearNodes()
         // The first element of a cluster is buffered in this map.
         // If it remains the only element in that "cluster", no new cluster will be created.

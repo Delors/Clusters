@@ -57,7 +57,7 @@ class SimilarityMetricClusteringStage(
 
     override def performClustering(cluster: Cluster): Boolean = {
         var createdNewCluster = false
-        val inputNodes = cluster.getNodes.toArray
+        val inputNodes = cluster.nodes.toArray
 
         def calcClusters(sortedEdges: List[((Int, Int), Long)], nodes: Iterable[Node]): Array[Node] = {
             val clusters = Map[Int, SimilarityMetricNode]()

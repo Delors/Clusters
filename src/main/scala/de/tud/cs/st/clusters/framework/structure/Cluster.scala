@@ -62,6 +62,15 @@ class Cluster(
     /////////////////////////////////////////////
     val nodeMap = Map[Int, Node]()
 
+    override def nodes: Iterable[Node] =
+        nodeMap.values
+
+    override def getNode(id: Int): Node =
+        nodeMap.getOrElse(id, sys.error("Node with ID["+id+"] was not found"))
+
+    override def numberOfNodes: Int =
+        nodeMap.size
+
     override def addNode(node: Node) {
         nodeMap.put(node.uniqueID, node)
         if (node.parent != null && node.parent != this) {
@@ -84,17 +93,6 @@ class Cluster(
     override def containsNode(id: Int): Boolean =
         nodeMap.contains(id) || nodeMap.values.exists(n ⇒ n.containsNode(id))
 
-    override def getNode(id: Int): Node = {
-        nodeMap.getOrElse(id, sys.error("Node with ID["+id+"] was not found"))
-    }
-
-    override def getNodes: Iterable[Node] = {
-        nodeMap.values
-    }
-
-    override def numberOfNodes: Int =
-        nodeMap.size
-
     /////////////////////////////////////////////
     // edges-related stuff
     /////////////////////////////////////////////
@@ -103,8 +101,8 @@ class Cluster(
         var edges = Set[Edge]()
         nodeMap.values foreach {
             _.getOutgoingEdges foreach { edge ⇒
-                val containsSource : Boolean = edge.source == this || edge.source.isChildOf(this.uniqueID)
-                val containsTarget : Boolean = edge.target == this || edge.target.isChildOf(this.uniqueID)
+                val containsSource: Boolean = edge.source == this || edge.source.isChildOf(this.uniqueID)
+                val containsTarget: Boolean = edge.target == this || edge.target.isChildOf(this.uniqueID)
                 if (containsSource && !containsTarget) {
                     edges = edges + edge
                 }

@@ -67,7 +67,7 @@ class DOTClusteringResultWriter(
 
         var emptyCluster = true
         // add nodes
-        cluster.getNodes foreach {
+        cluster.nodes foreach {
             case c: Cluster ⇒
                 if (emptyCluster) {
                     nodeBuffer.append(subGraphBuffer)

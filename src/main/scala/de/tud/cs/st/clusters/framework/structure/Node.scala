@@ -68,11 +68,13 @@ trait Node {
     private def getAncestor(levelDiff: Int): Node =
         if (levelDiff == 0) {
             this
-        } else {
+        }
+        else {
             if (levelDiff > 0 && this.parent != null) {
                 parent.getAncestor(levelDiff - 1)
-            } else {
-                sys.error("node[" + this.uniqueID + "] has no ancestor with levelDiff of \"" + levelDiff + "\"")
+            }
+            else {
+                sys.error("node["+this.uniqueID+"] has no ancestor with levelDiff of \""+levelDiff+"\"")
             }
         }
 
@@ -82,7 +84,8 @@ trait Node {
                 return this
             else
                 return parent.getDirectChild(parentID)
-        } else {
+        }
+        else {
             sys.error("")
         }
     }
@@ -212,7 +215,7 @@ trait Node {
         sys.error("This method call is not allowed on this kind of node!")
     }
 
-    def getNodes: Iterable[Node] = {
+    def nodes: Iterable[Node] = {
         Iterable()
     }
 
