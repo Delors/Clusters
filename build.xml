@@ -77,7 +77,7 @@ Author 	Thomas Schlosser
 	<property name="scala-compiler.jar" value="${scala.lib}/scala-compiler.jar" />
 	<property name="scala-library.jar" value="${scala.lib}/scala-library.jar" />
 
-	<property name="bat.jar" value="${lib.dir}/bat-1.6.ALPHA.jar" />
+	<property name="bat.jar" value="${lib.dir}/bat-1.6.0.R1.jar" />
 	<property name="commons-lang.jar" value="${lib.dir}/commons-lang3-3.1.jar" />
 	<property name="graphclustering.jar" value="${lib.dir}/graphclustering.jar" />
 	<property name="scalatest.jar" value="${lib.dir}/scalatest-1.6.1.jar" />

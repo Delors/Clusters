@@ -40,6 +40,7 @@ import de.tud.cs.st.bat.resolved.Field
 import de.tud.cs.st.bat.resolved.Method
 import de.tud.cs.st.bat.resolved.ClassFile
 import de.tud.cs.st.bat.resolved.ObjectType
+import de.tud.cs.st.bat.resolved.ReferenceType
 import de.tud.cs.st.bat.resolved.MethodDescriptor
 
 /**
@@ -81,11 +82,11 @@ trait NodeFactory extends PrettyPrint with NodeStore {
             (id) ⇒ new MethodNode(id, () ⇒ prettyPrint(classFile.thisClass, method.name, method.descriptor), method))
     }
 
-    def createMethodNode(id: Int, definingObjectType: ObjectType, methodName: String, methodDescriptor: MethodDescriptor): MethodNode =
+    def createMethodNode(id: Int, definingReferenceType: ReferenceType, methodName: String, methodDescriptor: MethodDescriptor): MethodNode =
         createNode(
             id,
             (c: MethodNode) ⇒ Unit,
-            (id) ⇒ new MethodNode(id, () ⇒ prettyPrint(definingObjectType, methodName, methodDescriptor)))
+            (id) ⇒ new MethodNode(id, () ⇒ prettyPrint(definingReferenceType, methodName, methodDescriptor)))
 
     private def createNode[N <: Node](
         id: Int,

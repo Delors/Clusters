@@ -43,6 +43,7 @@ import de.tud.cs.st.bat.resolved.Field
 import de.tud.cs.st.bat.resolved.Method
 import de.tud.cs.st.bat.resolved.Type
 import de.tud.cs.st.bat.resolved.ObjectType
+import de.tud.cs.st.bat.resolved.ReferenceType
 import de.tud.cs.st.bat.resolved.MethodDescriptor
 import de.tud.cs.st.bat.resolved.SourceElementIDs
 import de.tud.cs.st.bat.resolved.SourceElementIDsMap
@@ -79,9 +80,9 @@ trait ClusterManager
         id
     }
 
-    abstract override def sourceElementID(definingObjectType: ObjectType, methodName: String, methodDescriptor: MethodDescriptor): Int = {
-        val id = super.sourceElementID(definingObjectType, methodName, methodDescriptor)
-        val node = createMethodNode(id, definingObjectType, methodName, methodDescriptor)
+    abstract override def sourceElementID(definingReferenceType: ReferenceType, methodName: String, methodDescriptor: MethodDescriptor): Int = {
+        val id = super.sourceElementID(definingReferenceType, methodName, methodDescriptor)
+        val node = createMethodNode(id, definingReferenceType, methodName, methodDescriptor)
         projectCluster.addNode(node)
         id
     }

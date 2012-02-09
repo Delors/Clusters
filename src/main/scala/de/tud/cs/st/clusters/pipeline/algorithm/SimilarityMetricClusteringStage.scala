@@ -105,7 +105,7 @@ class SimilarityMetricClusteringStage(
                     result(i) = cluster
                 }
                 else {
-                    result(i) = clusterManager.getNode(nodes.first)
+                    result(i) = clusterManager.getNode(nodes.head)
                 }
                 i += 1
             }
