@@ -104,7 +104,7 @@ class GetterSetterClusteringStage(
                                     gscBean.methods = tEdge.target :: gscBean.methods
                                 }
                             }
-                        case _ ⇒ Nil // TOOD why do you return "Nil"?
+                        case _ ⇒ // nothing to do if the target is no MethodNode 
                     }
                 case WRITES_FIELD ⇒
                     tEdge.target match {
@@ -118,7 +118,7 @@ class GetterSetterClusteringStage(
                                     gscBean.methods = tEdge.target :: gscBean.methods
                                 }
                             }
-                        case _ ⇒ Nil // TOOD why do you return "Nil"?
+                        case _ ⇒ // nothing to do if the target is no MethodNode
                     }
                 case _ ⇒ // nothing to do if the type is not a read or write access
             }
