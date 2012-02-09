@@ -59,8 +59,8 @@ trait ClusteringStage {
      * Clients should not call this method from the outside of clustering stages.
      * The clustering pipeline of the framework uses this method to perform the stage's clustering.
      *
-     * @param cluster // TODO …?
-     * @return // TODO …?
+     * @param cluster The cluster the stage-specific clustering algorithm should be performed on.
+     * @return <code>true</code> if a new cluster was created. Otherwise, it returns <code>false</code>.
      */
     def performClustering(cluster: Cluster): Boolean
 
