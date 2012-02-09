@@ -47,12 +47,13 @@ import framework.structure.SourceElementNode
 trait AllClusterablesClusteringStrategy extends ClusteringStrategy {
 
     abstract override def performClustering(cluster: Cluster): Boolean = {
-        var createdNewCluster = false
-        cluster.nodes foreach {
-            case subCluster: Cluster ⇒
-                createdNewCluster |= performClustering(subCluster)
-            case sen: SourceElementNode ⇒ // nothing to do; a single node cannot be clustered
-        }
+        var createdNewCluster = (false /: cluster.nodes)((cnc, node) ⇒ cnc | {
+            node match {
+                case subCluster: Cluster ⇒
+                    performClustering(subCluster)
+                case _ ⇒ false // nothing to do; a single node cannot be clustered
+            }
+        })
         if (cluster.clusterable) {
             createdNewCluster |= super.performClustering(cluster)
             cluster.metaInfo("lastAppliedStage") = this.stageName

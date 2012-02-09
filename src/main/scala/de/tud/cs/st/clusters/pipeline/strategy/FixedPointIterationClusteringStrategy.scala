@@ -45,12 +45,11 @@ trait FixedPointIterationClusteringStrategy extends ClusteringStrategy {
 
     abstract override def performClustering(cluster: Cluster): Boolean = {
         var createdAtLeastOneCluster = false
-        // TODO Scala has a do while loop...
-        var createdNewCluster = true
-        while (createdNewCluster) {
+        var createdNewCluster = false
+        do {
             createdNewCluster = super.performClustering(cluster)
             createdAtLeastOneCluster |= createdNewCluster
-        }
+        } while (createdNewCluster)
         createdAtLeastOneCluster
     }
 }
