@@ -52,12 +52,14 @@ class PackageClusteringStage(
 
     override def performClustering(cluster: Cluster): Boolean = {
         def getMatchingPrefix(value: String, prefixes: Array[String]): String = {
-            // TODO consider using "find"
-            prefixes.foreach(prfx ⇒ if (value.startsWith(prfx)) { return prfx })
-            sys.error("No matching prefix found for \""+value+"\" in prefixes: "+prefixes.mkString("\n"))
+            prefixes.find(prfx ⇒ value.startsWith(prfx)) match {
+                case Some(prfx) ⇒ return prfx
+                case None ⇒
+                    sys.error("No matching prefix found for \""+value+"\" in prefixes: "+prefixes.mkString("\n"))
+            }
         }
 
-        var prefixRoot = new GreatestCommonCharPrefixTree('#') // TODO needs to be explained
+        var prefixRoot = new GreatestCommonCharPrefixTree()
         for (node ← cluster.nodes) {
             prefixRoot.addPrefix(node.identifier.toCharArray())
         }
@@ -86,23 +88,31 @@ class PackageClusteringStage(
     }
 }
 
+/**
+ *
+ * @param content In case that this instance is the root element of the tree, the content is 'None'.
+ * 		  If this instance is an intermediate tree element or a leaf of the whole tree,
+ *                the content is the character at the x-th position in the prefix, where x is the hierarchy
+ *                level of this instance in the whole tree.
+ *
+ * @author Thomas Schlosser
+ *
+ */
 private class GreatestCommonCharPrefixTree(
-    val content: Char,
-    val children: Map[Char, GreatestCommonPrefixTree[Char]])
+    val content: Option[Char] = None)
         extends GreatestCommonPrefixTree[Char] {
 
-    def this(content: Char) =
-        this(content, Map.empty)
+    val children: Map[Char, GreatestCommonPrefixTree[Char]] = Map.empty
 
     override def isEndMarker(content: Char): Boolean =
         content.isUpper
 
     override def GreatestCommonPrefixTree(content: Char): GreatestCommonCharPrefixTree =
-        new GreatestCommonCharPrefixTree(content)
+        new GreatestCommonCharPrefixTree(Some(content))
 }
 
 private trait GreatestCommonPrefixTree[Content] {
-    val content: Content
+    val content: Option[Content]
     val children: Map[Content, GreatestCommonPrefixTree[Content]]
     var end: Boolean = false
 
@@ -134,7 +144,7 @@ private trait GreatestCommonPrefixTree[Content] {
     def prefixes(implicit m: ClassManifest[Content]): Array[Array[Content]] = {
         var result: Array[Array[Content]] = Array()
         for ((key, value) ← children) {
-            var subResult: Array[Array[Content]] = /*TODO consider using for(...) yield {} */ value.prefixes.map(prfx ⇒ Array(key) ++ prfx)
+            var subResult: Array[Array[Content]] = for (prfx ← value.prefixes) yield { Array(key) ++ prfx }
             if (subResult.length == 0) {
                 subResult = Array(Array(key))
             }
