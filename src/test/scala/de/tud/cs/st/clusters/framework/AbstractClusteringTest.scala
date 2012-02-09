@@ -65,7 +65,7 @@ trait AbstractClusteringTest extends FunSuite
             new ClusteringPipeline(
                 clusteringStages,
                 extractDependencies,
-                resultWriterCreator) with PerformanceEvaluatedPipeline
+                Some(resultWriterCreator)) with PerformanceEvaluatedPipeline
 
         val cluster = clusteringPipeline.runPipeline()
 

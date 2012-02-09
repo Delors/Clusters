@@ -35,28 +35,25 @@ package framework
 package pipeline
 
 import scala.collection.mutable.Queue
-import structure.Cluster
-import structure.util.ClusterManager
-import structure.util.DefaultClusterManager
-import structure.util.DefaultDependencyExtractor
+
 import de.tud.cs.st.bat.resolved.dependency.DependencyExtractor
-import de.tud.cs.st.bat.resolved.SourceElementIDsMap
-import de.tud.cs.st.bat.resolved.UseIDOfBaseTypeForArrayTypes
+import structure.util.ClusterManager
+import structure.util.DefaultDependencyExtractor
+import structure.Cluster
 
 /**
  * @author Thomas Schlosser
  *
  */
 class ClusteringPipeline(
-        protected val initialClusteringStages: Array[ClusteringStage],
+        protected val initialClusteringStages: Traversable[ClusteringStage],
         protected val extractDependencies: (DependencyExtractor) ⇒ Unit, // ISSUE Why don't you just require a specific Object? As far as I have understood your code, the pipeline is set up exactly once
-        protected val createConcreteClusteringResultWriter: () ⇒ ClusteringResultWriter) {
+        protected val createConcreteClusteringResultWriter: Option[() ⇒ ClusteringResultWriter] = None) {
 
-    def this(clusteringStages: Array[ClusteringStage] /* ISSUE Why Array and not just "IndexedSeq"?*/ , extractDependencies: (DependencyExtractor) ⇒ Unit) {
-        this(clusteringStages, extractDependencies, () ⇒ null /*ISSUE Why don't you use "Option"?*/ )
-    }
+    // check the existence of the configurations on "initialization level"
+    require(extractDependencies != null, "A dependency extraction function has to be configured to run the pipeline!")
 
-    private val dependencyExtractor = new DefaultDependencyExtractor // why don't you put
+    private val dependencyExtractor = new DefaultDependencyExtractor // why don't you put //TODO: @Michael: a part of this comment seems to be missing
 
     // adding the 'initialClusteringStages' is part of the constructor code...
     private val clusteringStages = new Queue[ClusteringStage]() ++ initialClusteringStages
@@ -66,11 +63,6 @@ class ClusteringPipeline(
     }
 
     final def runPipeline(): Cluster = {
-        // TODO use "require" instead and move it up to the "initialization" level
-        if (extractDependencies == null) {
-            sys.error("A dependency extraction function has to be configured to run the pipeline!")
-        }
-
         runDependencyExtraction(dependencyExtractor)
 
         val result = runClustering(dependencyExtractor.clusterManager)
@@ -95,13 +87,15 @@ class ClusteringPipeline(
 
     protected def runExport(result: Cluster) {
         // export result by calling write method of concrete ClusteringResultWriter trait
-        val resultWriter = createConcreteClusteringResultWriter()
-        if (resultWriter != null) {
-            try {
-                resultWriter.write(result)
-            }
-            finally {
-                resultWriter.close()
+        if (createConcreteClusteringResultWriter.isDefined) {
+            val resultWriter = createConcreteClusteringResultWriter.get()
+            if (resultWriter != null) {
+                try {
+                    resultWriter.write(result)
+                }
+                finally {
+                    resultWriter.close()
+                }
             }
         }
     }
