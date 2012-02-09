@@ -199,4 +199,20 @@ trait Node {
 
     def childCount: Int
 
+    /////////////////////////////////////////////
+    // clone-related stuff
+    /////////////////////////////////////////////
+
+    /**
+     * Clones this instance of a node with clones of all its child nodes.
+     * Edges are not considered during this clone process. Hence, all cloned
+     * nodes do not contain edges. All other properties:
+     *  - clusterable and
+     *  - metaInfo
+     * are copied to the clone.
+     *
+     * @return A clone of this instance of a node.
+     */
+    def cloneStructure: Node
+
 }

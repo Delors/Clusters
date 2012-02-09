@@ -158,4 +158,20 @@ class Cluster(
         edges
     }
 
+    /////////////////////////////////////////////
+    // clone-related stuff
+    /////////////////////////////////////////////
+
+    def cloneStructure: Cluster = {
+        val clone = new Cluster(this.uniqueID, this.identifier)
+        clone.clusterable = this.clusterable
+        clone.metaInfo ++= this.metaInfo
+        // add clones of cluster elements to the cluster's clone
+        this.nodes foreach { node ⇒
+            val nodeClone = node.cloneStructure
+            clone.addNode(nodeClone)
+        }
+        clone
+    }
+
 }

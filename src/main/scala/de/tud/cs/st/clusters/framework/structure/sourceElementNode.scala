@@ -94,16 +94,42 @@ case class TypeNode(
     val uniqueID: Int,
     val identifierFun: () ⇒ String,
     var clazz: Option[ClassFile])
-        extends SourceElementNode
+        extends SourceElementNode {
+
+    def cloneStructure: TypeNode = {
+        val clone = new TypeNode(this.uniqueID, this.identifierFun, this.clazz)
+        clone.clusterable = this.clusterable
+        clone.metaInfo ++= this.metaInfo
+        clone
+    }
+
+}
 
 case class FieldNode(
     val uniqueID: Int,
     val identifierFun: () ⇒ String,
     var field: Option[Field])
-        extends SourceElementNode
+        extends SourceElementNode {
+
+    def cloneStructure: FieldNode = {
+        val clone = new FieldNode(this.uniqueID, this.identifierFun, this.field)
+        clone.clusterable = this.clusterable
+        clone.metaInfo ++= this.metaInfo
+        clone
+    }
+
+}
 
 case class MethodNode(
     val uniqueID: Int,
     val identifierFun: () ⇒ String,
     var method: Option[Method])
-        extends SourceElementNode
+        extends SourceElementNode {
+
+    def cloneStructure: MethodNode = {
+        val clone = new MethodNode(this.uniqueID, this.identifierFun, this.method)
+        clone.clusterable = this.clusterable
+        clone.metaInfo ++= this.metaInfo
+        clone
+    }
+}

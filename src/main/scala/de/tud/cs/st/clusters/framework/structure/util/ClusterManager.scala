@@ -35,12 +35,7 @@ package framework
 package structure
 package util
 
-import scala.collection.mutable.Map
-import scala.collection.mutable.ArrayBuffer
 import de.tud.cs.st.bat.resolved.dependency._
-import de.tud.cs.st.bat.resolved.ClassFile
-import de.tud.cs.st.bat.resolved.Field
-import de.tud.cs.st.bat.resolved.Method
 import de.tud.cs.st.bat.resolved.Type
 import de.tud.cs.st.bat.resolved.ObjectType
 import de.tud.cs.st.bat.resolved.ReferenceType
@@ -48,7 +43,6 @@ import de.tud.cs.st.bat.resolved.MethodDescriptor
 import de.tud.cs.st.bat.resolved.SourceElementIDs
 import de.tud.cs.st.bat.resolved.SourceElementIDsMap
 import de.tud.cs.st.bat.resolved.UseIDOfBaseTypeForArrayTypes
-import de.tud.cs.st.bat.resolved.SourceElementIDsMap
 
 /**
  * @author Thomas Schlosser
@@ -59,7 +53,6 @@ trait ClusterManager
         with ClusterIDs
         with NodeFactory
         with ClusterFactory
-        with NodeCloner
         with NodeStore {
 
     protected val PROJECT_CLUSTER_NAME = "project"
