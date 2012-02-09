@@ -92,15 +92,6 @@ class CombinedClusteringStageTest extends AbstractClusteringTest {
         simMetricStage
     )
 
-    test("testCombinedClusteringStage [\"[Lpattern/visitor/CarElement;\"]") {
-        val extractedCluster = testClustering(
-            "testCombinedClusteringStage [\"[Lpattern/visitor/CarElement;\"]",
-            extractDependencies("test/classfiles/ClusteringTestProject.zip",
-                "pattern/visitor/Car.class"),
-            graphmlClusteringResultWriterCreator("combinedClust_[Lpattern_visitor_CarElement",
-                _showSourceElementNodes = true))
-    }
-
     test("testCombinedClusteringStage [ClusteringTestProject]") {
         val extractedCluster = testClustering(
             "testCombinedClusteringStage [ClusteringTestProject]",

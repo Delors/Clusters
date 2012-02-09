@@ -52,32 +52,30 @@ class GraphmlClusteringResultWriter(
     var nextSubgraphID = 0
     var aggregatedEdgesSet = Set[(Int, Int)]()
 
-    // TODO Why don't you use Scala's native XML support? 
-    // Why don't you use multiline strings (If you can't use Scala's native XML support)?
-
     override protected def writeHeader() {
-        write("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n"+
-            "<graphml xmlns=\"http://graphml.graphdrawing.org/xmlns\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:y=\"http://www.yworks.com/xml/graphml\" xmlns:yed=\"http://www.yworks.com/xml/yed/3\" xsi:schemaLocation=\"http://graphml.graphdrawing.org/xmlns http://www.yworks.com/xml/schema/graphml/1.1/ygraphml.xsd\">\n"+
-            "<!--Created by Clusters for Java 2.8-->\n"+
-            "  <key for=\"graphml\" id=\"d0\" yfiles.type=\"resources\"/>\n"+
-            "  <key for=\"port\" id=\"d1\" yfiles.type=\"portgraphics\"/>\n"+
-            "  <key for=\"port\" id=\"d2\" yfiles.type=\"portgeometry\"/>\n"+
-            "  <key for=\"port\" id=\"d3\" yfiles.type=\"portuserdata\"/>\n"+
-            "  <key attr.name=\"url\" attr.type=\"string\" for=\"node\" id=\"d4\"/>\n"+
-            "  <key attr.name=\"description\" attr.type=\"string\" for=\"node\" id=\"d5\"/>\n"+
-            "  <key for=\"node\" id=\"d6\" yfiles.type=\"nodegraphics\"/>\n"+
-            "  <key attr.name=\"url\" attr.type=\"string\" for=\"edge\" id=\"d7\"/>\n"+
-            "  <key attr.name=\"description\" attr.type=\"string\" for=\"edge\" id=\"d8\"/>\n"+
-            "  <key for=\"edge\" id=\"d9\" yfiles.type=\"edgegraphics\"/>\n"+
-            "  <graph edgedefault=\"directed\" id=\"G\">\n")
+        write("""<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+  <graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:y="http://www.yworks.com/xml/graphml" xmlns:yed="http://www.yworks.com/xml/yed/3" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://www.yworks.com/xml/schema/graphml/1.1/ygraphml.xsd">
+  <!--Created by Clusters for Java 2.8-->
+    <key for="graphml" id="d0" yfiles.type="resources"/>
+    <key for="port" id="d1" yfiles.type="portgraphics"/>
+    <key for="port" id="d2" yfiles.type="portgeometry"/>
+    <key for="port" id="d3" yfiles.type="portuserdata"/>
+    <key attr.name="url" attr.type="string" for="node" id="d4"/>
+    <key attr.name="description" attr.type="string" for="node" id="d5"/>
+    <key for="node" id="d6" yfiles.type="nodegraphics"/>
+    <key attr.name="url" attr.type="string" for="edge" id="d7"/>
+    <key attr.name="description" attr.type="string" for="edge" id="d8"/>
+    <key for="edge" id="d9" yfiles.type="edgegraphics"/>
+    <graph edgedefault="directed" id="G">
+""")
     }
 
     override protected def writeFooter() {
-        write("  </graph>\n"+
-            "  <data key=\"d0\">\n"+
-            "    <y:Resources/>\n"+
-            "  </data>\n"+
-            "</graphml>\n")
+        write("""  </graph>
+  <data key="d0">
+    <y:Resources/>
+  </data>
+</graphml>""")
     }
 
     override protected def writeCluster(cluster: Cluster, nodeBuffer: StringBuffer, edgeBuffer: StringBuffer) {
@@ -139,35 +137,37 @@ class GraphmlClusteringResultWriter(
                 }
                 write("]]></data>\n")
             }
-            write("      <data key=\"d6\">\n")
-            write("        <y:ProxyAutoBoundsNode>\n")
-            write("          <y:Realizers active=\"0\">\n")
-            write("            <y:GroupNode>\n")
-            write("              <y:Fill color=\"#F8ECC9\" transparent=\"false\"/>\n")
-            write("              <y:BorderStyle color=\"#000000\" type=\"line\" width=\"1.0\"/>\n")
-            write("              <y:NodeLabel alignment=\"right\" autoSizePolicy=\"node_width\" backgroundColor=\"#404040\" borderDistance=\"0.0\" fontFamily=\"Dialog\" fontSize=\"16\" fontStyle=\"plain\" hasLineColor=\"false\" height=\"22.625\" modelName=\"internal\" modelPosition=\"t\" textColor=\"#FFFFFF\" visible=\"true\" width=\"3260.63639027429\" x=\"0.0\" y=\"0.0\">")
+
+            write("""      <data key="d6">
+        <y:ProxyAutoBoundsNode>
+            <y:Realizers active="0">
+            <y:GroupNode>
+              <y:Fill color="#F8ECC9" transparent="false"/>
+              <y:BorderStyle color="#000000" type="line" width="1.0"/>
+              <y:NodeLabel alignment="right" autoSizePolicy="node_width" backgroundColor="#404040" borderDistance="0.0" fontFamily="Dialog" fontSize="16" fontStyle="plain" hasLineColor="false" height="22.625" modelName="internal" modelPosition="t" textColor="#FFFFFF" visible="true" width="3260.63639027429" x="0.0" y="0.0">""")
             write(StringEscapeUtils.escapeXml(cluster.identifier))
-            write("</y:NodeLabel>\n")
-            write("              <y:Shape type=\"rectangle3d\"/>\n")
-            write("              <y:State closed=\"false\" innerGraphDisplayEnabled=\"false\"/>\n")
-            write("              <y:Insets bottom=\"15\" bottomF=\"15.0\" left=\"15\" leftF=\"15.0\" right=\"15\" rightF=\"15.0\" top=\"15\" topF=\"15.0\"/>\n")
-            write("              <y:BorderInsets bottom=\"1\" bottomF=\"1.0\" left=\"0\" leftF=\"0.0\" right=\"1\" rightF=\"1.0\" top=\"0\" topF=\"0.0\"/>\n")
-            write("            </y:GroupNode>\n")
-            write("            <y:GroupNode>\n")
-            write("              <y:Fill color=\"#F8ECC9\" transparent=\"false\"/>\n")
-            write("              <y:BorderStyle color=\"#000000\" type=\"line\" width=\"1.0\"/>\n")
-            write("              <y:NodeLabel alignment=\"right\" autoSizePolicy=\"node_width\" backgroundColor=\"#404040\" borderDistance=\"0.0\" fontFamily=\"Dialog\" fontSize=\"16\" fontStyle=\"plain\" hasLineColor=\"false\" height=\"22.625\" modelName=\"internal\" modelPosition=\"t\" textColor=\"#FFFFFF\" visible=\"true\" width=\"3263.636474609375\" x=\"0.0\" y=\"0.0\">")
+            write("""</y:NodeLabel>
+              <y:Shape type="rectangle3d"/>
+               <y:State closed="false" innerGraphDisplayEnabled="false"/>
+              <y:Insets bottom="15" bottomF="15.0" left="15" leftF="15.0" right="15" rightF="15.0" top="15" topF="15.0"/>
+              <y:BorderInsets bottom="1" bottomF="1.0" left="0" leftF="0.0" right="1" rightF="1.0" top="0" topF="0.0"/>
+            </y:GroupNode>
+            <y:GroupNode>
+              <y:Fill color="#F8ECC9" transparent="false"/>
+              <y:BorderStyle color="#000000" type="line" width="1.0"/>
+              <y:NodeLabel alignment="right" autoSizePolicy="node_width" backgroundColor="#404040" borderDistance="0.0" fontFamily="Dialog" fontSize="16" fontStyle="plain" hasLineColor="false" height="22.625" modelName="internal" modelPosition="t" textColor="#FFFFFF" visible="true" width="3263.636474609375" x="0.0" y="0.0">""")
             write(StringEscapeUtils.escapeXml(cluster.identifier))
-            write("</y:NodeLabel>\n")
-            write("              <y:Shape type=\"rectangle3d\"/>\n")
-            write("              <y:State closed=\"true\" innerGraphDisplayEnabled=\"false\"/>\n")
-            write("              <y:Insets bottom=\"15\" bottomF=\"15.0\" left=\"15\" leftF=\"15.0\" right=\"15\" rightF=\"15.0\" top=\"15\" topF=\"15.0\"/>\n")
-            write("              <y:BorderInsets bottom=\"0\" bottomF=\"0.0\" left=\"0\" leftF=\"0.0\" right=\"0\" rightF=\"0.0\" top=\"0\" topF=\"0.0\"/>\n")
-            write("            </y:GroupNode>\n")
-            write("          </y:Realizers>\n")
-            write("        </y:ProxyAutoBoundsNode>\n")
-            write("      </data>\n")
-            write("      <graph edgedefault=\"directed\" id=\""+nextSubgraphID+"\">\n")
+            write("""</y:NodeLabel>
+              <y:Shape type="rectangle3d"/>
+              <y:State closed="true" innerGraphDisplayEnabled="false"/>
+              <y:Insets bottom="15" bottomF="15.0" left="15" leftF="15.0" right="15" rightF="15.0" top="15" topF="15.0"/>
+              <y:BorderInsets bottom="0" bottomF="0.0" left="0" leftF="0.0" right="0" rightF="0.0" top="0" topF="0.0"/>
+            </y:GroupNode>
+          </y:Realizers>
+        </y:ProxyAutoBoundsNode>
+      </data>
+      <graph edgedefault="directed" id=""""+nextSubgraphID+"""">
+""")
             nextSubgraphID += 1
         }
 
@@ -180,8 +180,9 @@ class GraphmlClusteringResultWriter(
         }
 
         if (isVisibleLevel(cluster.level)) {
-            write("      </graph>\n")
-            write("  </node>\n")
+            write("""      </graph>
+    </node>
+""")
         }
 
         writeEdges(cluster, edgeBuffer)
@@ -213,19 +214,20 @@ class GraphmlClusteringResultWriter(
         //   </node>
 
         if (configuration.showSourceElementNodes && isVisibleLevel(node.level)) {
-            write("  <node id=\""+node.uniqueID+"\">\n")
-            write("    <data key=\"d5\"/>\n")
-            write("    <data key=\"d6\">\n")
-            write("      <y:ShapeNode>\n")
-            write("        <y:Fill color=\"#FFCC00\" transparent=\"false\"/>\n")
-            write("        <y:BorderStyle color=\"#000000\" type=\"line\" width=\"1.0\"/>\n")
-            write("        <y:NodeLabel alignment=\"center\" autoSizePolicy=\"content\" borderDistance=\"0.0\" fontFamily=\"Dialog\" fontSize=\"13\" fontStyle=\"plain\" hasBackgroundColor=\"false\" hasLineColor=\"false\" height=\"19.1328125\" modelName=\"internal\" modelPosition=\"c\" textColor=\"#000000\" visible=\"true\" width=\"114.3349609375\" x=\"5.0\" y=\"5.43359375\">")
+            write("""  <node id=""""+node.uniqueID+"""">
+    <data key="d5"/>
+    <data key="d6">
+      <y:ShapeNode>
+        <y:Fill color="#FFCC00" transparent="false"/>
+        <y:BorderStyle color="#000000" type="line" width="1.0"/>
+        <y:NodeLabel alignment="center" autoSizePolicy="content" borderDistance="0.0" fontFamily="Dialog" fontSize="13" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="19.1328125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="114.3349609375" x="5.0" y="5.43359375">""")
             write(StringEscapeUtils.escapeXml(node.identifier))
-            write("</y:NodeLabel>\n")
-            write("        <y:Shape type=\"rectangle\"/>\n")
-            write("      </y:ShapeNode>\n")
-            write("    </data>\n")
-            write("  </node>\n")
+            write("""</y:NodeLabel>
+        <y:Shape type="rectangle"/>
+      </y:ShapeNode>
+    </data>
+  </node>
+""")
         }
 
         writeEdges(node, edgeBuffer)
@@ -275,34 +277,26 @@ class GraphmlClusteringResultWriter(
                 }
             }
             if (!configuration.aggregateEdges || !aggregatedEdgesSet.contains((sourceID, targetID))) {
-                edgeBuffer.append("    <edge id=\""+nextEdgeID+"\" source=\"")
-                nextEdgeID += 1
-                edgeBuffer.append(sourceID)
-                edgeBuffer.append("\" target=\"")
-                edgeBuffer.append(targetID)
-                edgeBuffer.append("\">\n")
-                edgeBuffer.append("      <data key=\"d8\"/>\n")
-                edgeBuffer.append("      <data key=\"d9\">\n")
-                edgeBuffer.append("        <y:PolyLineEdge>\n")
-                edgeBuffer.append("          <y:LineStyle color=\"#000000\" type=\"line\" width=\"1.0\"/>\n")
-                edgeBuffer.append("          <y:Arrows source=\"none\" target=\"standard\"/>\n")
+                edgeBuffer.append("""    <edge id=""""+{ val id = nextEdgeID; nextEdgeID += 1; id }+"""" source=""""+sourceID+"""" target=""""+targetID+"""">
+      <data key="d8"/>
+      <data key="d9">
+        <y:PolyLineEdge>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="standard"/>""")
                 if (configuration.showEdgeLabels) {
-                    edgeBuffer.append("          <y:EdgeLabel alignment=\"center\" distance=\"2.0\" fontFamily=\"Dialog\" fontSize=\"12\" fontStyle=\"plain\" hasBackgroundColor=\"false\" hasLineColor=\"false\" height=\"17.96875\" modelName=\"side_slider\" preferredPlacement=\"anywhere\" ratio=\"0.0\" textColor=\"#000000\" visible=\"true\" width=\"176.025390625\" x=\"-178.02534985257694\" y=\"10.125\">")
+                    edgeBuffer.append("""          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.96875" modelName="side_slider" preferredPlacement="anywhere" ratio="0.0" textColor="#000000" visible="true" width="176.025390625" x="-178.02534985257694" y="10.125">""")
                     if (configuration.aggregateEdges) {
                         edgeBuffer.append("aggregated Edge")
                     }
                     else {
                         edgeBuffer.append(StringEscapeUtils.escapeXml(e.dType.toString))
                     }
-                    edgeBuffer.append(" [")
-                    edgeBuffer.append(e.count)
-                    edgeBuffer.append("]</y:EdgeLabel>\n")
+                    edgeBuffer.append(" ["+e.count+"]</y:EdgeLabel>\n")
                 }
-                edgeBuffer.append("          <y:BendStyle smoothed=\"false\"/>\n")
-                edgeBuffer.append("        </y:PolyLineEdge>\n")
-                edgeBuffer.append("      </data>\n")
-                edgeBuffer.append("    </edge>\n")
-
+                edgeBuffer.append("""          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>""")
                 aggregatedEdgesSet += ((sourceID, targetID))
             }
         }
