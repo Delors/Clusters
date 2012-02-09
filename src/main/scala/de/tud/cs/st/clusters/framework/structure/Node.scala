@@ -48,7 +48,7 @@ trait Node {
 
     def uniqueID: Int
 
-    val isCluster: Boolean = false
+    val isCluster: Boolean
 
     var clusterable: Boolean
 
@@ -180,39 +180,23 @@ trait Node {
      * is also a child of this node. The target of the returned (special) edges is
      * set to the direct child -- on the path to the original target -- of this node.
      */
-    def getSpecialEdgesBetweenDirectChildren(): Set[Edge] = {
-        Set()
-    }
+    def getSpecialEdgesBetweenDirectChildren(): Set[Edge]
 
     /////////////////////////////////////////////
     // children(nodes)-related stuff
     /////////////////////////////////////////////
-    def addNode(node: Node) {
-        throw new UnsupportedOperationException("This method call is not allowed on this kind of node!")
-    }
+    def addNode(node: Node)
 
-    def removeNode(id: Int) {
-        throw new UnsupportedOperationException("This method call is not allowed on this kind of node!")
-    }
+    def removeNode(id: Int)
 
-    def clearNodes() {
-        throw new UnsupportedOperationException("This method call is not allowed on this kind of node!")
-    }
+    def clearNodes()
 
-    // TODO make the following abstract and implement these methods in Cluster and SourceElementNode instead
+    def containsNode(id: Int): Boolean
 
-    def containsNode(id: Int): Boolean =
-        false
+    def getNode(id: Int): Node
 
-    def getNode(id: Int): Node = {
-        throw new UnsupportedOperationException("This method call is not allowed on this kind of node!")
-    }
+    def nodes: Iterable[Node]
 
-    def nodes: Iterable[Node] = {
-        Iterable()
-    }
-
-    def childCount: Int =
-        0
+    def childCount: Int
 
 }

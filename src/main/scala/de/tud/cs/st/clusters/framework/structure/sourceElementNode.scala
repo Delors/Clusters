@@ -45,10 +45,48 @@ import de.tud.cs.st.bat.resolved.Method
  */
 sealed trait SourceElementNode extends Node {
 
-    lazy val identifier = identifierFun()
     def identifierFun: () ⇒ String
+    override lazy val identifier = identifierFun()
+
+    override val isCluster: Boolean = false
 
     override var clusterable = false
+
+    /////////////////////////////////////////////
+    // edges-related stuff
+    /////////////////////////////////////////////
+    def getSpecialEdgesBetweenDirectChildren(): Set[Edge] = {
+        Set()
+    }
+
+    /////////////////////////////////////////////
+    // children(nodes)-related stuff
+    /////////////////////////////////////////////
+    def addNode(node: Node) {
+        throw new UnsupportedOperationException("This method call is not allowed on this kind of node!")
+    }
+
+    def removeNode(id: Int) {
+        throw new UnsupportedOperationException("This method call is not allowed on this kind of node!")
+    }
+
+    def clearNodes() {
+        throw new UnsupportedOperationException("This method call is not allowed on this kind of node!")
+    }
+
+    def containsNode(id: Int): Boolean =
+        false
+
+    def getNode(id: Int): Node = {
+        throw new UnsupportedOperationException("This method call is not allowed on this kind of node!")
+    }
+
+    def nodes: Iterable[Node] = {
+        Iterable()
+    }
+
+    def childCount: Int =
+        0
 
 }
 

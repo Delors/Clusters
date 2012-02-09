@@ -59,16 +59,16 @@ class Cluster(
     /////////////////////////////////////////////
     val nodeMap = Map[Int, Node]()
 
-    override def nodes: Iterable[Node] =
+    def nodes: Iterable[Node] =
         nodeMap.values
 
-    override def getNode(id: Int): Node =
+    def getNode(id: Int): Node =
         nodeMap.getOrElse(id, sys.error("Node with ID["+id+"] was not found"))
 
-    override def childCount: Int =
+    def childCount: Int =
         nodeMap.size
 
-    override def addNode(node: Node) {
+    def addNode(node: Node) {
         nodeMap.put(node.uniqueID, node)
         if (node.parent != null && node.parent != this) {
             node.parent match {
@@ -78,16 +78,16 @@ class Cluster(
         node.parent = this
     }
 
-    override def removeNode(id: Int) {
+    def removeNode(id: Int) {
         val removedNode = nodeMap.remove(id)
         if (removedNode.isDefined && removedNode.get.parent == this)
             removedNode.get.parent = null
     }
 
-    override def clearNodes() =
+    def clearNodes() =
         nodeMap.clear
 
-    override def containsNode(id: Int): Boolean =
+    def containsNode(id: Int): Boolean =
         nodeMap.contains(id) || nodeMap.values.exists(n ⇒ n.containsNode(id))
 
     /////////////////////////////////////////////
@@ -144,7 +144,7 @@ class Cluster(
         // fetch all edges from cluster elements and from cluster itself
         super.getAllEdges() ++ { for (node ← nodeMap.values; edge ← node.getAllEdges) yield edge }
 
-    override def getSpecialEdgesBetweenDirectChildren(): Set[Edge] = {
+    def getSpecialEdgesBetweenDirectChildren(): Set[Edge] = {
         var edges = Set[Edge]()
         nodeMap.values foreach {
             _.getOutgoingEdges foreach { edge ⇒
