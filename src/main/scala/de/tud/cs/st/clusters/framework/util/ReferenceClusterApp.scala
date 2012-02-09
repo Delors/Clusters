@@ -140,6 +140,7 @@ where options include:
                         sys.exit(1)
                     }
                     val file = new File(value)
+                    createNonExistentFile(file)
                     validateOutputFileParameter(file, "-outputFile")
                     outputFile = Some(file)
                     parseOptions(tail)
@@ -150,6 +151,7 @@ where options include:
                         sys.exit(1)
                     }
                     val file = new File(value)
+                    createNonExistentFile(file)
                     validateOutputFileParameter(file, "-graphmlFile")
                     graphmlFile = Some(file)
                     parseOptions(tail)
@@ -246,5 +248,10 @@ where options include:
         }
         else
             optFile.get
+    }
+
+    private def createNonExistentFile(file: File) {
+        if (file != null && !file.exists)
+            file.createNewFile()
     }
 }

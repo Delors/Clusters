@@ -42,15 +42,10 @@ import java.io.File
  */
 trait ConsoleParameterValidator {
 
-    // TODO Wrong method name... this method may create a file, which the name however does not tell you and hence is unexpected
     protected def validateOutputFileParameter(outputFile: java.io.File, parameterName: String) {
-        // TODO refactor "first check that the parameters are valid then perform some action, but do not intermix.
         if (outputFile == null)
             println("Parameter '"+parameterName+"' is not allowed to be empty in this case. Please choose a file as '"+parameterName+"'.")
-        else if (!outputFile.exists)
-            outputFile.createNewFile()
-        // TODO looks suspicious.. I think an else is missing.
-        if (outputFile.isDirectory)
+        else if (outputFile.isDirectory)
             println("Output can not be written to a directory! Please choose a file as '"+parameterName+"'.")
         else if (!outputFile.canWrite)
             println("It is not allowed to write to the given output file! Please choose a writable file as '"+parameterName+"'.")
@@ -63,7 +58,7 @@ trait ConsoleParameterValidator {
             println("Parameter '"+parameterName+"' is not allowed to be empty in this case. Please choose a file as '"+parameterName+"'.")
         else if (!inputFile.exists)
             println("Input file does not exist! Please choose an existing file as '"+parameterName+"'.")
-        if (inputFile.isDirectory)
+        else if (inputFile.isDirectory)
             println("Given input is a directory! Please choose a file as '"+parameterName+"'.")
         else if (!inputFile.canRead)
             println("It is not allowed to read from the given file! Please choose a readable file as '"+parameterName+"'.")
