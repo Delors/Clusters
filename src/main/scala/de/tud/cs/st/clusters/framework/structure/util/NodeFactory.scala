@@ -59,7 +59,7 @@ trait NodeFactory extends PrettyPrint with NodeStore {
     def createTypeNode(id: Int, t: Type): TypeNode =
         createNode(
             id,
-            (c: TypeNode) ⇒ Unit,
+            (c: TypeNode) ⇒ (),
             (id) ⇒ new TypeNode(id, () ⇒ prettyPrint(t), None))
 
     def createFieldNode(id: Int, classFile: ClassFile, field: Field) {
@@ -72,7 +72,7 @@ trait NodeFactory extends PrettyPrint with NodeStore {
     def createFieldNode(id: Int, definingObjectType: ObjectType, fieldName: String): FieldNode =
         createNode(
             id,
-            (c: FieldNode) ⇒ Unit,
+            (c: FieldNode) ⇒ (),
             (id) ⇒ new FieldNode(id, () ⇒ prettyPrint(definingObjectType, fieldName), None))
 
     def createMethodNode(id: Int, classFile: ClassFile, method: Method) {
@@ -85,12 +85,12 @@ trait NodeFactory extends PrettyPrint with NodeStore {
     def createMethodNode(id: Int, definingReferenceType: ReferenceType, methodName: String, methodDescriptor: MethodDescriptor): MethodNode =
         createNode(
             id,
-            (c: MethodNode) ⇒ Unit,
+            (c: MethodNode) ⇒ (),
             (id) ⇒ new MethodNode(id, () ⇒ prettyPrint(definingReferenceType, methodName, methodDescriptor), None))
 
     private def createNode[N <: Node](
         id: Int,
-        nodeExistsAction: (N) ⇒ Unit = (n: N) ⇒ Unit,
+        nodeExistsAction: (N) ⇒ _ = (n: N) ⇒ (),
         newNode: (Int) ⇒ N): N = {
         val oldNode = getNode(id).asInstanceOf[N]
         if (oldNode != null) {

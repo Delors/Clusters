@@ -43,31 +43,40 @@ trait ClusterFactory
         extends ClusterIDs
         with NodeStore {
 
+    private var nextGloballyUniqueID = 0
+    private def globallyUniqueID: Int = {
+        val id = nextGloballyUniqueID
+        nextGloballyUniqueID += 1
+        id
+    }
+
     def createCluster(clusterIdentifier: String, creatorStageName: String, makeUnique: Boolean = false): Cluster = {
         val cluster = createClusterInStore(
             if (makeUnique)
-                clusterID(clusterIdentifier + System.nanoTime()) // TODO suspicious! Why don't you just use a global counter if you really need it!
+                clusterID(clusterIdentifier + globallyUniqueID)
             else
                 clusterID(clusterIdentifier),
-            (c: Cluster) ⇒ Unit,
+            (c: Cluster) ⇒ (),
             (id) ⇒ new Cluster(id, clusterIdentifier))
         // TODO we have creatorStage and createStateName but it looks like they are referring to the same concept, don't they?
         if (cluster.metaInfo.isDefinedAt("creatorStage")) {
             cluster.metaInfo("lastExplicitUpdaterStage") = creatorStageName
-        } else {
+        }
+        else {
             cluster.metaInfo("creatorStage") = creatorStageName
         }
         cluster
     }
 
     private def createClusterInStore[N <: Node](id: Int,
-                                                nodeExistsAction: (N) ⇒ Unit, // TODO Looks suspicious; I would have expected something like: "(N) ⇒ _"
+                                                nodeExistsAction: (N) ⇒ _,
                                                 newNode: (Int) ⇒ N): N = {
         val oldNode = getNode(id).asInstanceOf[N]
         if (oldNode != null) {
             nodeExistsAction(oldNode)
             oldNode
-        } else {
+        }
+        else {
             val node = newNode(id)
             storeNode(node)
             node
