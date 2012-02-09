@@ -96,8 +96,7 @@ class LayerClusteringStage(
 
             var furtherLayers = !(bottomLayerNodes.isEmpty && topLayerNodes.isEmpty)
 
-            // TODO replace here and elsewhere: "if(...nonEmpty){...}"
-            if (!sparatedNodes.isEmpty) {
+            if (sparatedNodes.nonEmpty) {
                 if (layer == 0)
                     sparatedNodes foreach { node ⇒
                         cluster.addNode(node)
@@ -106,12 +105,12 @@ class LayerClusteringStage(
                     bottomLayerNodes = bottomLayerNodes ++ sparatedNodes
             }
 
-            if (!bottomLayerNodes.isEmpty) {
+            if (bottomLayerNodes.nonEmpty) {
                 // create bottom layer
                 createNewLayerClusterWithNodes(bottomLayerNodes)
             }
 
-            if (!middleLayerNodes.isEmpty) {
+            if (middleLayerNodes.nonEmpty) {
                 if (algorithmConfig.performRecursion && furtherLayers)
                     createLayers(middleLayerNodes)
                 else
@@ -119,7 +118,7 @@ class LayerClusteringStage(
                     createNewLayerClusterWithNodes(middleLayerNodes)
             }
 
-            if (!topLayerNodes.isEmpty) {
+            if (topLayerNodes.nonEmpty) {
                 // create top layer
                 createNewLayerClusterWithNodes(topLayerNodes)
             }

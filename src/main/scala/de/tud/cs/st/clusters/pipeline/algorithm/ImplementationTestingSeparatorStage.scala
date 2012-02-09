@@ -83,7 +83,7 @@ class ImplementationTestingSeparatorStage(
             // nothing to do in this case; the node is a cluster which is not considered in this stage
         }
 
-        if (!allTestRelatedNodes.isEmpty) {
+        if (allTestRelatedNodes.nonEmpty) {
             val inputNodes = cluster.nodes.toSet
 
             cluster.clearNodes()
