@@ -49,7 +49,6 @@ class ClassExtractorStage(
     val algorithmConfig: ClassExtractorStageConfiguration)
         extends SameNeighborClusteringStage[ClassExtractorStageConfiguration] {
 
-    // TODO Method name and implementation diverge. Consider renaming to "isMemeberOf". We should think about moving this functionality to BAT
     override protected def isOfConsideredDependencyType(dType: DependencyType): Boolean =
         dType == DependencyType.IS_INSTANCE_MEMBER_OF || dType == DependencyType.IS_CLASS_MEMBER_OF
 
