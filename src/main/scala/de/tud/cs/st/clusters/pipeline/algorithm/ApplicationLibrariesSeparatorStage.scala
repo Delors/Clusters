@@ -99,7 +99,9 @@ class ApplicationLibrariesSeparatorStage(
             }
         }
 
-        true // TODO suspicious (at least comment!)
+        // always return TRUE, because application and libraries clusters
+        // are created regardless of whether the clusters are empty or not.
+        true
     }
 }
 
