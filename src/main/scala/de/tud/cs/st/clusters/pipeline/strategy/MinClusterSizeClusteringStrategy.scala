@@ -34,7 +34,7 @@ package de.tud.cs.st.clusters
 package pipeline
 package strategy
 
-import framework.pipeline.ClusteringStrategy
+import framework.pipeline.ClusteringStage
 import framework.structure.Cluster
 
 /**
@@ -43,7 +43,7 @@ import framework.structure.Cluster
  *
  * @author Thomas Schlosser
  */
-trait MinClusterSizeClusteringStrategy extends ClusteringStrategy {
+trait MinClusterSizeClusteringStrategy extends ClusteringStage {
 
     val minClusterSizeThreshold: Int = 10
 

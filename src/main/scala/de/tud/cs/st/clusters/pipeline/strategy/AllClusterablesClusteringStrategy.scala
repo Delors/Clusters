@@ -34,7 +34,7 @@ package de.tud.cs.st.clusters
 package pipeline
 package strategy
 
-import framework.pipeline.ClusteringStrategy
+import framework.pipeline.ClusteringStage
 import framework.structure.Cluster
 import framework.structure.SourceElementNode
 
@@ -44,7 +44,7 @@ import framework.structure.SourceElementNode
  *
  * @author Thomas Schlosser
  */
-trait AllClusterablesClusteringStrategy extends ClusteringStrategy {
+trait AllClusterablesClusteringStrategy extends ClusteringStage {
 
     abstract override def performClustering(cluster: Cluster): Boolean = {
         var createdNewCluster = (false /: cluster.nodes)((cnc, node) ⇒ cnc | {

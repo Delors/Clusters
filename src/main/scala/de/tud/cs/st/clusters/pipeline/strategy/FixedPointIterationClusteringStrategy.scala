@@ -34,14 +34,14 @@ package de.tud.cs.st.clusters
 package pipeline
 package strategy
 
-import framework.pipeline.ClusteringStrategy
+import framework.pipeline.ClusteringStage
 import framework.structure.Cluster
 
 /**
  *
  * @author Thomas Schlosser
  */
-trait FixedPointIterationClusteringStrategy extends ClusteringStrategy {
+trait FixedPointIterationClusteringStrategy extends ClusteringStage {
 
     abstract override def performClustering(cluster: Cluster): Boolean = {
         var createdAtLeastOneCluster = false

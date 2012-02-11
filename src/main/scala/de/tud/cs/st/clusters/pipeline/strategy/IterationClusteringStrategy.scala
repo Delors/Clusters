@@ -34,14 +34,14 @@ package de.tud.cs.st.clusters
 package pipeline
 package strategy
 
-import framework.pipeline.ClusteringStrategy
+import framework.pipeline.ClusteringStage
 import framework.structure.Cluster
 
 /**
  *
  * @author Thomas Schlosser
  */
-trait IterationClusteringStrategy extends ClusteringStrategy {
+trait IterationClusteringStrategy extends ClusteringStage {
 
     val numberOfIterations: Int
 
