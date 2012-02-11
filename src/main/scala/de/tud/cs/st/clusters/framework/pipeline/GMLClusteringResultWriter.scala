@@ -44,7 +44,7 @@ import structure.SourceElementNode
  */
 class GMLClusteringResultWriter(
     val gmlFileName: String)
-        extends ClusteringResultWriter(gmlFileName, "gml") {
+        extends ClusteringResultFileWriter(gmlFileName, "gml") {
 
     override protected def writeHeader() {
         write("Creator\t\"Clusters\"\nVersion\t\"0.1\"\ngraph\n[\n\tdirected\t1\n")

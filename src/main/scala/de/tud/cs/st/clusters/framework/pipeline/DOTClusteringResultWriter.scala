@@ -47,7 +47,7 @@ import de.tud.cs.st.clusters.framework.structure.Node
 class DOTClusteringResultWriter(
     val dotFileName: String,
     val configuration: DOTClusteringResultWriterConfiguration)
-        extends ClusteringResultWriter(dotFileName, "dot") {
+        extends ClusteringResultFileWriter(dotFileName, "dot") {
 
     override protected def writeHeader() {
         write("digraph G {\n")

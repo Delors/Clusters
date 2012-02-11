@@ -46,7 +46,7 @@ import org.apache.commons.lang3.StringEscapeUtils
 class GraphmlClusteringResultWriter(
     val graphmlFileName: String,
     val configuration: GraphmlClusteringResultWriterConfiguration)
-        extends ClusteringResultWriter(graphmlFileName, "graphml") {
+        extends ClusteringResultFileWriter(graphmlFileName, "graphml") {
 
     var nextEdgeID = 0
     var nextSubgraphID = 0
