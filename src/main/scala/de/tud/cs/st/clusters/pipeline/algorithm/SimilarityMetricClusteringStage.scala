@@ -36,8 +36,7 @@ package algorithm
 
 import scala.collection.mutable.Map
 import scala.collection.mutable.Set
-import framework.pipeline.ClusteringAlgorithm
-import framework.pipeline.ClusteringAlgorithmConfiguration
+import framework.pipeline.ClusteringStage
 import framework.structure.Cluster
 import framework.structure.Node
 import framework.structure.TypeNode
@@ -53,7 +52,7 @@ import de.tud.cs.st.bat.resolved.dependency._
  */
 class SimilarityMetricClusteringStage(
     val algorithmConfig: SimilarityMetricClusteringAlgorithmConfiguration)
-        extends ClusteringAlgorithm[SimilarityMetricClusteringAlgorithmConfiguration] {
+        extends ClusteringStage {
 
     override def performClustering(cluster: Cluster): Boolean = {
         var createdNewCluster = false
@@ -193,6 +192,6 @@ class SimilarityMetricClusteringStage(
     }
 }
 
-trait SimilarityMetricClusteringAlgorithmConfiguration extends ClusteringAlgorithmConfiguration {
+trait SimilarityMetricClusteringAlgorithmConfiguration {
     val clusterIdentifierPrefix = "simMetricCluster_"
 }

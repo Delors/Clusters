@@ -34,8 +34,7 @@ package de.tud.cs.st.clusters
 package pipeline
 package algorithm
 
-import framework.pipeline.ClusteringAlgorithm
-import framework.pipeline.ClusteringAlgorithmConfiguration
+import framework.pipeline.ClusteringStage
 import framework.structure.Cluster
 import framework.structure.Node
 import framework.structure.FieldNode
@@ -57,7 +56,7 @@ import de.tud.cs.st.bat.resolved.Field
  */
 class GetterSetterClusteringStage(
     val algorithmConfig: GetterSetterClusteringAlgorithmConfiguration)
-        extends ClusteringAlgorithm[GetterSetterClusteringAlgorithmConfiguration] {
+        extends ClusteringStage {
 
     override def performClustering(cluster: Cluster): Boolean = {
         var createdNewCluster = false
@@ -135,7 +134,7 @@ class GetterSetterClusteringStage(
 
 }
 
-trait GetterSetterClusteringAlgorithmConfiguration extends ClusteringAlgorithmConfiguration {
+trait GetterSetterClusteringAlgorithmConfiguration {
     val clusterIdentifierPrefix = "Getter_Setter_"
 
     val checkGetterNameMatching = true

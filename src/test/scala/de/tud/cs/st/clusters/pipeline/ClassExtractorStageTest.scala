@@ -38,7 +38,6 @@ import org.scalatest.junit.JUnitRunner
 import framework.AbstractClusteringTest
 import framework.pipeline.ClusteringStage
 import algorithm.ClassExtractorStage
-import algorithm.ClassExtractorStageConfiguration
 
 /**
  * @author Thomas Schlosser
@@ -47,10 +46,8 @@ import algorithm.ClassExtractorStageConfiguration
 @RunWith(classOf[JUnitRunner])
 class ClassExtractorStageTest extends AbstractClusteringTest {
 
-    val configuration = new ClassExtractorStageConfiguration {}
-
     implicit val clusteringStages: Array[ClusteringStage] = Array(
-        new ClassExtractorStage(configuration)
+        new ClassExtractorStage()
     )
 
     test("testClassExtractorStage [ClusteringTestProject]") {

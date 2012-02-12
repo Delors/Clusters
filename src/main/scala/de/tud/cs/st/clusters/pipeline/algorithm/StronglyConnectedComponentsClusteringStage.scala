@@ -35,8 +35,7 @@ package pipeline
 package algorithm
 
 import scala.collection.mutable.Map
-import framework.pipeline.ClusteringAlgorithm
-import framework.pipeline.ClusteringAlgorithmConfiguration
+import framework.pipeline.ClusteringStage
 import framework.structure.Cluster
 import framework.structure.Node
 import framework.structure.util.ClusterManager
@@ -49,7 +48,7 @@ import graphscan.GraphScanningAlgorithms
  */
 class StronglyConnectedComponentsClusteringStage(
     val algorithmConfig: StronglyConnectedComponentsClusteringAlgorithmConfiguration)
-        extends ClusteringAlgorithm[StronglyConnectedComponentsClusteringAlgorithmConfiguration] {
+        extends ClusteringStage {
 
     override def performClustering(cluster: Cluster): Boolean = {
         // calculate finishing times of all nodes using depth first search
@@ -100,6 +99,6 @@ class StronglyConnectedComponentsClusteringStage(
     }
 }
 
-trait StronglyConnectedComponentsClusteringAlgorithmConfiguration extends ClusteringAlgorithmConfiguration {
+trait StronglyConnectedComponentsClusteringAlgorithmConfiguration {
     val clusterIdentifierPrefix = "SCC_"
 }

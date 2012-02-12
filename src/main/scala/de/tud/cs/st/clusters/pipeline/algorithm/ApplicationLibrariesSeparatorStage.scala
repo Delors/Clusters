@@ -35,8 +35,7 @@ package pipeline
 package algorithm
 
 import scala.collection.mutable.Set
-import framework.pipeline.ClusteringAlgorithm
-import framework.pipeline.ClusteringAlgorithmConfiguration
+import framework.pipeline.ClusteringStage
 import framework.structure.Cluster
 import framework.structure.TypeNode
 
@@ -51,7 +50,7 @@ import framework.structure.TypeNode
  */
 class ApplicationLibrariesSeparatorStage(
     val algorithmConfig: ApplicationLibrariesSeparatorStageConfiguration)
-        extends ClusteringAlgorithm[ApplicationLibrariesSeparatorStageConfiguration] {
+        extends ClusteringStage {
 
     override def performClustering(cluster: Cluster): Boolean = {
         // create list that contains all names of the application packages
@@ -105,7 +104,7 @@ class ApplicationLibrariesSeparatorStage(
     }
 }
 
-trait ApplicationLibrariesSeparatorStageConfiguration extends ClusteringAlgorithmConfiguration {
+trait ApplicationLibrariesSeparatorStageConfiguration {
     val applicationClusterIdentifier = "application"
     val librariesClusterIdentifier = "libraries"
 

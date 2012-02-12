@@ -35,8 +35,7 @@ package pipeline
 package algorithm
 
 import scala.collection.mutable.Set
-import framework.pipeline.ClusteringAlgorithm
-import framework.pipeline.ClusteringAlgorithmConfiguration
+import framework.pipeline.ClusteringStage
 import framework.structure.Cluster
 import framework.structure.Node
 import framework.structure.TypeNode
@@ -53,7 +52,7 @@ import de.tud.cs.st.bat.resolved.dependency._
  */
 class ImplementationTestingSeparatorStage(
     val algorithmConfig: ImplementationTestingSeparatorStageConfiguration)
-        extends ClusteringAlgorithm[ImplementationTestingSeparatorStageConfiguration] {
+        extends ClusteringStage {
 
     override def performClustering(cluster: Cluster): Boolean = {
         val directlyTestRelatedNodes = extractDirectlyTestRelatedNodes(cluster)
@@ -157,7 +156,7 @@ class ImplementationTestingSeparatorStage(
     }
 }
 
-trait ImplementationTestingSeparatorStageConfiguration extends ClusteringAlgorithmConfiguration {
+trait ImplementationTestingSeparatorStageConfiguration {
     val implementationClusterIdentifier = "implemenation"
     val testingClusterIdentifier = "testing"
 

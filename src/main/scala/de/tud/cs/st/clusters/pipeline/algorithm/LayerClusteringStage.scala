@@ -34,8 +34,7 @@ package de.tud.cs.st.clusters
 package pipeline
 package algorithm
 
-import framework.pipeline.ClusteringAlgorithm
-import framework.pipeline.ClusteringAlgorithmConfiguration
+import framework.pipeline.ClusteringStage
 import framework.structure.Cluster
 import framework.structure.Node
 import framework.structure.TypeNode
@@ -49,7 +48,7 @@ import framework.structure.util.ClusterManager
  */
 class LayerClusteringStage(
     val algorithmConfig: LayerClusteringAlgorithmConfiguration)
-        extends ClusteringAlgorithm[LayerClusteringAlgorithmConfiguration] {
+        extends ClusteringStage {
 
     override def performClustering(cluster: Cluster): Boolean = {
         var createdNewCluster = false
@@ -133,7 +132,7 @@ class LayerClusteringStage(
     }
 }
 
-trait LayerClusteringAlgorithmConfiguration extends ClusteringAlgorithmConfiguration {
+trait LayerClusteringAlgorithmConfiguration {
     val clusterIdentifierPrefix = "layer_"
 
     val performRecursion: Boolean = false
