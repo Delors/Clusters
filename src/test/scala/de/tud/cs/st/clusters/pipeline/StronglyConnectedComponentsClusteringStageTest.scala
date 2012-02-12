@@ -37,6 +37,8 @@ import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 
 import framework.AbstractClusteringTest
+import framework.TestSources._
+import framework.TestResultWriterCreators._
 import framework.pipeline.ClusteringStage
 import algorithm.StronglyConnectedComponentsClusteringStage
 import algorithm.StronglyConnectedComponentsClusteringAlgorithmConfiguration
@@ -57,14 +59,14 @@ class StronglyConnectedComponentsClusteringStageTest extends AbstractClusteringT
     test("testSCCClusteringStage [sccTestClass]") {
         testClustering(
             "testSCCClusteringStage [sccTestClass]",
-            stronglyConnectedComponentsTestClassDependencyExtractor,
-            graphmlClusteringResultWriterCreator("sccClust_sccTestClass")
+            graphmlClusteringResultWriterCreator("sccClust_sccTestClass"),
+            stronglyConnectedComponentsTestClassSourceZipFile
         )
     }
 
     test("testSCCClusteringStage [hibernate]") {
         testClustering(
             "testSCCClusteringStage [hibernate]",
-            hibernateDependencyExtractor)
+            hibernateSourceZipFile)
     }
 }

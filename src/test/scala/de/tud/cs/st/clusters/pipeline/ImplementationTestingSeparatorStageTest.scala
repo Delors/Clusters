@@ -37,6 +37,8 @@ import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 
 import framework.AbstractClusteringTest
+import framework.TestSources._
+import framework.TestResultWriterCreators._
 import framework.pipeline.ClusteringStage
 import algorithm.ImplementationTestingSeparatorStage
 import algorithm.ImplementationTestingSeparatorStageConfiguration
@@ -57,20 +59,20 @@ class ImplementationTestingSeparatorStageTest extends AbstractClusteringTest {
     test("testImplementationTestingSeparatorStage [cocome]") {
         testClustering(
             "testImplementationTestingSeparatorStage [cocome]",
-            cocomeDependencyExtractor,
-            graphmlClusteringResultWriterCreator("implTestClust_cocome"))
+            graphmlClusteringResultWriterCreator("implTestClust_cocome"),
+            cocomeSourceZipFile)
     }
 
     test("testImplementationTestingSeparatorStage [getterSetterTestClass]") {
         testClustering(
             "testImplementationTestingSeparatorStage [getterSetterTestClass]",
-            getterSetterTestClassDependencyExtractor,
-            graphmlClusteringResultWriterCreator("implTestClust_getterSetterTestClass"))
+            graphmlClusteringResultWriterCreator("implTestClust_getterSetterTestClass"),
+            getterSetterTestClassSourceZipFile)
     }
 
     test("testImplementationTestingSeparatorStage [hibernate]") {
         testClustering("testImplementationTestingSeparatorStage [hibernate]",
-            hibernateDependencyExtractor,
-            graphmlClusteringResultWriterCreator("implTestClust_hibernate"))
+            graphmlClusteringResultWriterCreator("implTestClust_hibernate"),
+            hibernateSourceZipFile)
     }
 }

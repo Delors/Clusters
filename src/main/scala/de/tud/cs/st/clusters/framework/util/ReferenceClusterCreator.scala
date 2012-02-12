@@ -49,14 +49,13 @@ import de.tud.cs.st.bat.resolved.reader.Java6Framework
  * @author Thomas Schlosser
  *
  */
-trait ReferenceClusterCreator
-        extends DependencyExtractionUtils {
+trait ReferenceClusterCreator {
 
-    def readReferenceCluster(sourceInputFilePath: String, referenceClusterInputFile: File): Cluster = {
+    def readReferenceCluster(sourceFile: SourceFile, referenceClusterInputFile: File): Cluster = {
         val dependencyExtractor = new DefaultDependencyExtractor()
         val clusterManager = dependencyExtractor.clusterManager
 
-        extractDependencies(sourceInputFilePath)(dependencyExtractor)
+        DependencyExtractionUtils.extractDependencies(dependencyExtractor)(sourceFile)
         val projectCluster = clusterManager.getProjectCluster
         var identifierMap = Map[String, Node]()
         projectCluster.nodes foreach { node ⇒

@@ -36,6 +36,8 @@ package pipeline
 
 import scala.collection.mutable.Queue
 
+import util.DependencyExtractionUtils
+import util.SourceFile
 import de.tud.cs.st.bat.resolved.dependency.DependencyExtractor
 import structure.util.ClusterManager
 import structure.util.DefaultDependencyExtractor
@@ -47,13 +49,7 @@ import structure.Cluster
  */
 class ClusteringPipeline(
         protected val initialClusteringStages: Traversable[ClusteringStage],
-        protected val extractDependencies: (DependencyExtractor) ⇒ Unit, // ISSUE Why don't you just require a specific Object? As far as I have understood your code, the pipeline is set up exactly once
         protected val createConcreteClusteringResultWriter: Option[() ⇒ ClusteringResultWriter] = None) {
-
-    // check the existence of the configurations on "initialization level"
-    require(extractDependencies != null, "A dependency extraction function has to be configured to run the pipeline!")
-
-    private val dependencyExtractor = new DefaultDependencyExtractor // why don't you put //TODO: @Michael: a part of this comment seems to be missing
 
     // adding the 'initialClusteringStages' is part of the constructor code...
     private val clusteringStages = new Queue[ClusteringStage]() ++ initialClusteringStages
@@ -62,25 +58,30 @@ class ClusteringPipeline(
         clusteringStages += clusteringStage
     }
 
-    final def runPipeline(): Cluster = {
-        runDependencyExtraction(dependencyExtractor)
+    final def runPipeline(sourceFiles: SourceFile*): Cluster = {
+        val clusterManager = runDependencyExtraction(sourceFiles: _*)
 
-        val result = runClustering(dependencyExtractor.clusterManager)
+        val result = runClustering(clusterManager)
 
         runExport(result)
 
         result
     }
 
-    protected def runDependencyExtraction(dependencyExtractor: DependencyExtractor) {
-        extractDependencies(dependencyExtractor)
+    protected def runDependencyExtraction(sourceFiles: SourceFile*): ClusterManager = {
+        val dependencyExtractor = new DefaultDependencyExtractor()
+        val extractDependencies = DependencyExtractionUtils.extractDependencies(dependencyExtractor)_
+        sourceFiles foreach { sourceFile ⇒
+            extractDependencies(sourceFile)
+        }
+        dependencyExtractor.clusterManager
     }
 
     protected def runClustering(clusterManager: ClusterManager): Cluster = {
         var projectCluster = clusterManager.getProjectCluster
         clusteringStages foreach { stage ⇒
             stage.clusterManager = clusterManager
-            stage.performClustering(projectCluster) // ISSUE Why don't you just pass in the ClusterManager (make it a parameter of perform clustering)? This would look much more "functional" :-) 
+            stage.performClustering(projectCluster)
         }
         projectCluster
     }

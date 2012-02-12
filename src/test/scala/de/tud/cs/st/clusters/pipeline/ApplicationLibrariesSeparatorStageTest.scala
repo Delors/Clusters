@@ -37,6 +37,8 @@ import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 
 import framework.AbstractClusteringTest
+import framework.TestSources._
+import framework.TestResultWriterCreators._
 import framework.pipeline.ClusteringStage
 import algorithm.ApplicationLibrariesSeparatorStage
 import algorithm.ApplicationLibrariesSeparatorStageConfiguration
@@ -57,20 +59,20 @@ class ApplicationLibrariesSeparatorStageTest extends AbstractClusteringTest {
     test("testApplicationLibrariesSeparatorStage [cocome]") {
         testClustering(
             "testApplicationLibrariesSeparatorStage [cocome]",
-            cocomeDependencyExtractor,
-            graphmlClusteringResultWriterCreator("appLibClust_cocome"))
+            graphmlClusteringResultWriterCreator("appLibClust_cocome"),
+            cocomeSourceZipFile)
     }
 
     test("testApplicationLibrariesSeparatorStage [getterSetterTestClass]") {
         testClustering(
             "testApplicationLibrariesSeparatorStage [getterSetterTestClass]",
-            getterSetterTestClassDependencyExtractor,
-            graphmlClusteringResultWriterCreator("appLibClust_getterSetterTestClass"))
+            graphmlClusteringResultWriterCreator("appLibClust_getterSetterTestClass"),
+            getterSetterTestClassSourceZipFile)
     }
 
     test("testApplicationLibrariesSeparatorStage [hibernate]") {
         testClustering("testApplicationLibrariesSeparatorStage [hibernate]",
-            hibernateDependencyExtractor,
-            graphmlClusteringResultWriterCreator("appLibClust_hibernate"))
+            graphmlClusteringResultWriterCreator("appLibClust_hibernate"),
+            hibernateSourceZipFile)
     }
 }

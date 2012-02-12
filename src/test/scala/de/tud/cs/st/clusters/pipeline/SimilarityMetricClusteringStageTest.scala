@@ -36,6 +36,8 @@ package pipeline
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import framework.AbstractClusteringTest
+import framework.TestSources._
+import framework.TestResultWriterCreators._
 import framework.pipeline.ClusteringStage
 import algorithm.SimilarityMetricClusteringStage
 import algorithm.SimilarityMetricClusteringAlgorithmConfiguration
@@ -56,20 +58,20 @@ class SimilarityMetricClusteringStageTest extends AbstractClusteringTest {
     test("testSimilarityMetricClusteringStage [cocome-printercontroller]") {
         testClustering(
             "testSimilarityMetricClusteringStage [cocome-printercontroller]",
-            cocomePrintercontrollerDependencyExtractor,
-            graphmlClusteringResultWriterCreator("simMetricClust_cocome-printercontroller"))
+            graphmlClusteringResultWriterCreator("simMetricClust_cocome-printercontroller"),
+            cocomePrintercontrollerSourceZipFile)
     }
 
     test("testSimilarityMetricClusteringStage [cocome]") {
         testClustering(
             "testSimilarityMetricClusteringStage [cocome]",
-            cocomeDependencyExtractor,
-            graphmlClusteringResultWriterCreator("simMetricClust_cocome"))
+            graphmlClusteringResultWriterCreator("simMetricClust_cocome"),
+            cocomeSourceZipFile)
     }
 
     test("testSimilarityMetricClusteringStage [hibernate]") {
         testClustering("testSimilarityMetricClusteringStage [hibernate]",
-            hibernateDependencyExtractor,
-            graphmlClusteringResultWriterCreator("simMetricClust_hibernate"))
+            graphmlClusteringResultWriterCreator("simMetricClust_hibernate"),
+            hibernateSourceZipFile)
     }
 }

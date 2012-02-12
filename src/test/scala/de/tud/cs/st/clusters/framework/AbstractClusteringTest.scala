@@ -41,6 +41,7 @@ import evaluation.PerformanceEvaluatedPipeline
 import structure.Cluster
 import structure.util.ClusterManager
 import util.DependencyExtractionUtils
+import util.SourceFile
 import _root_.de.tud.cs.st.bat.resolved.dependency.DependencyExtractor
 import _root_.de.tud.cs.st.util.perf.PerformanceEvaluation
 
@@ -49,33 +50,39 @@ import _root_.de.tud.cs.st.util.perf.PerformanceEvaluation
  *
  */
 trait AbstractClusteringTest extends FunSuite
-        with DependencyExtractionUtils
-        with TestDependencyExtractors
-        with TestResultWriterCreators
         with PerformanceEvaluation {
 
     type BaseDependencyExtractor = ClusterManager
 
     protected def testClustering(testName: String,
-                                 extractDependencies: (DependencyExtractor) ⇒ Unit,
-                                 resultWriterCreator: () ⇒ ClusteringResultWriter = () ⇒ null)(implicit clusteringStages: Array[ClusteringStage]): Cluster = {
+                                 resultWriterCreator: Option[() ⇒ ClusteringResultWriter],
+                                 sourceFiles: SourceFile*)(implicit clusteringStages: Array[ClusteringStage]): Cluster = {
         println(testName+" - START")
 
         var clusteringPipeline: ClusteringPipeline =
             new ClusteringPipeline(
                 clusteringStages,
-                extractDependencies,
-                Some(resultWriterCreator)) with PerformanceEvaluatedPipeline
+                resultWriterCreator) with PerformanceEvaluatedPipeline
 
-        val cluster = clusteringPipeline.runPipeline()
+        val cluster = clusteringPipeline.runPipeline(sourceFiles: _*)
 
         println(testName+" - END")
         cluster
     }
 
+    protected def testClustering(testName: String,
+                                 sourceFiles: SourceFile*)(implicit clusteringStages: Array[ClusteringStage]): Cluster = {
+        testClustering(testName, None, sourceFiles: _*)
+    }
+
     protected def testDependencyExtraction(testName: String,
-                                           extractDependencies: (DependencyExtractor) ⇒ Unit,
-                                           resultWriterCreator: () ⇒ ClusteringResultWriter = () ⇒ null) {
-        testClustering(testName, extractDependencies, resultWriterCreator)(null)
+                                           resultWriterCreator: Option[() ⇒ ClusteringResultWriter],
+                                           sourceFiles: SourceFile*) {
+        testClustering(testName, resultWriterCreator, sourceFiles: _*)(null)
+    }
+
+    protected def testDependencyExtraction(testName: String,
+                                           sourceFiles: SourceFile*) {
+        testDependencyExtraction(testName, None, sourceFiles: _*)
     }
 }

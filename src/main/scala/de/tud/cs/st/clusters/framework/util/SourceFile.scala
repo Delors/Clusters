@@ -13,9 +13,9 @@
 *  - Redistributions in binary form must reproduce the above copyright notice,
 *    this list of conditions and the following disclaimer in the documentation
 *    and/or other materials provided with the distribution.
-*  - Neither the name of the Software Technology Group or Technische 
-*    Universität Darmstadt nor the names of its contributors may be used to 
-*    endorse or promote products derived from this software without specific 
+*  - Neither the name of the Software Technology Group or Technische
+*    Universität Darmstadt nor the names of its contributors may be used to
+*    endorse or promote products derived from this software without specific
 *    prior written permission.
 *
 *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -32,44 +32,14 @@
 */
 package de.tud.cs.st.clusters
 package framework
-package structure
 package util
-
-import org.junit.runner.RunWith
-import org.scalatest.junit.JUnitRunner
-import framework.AbstractClusteringTest
-import framework.TestSources._
 
 /**
  * @author Thomas Schlosser
  *
  */
-@RunWith(classOf[JUnitRunner])
-class DependencyExtractorTest extends AbstractClusteringTest {
+sealed trait SourceFile
 
-    test("testDependencyExtraction - Apache ANT 1.7.1 - target 1.5.zip") {
-        testDependencyExtraction("testDependencyExtraction - Apache ANT 1.7.1 - target 1.5.zip",
-            antSourceZipFile)
-    }
+case class SourceZipFile(val zipFileName: String, val classFileRestrictions: String*) extends SourceFile
 
-    test("testDependencyExtraction - ClusteringTestProject.zip") {
-        testDependencyExtraction("testDependencyExtraction - ClusteringTestProject.zip",
-            clusteringTestProjectSourceZipFile)
-    }
-
-    test("testDependencyExtraction - Flashcards 0.4 - target 1.6.zip") {
-        testDependencyExtraction("testDependencyExtraction - Flashcards 0.4 - target 1.6.zip",
-            flashcardsSourceZipFile)
-    }
-
-    test("testDependencyExtraction - hibernate-core-3.6.0.Final.jar") {
-        testDependencyExtraction("testDependencyExtraction - hibernate-core-3.6.0.Final.jar",
-            hibernateSourceZipFile)
-    }
-
-    test("testDependencyExtraction - cocome-impl-classes.jar") {
-        testDependencyExtraction("testDependencyExtraction - cocome-impl-classes.jar",
-            cocomeSourceZipFile)
-    }
-
-}
+case class ClassFile(val fileName: String) extends SourceFile

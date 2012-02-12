@@ -45,7 +45,7 @@ import pipeline.GraphmlClusteringResultWriterConfiguration
  */
 trait TestResultWriterCreators {
 
-    protected def dotClusteringResultWriterCreator(
+    def dotClusteringResultWriterCreator(
         fileName: String,
         _includeSingleNodes: Boolean = true,
         _includeEdges: Boolean = true) = {
@@ -53,15 +53,15 @@ trait TestResultWriterCreators {
             override val includeSingleNodes = _includeSingleNodes
             override val includeEdges = _includeEdges
         } with DOTClusteringResultWriterConfiguration
-        () ⇒
-            new DOTClusteringResultWriter(fileName, configuration)
+        Some(() ⇒
+            new DOTClusteringResultWriter(fileName, configuration))
     }
 
-    protected def gmlClusteringResultWriterCreator(fileName: String) = {
-        () ⇒ new GMLClusteringResultWriter(fileName)
+    def gmlClusteringResultWriterCreator(fileName: String) = {
+        Some(() ⇒ new GMLClusteringResultWriter(fileName))
     }
 
-    protected def graphmlClusteringResultWriterCreator(
+    def graphmlClusteringResultWriterCreator(
         fileName: String,
         _aggregateEdges: Boolean = true,
         _showEdgeLabels: Boolean = false,
@@ -73,6 +73,8 @@ trait TestResultWriterCreators {
             override val showSourceElementNodes = _showSourceElementNodes
             override val maxNumberOfLevels = _maxNumberOfLevels
         } with GraphmlClusteringResultWriterConfiguration
-        () ⇒ new GraphmlClusteringResultWriter(fileName, writerConfiguration)
+        Some(() ⇒ new GraphmlClusteringResultWriter(fileName, writerConfiguration))
     }
 }
+
+object TestResultWriterCreators extends TestResultWriterCreators

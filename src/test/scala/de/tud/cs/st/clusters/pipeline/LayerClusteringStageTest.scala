@@ -37,6 +37,8 @@ import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 
 import framework.AbstractClusteringTest
+import framework.TestSources._
+import framework.TestResultWriterCreators._
 import framework.pipeline.ClusteringStage
 import algorithm.LayerClusteringStage
 import algorithm.LayerClusteringAlgorithmConfiguration
@@ -57,20 +59,20 @@ class LayerClusteringStageTest extends AbstractClusteringTest {
     test("testLayerClusteringStage [getterSetterTestClass]") {
         testClustering(
             "testLayerClusteringStage [getterSetterTestClass]",
-            getterSetterTestClassDependencyExtractor,
-            graphmlClusteringResultWriterCreator("layerClust_getterSetterTestClass"))
+            graphmlClusteringResultWriterCreator("layerClust_getterSetterTestClass"),
+            getterSetterTestClassSourceZipFile)
     }
 
     test("testLayerClusteringStage [cocome]") {
         testClustering(
             "testLayerClusteringStage [cocome]",
-            cocomeDependencyExtractor,
-            graphmlClusteringResultWriterCreator("layerClust_cocome"))
+            graphmlClusteringResultWriterCreator("layerClust_cocome"),
+            cocomeSourceZipFile)
     }
 
     test("testLayerClusteringStage [hibernate]") {
         testClustering("testLayerClusteringStage [hibernate]",
-            hibernateDependencyExtractor,
-            graphmlClusteringResultWriterCreator("layerClust_hibernate"))
+            graphmlClusteringResultWriterCreator("layerClust_hibernate"),
+            hibernateSourceZipFile)
     }
 }

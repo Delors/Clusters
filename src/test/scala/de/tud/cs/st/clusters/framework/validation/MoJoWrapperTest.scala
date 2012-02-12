@@ -34,6 +34,7 @@ package de.tud.cs.st.clusters
 package framework
 package validation
 
+import TestSources._
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import pipeline.ClusteringStage
@@ -50,7 +51,7 @@ class MoJoWrapperTest extends AbstractClusteringTest {
 
     test("test calculation of double direction MojoFM quality value") {
         val referenceClusters = ReferenceClusterCreator.readReferenceCluster(
-            "test/classfiles/ClusteringTestProject.zip",
+            clusteringTestProjectSourceZipFile,
             new java.io.File("test/referenceCluster/ClusteringTestProject.sei"))
 
         val libConfiguration = new ApplicationLibrariesSeparatorStageConfiguration {}
@@ -59,7 +60,7 @@ class MoJoWrapperTest extends AbstractClusteringTest {
 
         val extractedClusters = testClustering(
             "testMoJoWrapper-ApplicationLibrariesSeparatorStage [ClusteringTestProject.zip]",
-            clusteringTestProjectDependencyExtractor)(clusteringStages)
+            clusteringTestProjectSourceZipFile)(clusteringStages)
 
         println("MoJo:")
         var mjw = new MoJoWrapper(referenceClusters, extractedClusters)

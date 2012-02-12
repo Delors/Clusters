@@ -36,6 +36,8 @@ package pipeline
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import framework.AbstractClusteringTest
+import framework.TestSources._
+import framework.TestResultWriterCreators._
 import framework.pipeline.ClusteringStage
 import algorithm.GetterSetterClusteringStage
 import algorithm.GetterSetterClusteringAlgorithmConfiguration
@@ -55,12 +57,12 @@ class GetterSetterClusteringStageTest extends AbstractClusteringTest {
 
     test("testGetterSetterClusteringStage [getterSetterTestClass]") {
         testClustering("testGetterSetterClusteringStage [getterSetterTestClass]",
-            getterSetterTestClassDependencyExtractor,
-            graphmlClusteringResultWriterCreator("getterSetterClust_getterSetterTestClass"))
+            graphmlClusteringResultWriterCreator("getterSetterClust_getterSetterTestClass"),
+            getterSetterTestClassSourceZipFile)
     }
 
     test("testGetterSetterClusteringStage [hibernate]") {
         testClustering("testGetterSetterClusteringStage [hibernate]",
-            hibernateDependencyExtractor)
+            hibernateSourceZipFile)
     }
 }

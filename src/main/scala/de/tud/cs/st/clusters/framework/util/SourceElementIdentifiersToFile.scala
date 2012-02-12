@@ -45,14 +45,13 @@ import java.io.BufferedWriter
  * @author Thomas Schlosser
  *
  */
-trait SourceElementIdentifiersToFile
-        extends DependencyExtractionUtils {
+trait SourceElementIdentifiersToFile {
 
-    def writeSourceElementsToFile(sourceInputFilePath: String, outputFile: File) {
+    def writeSourceElementsToFile(sourceFile: SourceFile, outputFile: File) {
         val dependencyExtractor = new DefaultDependencyExtractor()
         val clusterManager = dependencyExtractor.clusterManager
 
-        extractDependencies(sourceInputFilePath)(dependencyExtractor)
+        DependencyExtractionUtils.extractDependencies(dependencyExtractor)(sourceFile)
         val projectCluster = clusterManager.getProjectCluster
 
         var fw: FileWriter = null

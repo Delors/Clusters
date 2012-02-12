@@ -36,6 +36,8 @@ package pipeline
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import framework.AbstractClusteringTest
+import framework.TestSources._
+import framework.TestResultWriterCreators._
 import framework.pipeline.ClusteringStage
 import algorithm.ClassExtractorStage
 
@@ -53,8 +55,8 @@ class ClassExtractorStageTest extends AbstractClusteringTest {
     test("testClassExtractorStage [ClusteringTestProject]") {
         testClustering(
             "testClassExtractorStage [ClusteringTestProject]",
-            clusteringTestProjectDependencyExtractor,
-            graphmlClusteringResultWriterCreator("classClust_ClusteringTestProject"))
+            graphmlClusteringResultWriterCreator("classClust_ClusteringTestProject"),
+            clusteringTestProjectSourceZipFile)
     }
 
 }

@@ -33,27 +33,29 @@
 package de.tud.cs.st.clusters
 package framework
 
-import util.DependencyExtractionUtils
+import util.SourceZipFile
 
 /**
  * @author Thomas Schlosser
  *
  */
-trait TestDependencyExtractors extends DependencyExtractionUtils {
+trait TestSources {
 
     // whole zip/jar files
-    protected val antDependencyExtractor = extractDependencies("test/classfiles/Apache ANT 1.7.1 - target 1.5.zip")
-    protected val clusteringTestProjectDependencyExtractor = extractDependencies("test/classfiles/ClusteringTestProject.zip")
-    protected val cocomeDependencyExtractor = extractDependencies("test/classfiles/cocome-impl-classes.jar")
-    protected val flashcardsDependencyExtractor = extractDependencies("test/classfiles/Flashcards 0.4 - target 1.6.zip")
-    protected val hibernateDependencyExtractor = extractDependencies("test/classfiles/hibernate-core-3.6.0.Final.jar")
+    val antSourceZipFile = SourceZipFile("test/classfiles/Apache ANT 1.7.1 - target 1.5.zip")
+    val clusteringTestProjectSourceZipFile = SourceZipFile("test/classfiles/ClusteringTestProject.zip")
+    val cocomeSourceZipFile = SourceZipFile("test/classfiles/cocome-impl-classes.jar")
+    val flashcardsSourceZipFile = SourceZipFile("test/classfiles/Flashcards 0.4 - target 1.6.zip")
+    val hibernateSourceZipFile = SourceZipFile("test/classfiles/hibernate-core-3.6.0.Final.jar")
 
     // only selected classes
-    protected val getterSetterTestClassDependencyExtractor = extractDependencies("test/classfiles/ClusteringTestProject.zip", "test/GetterSetterTestClass.class")
-    protected val stronglyConnectedComponentsTestClassDependencyExtractor = extractDependencies("test/classfiles/ClusteringTestProject.zip", "test/StronglyConnectedComponentsTestClass.class")
-    protected val cocomePrintercontrollerDependencyExtractor = extractDependencies("test/classfiles/cocome-impl-classes.jar",
+    val getterSetterTestClassSourceZipFile = SourceZipFile("test/classfiles/ClusteringTestProject.zip", "test/GetterSetterTestClass.class")
+    val stronglyConnectedComponentsTestClassSourceZipFile = SourceZipFile("test/classfiles/ClusteringTestProject.zip", "test/StronglyConnectedComponentsTestClass.class")
+    val cocomePrintercontrollerSourceZipFile = SourceZipFile("test/classfiles/cocome-impl-classes.jar",
         "org/cocome/tradingsystem/cashdeskline/cashdesk/printercontroller/PrinterControllerEventHandlerIf.class",
         "org/cocome/tradingsystem/cashdeskline/cashdesk/printercontroller/impl/PrinterController.class",
         "org/cocome/tradingsystem/cashdeskline/cashdesk/printercontroller/impl/PrinterControllerEventHandlerImpl.class",
         "org/cocome/tradingsystem/cashdeskline/cashdesk/printercontroller/impl/PrinterStates.class")
 }
+
+object TestSources extends TestSources

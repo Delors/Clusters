@@ -44,11 +44,26 @@ import de.tud.cs.st.bat.resolved.reader.Java6Framework
 trait DependencyExtractionUtils {
     // TODO We should move the relevant functionality over to BAT
 
-    protected def extractDependencies(zipFile: String, classFiles: String*): (DependencyExtractor) ⇒ Unit = {
-        dependencyExtractor ⇒ for (classFile ← classFiles) dependencyExtractor.process(Java6Framework.ClassFile(zipFile, classFile))
+    def extractDependencies(dependencyExtractor: DependencyExtractor)(sourceFile: SourceFile) {
+        sourceFile match {
+            case szf: SourceZipFile ⇒
+                extractDependencies(dependencyExtractor, szf)
+            case cf: ClassFile ⇒
+                extractDependencies(dependencyExtractor, cf)
+
+        }
     }
 
-    protected def extractDependencies(zipFile: String): (DependencyExtractor) ⇒ Unit = {
-        dependencyExtractor ⇒ for (cf ← Java6Framework.ClassFiles(zipFile)) dependencyExtractor.process(cf)
+    protected def extractDependencies(dependencyExtractor: DependencyExtractor, sourceZipFile: SourceZipFile) {
+        if (sourceZipFile.classFileRestrictions.length != 0)
+            for (classFile ← sourceZipFile.classFileRestrictions) dependencyExtractor.process(Java6Framework.ClassFile(sourceZipFile.zipFileName, classFile))
+        else
+            for (cf ← Java6Framework.ClassFiles(sourceZipFile.zipFileName)) dependencyExtractor.process(cf)
+    }
+
+    protected def extractDependencies(dependencyExtractor: DependencyExtractor, classFile: ClassFile) {
+        for (classFile ← Java6Framework.ClassFiles(new java.io.File(classFile.fileName))) dependencyExtractor.process(classFile)
     }
 }
+
+object DependencyExtractionUtils extends DependencyExtractionUtils

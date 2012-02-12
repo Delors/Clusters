@@ -36,6 +36,8 @@ package pipeline
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import framework.AbstractClusteringTest
+import framework.TestSources._
+import framework.TestResultWriterCreators._
 import framework.pipeline.ClusteringStage
 import algorithm.ApplicationLibrariesSeparatorStage
 import algorithm.ApplicationLibrariesSeparatorStageConfiguration
@@ -95,11 +97,11 @@ class CombinedClusteringStageTest extends AbstractClusteringTest {
     test("testCombinedClusteringStage [ClusteringTestProject]") {
         val extractedCluster = testClustering(
             "testCombinedClusteringStage [ClusteringTestProject]",
-            clusteringTestProjectDependencyExtractor,
-            graphmlClusteringResultWriterCreator("combinedClust_ClusteringTestProject"))
+            graphmlClusteringResultWriterCreator("combinedClust_ClusteringTestProject"),
+            clusteringTestProjectSourceZipFile)
 
         val referenceClusters = ReferenceClusterCreator.readReferenceCluster(
-            "test/classfiles/ClusteringTestProject.zip",
+            clusteringTestProjectSourceZipFile,
             new java.io.File("test/referenceCluster/ClusteringTestProject.sei"))
 
         println("MoJo:")
@@ -110,15 +112,15 @@ class CombinedClusteringStageTest extends AbstractClusteringTest {
     test("testCombinedClusteringStage [cocome]") {
         testClustering(
             "testCombinedClusteringStage [cocome]",
-            cocomeDependencyExtractor,
-            graphmlClusteringResultWriterCreator("combinedClust_cocome", _maxNumberOfLevels = Some(4)))
+            graphmlClusteringResultWriterCreator("combinedClust_cocome", _maxNumberOfLevels = Some(4)),
+            cocomeSourceZipFile)
     }
 
     test("testCombinedClusteringStage [hibernate]") {
         testClustering(
             "testCombinedClusteringStage [hibernate]",
-            hibernateDependencyExtractor,
-            graphmlClusteringResultWriterCreator("combinedClust_hibernate"))
+            graphmlClusteringResultWriterCreator("combinedClust_hibernate"),
+            hibernateSourceZipFile)
     }
 
 }

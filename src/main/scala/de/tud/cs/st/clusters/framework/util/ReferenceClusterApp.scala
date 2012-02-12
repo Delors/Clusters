@@ -198,12 +198,12 @@ where options include:
     }
 
     private def runWriteMode(binaryFilePath: String, outputFile: File) {
-        writeSourceElementsToFile(binaryFilePath, outputFile)
+        writeSourceElementsToFile(SourceZipFile(binaryFilePath), outputFile)
     }
 
     private def runReadMode(binaryFilePath: String, referenceClusterFile: File, graphmlFile: File) {
         try {
-            val cluster = readReferenceCluster(binaryFilePath, referenceClusterFile)
+            val cluster = readReferenceCluster(SourceZipFile(binaryFilePath), referenceClusterFile)
 
             val writerConfig = new {
                 override val aggregateEdges: Boolean = true

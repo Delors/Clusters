@@ -36,6 +36,8 @@ package pipeline
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import framework.AbstractClusteringTest
+import framework.TestSources._
+import framework.TestResultWriterCreators._
 import framework.pipeline.ClusteringStage
 import algorithm.PackageClusteringStage
 import algorithm.PackageClusteringAlgorithmConfiguration
@@ -55,12 +57,12 @@ class PackageClusteringStageTest extends AbstractClusteringTest {
 
     test("testPackageClusteringStage [cocome]") {
         testClustering("testPackageClusteringStage [cocome]",
-            cocomeDependencyExtractor,
-            graphmlClusteringResultWriterCreator("pckgClust_cocome"))
+            graphmlClusteringResultWriterCreator("pckgClust_cocome"),
+            cocomeSourceZipFile)
     }
 
     test("testPackageClusteringStage [hibernate]") {
         testClustering("testPackageClusteringStage [hibernate]",
-            hibernateDependencyExtractor)
+            hibernateSourceZipFile)
     }
 }

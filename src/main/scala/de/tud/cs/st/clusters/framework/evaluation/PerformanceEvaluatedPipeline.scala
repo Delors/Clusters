@@ -38,6 +38,7 @@ import structure.Cluster
 import structure.util.ClusterManager
 import structure.util.DefaultClusterManager
 import pipeline.ClusteringPipeline
+import framework.util.SourceFile
 import de.tud.cs.st.util.perf._
 import de.tud.cs.st.util.perf.PerformanceEvaluation
 import de.tud.cs.st.bat.resolved.dependency.DependencyExtractor
@@ -50,9 +51,9 @@ trait PerformanceEvaluatedPipeline
         extends ClusteringPipeline
         with PerformanceEvaluation {
 
-    protected abstract override def runDependencyExtraction(dependencyExtractor: DependencyExtractor) {
+    protected abstract override def runDependencyExtraction(sourceFiles: SourceFile*): ClusterManager = {
         time(duration ⇒ println("Time to read classfiles and extract dependencies: "+nanoSecondsToMilliseconds(duration)+"ms")) {
-            super.runDependencyExtraction(dependencyExtractor)
+            super.runDependencyExtraction(sourceFiles: _*)
         }
     }
 
