@@ -31,6 +31,7 @@
 *  POSSIBILITY OF SUCH DAMAGE.
 */
 package de.tud.cs.st.clusters
+package validation
 package pipeline
 
 import org.junit.runner.RunWith
@@ -39,30 +40,31 @@ import framework.AbstractClusteringTest
 import framework.TestSources._
 import framework.TestResultWriterCreators._
 import framework.pipeline.ClusteringStage
-import algorithm.ApplicationLibrariesSeparatorStage
-import algorithm.ApplicationLibrariesSeparatorStageConfiguration
-import algorithm.PackageClusteringStage
-import algorithm.PackageClusteringAlgorithmConfiguration
-import algorithm.ImplementationTestingSeparatorStage
-import algorithm.ImplementationTestingSeparatorStageConfiguration
-import algorithm.GetterSetterClusteringStage
-import algorithm.GetterSetterClusteringAlgorithmConfiguration
-import algorithm.SimilarityMetricClusteringStage
-import algorithm.SimilarityMetricClusteringAlgorithmConfiguration
-import algorithm.StronglyConnectedComponentsClusteringStage
-import algorithm.StronglyConnectedComponentsClusteringAlgorithmConfiguration
-import strategy.FirstClusterablesClusteringStrategy
-import strategy.FixedPointIterationClusteringStrategy
-import strategy.IdentifierBasedClusteringStrategy
-import strategy.MinClusterSizeClusteringStrategy
+import de.tud.cs.st.clusters.pipeline.algorithm.ApplicationLibrariesSeparatorStage
+import de.tud.cs.st.clusters.pipeline.algorithm.ApplicationLibrariesSeparatorStageConfiguration
+import de.tud.cs.st.clusters.pipeline.algorithm.PackageClusteringStage
+import de.tud.cs.st.clusters.pipeline.algorithm.PackageClusteringAlgorithmConfiguration
+import de.tud.cs.st.clusters.pipeline.algorithm.ImplementationTestingSeparatorStage
+import de.tud.cs.st.clusters.pipeline.algorithm.ImplementationTestingSeparatorStageConfiguration
+import de.tud.cs.st.clusters.pipeline.algorithm.GetterSetterClusteringStage
+import de.tud.cs.st.clusters.pipeline.algorithm.GetterSetterClusteringAlgorithmConfiguration
+import de.tud.cs.st.clusters.pipeline.algorithm.SimilarityMetricClusteringStage
+import de.tud.cs.st.clusters.pipeline.algorithm.SimilarityMetricClusteringAlgorithmConfiguration
+import de.tud.cs.st.clusters.pipeline.algorithm.StronglyConnectedComponentsClusteringStage
+import de.tud.cs.st.clusters.pipeline.algorithm.StronglyConnectedComponentsClusteringAlgorithmConfiguration
+import de.tud.cs.st.clusters.pipeline.strategy.FirstClusterablesClusteringStrategy
+import de.tud.cs.st.clusters.pipeline.strategy.FixedPointIterationClusteringStrategy
+import de.tud.cs.st.clusters.pipeline.strategy.IdentifierBasedClusteringStrategy
+import de.tud.cs.st.clusters.pipeline.strategy.MinClusterSizeClusteringStrategy
 import framework.util.ReferenceClusterCreator
+import framework.validation.MoJoWrapper
 
 /**
  * @author Thomas Schlosser
  *
  */
 @RunWith(classOf[JUnitRunner])
-class CombinedClusteringStageTest extends AbstractClusteringTest {
+class CombinedClusteringStageValidationTest extends AbstractClusteringTest {
 
     val appLibConfiguration = new ApplicationLibrariesSeparatorStageConfiguration {}
     val pkgConfiguration = new PackageClusteringAlgorithmConfiguration {}
@@ -94,10 +96,18 @@ class CombinedClusteringStageTest extends AbstractClusteringTest {
     )
 
     test("testCombinedClusteringStage [ClusteringTestProject]") {
-        testClustering(
+        val extractedCluster = testClustering(
             "testCombinedClusteringStage [ClusteringTestProject]",
             graphmlClusteringResultWriterCreator("combinedClust_ClusteringTestProject"),
             clusteringTestProjectSourceZipFile)
+
+        val referenceClusters = ReferenceClusterCreator.readReferenceCluster(
+            clusteringTestProjectSourceZipFile,
+            new java.io.File("test/referenceCluster/ClusteringTestProject.sei"))
+
+        println("MoJo:")
+        var mjw = new MoJoWrapper(referenceClusters, extractedCluster)
+        println(mjw.doubleDirectionMojoFM)
     }
 
     test("testCombinedClusteringStage [cocome]") {

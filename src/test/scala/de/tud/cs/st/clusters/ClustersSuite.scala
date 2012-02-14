@@ -24,5 +24,4 @@ class ClustersSuite extends Suites(
     new pipeline.StronglyConnectedComponentsClusteringStageTest,
 
     // Framework tests
-    new framework.validation.MoJoWrapperTest,
     new framework.structure.util.DependencyExtractorTest)
