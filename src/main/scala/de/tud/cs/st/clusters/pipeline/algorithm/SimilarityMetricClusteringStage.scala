@@ -195,3 +195,5 @@ class SimilarityMetricClusteringStage(
 trait SimilarityMetricClusteringAlgorithmConfiguration {
     val clusterIdentifierPrefix = "simMetricCluster_"
 }
+
+object SimilarityMetricClusteringAlgorithmConfiguration extends SimilarityMetricClusteringAlgorithmConfiguration

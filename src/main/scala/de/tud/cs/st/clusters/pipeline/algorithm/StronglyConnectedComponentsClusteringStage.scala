@@ -102,3 +102,5 @@ class StronglyConnectedComponentsClusteringStage(
 trait StronglyConnectedComponentsClusteringAlgorithmConfiguration {
     val clusterIdentifierPrefix = "SCC_"
 }
+
+object StronglyConnectedComponentsClusteringAlgorithmConfiguration extends StronglyConnectedComponentsClusteringAlgorithmConfiguration

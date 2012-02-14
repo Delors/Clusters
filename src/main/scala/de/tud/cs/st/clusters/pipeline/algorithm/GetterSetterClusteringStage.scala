@@ -142,3 +142,5 @@ trait GetterSetterClusteringAlgorithmConfiguration {
     val getterPrefixes: List[String] = List("get", "is")
     val setterPrefixes: List[String] = List("set")
 }
+
+object GetterSetterClusteringAlgorithmConfiguration extends GetterSetterClusteringAlgorithmConfiguration

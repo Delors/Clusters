@@ -137,3 +137,5 @@ trait LayerClusteringAlgorithmConfiguration {
 
     val performRecursion: Boolean = false
 }
+
+object LayerClusteringAlgorithmConfiguration extends LayerClusteringAlgorithmConfiguration

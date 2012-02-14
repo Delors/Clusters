@@ -163,3 +163,5 @@ trait ImplementationTestingSeparatorStageConfiguration {
     val testLibrariesPackagePrefixes = List("org.junit.", "org.scalatest.")
     val markTestClusterAsUnclusterable = true
 }
+
+object ImplementationTestingSeparatorStageConfiguration extends ImplementationTestingSeparatorStageConfiguration

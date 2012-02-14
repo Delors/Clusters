@@ -75,7 +75,7 @@ class CombinedClusteringStageTest extends AbstractClusteringTest {
 
     val libStage = new ApplicationLibrariesSeparatorStage(appLibConfiguration)
     val pkgStage = new {
-        val clusterIdentifier = "libraries"
+        val clusterIdentifier = appLibConfiguration.librariesClusterIdentifier
     } with PackageClusteringStage(pkgConfiguration) with IdentifierBasedClusteringStrategy
     val implTestStage = new ImplementationTestingSeparatorStage(implTestConfiguration) with FirstClusterablesClusteringStrategy
     val sccStage = new StronglyConnectedComponentsClusteringStage(sccConfiguration) with FirstClusterablesClusteringStrategy

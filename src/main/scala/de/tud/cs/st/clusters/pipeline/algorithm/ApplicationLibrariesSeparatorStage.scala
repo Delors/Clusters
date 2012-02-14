@@ -110,3 +110,5 @@ trait ApplicationLibrariesSeparatorStageConfiguration {
 
     val markLibrariesAsUnclusterable = true
 }
+
+object ApplicationLibrariesSeparatorStageConfiguration extends ApplicationLibrariesSeparatorStageConfiguration

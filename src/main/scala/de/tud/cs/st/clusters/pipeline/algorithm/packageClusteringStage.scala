@@ -162,3 +162,5 @@ trait PackageClusteringAlgorithmConfiguration {
     // new clusters should be marked as unclusterable if they are only libraries that should not further be considered
     val createUnclusterableClusters = true
 }
+
+object PackageClusteringAlgorithmConfiguration extends PackageClusteringAlgorithmConfiguration
