@@ -39,9 +39,9 @@ import framework.structure.Cluster
 
 /**
  * This strategy acts as follows:
- * Traverses (depth-first-search-like) the cluster's structure and finds all sub clusters
- * that have an identifier equal to 'clusterIdentifier'. The attribute 'considerOnlyClusterable'
- * can be used -- if set to TRUE -- to ignore unclusterable clusters.
+ * Traverses (depth-first-search-like) the cluster's structure and delegates the performClustering
+ * procedure of the super type to all sub clusters that have an identifier equal to 'clusterIdentifier'.
+ * The attribute 'considerOnlyClusterable' can be used -- if set to TRUE -- to ignore unclusterable clusters.
  *
  *
  * @author Thomas Schlosser
