@@ -38,6 +38,11 @@ import framework.pipeline.ClusteringStage
 import framework.structure.Cluster
 
 /**
+ * This strategy acts as follows:
+ * Traverses (depth-first-search-like) the cluster's structure and finds all sub clusters
+ * that have an identifier equal to 'clusterIdentifier'. The attribute 'considerOnlyClusterable'
+ * can be used -- if set to TRUE -- to ignore unclusterable clusters.
+ *
  *
  * @author Thomas Schlosser
  */
@@ -47,13 +52,20 @@ trait IdentifierBasedClusteringStrategy extends ClusteringStage {
 
     val considerOnlyClusterable = false
 
-    abstract override def performClustering(cluster: Cluster): Boolean = {
-        val c = clusterManager.getCluster(clusterManager.clusterID(clusterIdentifier))
-        if (c != null && (!considerOnlyClusterable || c.clusterable)) {
-            super.performClustering(c)
-        }
-        else {
-            false
-        }
-    }
+    abstract override def performClustering(cluster: Cluster): Boolean =
+        (false /: cluster.nodes)((cnc, node) ⇒ cnc | {
+            node match {
+                case subCluster: Cluster ⇒ {
+                    val nc = performClustering(subCluster)
+                    if (clusterIdentifier == subCluster.identifier &&
+                        (!considerOnlyClusterable || subCluster.clusterable)) {
+                        nc || super.performClustering(subCluster)
+                    }
+                    else {
+                        nc
+                    }
+                }
+                case _ ⇒ false // nothing to do; a single node cannot be clustered
+            }
+        })
 }
