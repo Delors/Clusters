@@ -50,7 +50,7 @@ trait ClusterFactory
         id
     }
 
-    def createCluster(clusterIdentifier: String, creatorStageName: String, makeUnique: Boolean = false): Cluster = {
+    def createCluster(clusterIdentifier: String, creatorName: String, makeUnique: Boolean = false): Cluster = {
         val cluster = createClusterInStore(
             if (makeUnique)
                 clusterID(clusterIdentifier + globallyUniqueID)
@@ -58,12 +58,11 @@ trait ClusterFactory
                 clusterID(clusterIdentifier),
             (c: Cluster) ⇒ (),
             (id) ⇒ new Cluster(id, clusterIdentifier))
-        // TODO we have creatorStage and createStateName but it looks like they are referring to the same concept, don't they?
-        if (cluster.metaInfo.isDefinedAt("creatorStage")) {
-            cluster.metaInfo("lastExplicitUpdaterStage") = creatorStageName
+        if (cluster.metaInfo.isDefinedAt("creator")) {
+            cluster.metaInfo("lastExplicitAccessor") = creatorName
         }
         else {
-            cluster.metaInfo("creatorStage") = creatorStageName
+            cluster.metaInfo("creator") = creatorName
         }
         cluster
     }
