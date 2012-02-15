@@ -48,7 +48,6 @@ trait FirstClusterablesClusteringStrategy extends ClusteringStage {
         var createdNewCluster = false
         if (cluster.clusterable) {
             createdNewCluster |= super.performClustering(cluster)
-            cluster.metaInfo("lastAppliedStage") = this.stageName
         }
         else {
             (createdNewCluster /: cluster.nodes)((cnc, node) ⇒ cnc | {

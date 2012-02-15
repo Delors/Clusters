@@ -71,8 +71,6 @@ class CombinedClusteringStageTest extends AbstractClusteringTest {
     val similarityMetricConfiguration = new SimilarityMetricClusteringAlgorithmConfiguration {}
     val sccConfiguration = new StronglyConnectedComponentsClusteringAlgorithmConfiguration {}
 
-    //TODO: implement more strategies and make use of the metaInfo data;
-
     val libStage = new ApplicationLibrariesSeparatorStage(appLibConfiguration)
     val pkgStage = new {
         val clusterIdentifier = appLibConfiguration.librariesClusterIdentifier

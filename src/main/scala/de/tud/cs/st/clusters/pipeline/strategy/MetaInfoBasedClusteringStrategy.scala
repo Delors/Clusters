@@ -13,9 +13,9 @@
 *  - Redistributions in binary form must reproduce the above copyright notice,
 *    this list of conditions and the following disclaimer in the documentation
 *    and/or other materials provided with the distribution.
-*  - Neither the name of the Software Technology Group or Technische
-*    Universität Darmstadt nor the names of its contributors may be used to
-*    endorse or promote products derived from this software without specific
+*  - Neither the name of the Software Technology Group or Technische 
+*    Universität Darmstadt nor the names of its contributors may be used to 
+*    endorse or promote products derived from this software without specific 
 *    prior written permission.
 *
 *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -36,27 +36,46 @@ package strategy
 
 import framework.pipeline.ClusteringStage
 import framework.structure.Cluster
-import framework.structure.SourceElementNode
 
 /**
+ * This strategy acts as follows:
+ * Traverses (depth-first-search-like) the cluster's structure and delegates the performClustering
+ * procedure of the super type to all sub clusters whose metaInfo properties match with all
+ * properties given in 'metaInfo'. The attribute 'considerOnlyClusterable'
+ * can be used -- if set to TRUE -- to ignore unclusterable clusters.
  *
- * bottom-up
  *
  * @author Thomas Schlosser
  */
-trait AllClusterablesClusteringStrategy extends ClusteringStage {
+trait MetaInfoBasedClusteringStrategy extends ClusteringStage {
 
-    abstract override def performClustering(cluster: Cluster): Boolean = {
-        var createdNewCluster = (false /: cluster.nodes)((cnc, node) ⇒ cnc | {
+    val metaInfo: Map[String, String]
+
+    val considerOnlyClusterable = true
+
+    abstract override def performClustering(cluster: Cluster): Boolean =
+        (false /: cluster.nodes)((cnc, node) ⇒ cnc | {
             node match {
-                case subCluster: Cluster ⇒
-                    performClustering(subCluster)
+                case subCluster: Cluster ⇒ {
+                    val nc = performClustering(subCluster)
+                    if (checkPropertyMatching(metaInfo, subCluster.metaInfo) &&
+                        (!considerOnlyClusterable || subCluster.clusterable)) {
+                        nc || super.performClustering(subCluster)
+                    }
+                    else {
+                        nc
+                    }
+                }
                 case _ ⇒ false // nothing to do; a single node cannot be clustered
             }
         })
-        if (cluster.clusterable) {
-            createdNewCluster |= super.performClustering(cluster)
+
+    private def checkPropertyMatching(referenceMap: Map[String, String], lookupMap: scala.collection.mutable.Map[String, String]): Boolean = {
+        for ((key, value) ← referenceMap) {
+            if (lookupMap.getOrElse(key, { return false }) != value) {
+                return false
+            }
         }
-        createdNewCluster
+        true
     }
 }
