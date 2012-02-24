@@ -48,7 +48,7 @@ object ReferenceClusterApp
         with ReferenceClusterCreator
         with SourceElementIdentifiersToFile {
 
-    private val defaultOutputFileExtension = ".sei"
+    private val defaultOutputFileExtension = "sei"
 
     private val usage = """
 Usage: ReferenceClusterApp [-mode [write|read|default]] -binaryFile <binaryFile> [-options]
