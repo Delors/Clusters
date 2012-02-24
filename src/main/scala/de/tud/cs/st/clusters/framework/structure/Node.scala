@@ -96,6 +96,10 @@ trait Node {
     // edges-related stuff
     /////////////////////////////////////////////
     protected var edges: List[Edge] = Nil
+
+    /**
+     * Outgoing edges of this node in the transposed dependency graph.
+     */
     protected var transposedEdges: List[Edge] = Nil
     protected val edgesMap: Map[(Node, Object), Edge] = Map() // Map[(Int, DependencyType), Int]
     protected val transposedEdgesMap: Map[(Node, Object), Edge] = Map() // Map[(Int, DependencyType), Int]
