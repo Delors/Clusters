@@ -1,0 +1,28 @@
+[
+java.io.PrintStream
+java.io.PrintStream.println(java.lang.String)
+java.lang.Object
+java.lang.Object.<init>()
+java.lang.String
+java.lang.String.toLowerCase()
+java.lang.String.toUpperCase()
+java.lang.System
+java.lang.System.out
+pattern.state.State
+pattern.state.State.writeName(pattern.state.StateContext, java.lang.String)
+pattern.state.StateA
+pattern.state.StateA.<init>()
+pattern.state.StateA.writeName(pattern.state.StateContext, java.lang.String)
+pattern.state.StateB
+pattern.state.StateB.<init>()
+pattern.state.StateB.count
+pattern.state.StateB.writeName(pattern.state.StateContext, java.lang.String)
+pattern.state.StateContext
+pattern.state.StateContext.<init>()
+pattern.state.StateContext.myState
+pattern.state.StateContext.setState(pattern.state.State)
+pattern.state.StateContext.writeName(java.lang.String)
+pattern.state.TestClientState
+pattern.state.TestClientState.<init>()
+pattern.state.TestClientState.main(java.lang.String[])
+]

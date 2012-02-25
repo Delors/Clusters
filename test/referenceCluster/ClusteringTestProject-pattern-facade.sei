@@ -1,0 +1,28 @@
+[
+java.lang.Object
+java.lang.Object.<init>()
+java.lang.String
+pattern.facade.Computer
+pattern.facade.Computer.<init>()
+pattern.facade.Computer.BOOT_ADDRESS
+pattern.facade.Computer.BOOT_SECTOR
+pattern.facade.Computer.cpu
+pattern.facade.Computer.hardDrive
+pattern.facade.Computer.memory
+pattern.facade.Computer.SECTOR_SIZE
+pattern.facade.Computer.startComputer()
+pattern.facade.CPU
+pattern.facade.CPU.<init>()
+pattern.facade.CPU.execute()
+pattern.facade.CPU.freeze()
+pattern.facade.CPU.jump(long)
+pattern.facade.HardDrive
+pattern.facade.HardDrive.<init>()
+pattern.facade.HardDrive.read(long, int)
+pattern.facade.Memory
+pattern.facade.Memory.<init>()
+pattern.facade.Memory.load(long, byte[])
+pattern.facade.You
+pattern.facade.You.<init>()
+pattern.facade.You.main(java.lang.String[])
+]

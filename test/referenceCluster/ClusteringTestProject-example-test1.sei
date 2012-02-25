@@ -1,0 +1,32 @@
+[
+	[
+		[
+			example.test1.HungryClient
+			example.test1.HungryClient.<init>(example.test1.Restaurant)
+			example.test1.HungryClient.eatPizza()
+			example.test1.HungryClient.eatSteak()
+			example.test1.HungryClient.restaurant
+			example.test1.Restaurant.orderPizza()
+			example.test1.Restaurant.orderSteak()
+		]
+		[
+			example.test1.Restaurant
+			example.test1.Restaurant.<init>()
+		]
+		[
+			example.test1.ThirstyClient
+			example.test1.ThirstyClient.<init>(example.test1.Restaurant)
+			example.test1.ThirstyClient.drinkCoke()
+			example.test1.ThirstyClient.drinkWater()
+			example.test1.ThirstyClient.restaurant
+			example.test1.Restaurant.orderCoke()
+			example.test1.Restaurant.orderWater()
+		]
+	]
+	[
+		[
+			java.lang.Object
+			java.lang.Object.<init>()
+		]
+	]
+]

@@ -1,0 +1,47 @@
+[
+java.io.PrintStream
+java.io.PrintStream.println(int)
+java.lang.Object
+java.lang.Object.<init>()
+java.lang.String
+java.lang.String.equals(java.lang.Object)
+java.lang.String.split(java.lang.String)
+java.lang.System
+java.lang.System.out
+java.util.HashMap
+java.util.HashMap.<init>()
+java.util.Map
+java.util.Map.get(java.lang.Object)
+java.util.Map.put(java.lang.Object, java.lang.Object)
+java.util.Stack
+java.util.Stack.<init>()
+java.util.Stack.pop()
+java.util.Stack.push(java.lang.Object)
+pattern.interpreter.Evaluator
+pattern.interpreter.Evaluator.<init>(java.lang.String)
+pattern.interpreter.Evaluator.interpret(java.util.Map)
+pattern.interpreter.Evaluator.syntaxTree
+pattern.interpreter.Expression
+pattern.interpreter.Expression.interpret(java.util.Map)
+pattern.interpreter.InterpreterExample
+pattern.interpreter.InterpreterExample.<init>()
+pattern.interpreter.InterpreterExample.main(java.lang.String[])
+pattern.interpreter.Minus
+pattern.interpreter.Minus.<init>(pattern.interpreter.Expression, pattern.interpreter.Expression)
+pattern.interpreter.Minus.interpret(java.util.Map)
+pattern.interpreter.Minus.leftOperand
+pattern.interpreter.Minus.rightOperand
+pattern.interpreter.Number
+pattern.interpreter.Number.<init>(int)
+pattern.interpreter.Number.interpret(java.util.Map)
+pattern.interpreter.Number.number
+pattern.interpreter.Plus
+pattern.interpreter.Plus.<init>(pattern.interpreter.Expression, pattern.interpreter.Expression)
+pattern.interpreter.Plus.interpret(java.util.Map)
+pattern.interpreter.Plus.leftOperand
+pattern.interpreter.Plus.rightOperand
+pattern.interpreter.Variable
+pattern.interpreter.Variable.<init>(java.lang.String)
+pattern.interpreter.Variable.interpret(java.util.Map)
+pattern.interpreter.Variable.name
+]

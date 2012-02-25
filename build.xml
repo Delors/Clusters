@@ -179,7 +179,7 @@ Author 	Thomas Schlosser
 	</target>
 
 	<target name="default"
-	        depends="compile,api-doc,package"
+	        depends="compile,compile-tests,api-doc,package"
 	        description="Compiles and packages Clusters." />
 
 </project>

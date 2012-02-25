@@ -56,6 +56,33 @@ trait TestSources {
         "org/cocome/tradingsystem/cashdeskline/cashdesk/printercontroller/impl/PrinterController.class",
         "org/cocome/tradingsystem/cashdeskline/cashdesk/printercontroller/impl/PrinterControllerEventHandlerImpl.class",
         "org/cocome/tradingsystem/cashdeskline/cashdesk/printercontroller/impl/PrinterStates.class")
+
+    val clTestProjectExampleTest1SourcesZipFile = SourceZipFile("test/classfiles/clusteringTestProject/ClusteringTestProject-example-test1.jar")
+    val clTestProjectPatternAbstractFactorySourcesZipFile = SourceZipFile("test/classfiles/clusteringTestProject/ClusteringTestProject-pattern-abstractFactory.jar")
+    val clTestProjectPatternAdapterSourcesZipFile = SourceZipFile("test/classfiles/clusteringTestProject/ClusteringTestProject-pattern-adapter.jar")
+    val clTestProjectPatternBridgeSourcesZipFile = SourceZipFile("test/classfiles/clusteringTestProject/ClusteringTestProject-pattern-bridge.jar")
+    val clTestProjectPatternBuilderSourcesZipFile = SourceZipFile("test/classfiles/clusteringTestProject/ClusteringTestProject-pattern-builder.jar")
+    val clTestProjectPatternChainofresponsibilityExample1SourcesZipFile = SourceZipFile("test/classfiles/clusteringTestProject/ClusteringTestProject-pattern-chainofresponsibility-example1.jar")
+    val clTestProjectPatternChainofresponsibilityExample2SourcesZipFile = SourceZipFile("test/classfiles/clusteringTestProject/ClusteringTestProject-pattern-chainofresponsibility-example2.jar")
+    val clTestProjectPatternCommandSourcesZipFile = SourceZipFile("test/classfiles/clusteringTestProject/ClusteringTestProject-pattern-command.jar")
+    val clTestProjectPatternCompositeSourcesZipFile = SourceZipFile("test/classfiles/clusteringTestProject/ClusteringTestProject-pattern-composite.jar")
+    val clTestProjectPatternDecoratorExample1SourcesZipFile = SourceZipFile("test/classfiles/clusteringTestProject/ClusteringTestProject-pattern-decorator-example1.jar")
+    val clTestProjectPatternDecoratorExample2SourcesZipFile = SourceZipFile("test/classfiles/clusteringTestProject/ClusteringTestProject-pattern-decorator-example2.jar")
+    val clTestProjectPatternFacadeSourcesZipFile = SourceZipFile("test/classfiles/clusteringTestProject/ClusteringTestProject-pattern-facade.jar")
+    val clTestProjectPatternFactorymethodSourcesZipFile = SourceZipFile("test/classfiles/clusteringTestProject/ClusteringTestProject-pattern-factorymethod.jar")
+    val clTestProjectPatternFlyweightSourcesZipFile = SourceZipFile("test/classfiles/clusteringTestProject/ClusteringTestProject-pattern-flyweight.jar")
+    val clTestProjectPatternInterpreterSourcesZipFile = SourceZipFile("test/classfiles/clusteringTestProject/ClusteringTestProject-pattern-interpreter.jar")
+    val clTestProjectPatternIteratorSourcesZipFile = SourceZipFile("test/classfiles/clusteringTestProject/ClusteringTestProject-pattern-iterator.jar")
+    val clTestProjectPatternMediatorSourcesZipFile = SourceZipFile("test/classfiles/clusteringTestProject/ClusteringTestProject-pattern-mediator.jar")
+    val clTestProjectPatternMementoSourcesZipFile = SourceZipFile("test/classfiles/clusteringTestProject/ClusteringTestProject-pattern-memento.jar")
+    val clTestProjectPatternObserverSourcesZipFile = SourceZipFile("test/classfiles/clusteringTestProject/ClusteringTestProject-pattern-observer.jar")
+    val clTestProjectPatternPrototypeSourcesZipFile = SourceZipFile("test/classfiles/clusteringTestProject/ClusteringTestProject-pattern-prototype.jar")
+    val clTestProjectPatternProxySourcesZipFile = SourceZipFile("test/classfiles/clusteringTestProject/ClusteringTestProject-pattern-proxy.jar")
+    val clTestProjectPatternSingletonSourcesZipFile = SourceZipFile("test/classfiles/clusteringTestProject/ClusteringTestProject-pattern-singleton.jar")
+    val clTestProjectPatternStateSourcesZipFile = SourceZipFile("test/classfiles/clusteringTestProject/ClusteringTestProject-pattern-state.jar")
+    val clTestProjectPatternStrategySourcesZipFile = SourceZipFile("test/classfiles/clusteringTestProject/ClusteringTestProject-pattern-strategy.jar")
+    val clTestProjectPatternTemplatemethodSourcesZipFile = SourceZipFile("test/classfiles/clusteringTestProject/ClusteringTestProject-pattern-templatemethod.jar")
+    val clTestProjectPatternVisitorSourcesZipFile = SourceZipFile("test/classfiles/clusteringTestProject/ClusteringTestProject-pattern-visitor.jar")
 }
 
 object TestSources extends TestSources

@@ -94,21 +94,21 @@
 			pattern.builder.PizzaBuilderExample.main(java.lang.String[])
 		]
 		[
-			pattern.factoryMethod.MagicMazeGame
-			pattern.factoryMethod.MagicMazeGame.<init>()
-			pattern.factoryMethod.MagicMazeGame.makeRoom()
-			pattern.factoryMethod.MagicRoom
-			pattern.factoryMethod.MagicRoom.<init>()
-			pattern.factoryMethod.MagicRoom.connect(pattern.factoryMethod.Room)
-			pattern.factoryMethod.MazeGame
-			pattern.factoryMethod.MazeGame.<init>()
-			pattern.factoryMethod.MazeGame.addRoom(pattern.factoryMethod.Room)
-			pattern.factoryMethod.MazeGame.makeRoom()
-			pattern.factoryMethod.OrdinaryRoom
-			pattern.factoryMethod.OrdinaryRoom.<init>()
-			pattern.factoryMethod.OrdinaryRoom.connect(pattern.factoryMethod.Room)
-			pattern.factoryMethod.Room
-			pattern.factoryMethod.Room.connect(pattern.factoryMethod.Room)
+			pattern.factorymethod.MagicMazeGame
+			pattern.factorymethod.MagicMazeGame.<init>()
+			pattern.factorymethod.MagicMazeGame.makeRoom()
+			pattern.factorymethod.MagicRoom
+			pattern.factorymethod.MagicRoom.<init>()
+			pattern.factorymethod.MagicRoom.connect(pattern.factorymethod.Room)
+			pattern.factorymethod.MazeGame
+			pattern.factorymethod.MazeGame.<init>()
+			pattern.factorymethod.MazeGame.addRoom(pattern.factorymethod.Room)
+			pattern.factorymethod.MazeGame.makeRoom()
+			pattern.factorymethod.OrdinaryRoom
+			pattern.factorymethod.OrdinaryRoom.<init>()
+			pattern.factorymethod.OrdinaryRoom.connect(pattern.factorymethod.Room)
+			pattern.factorymethod.Room
+			pattern.factorymethod.Room.connect(pattern.factorymethod.Room)
 		]
 		[
 			test.GetterSetterTestClass
