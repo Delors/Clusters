@@ -47,6 +47,12 @@ trait TestSources {
     val cocomeSourceZipFile = SourceZipFile("test/classfiles/cocome-impl-classes.jar")
     val flashcardsSourceZipFile = SourceZipFile("test/classfiles/Flashcards 0.4 - target 1.6.zip")
     val hibernateSourceZipFile = SourceZipFile("test/classfiles/hibernate-core-3.6.0.Final.jar")
+    def javaRuntimeSourceZipFile = {
+        if (!new java.io.File("test/classfiles/rt_jdk1.7.0_01.jar").exists()) {
+            sys.error("The optional file 'test/classfiles/rt_jdk1.7.0_01.jar' is not available. Please add this file first if you want to use it!")
+        }
+        SourceZipFile("test/classfiles/rt_jdk1.7.0_01.jar")
+    }
 
     // only selected classes
     val getterSetterTestClassSourceZipFile = SourceZipFile("test/classfiles/ClusteringTestProject.zip", "test/GetterSetterTestClass.class")

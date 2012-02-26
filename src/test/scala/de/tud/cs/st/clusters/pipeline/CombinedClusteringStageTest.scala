@@ -112,4 +112,10 @@ class CombinedClusteringStageTest extends AbstractClusteringTest {
             hibernateSourceZipFile)
     }
 
+    test("testCombinedClusteringStage [javaRuntime]") {
+        testClustering(
+            "testCombinedClusteringStage [javaRuntime]",
+            javaRuntimeSourceZipFile)
+    }
+
 }
