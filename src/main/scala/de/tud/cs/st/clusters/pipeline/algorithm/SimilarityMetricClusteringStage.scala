@@ -124,12 +124,12 @@ class SimilarityMetricClusteringStage(
         val sortedEdges = weightMatrix.toList.sortWith((a, b) ⇒ a._2 > b._2)
 
         cluster.clearNodes()
-        cluster.clusterable = !createdNewCluster
 
         calcClusters(sortedEdges, inputNodes) foreach {
             cluster.addNode(_)
         }
 
+        cluster.clusterable = createdNewCluster
         createdNewCluster
     }
 
