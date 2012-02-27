@@ -52,8 +52,6 @@ import _root_.de.tud.cs.st.util.perf.PerformanceEvaluation
 trait AbstractClusteringTest extends FunSuite
         with PerformanceEvaluation {
 
-    type BaseDependencyExtractor = ClusterManager
-
     protected def testClustering(testName: String,
                                  resultWriterCreator: Option[() ⇒ ClusteringResultWriter],
                                  sourceFiles: SourceFile*)(implicit clusteringStages: Array[ClusteringStage]): Cluster = {
