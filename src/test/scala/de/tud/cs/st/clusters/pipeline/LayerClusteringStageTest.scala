@@ -63,6 +63,13 @@ class LayerClusteringStageTest extends AbstractClusteringTest {
             getterSetterTestClassSourceZipFile)
     }
 
+    test("testLayerClusteringStage [ClusteringTestProject]") {
+        testClustering(
+            "testLayerClusteringStage [ClusteringTestProject]",
+            graphmlClusteringResultWriterCreator("layerClust_clusteringTestProject"),
+            clusteringTestProjectSourceZipFile)
+    }
+
     test("testLayerClusteringStage [cocome]") {
         testClustering(
             "testLayerClusteringStage [cocome]",

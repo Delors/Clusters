@@ -113,7 +113,9 @@ class ImplementationTestingSeparatorStage(
     }
 
     protected def getMostOuterType(typeNode: Node): Node = {
-        typeNode.getOutgoingEdges.find(edge ⇒ edge.dType == DependencyType.IS_INNER_CLASS_OF) match {
+        typeNode.getOutgoingEdges.find(edge ⇒ edge.dType == DependencyType.IS_INNER_CLASS_OF ||
+            edge.dType == DependencyType.IS_INSTANCE_MEMBER_OF ||
+            edge.dType == DependencyType.IS_CLASS_MEMBER_OF) match {
             case Some(edge) ⇒
                 getMostOuterType(edge.target) // return most outer type of the outer class
             case None ⇒ // given type is no inner type; return the type itself
@@ -144,10 +146,8 @@ class ImplementationTestingSeparatorStage(
         var result = List(typeNode)
         for (tEdge ← typeNode.getOwnTransposedEdges) {
             if (tEdge.dType == DependencyType.IS_INSTANCE_MEMBER_OF ||
-                tEdge.dType == DependencyType.IS_CLASS_MEMBER_OF) {
-                result = tEdge.target :: result
-            }
-            else if (tEdge.dType == DependencyType.IS_INNER_CLASS_OF) {
+                tEdge.dType == DependencyType.IS_CLASS_MEMBER_OF ||
+                tEdge.dType == DependencyType.IS_INNER_CLASS_OF) {
                 result = tEdge.target :: result
                 result = getClassRelatedNodes(tEdge.target) ::: result
             }

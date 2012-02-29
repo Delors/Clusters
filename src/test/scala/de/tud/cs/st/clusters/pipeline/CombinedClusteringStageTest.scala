@@ -98,6 +98,13 @@ class CombinedClusteringStageTest extends AbstractClusteringTest {
             clusteringTestProjectSourceZipFile)
     }
 
+    test("testCombinedClusteringStage [Flashcards]") {
+        testClustering(
+            "testCombinedClusteringStage [Flashcards]",
+            graphmlClusteringResultWriterCreator("combinedClust_flashcards"),
+            flashcardsSourceZipFile)
+    }
+
     test("testCombinedClusteringStage [cocome]") {
         testClustering(
             "testCombinedClusteringStage [cocome]",
