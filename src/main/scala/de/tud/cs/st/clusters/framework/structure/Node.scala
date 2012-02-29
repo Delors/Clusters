@@ -145,7 +145,7 @@ trait Node {
         edges
 
     /**
-     * Gets all transposed edges whose target is this node.
+     * Gets all edges of the transposed graph whose source is this node.
      */
     def getOwnTransposedEdges: List[Edge] =
         transposedEdges
@@ -159,11 +159,11 @@ trait Node {
     }
 
     /**
-     * Gets all transposed edges whose target is this node or any of its children
-     * and whose source is neither this node nor any of its children.
+     * Gets all edges of the transposed graph whose source is this node or any of its children
+     * and whose target is neither this node nor any of its children.
      */
     def getIncomingEdges(): Set[Edge] = {
-        transposedEdges.filter(e ⇒ !(e.source == this || e.source.isChildOf(this.uniqueID))).toSet
+        transposedEdges.filter(e ⇒ !(e.target == this || e.target.isChildOf(this.uniqueID))).toSet
     }
 
     /**
