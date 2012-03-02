@@ -132,7 +132,7 @@ class ImplementationTestingSeparatorStage(
             }
             else {
                 // check whether the current node has a direct dependency to a test library
-                node.getOwnEdges foreach { edge ⇒
+                node.getOutgoingEdges foreach { edge ⇒
                     if (algorithmConfig.testLibrariesPackagePrefixes.exists(prfx ⇒ edge.target.identifier.startsWith(prfx))) {
                         result = node :: result
                     }
@@ -144,7 +144,7 @@ class ImplementationTestingSeparatorStage(
 
     protected def getClassRelatedNodes(typeNode: Node): List[Node] = {
         var result = List(typeNode)
-        for (tEdge ← typeNode.getOwnTransposedEdges) {
+        for (tEdge ← typeNode.getIncomingEdges) {
             if (tEdge.dType == DependencyType.IS_INSTANCE_MEMBER_OF ||
                 tEdge.dType == DependencyType.IS_CLASS_MEMBER_OF ||
                 tEdge.dType == DependencyType.IS_INNER_CLASS_OF) {

@@ -96,7 +96,7 @@ object GraphScanningAlgorithms {
             implicit resultBean: GraphScanResultBean,
             useTransposedEdges: Boolean = false) {
 
-        def getNextWhiteNode(edges: List[Edge]): Edge = {
+        def getNextWhiteNode(edges: Set[Edge]): Edge = {
             for (edge ← edges)
                 // TODO remove the contains check, rather implement a mechanism to handle cluster cutting concerns
                 if (resultBean.color.contains(edge.target.uniqueID) && resultBean.color(edge.target.uniqueID) == WHITE)
@@ -141,7 +141,7 @@ object GraphScanningAlgorithms {
         // CALCULATION
         while (!q.isEmpty) {
             var u = q.getNext
-            var current = getNextWhiteNode({ if (useTransposedEdges) cluster.getNode(u).getOwnTransposedEdges else cluster.getNode(u).getOutgoingEdges.toList })
+            var current = getNextWhiteNode({ if (useTransposedEdges) cluster.getNode(u).getIncomingEdges else cluster.getNode(u).getOutgoingEdges })
             if (current != null) {
                 // found white neighbor node
                 resultBean.color(current.target.uniqueID) = BLUE

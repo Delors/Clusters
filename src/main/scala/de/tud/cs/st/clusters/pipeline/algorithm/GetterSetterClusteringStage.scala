@@ -89,7 +89,7 @@ class GetterSetterClusteringStage(
         var gscBean = new GetterSetterClusterBean
         // use transposed edges to determine nodes that use this field
         var checkedNodes = Set[Int]()
-        for (tEdge ← node.getOwnTransposedEdges if (!checkedNodes.contains(tEdge.target.uniqueID))) {
+        for (tEdge ← node.getIncomingEdges if (!checkedNodes.contains(tEdge.target.uniqueID))) {
             tEdge.dType match {
                 case READS_FIELD ⇒
                     tEdge.target match {
