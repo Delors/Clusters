@@ -13,9 +13,9 @@
 *  - Redistributions in binary form must reproduce the above copyright notice,
 *    this list of conditions and the following disclaimer in the documentation
 *    and/or other materials provided with the distribution.
-*  - Neither the name of the Software Technology Group or Technische 
-*    Universität Darmstadt nor the names of its contributors may be used to 
-*    endorse or promote products derived from this software without specific 
+*  - Neither the name of the Software Technology Group or Technische
+*    Universität Darmstadt nor the names of its contributors may be used to
+*    endorse or promote products derived from this software without specific
 *    prior written permission.
 *
 *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -32,41 +32,21 @@
 */
 package de.tud.cs.st.clusters
 package pipeline
+package algorithm
 
-import org.junit.runner.RunWith
-import org.scalatest.junit.JUnitRunner
-
-import framework.AbstractClusteringTest
-import framework.TestSources._
-import framework.TestResultWriterCreators._
-import framework.pipeline.ClusteringStage
-import algorithm.StronglyConnectedComponentsClusteringStage
-import algorithm.StronglyConnectedComponentsClusteringAlgorithmConfiguration
+import framework.pipeline.SameNeighborClusteringAlgorithm
+import de.tud.cs.st.bat.resolved.dependency._
 
 /**
+ *
+ * NOTE: This stage is only (usefully) applicable on the application cluster or any of its sub clusters.
+ *
  * @author Thomas Schlosser
  *
  */
-@RunWith(classOf[JUnitRunner])
-class StronglyConnectedComponentsClusteringStageTest extends AbstractClusteringTest {
+class ClassExtractor extends SameNeighborClusteringAlgorithm {
 
-    val sccConfiguration = new StronglyConnectedComponentsClusteringAlgorithmConfiguration {}
+    protected def isOfConsideredDependencyType(dType: DependencyType): Boolean =
+        dType == DependencyType.IS_INSTANCE_MEMBER_OF || dType == DependencyType.IS_CLASS_MEMBER_OF
 
-    implicit val clusteringStages: Array[ClusteringStage] = Array(
-        new StronglyConnectedComponentsClusteringStage(sccConfiguration)
-    )
-
-    test("testSCCClusteringStage [sccTestClass]") {
-        testClustering(
-            "testSCCClusteringStage [sccTestClass]",
-            graphmlClusteringResultWriterCreator("sccClust_sccTestClass"),
-            stronglyConnectedComponentsTestClassSourceZipFile
-        )
-    }
-
-    test("testSCCClusteringStage [hibernate]") {
-        testClustering(
-            "testSCCClusteringStage [hibernate]",
-            hibernateSourceZipFile)
-    }
 }

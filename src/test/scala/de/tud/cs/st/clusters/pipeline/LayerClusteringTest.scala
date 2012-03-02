@@ -40,45 +40,45 @@ import framework.AbstractClusteringTest
 import framework.TestSources._
 import framework.TestResultWriterCreators._
 import framework.pipeline.ClusteringStage
-import algorithm.LayerClusteringStage
-import algorithm.LayerClusteringAlgorithmConfiguration
+import algorithm.LayerClustering
+import algorithm.LayerClusteringConfiguration
 
 /**
  * @author Thomas Schlosser
  *
  */
 @RunWith(classOf[JUnitRunner])
-class LayerClusteringStageTest extends AbstractClusteringTest {
+class LayerClusteringTest extends AbstractClusteringTest {
 
-    val configuration = new { override val performRecursion = true } with LayerClusteringAlgorithmConfiguration
+    val configuration = new { override val performRecursion = true } with LayerClusteringConfiguration
 
     implicit val clusteringStages: Array[ClusteringStage] = Array(
-        new LayerClusteringStage(configuration)
+        new LayerClustering(configuration)
     )
 
-    test("testLayerClusteringStage [getterSetterTestClass]") {
+    test("testLayerClustering [getterSetterTestClass]") {
         testClustering(
-            "testLayerClusteringStage [getterSetterTestClass]",
+            "testLayerClustering [getterSetterTestClass]",
             graphmlClusteringResultWriterCreator("layerClust_getterSetterTestClass"),
             getterSetterTestClassSourceZipFile)
     }
 
-    test("testLayerClusteringStage [ClusteringTestProject]") {
+    test("testLayerClustering [ClusteringTestProject]") {
         testClustering(
-            "testLayerClusteringStage [ClusteringTestProject]",
+            "testLayerClustering [ClusteringTestProject]",
             graphmlClusteringResultWriterCreator("layerClust_clusteringTestProject"),
             clusteringTestProjectSourceZipFile)
     }
 
-    test("testLayerClusteringStage [cocome]") {
+    test("testLayerClustering [cocome]") {
         testClustering(
-            "testLayerClusteringStage [cocome]",
+            "testLayerClustering [cocome]",
             graphmlClusteringResultWriterCreator("layerClust_cocome"),
             cocomeSourceZipFile)
     }
 
-    test("testLayerClusteringStage [hibernate]") {
-        testClustering("testLayerClusteringStage [hibernate]",
+    test("testLayerClustering [hibernate]") {
+        testClustering("testLayerClustering [hibernate]",
             graphmlClusteringResultWriterCreator("layerClust_hibernate"),
             hibernateSourceZipFile)
     }

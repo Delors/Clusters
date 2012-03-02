@@ -34,7 +34,7 @@ package de.tud.cs.st.clusters
 package pipeline
 package algorithm
 
-import framework.pipeline.ClusteringStage
+import framework.pipeline.ClusteringAlgorithm
 import framework.structure.Cluster
 import framework.structure.Node
 import framework.structure.FieldNode
@@ -54,11 +54,11 @@ import de.tud.cs.st.bat.resolved.Field
  * @author Thomas Schlosser
  *
  */
-class GetterSetterClusteringStage(
-    val algorithmConfig: GetterSetterClusteringAlgorithmConfiguration)
-        extends ClusteringStage {
+class GetterSetterClustering(
+    val config: GetterSetterClusteringConfiguration)
+        extends ClusteringAlgorithm {
 
-    override def performClustering(cluster: Cluster): Boolean = {
+    def doPerformClustering(cluster: Cluster): Boolean = {
         var createdNewCluster = false
         // TODO: cluster needs methods that return only type/field/method nodes => performance improvement
         val inputNodes = cluster.nodes.toArray
@@ -69,7 +69,7 @@ class GetterSetterClusteringStage(
                     optClusterBean match {
                         case Some(clusterBean) ⇒
                             // create setter/getter cluster
-                            val gsCluster = clusterManager.createCluster(algorithmConfig.clusterIdentifierPrefix + clusterBean.field.identifier, this.stageName)
+                            val gsCluster = clusterManager.createCluster(config.clusterIdentifierPrefix + clusterBean.field.identifier, this.stageName)
                             gsCluster.addNode(clusterBean.field)
                             clusterBean.methods foreach { gsCluster.addNode(_) }
                             gsCluster.clusterable = false // a getter-setter cluster is treated as a primitive unit
@@ -94,8 +94,8 @@ class GetterSetterClusteringStage(
                 case READS_FIELD ⇒
                     tEdge.target match {
                         case MethodNode(_, identifier, Some(method)) ⇒
-                            if (!algorithmConfig.checkGetterNameMatching ||
-                                algorithmConfig.getterPrefixes.exists(prefix ⇒ method.name.equalsIgnoreCase(prefix + field.name))) {
+                            if (!config.checkGetterNameMatching ||
+                                config.getterPrefixes.exists(prefix ⇒ method.name.equalsIgnoreCase(prefix + field.name))) {
                                 val descriptor = method.descriptor
                                 if (descriptor.parameterTypes.isEmpty &&
                                     descriptor.returnType.equals(field.fieldType)) {
@@ -108,8 +108,8 @@ class GetterSetterClusteringStage(
                 case WRITES_FIELD ⇒
                     tEdge.target match {
                         case MethodNode(_, identifier, Some(method)) ⇒
-                            if (!algorithmConfig.checkSetterNameMatching ||
-                                algorithmConfig.setterPrefixes.exists(prefix ⇒ method.name.equalsIgnoreCase(prefix + field.name))) {
+                            if (!config.checkSetterNameMatching ||
+                                config.setterPrefixes.exists(prefix ⇒ method.name.equalsIgnoreCase(prefix + field.name))) {
                                 val descriptor = method.descriptor
                                 if (descriptor.parameterTypes.size == 1 && descriptor.parameterTypes(0).equals(field.fieldType) &&
                                     descriptor.returnType.isVoidType) {
@@ -134,7 +134,7 @@ class GetterSetterClusteringStage(
 
 }
 
-trait GetterSetterClusteringAlgorithmConfiguration {
+trait GetterSetterClusteringConfiguration {
     val clusterIdentifierPrefix = "Getter_Setter_"
 
     val checkGetterNameMatching = true
@@ -143,4 +143,4 @@ trait GetterSetterClusteringAlgorithmConfiguration {
     val setterPrefixes: List[String] = List("set")
 }
 
-object GetterSetterClusteringAlgorithmConfiguration extends GetterSetterClusteringAlgorithmConfiguration
+object GetterSetterClusteringConfiguration extends GetterSetterClusteringConfiguration

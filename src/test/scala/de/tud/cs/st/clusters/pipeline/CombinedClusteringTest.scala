@@ -39,18 +39,18 @@ import framework.AbstractClusteringTest
 import framework.TestSources._
 import framework.TestResultWriterCreators._
 import framework.pipeline.ClusteringStage
-import algorithm.ApplicationLibrariesSeparatorStage
-import algorithm.ApplicationLibrariesSeparatorStageConfiguration
-import algorithm.PackageClusteringStage
-import algorithm.PackageClusteringAlgorithmConfiguration
-import algorithm.ImplementationTestingSeparatorStage
-import algorithm.ImplementationTestingSeparatorStageConfiguration
-import algorithm.GetterSetterClusteringStage
-import algorithm.GetterSetterClusteringAlgorithmConfiguration
-import algorithm.SimilarityMetricClusteringStage
-import algorithm.SimilarityMetricClusteringAlgorithmConfiguration
-import algorithm.StronglyConnectedComponentsClusteringStage
-import algorithm.StronglyConnectedComponentsClusteringAlgorithmConfiguration
+import algorithm.ApplicationLibrariesSeparator
+import algorithm.ApplicationLibrariesSeparatorConfiguration
+import algorithm.PackageClustering
+import algorithm.PackageClusteringConfiguration
+import algorithm.ImplementationTestingSeparator
+import algorithm.ImplementationTestingSeparatorConfiguration
+import algorithm.GetterSetterClustering
+import algorithm.GetterSetterClusteringConfiguration
+import algorithm.SimilarityMetricClustering
+import algorithm.SimilarityMetricClusteringConfiguration
+import algorithm.StronglyConnectedComponentsClustering
+import algorithm.StronglyConnectedComponentsClusteringConfiguration
 import strategy.FirstClusterablesClusteringStrategy
 import strategy.FixedPointIterationClusteringStrategy
 import strategy.IdentifierBasedClusteringStrategy
@@ -62,66 +62,66 @@ import framework.util.ReferenceClusterCreator
  *
  */
 @RunWith(classOf[JUnitRunner])
-class CombinedClusteringStageTest extends AbstractClusteringTest {
+class CombinedClusteringTest extends AbstractClusteringTest {
 
-    val appLibConfiguration = new ApplicationLibrariesSeparatorStageConfiguration {}
-    val pkgConfiguration = new PackageClusteringAlgorithmConfiguration {}
-    val implTestConfiguration = new ImplementationTestingSeparatorStageConfiguration {}
-    val getterSetterConfiguration = new GetterSetterClusteringAlgorithmConfiguration {}
-    val similarityMetricConfiguration = new SimilarityMetricClusteringAlgorithmConfiguration {}
-    val sccConfiguration = new StronglyConnectedComponentsClusteringAlgorithmConfiguration {}
+    val appLibsConfig = new ApplicationLibrariesSeparatorConfiguration {}
+    val pkgConfig = new PackageClusteringConfiguration {}
+    val implTestConfig = new ImplementationTestingSeparatorConfiguration {}
+    val getterSetterConfig = new GetterSetterClusteringConfiguration {}
+    val similarityMetricConfig = new SimilarityMetricClusteringConfiguration {}
+    val sccConfig = new StronglyConnectedComponentsClusteringConfiguration {}
 
-    val libStage = new ApplicationLibrariesSeparatorStage(appLibConfiguration)
-    val pkgStage = new {
-        val clusterIdentifier = appLibConfiguration.librariesClusterIdentifier
-    } with PackageClusteringStage(pkgConfiguration) with IdentifierBasedClusteringStrategy
-    val implTestStage = new ImplementationTestingSeparatorStage(implTestConfiguration) with FirstClusterablesClusteringStrategy
-    val sccStage = new StronglyConnectedComponentsClusteringStage(sccConfiguration) with FirstClusterablesClusteringStrategy
-    val getterSetterStage = new GetterSetterClusteringStage(getterSetterConfiguration) with FirstClusterablesClusteringStrategy
-    val simMetricStage = new {
+    val appLibsSeparator = new ApplicationLibrariesSeparator(appLibsConfig)
+    val packageClustering = new {
+        val clusterIdentifier = appLibsConfig.librariesClusterIdentifier
+    } with PackageClustering(pkgConfig) with IdentifierBasedClusteringStrategy
+    val implTestSeparator = new ImplementationTestingSeparator(implTestConfig) with FirstClusterablesClusteringStrategy
+    val sccClustering = new StronglyConnectedComponentsClustering(sccConfig) with FirstClusterablesClusteringStrategy
+    val getterSetterClustering = new GetterSetterClustering(getterSetterConfig) with FirstClusterablesClusteringStrategy
+    val simMetricClustering = new {
         override val minClusterSizeThreshold: Int = 3
-    } with SimilarityMetricClusteringStage(similarityMetricConfiguration) with MinClusterSizeClusteringStrategy with FirstClusterablesClusteringStrategy with FixedPointIterationClusteringStrategy
+    } with SimilarityMetricClustering(similarityMetricConfig) with MinClusterSizeClusteringStrategy with FirstClusterablesClusteringStrategy with FixedPointIterationClusteringStrategy
 
     implicit val clusteringStages: Array[ClusteringStage] = Array(
-        libStage,
-        pkgStage,
-        implTestStage,
-        sccStage,
-        getterSetterStage,
-        simMetricStage
+        appLibsSeparator,
+        packageClustering,
+        implTestSeparator,
+        sccClustering,
+        getterSetterClustering,
+        simMetricClustering
     )
 
-    test("testCombinedClusteringStage [ClusteringTestProject]") {
+    test("testCombinedClustering [ClusteringTestProject]") {
         testClustering(
-            "testCombinedClusteringStage [ClusteringTestProject]",
+            "testCombinedClustering [ClusteringTestProject]",
             graphmlClusteringResultWriterCreator("combinedClust_ClusteringTestProject"),
             clusteringTestProjectSourceZipFile)
     }
 
-    test("testCombinedClusteringStage [Flashcards]") {
+    test("testCombinedClustering [Flashcards]") {
         testClustering(
-            "testCombinedClusteringStage [Flashcards]",
+            "testCombinedClustering [Flashcards]",
             graphmlClusteringResultWriterCreator("combinedClust_flashcards"),
             flashcardsSourceZipFile)
     }
 
-    test("testCombinedClusteringStage [cocome]") {
+    test("testCombinedClustering [cocome]") {
         testClustering(
-            "testCombinedClusteringStage [cocome]",
+            "testCombinedClustering [cocome]",
             graphmlClusteringResultWriterCreator("combinedClust_cocome", _maxNumberOfLevels = Some(4)),
             cocomeSourceZipFile)
     }
 
-    test("testCombinedClusteringStage [hibernate]") {
+    test("testCombinedClustering [hibernate]") {
         testClustering(
-            "testCombinedClusteringStage [hibernate]",
+            "testCombinedClustering [hibernate]",
             graphmlClusteringResultWriterCreator("combinedClust_hibernate"),
             hibernateSourceZipFile)
     }
 
-    test("testCombinedClusteringStage [javaRuntime]") {
+    test("testCombinedClustering [javaRuntime]") {
         testClustering(
-            "testCombinedClusteringStage [javaRuntime]",
+            "testCombinedClustering [javaRuntime]",
             javaRuntimeSourceZipFile)
     }
 

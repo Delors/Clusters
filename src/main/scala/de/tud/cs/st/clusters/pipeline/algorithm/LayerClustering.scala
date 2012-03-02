@@ -34,7 +34,7 @@ package de.tud.cs.st.clusters
 package pipeline
 package algorithm
 
-import framework.pipeline.ClusteringStage
+import framework.pipeline.ClusteringAlgorithm
 import framework.structure.Cluster
 import framework.structure.Node
 import framework.structure.TypeNode
@@ -46,17 +46,17 @@ import framework.structure.util.ClusterManager
  * @author Thomas Schlosser
  *
  */
-class LayerClusteringStage(
-    val algorithmConfig: LayerClusteringAlgorithmConfiguration)
-        extends ClusteringStage {
+class LayerClustering(
+    val config: LayerClusteringConfiguration)
+        extends ClusteringAlgorithm {
 
-    override def performClustering(cluster: Cluster): Boolean = {
+    def doPerformClustering(cluster: Cluster): Boolean = {
         var createdNewCluster = false
         var layer = 0
 
         def createLayers(nodes: Set[Node]) {
             def createNewLayerCluster(): Cluster = {
-                val layerCluster = clusterManager.createCluster(algorithmConfig.clusterIdentifierPrefix + layer, this.stageName, true)
+                val layerCluster = clusterManager.createCluster(config.clusterIdentifierPrefix + layer, this.stageName, true)
                 createdNewCluster = true
                 layer += 1
                 cluster.addNode(layerCluster)
@@ -110,7 +110,7 @@ class LayerClusteringStage(
             }
 
             if (middleLayerNodes.nonEmpty) {
-                if (algorithmConfig.performRecursion && furtherLayers)
+                if (config.performRecursion && furtherLayers)
                     createLayers(middleLayerNodes)
                 else
                     // create middle layer
@@ -132,10 +132,10 @@ class LayerClusteringStage(
     }
 }
 
-trait LayerClusteringAlgorithmConfiguration {
+trait LayerClusteringConfiguration {
     val clusterIdentifierPrefix = "layer_"
 
     val performRecursion: Boolean = false
 }
 
-object LayerClusteringAlgorithmConfiguration extends LayerClusteringAlgorithmConfiguration
+object LayerClusteringConfiguration extends LayerClusteringConfiguration

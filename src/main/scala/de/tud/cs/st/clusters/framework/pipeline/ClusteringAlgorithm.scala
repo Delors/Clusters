@@ -31,22 +31,25 @@
 *  POSSIBILITY OF SUCH DAMAGE.
 */
 package de.tud.cs.st.clusters
+package framework
 package pipeline
-package algorithm
 
-import framework.pipeline.SameNeighborClusteringStage
-import de.tud.cs.st.bat.resolved.dependency._
+import structure.Cluster
+import structure.util.ClusterManager
 
 /**
  *
- * NOTE: This stage is only (usefully) applicable on the application cluster or any of its sub clusters.
- *
  * @author Thomas Schlosser
- *
  */
-class ClassExtractorStage extends SameNeighborClusteringStage {
+trait ClusteringAlgorithm extends ClusteringStage {
 
-    override protected def isOfConsideredDependencyType(dType: DependencyType): Boolean =
-        dType == DependencyType.IS_INSTANCE_MEMBER_OF || dType == DependencyType.IS_CLASS_MEMBER_OF
+    val algorithmNameKey = "lastAppliedAlgorithm"
+
+    def performClustering(cluster: Cluster): Boolean = {
+        cluster.metaInfo(algorithmNameKey) = this.stageName
+        doPerformClustering(cluster)
+    }
+
+    def doPerformClustering(cluster: Cluster): Boolean
 
 }

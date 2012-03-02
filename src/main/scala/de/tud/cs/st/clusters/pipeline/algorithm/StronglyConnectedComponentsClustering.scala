@@ -35,7 +35,7 @@ package pipeline
 package algorithm
 
 import scala.collection.mutable.Map
-import framework.pipeline.ClusteringStage
+import framework.pipeline.ClusteringAlgorithm
 import framework.structure.Cluster
 import framework.structure.Node
 import framework.structure.util.ClusterManager
@@ -46,11 +46,11 @@ import graphscan.GraphScanningAlgorithms
  * @author Thomas Schlosser
  *
  */
-class StronglyConnectedComponentsClusteringStage(
-    val algorithmConfig: StronglyConnectedComponentsClusteringAlgorithmConfiguration)
-        extends ClusteringStage {
+class StronglyConnectedComponentsClustering(
+    val config: StronglyConnectedComponentsClusteringConfiguration)
+        extends ClusteringAlgorithm {
 
-    override def performClustering(cluster: Cluster): Boolean = {
+    def doPerformClustering(cluster: Cluster): Boolean = {
         // calculate finishing times of all nodes using depth first search
         var result = GraphScanningAlgorithms.graphScanComplete(
             cluster, null, true, null)
@@ -79,7 +79,7 @@ class StronglyConnectedComponentsClusteringStage(
                         // handling to ensure that only clusters with more than one element will be created
                         newClusterMinSizeBuffer.get(sccID) match {
                             case Some(firstElement) ⇒
-                                val c = clusterManager.createCluster(algorithmConfig.clusterIdentifierPrefix + sccID, this.stageName, true)
+                                val c = clusterManager.createCluster(config.clusterIdentifierPrefix + sccID, this.stageName, true)
                                 createdNewCluster = true
                                 c.addNode(firstElement)
                                 c.addNode(node)
@@ -99,8 +99,8 @@ class StronglyConnectedComponentsClusteringStage(
     }
 }
 
-trait StronglyConnectedComponentsClusteringAlgorithmConfiguration {
+trait StronglyConnectedComponentsClusteringConfiguration {
     val clusterIdentifierPrefix = "SCC_"
 }
 
-object StronglyConnectedComponentsClusteringAlgorithmConfiguration extends StronglyConnectedComponentsClusteringAlgorithmConfiguration
+object StronglyConnectedComponentsClusteringConfiguration extends StronglyConnectedComponentsClusteringConfiguration

@@ -35,34 +35,38 @@ package pipeline
 
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
+
 import framework.AbstractClusteringTest
 import framework.TestSources._
 import framework.TestResultWriterCreators._
 import framework.pipeline.ClusteringStage
-import algorithm.PackageClusteringStage
-import algorithm.PackageClusteringAlgorithmConfiguration
+import algorithm.StronglyConnectedComponentsClustering
+import algorithm.StronglyConnectedComponentsClusteringConfiguration
 
 /**
  * @author Thomas Schlosser
  *
  */
 @RunWith(classOf[JUnitRunner])
-class PackageClusteringStageTest extends AbstractClusteringTest {
+class StronglyConnectedComponentsClusteringTest extends AbstractClusteringTest {
 
-    val configuration = new PackageClusteringAlgorithmConfiguration {}
+    val sccConfiguration = new StronglyConnectedComponentsClusteringConfiguration {}
 
     implicit val clusteringStages: Array[ClusteringStage] = Array(
-        new PackageClusteringStage(configuration)
+        new StronglyConnectedComponentsClustering(sccConfiguration)
     )
 
-    test("testPackageClusteringStage [cocome]") {
-        testClustering("testPackageClusteringStage [cocome]",
-            graphmlClusteringResultWriterCreator("pckgClust_cocome"),
-            cocomeSourceZipFile)
+    test("testSCCClustering [sccTestClass]") {
+        testClustering(
+            "testSCCClustering [sccTestClass]",
+            graphmlClusteringResultWriterCreator("sccClust_sccTestClass"),
+            stronglyConnectedComponentsTestClassSourceZipFile
+        )
     }
 
-    test("testPackageClusteringStage [hibernate]") {
-        testClustering("testPackageClusteringStage [hibernate]",
+    test("testSCCClustering [hibernate]") {
+        testClustering(
+            "testSCCClustering [hibernate]",
             hibernateSourceZipFile)
     }
 }

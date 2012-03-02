@@ -35,44 +35,34 @@ package pipeline
 
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
-
 import framework.AbstractClusteringTest
 import framework.TestSources._
 import framework.TestResultWriterCreators._
 import framework.pipeline.ClusteringStage
-import algorithm.ImplementationTestingSeparatorStage
-import algorithm.ImplementationTestingSeparatorStageConfiguration
+import algorithm.PackageClustering
+import algorithm.PackageClusteringConfiguration
 
 /**
  * @author Thomas Schlosser
  *
  */
 @RunWith(classOf[JUnitRunner])
-class ImplementationTestingSeparatorStageTest extends AbstractClusteringTest {
+class PackageClusteringTest extends AbstractClusteringTest {
 
-    val configuration = new ImplementationTestingSeparatorStageConfiguration {}
+    val configuration = new PackageClusteringConfiguration {}
 
     implicit val clusteringStages: Array[ClusteringStage] = Array(
-        new ImplementationTestingSeparatorStage(configuration)
+        new PackageClustering(configuration)
     )
 
-    test("testImplementationTestingSeparatorStage [cocome]") {
-        testClustering(
-            "testImplementationTestingSeparatorStage [cocome]",
-            graphmlClusteringResultWriterCreator("implTestClust_cocome"),
+    test("testPackageClustering [cocome]") {
+        testClustering("testPackageClustering [cocome]",
+            graphmlClusteringResultWriterCreator("pckgClust_cocome"),
             cocomeSourceZipFile)
     }
 
-    test("testImplementationTestingSeparatorStage [getterSetterTestClass]") {
-        testClustering(
-            "testImplementationTestingSeparatorStage [getterSetterTestClass]",
-            graphmlClusteringResultWriterCreator("implTestClust_getterSetterTestClass"),
-            getterSetterTestClassSourceZipFile)
-    }
-
-    test("testImplementationTestingSeparatorStage [hibernate]") {
-        testClustering("testImplementationTestingSeparatorStage [hibernate]",
-            graphmlClusteringResultWriterCreator("implTestClust_hibernate"),
+    test("testPackageClustering [hibernate]") {
+        testClustering("testPackageClustering [hibernate]",
             hibernateSourceZipFile)
     }
 }

@@ -13,9 +13,9 @@
 *  - Redistributions in binary form must reproduce the above copyright notice,
 *    this list of conditions and the following disclaimer in the documentation
 *    and/or other materials provided with the distribution.
-*  - Neither the name of the Software Technology Group or Technische
-*    Universität Darmstadt nor the names of its contributors may be used to
-*    endorse or promote products derived from this software without specific
+*  - Neither the name of the Software Technology Group or Technische 
+*    Universität Darmstadt nor the names of its contributors may be used to 
+*    endorse or promote products derived from this software without specific 
 *    prior written permission.
 *
 *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -31,24 +31,32 @@
 *  POSSIBILITY OF SUCH DAMAGE.
 */
 package de.tud.cs.st.clusters
-package framework
 package pipeline
 
-import structure.Cluster
-import structure.util.ClusterManager
+import org.junit.runner.RunWith
+import org.scalatest.junit.JUnitRunner
+import framework.AbstractClusteringTest
+import framework.TestSources._
+import framework.TestResultWriterCreators._
+import framework.pipeline.ClusteringStage
+import algorithm.ClassExtractor
 
 /**
- *
  * @author Thomas Schlosser
+ *
  */
-trait ClusteringAlgorithm extends ClusteringStage {
+@RunWith(classOf[JUnitRunner])
+class ClassExtractorTest extends AbstractClusteringTest {
 
-    val stageNameKey = "lastAppliedAlgorithm"
+    implicit val clusteringStages: Array[ClusteringStage] = Array(
+        new ClassExtractor()
+    )
 
-    //TODO: this trait must be used as mixin for all clustering algorithms
-    abstract override def performClustering(cluster: Cluster): Boolean = {
-        cluster.metaInfo(stageNameKey) = this.stageName
-        super.performClustering(cluster)
+    test("testClassExtractor [ClusteringTestProject]") {
+        testClustering(
+            "testClassExtractor [ClusteringTestProject]",
+            graphmlClusteringResultWriterCreator("classExtractor_ClusteringTestProject"),
+            clusteringTestProjectSourceZipFile)
     }
 
 }

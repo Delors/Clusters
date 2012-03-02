@@ -35,43 +35,44 @@ package pipeline
 
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
+
 import framework.AbstractClusteringTest
 import framework.TestSources._
 import framework.TestResultWriterCreators._
 import framework.pipeline.ClusteringStage
-import algorithm.SimilarityMetricClusteringStage
-import algorithm.SimilarityMetricClusteringAlgorithmConfiguration
+import algorithm.ApplicationLibrariesSeparator
+import algorithm.ApplicationLibrariesSeparatorConfiguration
 
 /**
  * @author Thomas Schlosser
  *
  */
 @RunWith(classOf[JUnitRunner])
-class SimilarityMetricClusteringStageTest extends AbstractClusteringTest {
+class ApplicationLibrariesSeparatorTest extends AbstractClusteringTest {
 
-    val configuration = new SimilarityMetricClusteringAlgorithmConfiguration {}
+    val configuration = new ApplicationLibrariesSeparatorConfiguration {}
 
     implicit val clusteringStages: Array[ClusteringStage] = Array(
-        new SimilarityMetricClusteringStage(configuration)
+        new ApplicationLibrariesSeparator(configuration)
     )
 
-    test("testSimilarityMetricClusteringStage [cocome-printercontroller]") {
+    test("testApplicationLibrariesSeparator [cocome]") {
         testClustering(
-            "testSimilarityMetricClusteringStage [cocome-printercontroller]",
-            graphmlClusteringResultWriterCreator("simMetricClust_cocome-printercontroller"),
-            cocomePrintercontrollerSourceZipFile)
-    }
-
-    test("testSimilarityMetricClusteringStage [cocome]") {
-        testClustering(
-            "testSimilarityMetricClusteringStage [cocome]",
-            graphmlClusteringResultWriterCreator("simMetricClust_cocome"),
+            "testApplicationLibrariesSeparator [cocome]",
+            graphmlClusteringResultWriterCreator("appLibsClust_cocome"),
             cocomeSourceZipFile)
     }
 
-    test("testSimilarityMetricClusteringStage [hibernate]") {
-        testClustering("testSimilarityMetricClusteringStage [hibernate]",
-            graphmlClusteringResultWriterCreator("simMetricClust_hibernate"),
+    test("testApplicationLibrariesSeparator [getterSetterTestClass]") {
+        testClustering(
+            "testApplicationLibrariesSeparator [getterSetterTestClass]",
+            graphmlClusteringResultWriterCreator("appLibsClust_getterSetterTestClass"),
+            getterSetterTestClassSourceZipFile)
+    }
+
+    test("testApplicationLibrariesSeparator [hibernate]") {
+        testClustering("testApplicationLibrariesSeparator [hibernate]",
+            graphmlClusteringResultWriterCreator("appLibsClust_hibernate"),
             hibernateSourceZipFile)
     }
 }

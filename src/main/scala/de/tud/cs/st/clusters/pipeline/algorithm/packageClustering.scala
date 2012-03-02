@@ -35,7 +35,7 @@ package pipeline
 package algorithm
 
 import scala.collection.mutable.Map
-import framework.pipeline.ClusteringStage
+import framework.pipeline.ClusteringAlgorithm
 import framework.structure.Cluster
 import framework.structure.util.ClusterManager
 
@@ -45,11 +45,11 @@ import framework.structure.util.ClusterManager
  * @author Thomas Schlosser
  *
  */
-class PackageClusteringStage(
-    val algorithmConfig: PackageClusteringAlgorithmConfiguration)
-        extends ClusteringStage {
+class PackageClustering(
+    val config: PackageClusteringConfiguration)
+        extends ClusteringAlgorithm {
 
-    override def performClustering(cluster: Cluster): Boolean = {
+    def doPerformClustering(cluster: Cluster): Boolean = {
         def getMatchingPrefix(value: String, prefixes: Array[String]): String = {
             prefixes.find(prfx ⇒ value.startsWith(prfx)) match {
                 case Some(prfx) ⇒ return prfx
@@ -75,7 +75,7 @@ class PackageClusteringStage(
             val prfx = prfxs(i)
             val cl = clusterManager.createCluster(prfx, this.stageName)
             createdNewCluster = true
-            cl.clusterable = !algorithmConfig.createUnclusterableClusters
+            cl.clusterable = !config.createUnclusterableClusters
             resultMap(prfx) = cl
             cluster.addNode(cl)
         }
@@ -158,9 +158,9 @@ private trait GreatestCommonPrefixTree[Content] {
 
 }
 
-trait PackageClusteringAlgorithmConfiguration {
+trait PackageClusteringConfiguration {
     // new clusters should be marked as unclusterable if they are only libraries that should not further be considered
     val createUnclusterableClusters = true
 }
 
-object PackageClusteringAlgorithmConfiguration extends PackageClusteringAlgorithmConfiguration
+object PackageClusteringConfiguration extends PackageClusteringConfiguration

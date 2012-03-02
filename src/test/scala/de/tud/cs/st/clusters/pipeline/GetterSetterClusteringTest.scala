@@ -39,24 +39,30 @@ import framework.AbstractClusteringTest
 import framework.TestSources._
 import framework.TestResultWriterCreators._
 import framework.pipeline.ClusteringStage
-import algorithm.ClassExtractorStage
+import algorithm.GetterSetterClustering
+import algorithm.GetterSetterClusteringConfiguration
 
 /**
  * @author Thomas Schlosser
  *
  */
 @RunWith(classOf[JUnitRunner])
-class ClassExtractorStageTest extends AbstractClusteringTest {
+class GetterSetterClusteringTest extends AbstractClusteringTest {
+
+    val configuration = new GetterSetterClusteringConfiguration {}
 
     implicit val clusteringStages: Array[ClusteringStage] = Array(
-        new ClassExtractorStage()
+        new GetterSetterClustering(configuration)
     )
 
-    test("testClassExtractorStage [ClusteringTestProject]") {
-        testClustering(
-            "testClassExtractorStage [ClusteringTestProject]",
-            graphmlClusteringResultWriterCreator("classClust_ClusteringTestProject"),
-            clusteringTestProjectSourceZipFile)
+    test("testGetterSetterClustering [getterSetterTestClass]") {
+        testClustering("testGetterSetterClustering [getterSetterTestClass]",
+            graphmlClusteringResultWriterCreator("getterSetterClust_getterSetterTestClass"),
+            getterSetterTestClassSourceZipFile)
     }
 
+    test("testGetterSetterClustering [hibernate]") {
+        testClustering("testGetterSetterClustering [hibernate]",
+            hibernateSourceZipFile)
+    }
 }

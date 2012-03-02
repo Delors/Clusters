@@ -36,7 +36,7 @@ package algorithm
 
 import scala.collection.mutable.Map
 import scala.collection.mutable.Set
-import framework.pipeline.ClusteringStage
+import framework.pipeline.ClusteringAlgorithm
 import framework.structure.Cluster
 import framework.structure.Node
 import framework.structure.TypeNode
@@ -50,11 +50,11 @@ import de.tud.cs.st.bat.resolved.dependency._
  * @author Thomas Schlosser
  *
  */
-class SimilarityMetricClusteringStage(
-    val algorithmConfig: SimilarityMetricClusteringAlgorithmConfiguration)
-        extends ClusteringStage {
+class SimilarityMetricClustering(
+    val config: SimilarityMetricClusteringConfiguration)
+        extends ClusteringAlgorithm {
 
-    override def performClustering(cluster: Cluster): Boolean = {
+    def doPerformClustering(cluster: Cluster): Boolean = {
         var createdNewCluster = false
         val inputNodes = cluster.nodes.toArray
 
@@ -96,7 +96,7 @@ class SimilarityMetricClusteringStage(
             var i = 0
             clusterset foreach { nodes ⇒
                 if (nodes.size > 1) {
-                    val cluster = clusterManager.createCluster(algorithmConfig.clusterIdentifierPrefix + i, this.stageName, true)
+                    val cluster = clusterManager.createCluster(config.clusterIdentifierPrefix + i, this.stageName, true)
                     createdNewCluster = true
                     nodes foreach { node ⇒
                         cluster.addNode(clusterManager.getNode(node))
@@ -192,8 +192,8 @@ class SimilarityMetricClusteringStage(
     }
 }
 
-trait SimilarityMetricClusteringAlgorithmConfiguration {
+trait SimilarityMetricClusteringConfiguration {
     val clusterIdentifierPrefix = "simMetricCluster_"
 }
 
-object SimilarityMetricClusteringAlgorithmConfiguration extends SimilarityMetricClusteringAlgorithmConfiguration
+object SimilarityMetricClusteringConfiguration extends SimilarityMetricClusteringConfiguration

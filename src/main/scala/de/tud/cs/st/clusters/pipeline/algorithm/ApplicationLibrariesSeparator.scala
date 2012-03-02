@@ -35,7 +35,7 @@ package pipeline
 package algorithm
 
 import scala.collection.mutable.Set
-import framework.pipeline.ClusteringStage
+import framework.pipeline.ClusteringAlgorithm
 import framework.structure.Cluster
 import framework.structure.TypeNode
 
@@ -48,11 +48,11 @@ import framework.structure.TypeNode
  * @author Thomas Schlosser
  *
  */
-class ApplicationLibrariesSeparatorStage(
-    val algorithmConfig: ApplicationLibrariesSeparatorStageConfiguration)
-        extends ClusteringStage {
+class ApplicationLibrariesSeparator(
+    val config: ApplicationLibrariesSeparatorConfiguration)
+        extends ClusteringAlgorithm {
 
-    override def performClustering(cluster: Cluster): Boolean = {
+    def doPerformClustering(cluster: Cluster): Boolean = {
         // create list that contains all names of the application packages
         var applicationPackages: Set[String] = Set()
         for (node ← cluster.nodes) {
@@ -84,9 +84,9 @@ class ApplicationLibrariesSeparatorStage(
         val inputNodes = cluster.nodes.toArray
         cluster.clearNodes()
         cluster.clusterable = false
-        val applicationCluster = clusterManager.createCluster(algorithmConfig.applicationClusterIdentifier, this.stageName)
-        val librariesCluster = clusterManager.createCluster(algorithmConfig.librariesClusterIdentifier, this.stageName)
-        librariesCluster.clusterable = !algorithmConfig.markLibrariesAsUnclusterable
+        val applicationCluster = clusterManager.createCluster(config.applicationClusterIdentifier, this.stageName)
+        val librariesCluster = clusterManager.createCluster(config.librariesClusterIdentifier, this.stageName)
+        librariesCluster.clusterable = !config.markLibrariesAsUnclusterable
         cluster.addNode(applicationCluster)
         cluster.addNode(librariesCluster)
         for (node ← inputNodes) {
@@ -104,11 +104,11 @@ class ApplicationLibrariesSeparatorStage(
     }
 }
 
-trait ApplicationLibrariesSeparatorStageConfiguration {
+trait ApplicationLibrariesSeparatorConfiguration {
     val applicationClusterIdentifier = "application"
     val librariesClusterIdentifier = "libraries"
 
     val markLibrariesAsUnclusterable = true
 }
 
-object ApplicationLibrariesSeparatorStageConfiguration extends ApplicationLibrariesSeparatorStageConfiguration
+object ApplicationLibrariesSeparatorConfiguration extends ApplicationLibrariesSeparatorConfiguration

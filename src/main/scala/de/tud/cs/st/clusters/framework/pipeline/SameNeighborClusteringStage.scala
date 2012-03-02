@@ -44,9 +44,9 @@ import de.tud.cs.st.bat.resolved.dependency._
  * @author Thomas Schlosser
  *
  */
-trait SameNeighborClusteringStage extends ClusteringStage {
+trait SameNeighborClusteringAlgorithm extends ClusteringAlgorithm {
 
-    override def performClustering(cluster: Cluster): Boolean = {
+    def doPerformClustering(cluster: Cluster): Boolean = {
         def getConsideredEdge(node: Node): Option[Edge] = {
             node.getOutgoingEdges.find(edge ⇒ isOfConsideredDependencyType(edge.dType))
         }

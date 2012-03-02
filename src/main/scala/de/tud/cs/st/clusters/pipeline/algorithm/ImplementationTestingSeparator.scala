@@ -35,7 +35,7 @@ package pipeline
 package algorithm
 
 import scala.collection.mutable.Set
-import framework.pipeline.ClusteringStage
+import framework.pipeline.ClusteringAlgorithm
 import framework.structure.Cluster
 import framework.structure.Node
 import framework.structure.TypeNode
@@ -50,11 +50,11 @@ import de.tud.cs.st.bat.resolved.dependency._
  * @author Thomas Schlosser
  *
  */
-class ImplementationTestingSeparatorStage(
-    val algorithmConfig: ImplementationTestingSeparatorStageConfiguration)
-        extends ClusteringStage {
+class ImplementationTestingSeparator(
+    val config: ImplementationTestingSeparatorConfiguration)
+        extends ClusteringAlgorithm {
 
-    override def performClustering(cluster: Cluster): Boolean = {
+    def doPerformClustering(cluster: Cluster): Boolean = {
         val directlyTestRelatedNodes = extractDirectlyTestRelatedNodes(cluster)
 
         var allTestRelatedNodes: List[Node] = Nil
@@ -88,9 +88,9 @@ class ImplementationTestingSeparatorStage(
             cluster.clearNodes()
             cluster.clusterable = false
 
-            val implementationCluster = clusterManager.createCluster(algorithmConfig.implementationClusterIdentifier, this.stageName)
-            val testingCluster = clusterManager.createCluster(algorithmConfig.testingClusterIdentifier, this.stageName)
-            testingCluster.clusterable = !algorithmConfig.markTestClusterAsUnclusterable
+            val implementationCluster = clusterManager.createCluster(config.implementationClusterIdentifier, this.stageName)
+            val testingCluster = clusterManager.createCluster(config.testingClusterIdentifier, this.stageName)
+            testingCluster.clusterable = !config.markTestClusterAsUnclusterable
 
             cluster.addNode(implementationCluster)
             cluster.addNode(testingCluster)
@@ -127,13 +127,13 @@ class ImplementationTestingSeparatorStage(
         var result: List[Node] = Nil
         cluster.nodes foreach { node ⇒
             // a node with an identifier that starts with a test library package prefix is considered as directly test related
-            if (algorithmConfig.testLibrariesPackagePrefixes.exists(prfx ⇒ node.identifier.startsWith(prfx))) {
+            if (config.testLibrariesPackagePrefixes.exists(prfx ⇒ node.identifier.startsWith(prfx))) {
                 result = node :: result
             }
             else {
                 // check whether the current node has a direct dependency to a test library
                 node.getOutgoingEdges foreach { edge ⇒
-                    if (algorithmConfig.testLibrariesPackagePrefixes.exists(prfx ⇒ edge.target.identifier.startsWith(prfx))) {
+                    if (config.testLibrariesPackagePrefixes.exists(prfx ⇒ edge.target.identifier.startsWith(prfx))) {
                         result = node :: result
                     }
                 }
@@ -156,7 +156,7 @@ class ImplementationTestingSeparatorStage(
     }
 }
 
-trait ImplementationTestingSeparatorStageConfiguration {
+trait ImplementationTestingSeparatorConfiguration {
     val implementationClusterIdentifier = "implemenation"
     val testingClusterIdentifier = "testing"
 
@@ -164,4 +164,4 @@ trait ImplementationTestingSeparatorStageConfiguration {
     val markTestClusterAsUnclusterable = true
 }
 
-object ImplementationTestingSeparatorStageConfiguration extends ImplementationTestingSeparatorStageConfiguration
+object ImplementationTestingSeparatorConfiguration extends ImplementationTestingSeparatorConfiguration

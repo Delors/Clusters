@@ -40,39 +40,39 @@ import framework.AbstractClusteringTest
 import framework.TestSources._
 import framework.TestResultWriterCreators._
 import framework.pipeline.ClusteringStage
-import algorithm.ApplicationLibrariesSeparatorStage
-import algorithm.ApplicationLibrariesSeparatorStageConfiguration
+import algorithm.ImplementationTestingSeparator
+import algorithm.ImplementationTestingSeparatorConfiguration
 
 /**
  * @author Thomas Schlosser
  *
  */
 @RunWith(classOf[JUnitRunner])
-class ApplicationLibrariesSeparatorStageTest extends AbstractClusteringTest {
+class ImplementationTestingSeparatorTest extends AbstractClusteringTest {
 
-    val configuration = new ApplicationLibrariesSeparatorStageConfiguration {}
+    val configuration = new ImplementationTestingSeparatorConfiguration {}
 
     implicit val clusteringStages: Array[ClusteringStage] = Array(
-        new ApplicationLibrariesSeparatorStage(configuration)
+        new ImplementationTestingSeparator(configuration)
     )
 
-    test("testApplicationLibrariesSeparatorStage [cocome]") {
+    test("testImplementationTestingSeparator [cocome]") {
         testClustering(
-            "testApplicationLibrariesSeparatorStage [cocome]",
-            graphmlClusteringResultWriterCreator("appLibClust_cocome"),
+            "testImplementationTestingSeparator [cocome]",
+            graphmlClusteringResultWriterCreator("implTestSeparator_cocome"),
             cocomeSourceZipFile)
     }
 
-    test("testApplicationLibrariesSeparatorStage [getterSetterTestClass]") {
+    test("testImplementationTestingSeparator [getterSetterTestClass]") {
         testClustering(
-            "testApplicationLibrariesSeparatorStage [getterSetterTestClass]",
-            graphmlClusteringResultWriterCreator("appLibClust_getterSetterTestClass"),
+            "testImplementationTestingSeparator [getterSetterTestClass]",
+            graphmlClusteringResultWriterCreator("implTestSeparator_getterSetterTestClass"),
             getterSetterTestClassSourceZipFile)
     }
 
-    test("testApplicationLibrariesSeparatorStage [hibernate]") {
-        testClustering("testApplicationLibrariesSeparatorStage [hibernate]",
-            graphmlClusteringResultWriterCreator("appLibClust_hibernate"),
+    test("testImplementationTestingSeparator [hibernate]") {
+        testClustering("testImplementationTestingSeparator [hibernate]",
+            graphmlClusteringResultWriterCreator("implTestSeparator_hibernate"),
             hibernateSourceZipFile)
     }
 }

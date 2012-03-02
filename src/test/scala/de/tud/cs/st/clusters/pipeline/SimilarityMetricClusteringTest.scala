@@ -39,30 +39,39 @@ import framework.AbstractClusteringTest
 import framework.TestSources._
 import framework.TestResultWriterCreators._
 import framework.pipeline.ClusteringStage
-import algorithm.GetterSetterClusteringStage
-import algorithm.GetterSetterClusteringAlgorithmConfiguration
+import algorithm.SimilarityMetricClustering
+import algorithm.SimilarityMetricClusteringConfiguration
 
 /**
  * @author Thomas Schlosser
  *
  */
 @RunWith(classOf[JUnitRunner])
-class GetterSetterClusteringStageTest extends AbstractClusteringTest {
+class SimilarityMetricClusteringTest extends AbstractClusteringTest {
 
-    val configuration = new GetterSetterClusteringAlgorithmConfiguration {}
+    val configuration = new SimilarityMetricClusteringConfiguration {}
 
     implicit val clusteringStages: Array[ClusteringStage] = Array(
-        new GetterSetterClusteringStage(configuration)
+        new SimilarityMetricClustering(configuration)
     )
 
-    test("testGetterSetterClusteringStage [getterSetterTestClass]") {
-        testClustering("testGetterSetterClusteringStage [getterSetterTestClass]",
-            graphmlClusteringResultWriterCreator("getterSetterClust_getterSetterTestClass"),
-            getterSetterTestClassSourceZipFile)
+    test("testSimilarityMetricClustering [cocome-printercontroller]") {
+        testClustering(
+            "testSimilarityMetricClustering [cocome-printercontroller]",
+            graphmlClusteringResultWriterCreator("simMetricClust_cocome-printercontroller"),
+            cocomePrintercontrollerSourceZipFile)
     }
 
-    test("testGetterSetterClusteringStage [hibernate]") {
-        testClustering("testGetterSetterClusteringStage [hibernate]",
+    test("testSimilarityMetricClustering [cocome]") {
+        testClustering(
+            "testSimilarityMetricClustering [cocome]",
+            graphmlClusteringResultWriterCreator("simMetricClust_cocome"),
+            cocomeSourceZipFile)
+    }
+
+    test("testSimilarityMetricClustering [hibernate]") {
+        testClustering("testSimilarityMetricClustering [hibernate]",
+            graphmlClusteringResultWriterCreator("simMetricClust_hibernate"),
             hibernateSourceZipFile)
     }
 }
