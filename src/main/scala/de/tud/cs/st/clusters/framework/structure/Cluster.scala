@@ -98,8 +98,8 @@ class Cluster(
         var edges = Set[Edge]()
         nodeMap.values foreach {
             _.getOutgoingEdges foreach { edge ⇒
-                val containsSource: Boolean = edge.source == this || edge.source.isChildOf(this.uniqueID)
-                val containsTarget: Boolean = edge.target == this || edge.target.isChildOf(this.uniqueID)
+                val containsSource: Boolean = edge.source == this || edge.source.isDescendantOf(this.uniqueID)
+                val containsTarget: Boolean = edge.target == this || edge.target.isDescendantOf(this.uniqueID)
                 if (containsSource && !containsTarget) {
                     edges = edges + edge
                 }
@@ -114,8 +114,8 @@ class Cluster(
         var edges = Set[Edge]()
         nodeMap.values foreach {
             _.getIncomingEdges foreach { edge ⇒
-                val containsSource = edge.source == this || edge.source.isChildOf(this.uniqueID)
-                val containsTarget = edge.target == this || edge.target.isChildOf(this.uniqueID)
+                val containsSource = edge.source == this || edge.source.isDescendantOf(this.uniqueID)
+                val containsTarget = edge.target == this || edge.target.isDescendantOf(this.uniqueID)
                 if (!containsSource && containsTarget) {
                     edges = edges + edge
                 }
@@ -130,8 +130,8 @@ class Cluster(
         var edges = Set[Edge]()
         nodeMap.values foreach {
             _.getOutgoingEdges foreach { edge ⇒
-                val containsSource = edge.source == this || edge.source.isChildOf(this.uniqueID)
-                val containsTarget = edge.target == this || edge.target.isChildOf(this.uniqueID)
+                val containsSource = edge.source == this || edge.source.isDescendantOf(this.uniqueID)
+                val containsTarget = edge.target == this || edge.target.isDescendantOf(this.uniqueID)
                 if (containsSource && containsTarget) {
                     edges = edges + edge
                 }
@@ -144,14 +144,14 @@ class Cluster(
         // fetch all edges from cluster elements and from cluster itself
         super.getAllEdges() ++ { for (node ← nodeMap.values; edge ← node.getAllEdges) yield edge }
 
-    def getSpecialEdgesBetweenDirectChildren(): Set[Edge] = {
+    def getSpecialEdgesBetweenChildren(): Set[Edge] = {
         var edges = Set[Edge]()
         nodeMap.values foreach {
             _.getOutgoingEdges foreach { edge ⇒
-                val childrenContainsSource = edge.source.isChildOf(this.uniqueID)
-                val childrenContainsTarget = edge.target.isChildOf(this.uniqueID)
+                val childrenContainsSource = edge.source.isDescendantOf(this.uniqueID)
+                val childrenContainsTarget = edge.target.isDescendantOf(this.uniqueID)
                 if (childrenContainsSource && childrenContainsTarget) {
-                    edges = edges + new Edge(edge.source.getDirectChild(this.uniqueID), edge.target.getDirectChild(this.uniqueID), edge.dType, edge.count)
+                    edges = edges + new Edge(edge.source.getChildOnPath(this.uniqueID), edge.target.getChildOnPath(this.uniqueID), edge.dType, edge.count)
                 }
             }
         }

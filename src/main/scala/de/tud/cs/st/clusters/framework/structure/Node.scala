@@ -78,19 +78,23 @@ trait Node {
             }
         }
 
-    def getDirectChild(parentID: Int): Node = {
+    /**
+     * Gets the child of the node that has the given parentID as uniqueID
+     * and that is member of the path between this node and the node with the parentID.
+     */
+    def getChildOnPath(parentID: Int): Node = {
         require(this.parent != null, println("parent is null"))
 
         if (this.parent.uniqueID == parentID)
             return this
         else
-            return parent.getDirectChild(parentID)
+            return parent.getChildOnPath(parentID)
     }
 
-    def isChildOf(parentID: Int): Boolean =
+    def isDescendantOf(parentID: Int): Boolean =
         this.parent != null && (
             this.parent.uniqueID == parentID ||
-            this.parent.isChildOf(parentID))
+            this.parent.isDescendantOf(parentID))
 
     /////////////////////////////////////////////
     // edges-related stuff
@@ -151,29 +155,29 @@ trait Node {
         transposedEdges
 
     /**
-     * Gets all edges whose source is this node or any of its children
-     * and whose target is neither this node nor any of its children.
+     * Gets all edges whose source is this node or any of its descendants
+     * and whose target is neither this node nor any of its descendants.
      */
     def getOutgoingEdges(): Set[Edge] = {
-        edges.filter(e ⇒ !(e.target == this || e.target.isChildOf(this.uniqueID))).toSet
+        edges.filter(e ⇒ !(e.target == this || e.target.isDescendantOf(this.uniqueID))).toSet
     }
 
     /**
-     * Gets all edges of the transposed graph whose source is this node or any of its children
-     * and whose target is neither this node nor any of its children.
+     * Gets all edges of the transposed graph whose source is this node or any of its descendants
+     * and whose target is neither this node nor any of its descendants.
      */
     def getIncomingEdges(): Set[Edge] = {
-        transposedEdges.filter(e ⇒ !(e.target == this || e.target.isChildOf(this.uniqueID))).toSet
+        transposedEdges.filter(e ⇒ !(e.target == this || e.target.isDescendantOf(this.uniqueID))).toSet
     }
 
     /**
-     * Gets all edges whose source and target are children of this node.
+     * Gets all edges whose source and target are descendants of this node.
      */
     def getInnerEdges(): Set[Edge] =
         Set()
 
     /**
-     * Gets all edges that are somehow related to this node or its children.
+     * Gets all edges that are somehow related to this node or its descendants.
      */
     def getAllEdges(): Set[Edge] = {
         getOutgoingEdges() ++ getIncomingEdges() ++ getInnerEdges()
@@ -184,7 +188,7 @@ trait Node {
      * is also a child of this node. The target of the returned (special) edges is
      * set to the direct child -- on the path to the original target -- of this node.
      */
-    def getSpecialEdgesBetweenDirectChildren(): Set[Edge]
+    def getSpecialEdgesBetweenChildren(): Set[Edge]
 
     /////////////////////////////////////////////
     // children(nodes)-related stuff

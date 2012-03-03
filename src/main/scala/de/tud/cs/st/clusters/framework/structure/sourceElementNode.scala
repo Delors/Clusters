@@ -55,7 +55,7 @@ sealed trait SourceElementNode extends Node {
     /////////////////////////////////////////////
     // edges-related stuff
     /////////////////////////////////////////////
-    def getSpecialEdgesBetweenDirectChildren(): Set[Edge] = {
+    def getSpecialEdgesBetweenChildren(): Set[Edge] = {
         Set()
     }
 

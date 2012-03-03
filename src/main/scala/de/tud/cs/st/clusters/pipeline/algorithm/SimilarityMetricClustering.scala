@@ -113,7 +113,7 @@ class SimilarityMetricClustering(
 
         val weightMatrix: Map[(Int, Int), Long] = Map()
 
-        cluster.getSpecialEdgesBetweenDirectChildren foreach { edge ⇒
+        cluster.getSpecialEdgesBetweenChildren foreach { edge ⇒
             val key = (edge.source.uniqueID, edge.target.uniqueID)
             val oldWeight: Long = weightMatrix.getOrElse(key, 0)
             val newWeight = oldWeight + (getWeight(edge.dType) * edge.count)
