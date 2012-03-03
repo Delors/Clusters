@@ -98,9 +98,8 @@ class Cluster(
         var edges = Set[Edge]()
         nodeMap.values foreach {
             _.getOutgoingEdges foreach { edge ⇒
-                val containsSource: Boolean = edge.source == this || edge.source.isDescendantOf(this.uniqueID)
                 val containsTarget: Boolean = edge.target == this || edge.target.isDescendantOf(this.uniqueID)
-                if (containsSource && !containsTarget) {
+                if (!containsTarget) {
                     edges = edges + edge
                 }
             }
@@ -114,9 +113,8 @@ class Cluster(
         var edges = Set[Edge]()
         nodeMap.values foreach {
             _.getIncomingEdges foreach { edge ⇒
-                val containsSource = edge.source == this || edge.source.isDescendantOf(this.uniqueID)
                 val containsTarget = edge.target == this || edge.target.isDescendantOf(this.uniqueID)
-                if (containsSource && !containsTarget) {
+                if (!containsTarget) {
                     edges = edges + edge
                 }
             }
@@ -130,9 +128,8 @@ class Cluster(
         var edges = Set[Edge]()
         nodeMap.values foreach {
             _.getOutgoingEdges foreach { edge ⇒
-                val containsSource = edge.source == this || edge.source.isDescendantOf(this.uniqueID)
                 val containsTarget = edge.target == this || edge.target.isDescendantOf(this.uniqueID)
-                if (containsSource && containsTarget) {
+                if (containsTarget) {
                     edges = edges + edge
                 }
             }
@@ -148,9 +145,8 @@ class Cluster(
         var edges = Set[Edge]()
         nodeMap.values foreach {
             _.getOutgoingEdges foreach { edge ⇒
-                val childrenContainsSource = edge.source.isDescendantOf(this.uniqueID)
                 val childrenContainsTarget = edge.target.isDescendantOf(this.uniqueID)
-                if (childrenContainsSource && childrenContainsTarget) {
+                if (childrenContainsTarget) {
                     edges = edges + new Edge(edge.source.getChildOnPath(this.uniqueID), edge.target.getChildOnPath(this.uniqueID), edge.dType, edge.count)
                 }
             }
