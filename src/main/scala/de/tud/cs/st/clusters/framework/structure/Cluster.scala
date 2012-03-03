@@ -116,7 +116,7 @@ class Cluster(
             _.getIncomingEdges foreach { edge ⇒
                 val containsSource = edge.source == this || edge.source.isDescendantOf(this.uniqueID)
                 val containsTarget = edge.target == this || edge.target.isDescendantOf(this.uniqueID)
-                if (!containsSource && containsTarget) {
+                if (containsSource && !containsTarget) {
                     edges = edges + edge
                 }
             }
