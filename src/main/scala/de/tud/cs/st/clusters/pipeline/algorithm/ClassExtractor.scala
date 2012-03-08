@@ -35,6 +35,7 @@ package pipeline
 package algorithm
 
 import framework.pipeline.SameNeighborClusteringAlgorithm
+import framework.pipeline.SameNeighborClusteringAlgorithmConfiguration
 import de.tud.cs.st.bat.resolved.dependency._
 
 /**
@@ -45,6 +46,8 @@ import de.tud.cs.st.bat.resolved.dependency._
  *
  */
 class ClassExtractor extends SameNeighborClusteringAlgorithm {
+
+    val config = SameNeighborClusteringAlgorithmConfiguration
 
     protected def isOfConsideredDependencyType(dType: DependencyType): Boolean =
         dType == DependencyType.IS_INSTANCE_MEMBER_OF || dType == DependencyType.IS_CLASS_MEMBER_OF

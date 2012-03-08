@@ -32,52 +32,38 @@
 */
 package de.tud.cs.st.clusters
 package framework
-package pipeline
+package evaluation
 
-import scala.collection.mutable.Map
-import framework.structure.Cluster
-import framework.structure.Node
-import framework.structure.Edge
-import de.tud.cs.st.bat.resolved.dependency._
+import structure.util.DefaultDependencyExtractor
+import util.SourceZipFile
+import util.DependencyExtractionUtils
+import framework.pipeline.GraphmlClusteringResultWriter
+import framework.pipeline.GraphmlClusteringResultWriterConfiguration
 
 /**
  * @author Thomas Schlosser
  *
  */
-trait SameNeighborClusteringAlgorithm extends ClusteringAlgorithm {
+object SourceToGraphDiagram {
+    def main(args: Array[String]) {
+        val sourceZipFile = SourceZipFile("test/classfiles/HelloWorld.class.zip")
 
-    def doPerformClustering(cluster: Cluster): Boolean = {
-        def getConsideredEdge(node: Node): Option[Edge] = {
-            node.getOutgoingEdges.find(edge ⇒ isOfConsideredDependencyType(edge.dType))
+        val dependencyExtractor = new DefaultDependencyExtractor()
+        DependencyExtractionUtils.extractDependencies(dependencyExtractor)(sourceZipFile)
+
+        val writerConfiguration = new {
+            override val aggregateEdges = false
+            override val showEdgeLabels = true
+            override val showSourceElementNodes = true
+            override val maxNumberOfLevels = None
+        } with GraphmlClusteringResultWriterConfiguration
+        val resultWriter = new GraphmlClusteringResultWriter("helloWorld", writerConfiguration)
+
+        try {
+            resultWriter.write(dependencyExtractor.clusterManager.getProjectCluster)
         }
-
-        var createdNewCluster = false
-        val clustersMap = Map[Int, Set[Node]]()
-
-        for (node ← cluster.nodes) {
-            getConsideredEdge(node) match {
-                case Some(edge) ⇒
-                    val neighborNodeID = edge.target.uniqueID
-                    val clusterSet = clustersMap.getOrElse(neighborNodeID, Set())
-                    clustersMap(neighborNodeID) = clusterSet + node
-                case None ⇒ // Nothing to do if the current node has no edge of the considered type.
-            }
+        finally {
+            resultWriter.close()
         }
-
-        cluster.clearNodes()
-        for ((neighborNodeID, nodeSet) ← clustersMap) {
-            val neighborNode = clusterManager.getNode(neighborNodeID)
-            val sameNeighborCluster = clusterManager.createCluster(neighborNode.identifier, this.stageName)
-            createdNewCluster = true
-            sameNeighborCluster.addNode(neighborNode)
-            nodeSet foreach {
-                sameNeighborCluster.addNode(_)
-            }
-            cluster.addNode(sameNeighborCluster)
-        }
-
-        createdNewCluster
     }
-
-    protected def isOfConsideredDependencyType(dType: DependencyType): Boolean
 }

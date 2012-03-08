@@ -13,9 +13,9 @@
 *  - Redistributions in binary form must reproduce the above copyright notice,
 *    this list of conditions and the following disclaimer in the documentation
 *    and/or other materials provided with the distribution.
-*  - Neither the name of the Software Technology Group or Technische
-*    Universität Darmstadt nor the names of its contributors may be used to
-*    endorse or promote products derived from this software without specific
+*  - Neither the name of the Software Technology Group or Technische 
+*    Universität Darmstadt nor the names of its contributors may be used to 
+*    endorse or promote products derived from this software without specific 
 *    prior written permission.
 *
 *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -34,33 +34,36 @@ package de.tud.cs.st.clusters
 package framework
 package evaluation
 
-import structure.Cluster
-import structure.util.ClusterManager
-import structure.util.DefaultClusterManager
-import framework.pipeline.ClusteringPipeline
-import framework.util.SourceFile
-import de.tud.cs.st.util.perf._
-import de.tud.cs.st.util.perf.PerformanceEvaluation
-import de.tud.cs.st.bat.resolved.dependency.DependencyExtractor
+import TestSources._
+import org.junit.runner.RunWith
+import org.scalatest.junit.JUnitRunner
+import de.tud.cs.st.clusters.framework.pipeline.ClusteringStage
+import util.ReferenceClusterCreator
+import de.tud.cs.st.clusters.pipeline.algorithm.ApplicationLibrariesSeparator
+import de.tud.cs.st.clusters.pipeline.algorithm.ApplicationLibrariesSeparatorConfiguration
 
 /**
  * @author Thomas Schlosser
  *
  */
-trait PerformanceEvaluatedPipeline
-        extends ClusteringPipeline
-        with PerformanceEvaluation {
+@RunWith(classOf[JUnitRunner])
+class MoJoWrapperTest extends AbstractClusteringTest {
 
-    protected abstract override def runDependencyExtraction(sourceFiles: SourceFile*): ClusterManager = {
-        time(duration ⇒ println("Time to read classfiles and extract dependencies: "+nanoSecondsToMilliseconds(duration)+"ms")) {
-            super.runDependencyExtraction(sourceFiles: _*)
-        }
-    }
+    test("test calculation of double direction MojoFM quality value") {
+        val referenceClusters = ReferenceClusterCreator.readReferenceCluster(
+            clusteringTestProjectSourceZipFile,
+            new java.io.File("test/referenceCluster/ClusteringTestProject.sei"))
 
-    protected abstract override def runClustering(clusterManager: ClusterManager): Cluster = {
-        println("Number of nodes in project cluster: "+clusterManager.getProjectCluster.childCount)
-        time(duration ⇒ println("time to cluster input: "+nanoSecondsToMilliseconds(duration)+"ms")) {
-            super.runClustering(clusterManager)
-        }
+        val appLibConfig = new ApplicationLibrariesSeparatorConfiguration {}
+        val clusteringStages: Array[ClusteringStage] = Array(
+            new ApplicationLibrariesSeparator(appLibConfig))
+
+        val extractedClusters = testClustering(
+            "testMoJoWrapper-ApplicationLibrariesSeparatorStage [ClusteringTestProject.zip]",
+            clusteringTestProjectSourceZipFile)(clusteringStages)
+
+        println("MoJo:")
+        var mjw = new MoJoWrapper(extractedClusters, referenceClusters)
+        println(mjw.doubleDirectionMojoFM)
     }
 }

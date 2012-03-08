@@ -135,7 +135,7 @@ class GetterSetterClustering(
 }
 
 trait GetterSetterClusteringConfiguration {
-    val clusterIdentifierPrefix = "Getter_Setter_"
+    val clusterIdentifierPrefix = "getter_setter_"
 
     val checkGetterNameMatching = true
     val checkSetterNameMatching = true
