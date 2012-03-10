@@ -60,7 +60,9 @@ class PackageClustering(
 
         var prefixRoot = new GreatestCommonCharPrefixTree()
         for (node ← cluster.nodes) {
-            prefixRoot.addPrefix(node.identifier.toCharArray())
+            if (!node.isCluster) {
+                prefixRoot.addPrefix(node.identifier.toCharArray())
+            }
         }
         var prfxs = prefixRoot.prefixes.map(charArray ⇒ String.copyValueOf(charArray))
 
@@ -80,8 +82,13 @@ class PackageClustering(
             cluster.addNode(cl)
         }
         for (node ← inputNodes) {
-            val c = resultMap(getMatchingPrefix(node.identifier, prfxs))
-            c.addNode(node)
+            if (node.isCluster) {
+                cluster.addNode(node)
+            }
+            else {
+                val c = resultMap(getMatchingPrefix(node.identifier, prfxs))
+                c.addNode(node)
+            }
         }
         createdNewCluster
     }
