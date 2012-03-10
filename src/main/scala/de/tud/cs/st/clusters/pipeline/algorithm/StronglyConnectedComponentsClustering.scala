@@ -100,7 +100,7 @@ class StronglyConnectedComponentsClustering(
 }
 
 trait StronglyConnectedComponentsClusteringConfiguration {
-    val clusterIdentifierPrefix = "SCC_"
+    val clusterIdentifierPrefix = "scc_"
 }
 
 object StronglyConnectedComponentsClusteringConfiguration extends StronglyConnectedComponentsClusteringConfiguration
