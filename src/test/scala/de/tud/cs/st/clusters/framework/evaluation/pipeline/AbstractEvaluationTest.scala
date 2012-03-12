@@ -54,8 +54,8 @@ import de.tud.cs.st.clusters.pipeline.algorithm.GetterSetterClustering
 import de.tud.cs.st.clusters.pipeline.algorithm.GetterSetterClusteringConfiguration
 import de.tud.cs.st.clusters.pipeline.algorithm.LayerClustering
 import de.tud.cs.st.clusters.pipeline.algorithm.LayerClusteringConfiguration
-import de.tud.cs.st.clusters.pipeline.algorithm.SimilarityMetricClustering
-import de.tud.cs.st.clusters.pipeline.algorithm.SimilarityMetricClusteringConfiguration
+import de.tud.cs.st.clusters.pipeline.algorithm.ChineseWhispers
+import de.tud.cs.st.clusters.pipeline.algorithm.ChineseWhispersConfiguration
 import de.tud.cs.st.clusters.pipeline.algorithm.StronglyConnectedComponentsClustering
 import de.tud.cs.st.clusters.pipeline.algorithm.StronglyConnectedComponentsClusteringConfiguration
 import de.tud.cs.st.clusters.pipeline.strategy.FirstClusterablesClusteringStrategy
@@ -81,7 +81,7 @@ abstract class AbstractEvaluationTest extends AbstractClusteringTest {
     val pkgConfig = new PackageClusteringConfiguration {}
     val implTestConfig = new ImplementationTestingSeparatorConfiguration {}
     val getterSetterConfig = new GetterSetterClusteringConfiguration {}
-    val similarityMetricConfig = new SimilarityMetricClusteringConfiguration {}
+    val chineseWhispersConfig = new ChineseWhispersConfiguration {}
     val sccConfig = new StronglyConnectedComponentsClusteringConfiguration {}
     val layerConfig = new LayerClusteringConfiguration {}
 
@@ -92,21 +92,21 @@ abstract class AbstractEvaluationTest extends AbstractClusteringTest {
     val implTestSeparator = new ImplementationTestingSeparator(implTestConfig) with FirstClusterablesClusteringStrategy
     val sccClustering = new StronglyConnectedComponentsClustering(sccConfig) with FirstClusterablesClusteringStrategy
     val getterSetterClustering = new GetterSetterClustering(getterSetterConfig) with FirstClusterablesClusteringStrategy
-    val simMetricClustering = new {
+    val chineseWhispers = new {
         override val minClusterSizeThreshold: Int = 3
-    } with SimilarityMetricClustering(similarityMetricConfig) with MinClusterSizeClusteringStrategy with FirstClusterablesClusteringStrategy with FixedPointIterationClusteringStrategy
+    } with ChineseWhispers(chineseWhispersConfig) with MinClusterSizeClusteringStrategy with FirstClusterablesClusteringStrategy with FixedPointIterationClusteringStrategy
 
     val layerClustering = new LayerClustering(layerConfig)
     val classExtractor = new ClassExtractor() with FirstClusterablesClusteringStrategy
 
-    val onlySimMetricClustering: Array[ClusteringStage] = Array(simMetricClustering)
-    val combinedStagesSimMetricClustering: Array[ClusteringStage] = Array(
+    val onlyChineseWhispers: Array[ClusteringStage] = Array(chineseWhispers)
+    val combinedStagesChineseWhispers: Array[ClusteringStage] = Array(
         appLibsSeparator,
         packageClustering,
         implTestSeparator,
         sccClustering,
         getterSetterClustering,
-        simMetricClustering
+        chineseWhispers
     )
     val onlyLayerClustering: Array[ClusteringStage] = Array(layerClustering)
     val combinedStagesLayerClustering: Array[ClusteringStage] = Array(
@@ -140,8 +140,8 @@ abstract class AbstractEvaluationTest extends AbstractClusteringTest {
     val onlySCCClustering: Array[ClusteringStage] = Array(sccClustering)
 
     val allStageCombos: Array[(String, Array[ClusteringStage])] = Array(
-        ("onlySimMetricClustering", onlySimMetricClustering),
-        ("combinedStagesSimMetric", combinedStagesSimMetricClustering),
+        ("onlyChineseWhispers", onlyChineseWhispers),
+        ("combinedStagesChineseWhispers", combinedStagesChineseWhispers),
         ("onlyLayerClustering", onlyLayerClustering),
         ("combinedStagesLayerClustering", combinedStagesLayerClustering),
         ("onlyClassExtractor", onlyClassExtractor),

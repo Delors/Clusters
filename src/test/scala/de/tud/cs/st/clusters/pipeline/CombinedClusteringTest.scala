@@ -47,8 +47,8 @@ import algorithm.ImplementationTestingSeparator
 import algorithm.ImplementationTestingSeparatorConfiguration
 import algorithm.GetterSetterClustering
 import algorithm.GetterSetterClusteringConfiguration
-import algorithm.SimilarityMetricClustering
-import algorithm.SimilarityMetricClusteringConfiguration
+import algorithm.ChineseWhispers
+import algorithm.ChineseWhispersConfiguration
 import algorithm.StronglyConnectedComponentsClustering
 import algorithm.StronglyConnectedComponentsClusteringConfiguration
 import strategy.FirstClusterablesClusteringStrategy
@@ -68,7 +68,7 @@ class CombinedClusteringTest extends AbstractClusteringTest {
     val pkgConfig = new PackageClusteringConfiguration {}
     val implTestConfig = new ImplementationTestingSeparatorConfiguration {}
     val getterSetterConfig = new GetterSetterClusteringConfiguration {}
-    val similarityMetricConfig = new SimilarityMetricClusteringConfiguration {}
+    val chineseWhispersConfig = new ChineseWhispersConfiguration {}
     val sccConfig = new StronglyConnectedComponentsClusteringConfiguration {}
 
     val appLibsSeparator = new ApplicationLibrariesSeparator(appLibsConfig)
@@ -78,9 +78,9 @@ class CombinedClusteringTest extends AbstractClusteringTest {
     val implTestSeparator = new ImplementationTestingSeparator(implTestConfig) with FirstClusterablesClusteringStrategy
     val sccClustering = new StronglyConnectedComponentsClustering(sccConfig) with FirstClusterablesClusteringStrategy
     val getterSetterClustering = new GetterSetterClustering(getterSetterConfig) with FirstClusterablesClusteringStrategy
-    val simMetricClustering = new {
+    val chineseWhispers = new {
         override val minClusterSizeThreshold: Int = 3
-    } with SimilarityMetricClustering(similarityMetricConfig) with MinClusterSizeClusteringStrategy with FirstClusterablesClusteringStrategy with FixedPointIterationClusteringStrategy
+    } with ChineseWhispers(chineseWhispersConfig) with MinClusterSizeClusteringStrategy with FirstClusterablesClusteringStrategy with FixedPointIterationClusteringStrategy
 
     implicit val clusteringStages: Array[ClusteringStage] = Array(
         appLibsSeparator,
@@ -88,7 +88,7 @@ class CombinedClusteringTest extends AbstractClusteringTest {
         implTestSeparator,
         sccClustering,
         getterSetterClustering,
-        simMetricClustering
+        chineseWhispers
     )
 
     test("testCombinedClustering [ClusteringTestProject]") {

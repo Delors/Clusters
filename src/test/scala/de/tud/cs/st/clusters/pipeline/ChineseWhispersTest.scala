@@ -39,39 +39,39 @@ import framework.AbstractClusteringTest
 import framework.TestSources._
 import framework.TestResultWriterCreators._
 import framework.pipeline.ClusteringStage
-import algorithm.SimilarityMetricClustering
-import algorithm.SimilarityMetricClusteringConfiguration
+import algorithm.ChineseWhispers
+import algorithm.ChineseWhispersConfiguration
 
 /**
  * @author Thomas Schlosser
  *
  */
 @RunWith(classOf[JUnitRunner])
-class SimilarityMetricClusteringTest extends AbstractClusteringTest {
+class ChineseWhispersTest extends AbstractClusteringTest {
 
-    val configuration = new SimilarityMetricClusteringConfiguration {}
+    val configuration = new ChineseWhispersConfiguration {}
 
     implicit val clusteringStages: Array[ClusteringStage] = Array(
-        new SimilarityMetricClustering(configuration)
+        new ChineseWhispers(configuration)
     )
 
-    test("testSimilarityMetricClustering [cocome-printercontroller]") {
+    test("testChineseWhispers [cocome-printercontroller]") {
         testClustering(
-            "testSimilarityMetricClustering [cocome-printercontroller]",
-            graphmlClusteringResultWriterCreator("simMetricClust_cocome-printercontroller"),
+            "testChineseWhispers [cocome-printercontroller]",
+            graphmlClusteringResultWriterCreator("chineseWhispers_cocome-printercontroller"),
             cocomePrintercontrollerSourceZipFile)
     }
 
-    test("testSimilarityMetricClustering [cocome]") {
+    test("testChineseWhispers [cocome]") {
         testClustering(
-            "testSimilarityMetricClustering [cocome]",
-            graphmlClusteringResultWriterCreator("simMetricClust_cocome"),
+            "testChineseWhispers [cocome]",
+            graphmlClusteringResultWriterCreator("chineseWhispers_cocome"),
             cocomeSourceZipFile)
     }
 
-    test("testSimilarityMetricClustering [hibernate]") {
-        testClustering("testSimilarityMetricClustering [hibernate]",
-            graphmlClusteringResultWriterCreator("simMetricClust_hibernate"),
+    test("testChineseWhispers [hibernate]") {
+        testClustering("testChineseWhispers [hibernate]",
+            graphmlClusteringResultWriterCreator("chineseWhispers_hibernate"),
             hibernateSourceZipFile)
     }
 }

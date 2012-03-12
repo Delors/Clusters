@@ -50,8 +50,8 @@ import de.tud.cs.st.bat.resolved.dependency._
  * @author Thomas Schlosser
  *
  */
-class SimilarityMetricClustering(
-    val config: SimilarityMetricClusteringConfiguration)
+class ChineseWhispers(
+    val config: ChineseWhispersConfiguration)
         extends ClusteringAlgorithm {
 
     def doPerformClustering(cluster: Cluster): Boolean = {
@@ -59,10 +59,10 @@ class SimilarityMetricClustering(
         val inputNodes = cluster.nodes.toArray
 
         def calcClusters(sortedEdges: List[((Int, Int), Long)], nodes: Iterable[Node]): Array[Node] = {
-            val clusters = Map[Int, SimilarityMetricNode]()
+            val clusters = Map[Int, ChineseWhispersNode]()
             for (node ← nodes) {
-                val set = scala.collection.mutable.Set.empty[SimilarityMetricNode]
-                val n = new SimilarityMetricNode(node.uniqueID, set)
+                val set = scala.collection.mutable.Set.empty[ChineseWhispersNode]
+                val n = new ChineseWhispersNode(node.uniqueID, set)
                 set += n
                 n.cluster = set
                 clusters(n.id) = n
@@ -116,7 +116,7 @@ class SimilarityMetricClustering(
         cluster.getSpecialEdgesBetweenChildren foreach { edge ⇒
             val key = (edge.source.uniqueID, edge.target.uniqueID)
             val oldWeight: Long = weightMatrix.getOrElse(key, 0)
-            val newWeight = oldWeight + (getWeight(edge.dType) * edge.count)
+            val newWeight = oldWeight + (config.getWeight(edge.dType) * edge.count)
             if (newWeight != 0)
                 weightMatrix(key) = newWeight
         }
@@ -133,7 +133,15 @@ class SimilarityMetricClustering(
         createdNewCluster
     }
 
-    private def getWeight(dType: DependencyType): Long = {
+    private class ChineseWhispersNode(val id: Int, var cluster: scala.collection.mutable.Set[ChineseWhispersNode]) {
+        override def toString: String = String.valueOf(id)
+    }
+}
+
+trait ChineseWhispersConfiguration {
+    val clusterIdentifierPrefix = "cw_"
+
+    def getWeight(dType: DependencyType): Long = {
         // TODO: check which configuration creates the best results...
         dType match {
             // class/method/field definition related dependency types
@@ -186,14 +194,6 @@ class SimilarityMetricClustering(
         }
         0
     }
-
-    private class SimilarityMetricNode(val id: Int, var cluster: scala.collection.mutable.Set[SimilarityMetricNode]) {
-        override def toString: String = String.valueOf(id)
-    }
 }
 
-trait SimilarityMetricClusteringConfiguration {
-    val clusterIdentifierPrefix = "simMetricCluster_"
-}
-
-object SimilarityMetricClusteringConfiguration extends SimilarityMetricClusteringConfiguration
+object ChineseWhispersConfiguration extends ChineseWhispersConfiguration
