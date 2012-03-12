@@ -104,7 +104,7 @@ class QualityTest extends AbstractEvaluationTest {
                 //                println("MoJo(level="+level+"):"+mjw.singleDirectionMoJo+"\t MojoPlus: "+mjw.singleDirectionMoJoPlus+"\t MojoFm: "+mjw.singleDirectionMoJoFM)
                 //                println("MoJoFM(level="+level+"):"+mjw.singleDirectionMoJoFM)
                 //LaTeX format:
-                println("("+level+","+mjw.singleDirectionMoJoFM+")")
+                println("("+level+","+mjw.singleDirectionMoJoHM+")")
             }
             // LaTeX output:
             println("};")

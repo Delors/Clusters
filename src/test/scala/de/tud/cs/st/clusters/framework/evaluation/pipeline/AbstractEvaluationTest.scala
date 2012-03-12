@@ -68,6 +68,7 @@ import framework.pipeline.ClusteringResultWriter
 import framework.structure.Cluster
 import framework.structure.util.ClusterManager
 import framework.structure.SourceElementNode
+import de.tud.cs.st.bat.resolved.dependency._
 import de.tud.cs.st.util.perf._
 
 /**
@@ -82,6 +83,9 @@ abstract class AbstractEvaluationTest extends AbstractClusteringTest {
     val implTestConfig = new ImplementationTestingSeparatorConfiguration {}
     val getterSetterConfig = new GetterSetterClusteringConfiguration {}
     val chineseWhispersConfig = new ChineseWhispersConfiguration {}
+    val chineseWhispersEquallyWeightedConfig = new ChineseWhispersConfiguration {
+        override def getWeight(dType: DependencyType): Long = 10
+    }
     val sccConfig = new StronglyConnectedComponentsClusteringConfiguration {}
     val layerConfig = new LayerClusteringConfiguration {}
 
@@ -96,6 +100,10 @@ abstract class AbstractEvaluationTest extends AbstractClusteringTest {
         override val minClusterSizeThreshold: Int = 3
     } with ChineseWhispers(chineseWhispersConfig) with MinClusterSizeClusteringStrategy with FirstClusterablesClusteringStrategy with FixedPointIterationClusteringStrategy
 
+    val chineseWhispersEquallyWeighted = new {
+        override val minClusterSizeThreshold: Int = 3
+    } with ChineseWhispers(chineseWhispersEquallyWeightedConfig) with MinClusterSizeClusteringStrategy with FirstClusterablesClusteringStrategy with FixedPointIterationClusteringStrategy
+
     val layerClustering = new LayerClustering(layerConfig)
     val classExtractor = new ClassExtractor() with FirstClusterablesClusteringStrategy
 
@@ -107,6 +115,15 @@ abstract class AbstractEvaluationTest extends AbstractClusteringTest {
         sccClustering,
         getterSetterClustering,
         chineseWhispers
+    )
+    val onlyChineseWhispersEquallyWeighted: Array[ClusteringStage] = Array(chineseWhispersEquallyWeighted)
+    val combinedStagesChineseWhispersEquallyWeighted: Array[ClusteringStage] = Array(
+        appLibsSeparator,
+        packageClustering,
+        implTestSeparator,
+        sccClustering,
+        getterSetterClustering,
+        chineseWhispersEquallyWeighted
     )
     val onlyLayerClustering: Array[ClusteringStage] = Array(layerClustering)
     val combinedStagesLayerClustering: Array[ClusteringStage] = Array(
@@ -142,16 +159,18 @@ abstract class AbstractEvaluationTest extends AbstractClusteringTest {
     val allStageCombos: Array[(String, Array[ClusteringStage])] = Array(
         ("onlyChineseWhispers", onlyChineseWhispers),
         ("combinedStagesChineseWhispers", combinedStagesChineseWhispers),
+        ("onlyChineseWhispersEquallyWeighted", onlyChineseWhispersEquallyWeighted),
+        ("combinedStagesChineseWhispersEquallyWeighted", combinedStagesChineseWhispersEquallyWeighted),
         ("onlyLayerClustering", onlyLayerClustering),
         ("combinedStagesLayerClustering", combinedStagesLayerClustering),
         ("onlyClassExtractor", onlyClassExtractor),
         ("combinedStagesClassExtractor", combinedStagesClassExtractor),
         ("combinedStagesWithoutFinalizer", combinedStagesWithoutFinalizer),
-        ("onlyAppLibsSeparator", onlyAppLibsSeparator),
-        //        ("onlyGetterSetterClustering", onlyGetterSetterClustering),
-        //        ("onlyImplTestSeparator", onlyImplTestSeparator),
-        ("onlyPackageClustering", onlyPackageClustering),
-        //        ("onlySCCClustering", onlySCCClustering),
+        // ("onlyAppLibsSeparator", onlyAppLibsSeparator),
+        // //        ("onlyGetterSetterClustering", onlyGetterSetterClustering),
+        // //        ("onlyImplTestSeparator", onlyImplTestSeparator),
+        // ("onlyPackageClustering", onlyPackageClustering),
+        // //        ("onlySCCClustering", onlySCCClustering),
         ("noClustering", Array())
     )
 
@@ -176,19 +195,19 @@ abstract class AbstractEvaluationTest extends AbstractClusteringTest {
     }
 
     // TODO: there are no valid reference clusters...
-    //    test("evaluate [CoCoME]") {
-    //        evaluate(
-    //            "evaluate [CoCoME]",
-    //            cocomeSourceZipFile,
-    //            "test/referenceCluster/cocome-impl-classes.sei")
-    //    }
-    //
-    //    test("evaluate [hibernate]") {
-    //        evaluate(
-    //            "evaluate [hibernate]",
-    //            hibernateSourceZipFile,
-    //            "test/referenceCluster/hibernate-core-3.6.0.Final.sei")
-    //    }
+    test("evaluate [CoCoME]") {
+        evaluate(
+            "evaluate [CoCoME]",
+            cocomeSourceZipFile,
+            "test/referenceCluster/cocome-impl-classes.sei")
+    }
+
+    test("evaluate [hibernate]") {
+        evaluate(
+            "evaluate [hibernate]",
+            hibernateSourceZipFile,
+            "test/referenceCluster/hibernate-core-3.6.0.Final.sei")
+    }
 
     test("evaluate [ClusteringTestProject]") {
         evaluate(

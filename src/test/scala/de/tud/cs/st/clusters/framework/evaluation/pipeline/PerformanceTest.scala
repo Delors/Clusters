@@ -39,8 +39,15 @@ import framework.pipeline.ClusteringPipeline
 import framework.pipeline.ClusteringStage
 import util.SourceFile
 import framework.structure.Cluster
+import framework.structure.Node
+import framework.structure.SourceElementNode
+import framework.structure.TypeNode
+import framework.structure.FieldNode
+import framework.structure.MethodNode
 import framework.structure.util.ClusterManager
+import framework.structure.util.NodeStore
 import de.tud.cs.st.util.perf._
+import de.tud.cs.st.clusters.framework.structure.util.DefaultClusterManager
 
 /**
  * @author Thomas Schlosser
@@ -77,17 +84,41 @@ class PerformanceTest extends AbstractEvaluationTest {
     trait PerformanceEvaluatedPipeline
             extends ClusteringPipeline {
 
-        //        protected abstract override def runDependencyExtraction(sourceFiles: SourceFile*): ClusterManager = {
-        //            time(duration ⇒ println("Time to read classfiles and extract dependencies: "+nanoSecondsToMilliseconds(duration)+"ms")) {
-        //                super.runDependencyExtraction(sourceFiles: _*)
-        //            }
-        //        }
+        var cachedClusterManager: ClusterManager = null
+        var cachedSourceElements: Set[Node] = null
+
+        protected abstract override def runDependencyExtraction(sourceFiles: SourceFile*): ClusterManager = {
+            if (cachedClusterManager == null) {
+                cachedClusterManager = super.runDependencyExtraction(sourceFiles: _*)
+                cachedSourceElements = cachedClusterManager.getProjectCluster.nodes.toSet
+            }
+
+            // reset root cluster
+            cachedClusterManager.getProjectCluster.clearNodes()
+            cachedClusterManager.getProjectCluster.clusterable = true
+
+            // reset all clusters in node store... (using reflections)
+            val method = classOf[NodeStore].getMethods.find(_.getName == "clusterNodes").get
+            method.setAccessible(true);
+            val clusterNodes = method.invoke(cachedClusterManager).asInstanceOf[scala.collection.mutable.Map[Int, Cluster]]
+            clusterNodes.clear()
+            clusterNodes.put(cachedClusterManager.getProjectCluster.uniqueID, cachedClusterManager.getProjectCluster)
+
+            // add all source elements directly to the root cluster
+            cachedSourceElements foreach { node ⇒
+                node.metaInfo.empty
+                node.clusterable = false
+                cachedClusterManager.getProjectCluster.addNode(node)
+            }
+
+            cachedClusterManager
+        }
 
         var durations: List[Long] = Nil
 
         protected abstract override def runClustering(clusterManager: ClusterManager): Cluster = {
             time(duration ⇒ {
-                println("cluster time: "+nanoSecondsToMilliseconds(duration)+"ms")
+                //println("cluster time: "+nanoSecondsToMilliseconds(duration)+"ms")
                 durations = duration :: durations
             }) {
                 super.runClustering(clusterManager)
@@ -105,7 +136,6 @@ class PerformanceTest extends AbstractEvaluationTest {
             println("cluster time (avg): "+nanoSecondsToMilliseconds(avg)+"ms")
             println("cluster time (med): "+nanoSecondsToMilliseconds(med)+"ms")
         }
-
     }
 }
 
