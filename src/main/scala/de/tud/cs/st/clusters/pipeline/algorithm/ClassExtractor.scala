@@ -34,22 +34,62 @@ package de.tud.cs.st.clusters
 package pipeline
 package algorithm
 
-import framework.pipeline.SameNeighborClusteringAlgorithm
-import framework.pipeline.SameNeighborClusteringAlgorithmConfiguration
-import de.tud.cs.st.bat.resolved.dependency._
+import framework.pipeline.ClusteringAlgorithm
+import scala.collection.mutable.Map
+import framework.structure.Cluster
+import framework.structure.Node
+import framework.structure.TypeNode
+import framework.structure.FieldNode
+import framework.structure.MethodNode
 
 /**
  *
- * NOTE: This stage is only (usefully) applicable on the application cluster or any of its sub clusters.
  *
  * @author Thomas Schlosser
  *
  */
-class ClassExtractor extends SameNeighborClusteringAlgorithm {
+class ClassExtractor extends ClusteringAlgorithm {
 
-    val config = SameNeighborClusteringAlgorithmConfiguration
+    def doPerformClustering(cluster: Cluster): Boolean = {
+        var createdNewCluster = false
+        val clustersMap = Map[String, Set[Node]]()
+        var ignoredClusters: Set[Node] = Set()
 
-    protected def isOfConsideredDependencyType(dType: DependencyType): Boolean =
-        dType == DependencyType.IS_INSTANCE_MEMBER_OF || dType == DependencyType.IS_CLASS_MEMBER_OF
+        for (node ← cluster.nodes) {
+            if (node.isCluster) {
+                ignoredClusters = ignoredClusters + node
+            }
+            else {
+                var typeIdentifier: String = null
+                node match {
+                    case t: TypeNode ⇒
+                        typeIdentifier = t.identifier
+                    case f: FieldNode ⇒
+                        typeIdentifier = f.identifier.substring(0, f.identifier.lastIndexOf('.'))
+                    case m: MethodNode ⇒
+                        typeIdentifier = m.identifier.substring(0, m.identifier.lastIndexOf('('))
+                        typeIdentifier = typeIdentifier.substring(0, typeIdentifier.lastIndexOf('.'))
+                }
+                val clusterSet = clustersMap.getOrElse(typeIdentifier, Set())
+                clustersMap(typeIdentifier) = clusterSet + node
+            }
+        }
+
+        cluster.clearNodes()
+        for ((clusterIdentifier, nodeSet) ← clustersMap) {
+            val sameNeighborCluster = clusterManager.createCluster(clusterIdentifier, this.stageName)
+            createdNewCluster = true
+            nodeSet foreach {
+                sameNeighborCluster.addNode(_)
+            }
+            cluster.addNode(sameNeighborCluster)
+        }
+        // re-add all ignored clusters to the result cluster
+        ignoredClusters foreach {
+            cluster.addNode(_)
+        }
+
+        createdNewCluster
+    }
 
 }

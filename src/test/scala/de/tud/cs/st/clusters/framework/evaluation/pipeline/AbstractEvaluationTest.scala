@@ -143,6 +143,24 @@ abstract class AbstractEvaluationTest extends AbstractClusteringTest {
         getterSetterClustering,
         classExtractor
     )
+    val combinedStagesClassExChineseWhisp: Array[ClusteringStage] = Array(
+        appLibsSeparator,
+        packageClustering,
+        implTestSeparator,
+        sccClustering,
+        getterSetterClustering,
+        classExtractor,
+        chineseWhispers
+    )
+    val combinedStagesClassExChineseWhispEqWe: Array[ClusteringStage] = Array(
+        appLibsSeparator,
+        packageClustering,
+        implTestSeparator,
+        sccClustering,
+        getterSetterClustering,
+        classExtractor,
+        chineseWhispersEquallyWeighted
+    )
     val combinedStagesWithoutFinalizer: Array[ClusteringStage] = Array(
         appLibsSeparator,
         packageClustering,
@@ -157,14 +175,16 @@ abstract class AbstractEvaluationTest extends AbstractClusteringTest {
     val onlySCCClustering: Array[ClusteringStage] = Array(sccClustering)
 
     val allStageCombos: Array[(String, Array[ClusteringStage])] = Array(
-        ("onlyChineseWhispers", onlyChineseWhispers),
+        //        ("onlyChineseWhispers", onlyChineseWhispers),
         ("combinedStagesChineseWhispers", combinedStagesChineseWhispers),
-        ("onlyChineseWhispersEquallyWeighted", onlyChineseWhispersEquallyWeighted),
+        //        ("onlyChineseWhispersEquallyWeighted", onlyChineseWhispersEquallyWeighted),
         ("combinedStagesChineseWhispersEquallyWeighted", combinedStagesChineseWhispersEquallyWeighted),
-        ("onlyLayerClustering", onlyLayerClustering),
+        //        ("onlyLayerClustering", onlyLayerClustering),
         ("combinedStagesLayerClustering", combinedStagesLayerClustering),
         ("onlyClassExtractor", onlyClassExtractor),
         ("combinedStagesClassExtractor", combinedStagesClassExtractor),
+        ("combinedStagesClassExChineseWhisp", combinedStagesClassExChineseWhisp),
+        ("combinedStagesClassExChineseWhispEqWe", combinedStagesClassExChineseWhispEqWe),
         ("combinedStagesWithoutFinalizer", combinedStagesWithoutFinalizer),
         // ("onlyAppLibsSeparator", onlyAppLibsSeparator),
         // //        ("onlyGetterSetterClustering", onlyGetterSetterClustering),
@@ -195,19 +215,19 @@ abstract class AbstractEvaluationTest extends AbstractClusteringTest {
     }
 
     // TODO: there are no valid reference clusters...
-    test("evaluate [CoCoME]") {
-        evaluate(
-            "evaluate [CoCoME]",
-            cocomeSourceZipFile,
-            "test/referenceCluster/cocome-impl-classes.sei")
-    }
-
-    test("evaluate [hibernate]") {
-        evaluate(
-            "evaluate [hibernate]",
-            hibernateSourceZipFile,
-            "test/referenceCluster/hibernate-core-3.6.0.Final.sei")
-    }
+    //    test("evaluate [CoCoME]") {
+    //        evaluate(
+    //            "evaluate [CoCoME]",
+    //            cocomeSourceZipFile,
+    //            "test/referenceCluster/cocome-impl-classes.sei")
+    //    }
+    //
+    //    test("evaluate [hibernate]") {
+    //        evaluate(
+    //            "evaluate [hibernate]",
+    //            hibernateSourceZipFile,
+    //            "test/referenceCluster/hibernate-core-3.6.0.Final.sei")
+    //    }
 
     test("evaluate [ClusteringTestProject]") {
         evaluate(
