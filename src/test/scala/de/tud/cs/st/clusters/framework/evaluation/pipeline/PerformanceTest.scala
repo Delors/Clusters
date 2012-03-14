@@ -65,13 +65,21 @@ class PerformanceTest extends AbstractEvaluationTest {
         var i = 1
         allStageCombos foreach { combo ⇒
             val (comboName, stageCombo) = combo
-            println("run combination #"+i+" ("+comboName+")")
+            print("run combination #"+i+" ("+comboName+")")
+
+            var testClusteringPipeline = new ClusteringPipeline(stageCombo, None) with ClusterCachedPipeline
+            1 to 50 foreach { x ⇒
+                print(".")
+                testClusteringPipeline.runPipeline(sourceFiles)
+            }
+            println()
+
             var clusteringPipeline =
                 new ClusteringPipeline(
                     stageCombo,
-                    None) with PerformanceEvaluatedPipeline
+                    None) with PerformanceEvaluatedPipeline with ClusterCachedPipeline
 
-            1 to 10 foreach { x ⇒
+            1 to 100 foreach { x ⇒
                 clusteringPipeline.runPipeline(sourceFiles)
             }
             clusteringPipeline.printStatistics()
@@ -82,6 +90,33 @@ class PerformanceTest extends AbstractEvaluationTest {
     }
 
     trait PerformanceEvaluatedPipeline
+            extends ClusteringPipeline {
+
+        var durations: List[Long] = Nil
+
+        protected abstract override def runClustering(clusterManager: ClusterManager): Cluster = {
+            time(duration ⇒ {
+                //println("cluster time: "+nanoSecondsToMilliseconds(duration)+"ms")
+                durations = duration :: durations
+            }) {
+                super.runClustering(clusterManager)
+            }
+        }
+
+        def printStatistics() {
+            val min = (Long.MaxValue /: durations) { math.min(_, _) }
+            val max = (0l /: durations) { math.max(_, _) }
+            val avg = (0l /: durations) { _ + _ } / durations.length
+            val (lower, upper) = durations.sortWith(_ < _).splitAt(durations.size / 2)
+            val med = if (durations.size % 2 == 0) (lower.last + upper.head) / 2 else upper.head
+            println("cluster time (min): "+nanoSecondsToMilliseconds(min)+"ms")
+            println("cluster time (max): "+nanoSecondsToMilliseconds(max)+"ms")
+            println("cluster time (avg): "+nanoSecondsToMilliseconds(avg)+"ms")
+            println("cluster time (med): "+nanoSecondsToMilliseconds(med)+"ms")
+        }
+    }
+
+    trait ClusterCachedPipeline
             extends ClusteringPipeline {
 
         var cachedClusterManager: ClusterManager = null
@@ -112,29 +147,6 @@ class PerformanceTest extends AbstractEvaluationTest {
             }
 
             cachedClusterManager
-        }
-
-        var durations: List[Long] = Nil
-
-        protected abstract override def runClustering(clusterManager: ClusterManager): Cluster = {
-            time(duration ⇒ {
-                //println("cluster time: "+nanoSecondsToMilliseconds(duration)+"ms")
-                durations = duration :: durations
-            }) {
-                super.runClustering(clusterManager)
-            }
-        }
-
-        def printStatistics() {
-            val min = (Long.MaxValue /: durations) { math.min(_, _) }
-            val max = (0l /: durations) { math.max(_, _) }
-            val avg = (0l /: durations) { _ + _ } / durations.length
-            val (lower, upper) = durations.sortWith(_ < _).splitAt(durations.size / 2)
-            val med = if (durations.size % 2 == 0) (lower.last + upper.head) / 2 else upper.head
-            println("cluster time (min): "+nanoSecondsToMilliseconds(min)+"ms")
-            println("cluster time (max): "+nanoSecondsToMilliseconds(max)+"ms")
-            println("cluster time (avg): "+nanoSecondsToMilliseconds(avg)+"ms")
-            println("cluster time (med): "+nanoSecondsToMilliseconds(med)+"ms")
         }
     }
 }
