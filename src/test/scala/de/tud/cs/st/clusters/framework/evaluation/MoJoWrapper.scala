@@ -60,27 +60,39 @@ class MoJoWrapper(val calculatedCluster: Cluster, val authorativeCluster: Cluste
             val relFile = null
 
             val mjc = new MoJoCalculator(sourceFile, targetFile, relFile)
-            mojoHMValue = mojoHMValue * (mjc.mojofm() / 100)
+            mojoHMValue = mojoHMValue * (mjc.mojofm() / 100.0)
+            removeFile(sourceFile)
+            removeFile(targetFile)
         }
-        mojoHMValue * 100
+        mojoHMValue * 100.0
     }
 
-    def singleDirectionMoJo: Double = {
+    def singleDirectionMoJo: Long = {
         val sourceFile = writeIntoTempRSFfile(calculatedCluster, levelLimit)
         val targetFile = writeIntoTempRSFfile(authorativeCluster, levelLimit)
         val relFile = null
 
         val mjc = new MoJoCalculator(sourceFile, targetFile, relFile)
-        mjc.mojo()
+        val result = mjc.mojo()
+
+        removeFile(sourceFile)
+        removeFile(targetFile)
+
+        result
     }
 
-    def singleDirectionMoJoPlus: Double = {
+    def singleDirectionMoJoPlus: Long = {
         val sourceFile = writeIntoTempRSFfile(calculatedCluster, levelLimit)
         val targetFile = writeIntoTempRSFfile(authorativeCluster, levelLimit)
         val relFile = null
 
         val mjc = new MoJoCalculator(sourceFile, targetFile, relFile)
-        mjc.mojoplus()
+        val result = mjc.mojoplus()
+
+        removeFile(sourceFile)
+        removeFile(targetFile)
+
+        result
     }
 
     def singleDirectionMoJoFM: Double = {
@@ -89,10 +101,15 @@ class MoJoWrapper(val calculatedCluster: Cluster, val authorativeCluster: Cluste
         val relFile = null
 
         val mjc = new MoJoCalculator(sourceFile, targetFile, relFile)
-        mjc.mojofm()
+        val result = mjc.mojofm()
+
+        removeFile(sourceFile)
+        removeFile(targetFile)
+
+        result
     }
 
-    def doubleDirectionMoJo: Double = {
+    def doubleDirectionMoJo: Long = {
         val sourceFile = writeIntoTempRSFfile(calculatedCluster, levelLimit)
         val targetFile = writeIntoTempRSFfile(authorativeCluster, levelLimit)
         val relFile = null
@@ -101,10 +118,14 @@ class MoJoWrapper(val calculatedCluster: Cluster, val authorativeCluster: Cluste
         val one = mjc.mojo()
         mjc = new MoJoCalculator(targetFile, sourceFile, relFile)
         val two = mjc.mojo()
+
+        removeFile(sourceFile)
+        removeFile(targetFile)
+
         scala.math.min(one, two)
     }
 
-    def doubleDirectionMoJoPlus: Double = {
+    def doubleDirectionMoJoPlus: Long = {
         val sourceFile = writeIntoTempRSFfile(calculatedCluster, levelLimit)
         val targetFile = writeIntoTempRSFfile(authorativeCluster, levelLimit)
         val relFile = null
@@ -113,6 +134,10 @@ class MoJoWrapper(val calculatedCluster: Cluster, val authorativeCluster: Cluste
         val one = mjc.mojoplus()
         mjc = new MoJoCalculator(targetFile, sourceFile, relFile)
         val two = mjc.mojoplus()
+
+        removeFile(sourceFile)
+        removeFile(targetFile)
+
         scala.math.min(one, two)
     }
 
@@ -125,6 +150,10 @@ class MoJoWrapper(val calculatedCluster: Cluster, val authorativeCluster: Cluste
         val one = mjc.mojofm()
         mjc = new MoJoCalculator(targetFile, sourceFile, relFile)
         val two = mjc.mojofm()
+
+        removeFile(sourceFile)
+        removeFile(targetFile)
+
         scala.math.max(one, two)
     }
 
@@ -141,6 +170,9 @@ class MoJoWrapper(val calculatedCluster: Cluster, val authorativeCluster: Cluste
 
         val mjc = new MoJoCalculator(sourceFile, targetFile, relFile)
         mjc.showSequence()
+
+        removeFile(sourceFile)
+        removeFile(targetFile)
     }
 
     private def writeIntoTempRSFfile(cluster: Cluster, levelLimit: Option[Int]): String = {
@@ -169,6 +201,10 @@ class MoJoWrapper(val calculatedCluster: Cluster, val authorativeCluster: Cluste
         })
 
         tmpFile.getAbsolutePath()
+    }
+
+    private def removeFile(filePath: String) {
+        new File(filePath).delete()
     }
 
     private def printToFile(f: java.io.File)(op: java.io.PrintWriter ⇒ Unit) {

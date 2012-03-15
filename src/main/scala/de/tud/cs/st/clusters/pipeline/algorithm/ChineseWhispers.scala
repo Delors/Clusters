@@ -83,13 +83,13 @@ class ChineseWhispers(
                 }
             }
 
-            val clusterset = scala.collection.mutable.Set[Set[Int]]()
+            var clusterset = List[Set[Int]]()
             for (c ← clusters.values) {
                 var cl = Set[Int]()
                 for (n ← c.cluster) {
                     cl += n.id
                 }
-                clusterset += cl
+                clusterset = cl :: clusterset
             }
 
             val result = new Array[Node](clusterset.size)
@@ -121,7 +121,7 @@ class ChineseWhispers(
                 weightMatrix(key) = newWeight
         }
 
-        val sortedEdges = weightMatrix.toList.sortWith((a, b) ⇒ a._2 > b._2)
+        val sortedEdges = weightMatrix.toList.sortWith((a, b) ⇒ a._2 > b._2 || (a._2 == b._2 && (a._1._1 > b._1._1 || (a._1._1 == b._1._1 && a._1._2 > b._1._2))))
 
         cluster.clearNodes()
 

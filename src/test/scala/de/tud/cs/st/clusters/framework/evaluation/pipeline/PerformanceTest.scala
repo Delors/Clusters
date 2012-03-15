@@ -67,20 +67,22 @@ class PerformanceTest extends AbstractEvaluationTest {
             val (comboName, stageCombo) = combo
             print("run combination #"+i+" ("+comboName+")")
 
-            var testClusteringPipeline = new ClusteringPipeline(stageCombo, None) with ClusterCachedPipeline
-            1 to 50 foreach { x ⇒
-                print(".")
-                testClusteringPipeline.runPipeline(sourceFiles)
-            }
-            println()
+            val referenceClusteringPipeline = new ClusteringPipeline(stageCombo, None)
+            val refCluster = referenceClusteringPipeline.runPipeline(sourceFiles)
 
             var clusteringPipeline =
                 new ClusteringPipeline(
                     stageCombo,
-                    None) with PerformanceEvaluatedPipeline with ClusterCachedPipeline
+                    None) with PerformanceEvaluatedPipeline with ClusterCachedPipeline {
+                    val numberOfTestRuns = 50
+                }
 
             1 to 100 foreach { x ⇒
-                clusteringPipeline.runPipeline(sourceFiles)
+                val cl = clusteringPipeline.runPipeline(sourceFiles)
+                val mojoHM = new MoJoWrapper(cl, refCluster).singleDirectionMoJoHM
+                if (mojoHM != 100.0) {
+                    println("ERROR: wrong result in iteration ["+x+"] mojoHM:["+mojoHM+"]")
+                }
             }
             clusteringPipeline.printStatistics()
             i += 1
@@ -92,14 +94,27 @@ class PerformanceTest extends AbstractEvaluationTest {
     trait PerformanceEvaluatedPipeline
             extends ClusteringPipeline {
 
+        val numberOfTestRuns: Int
+        var runCounter = 0
+
         var durations: List[Long] = Nil
 
         protected abstract override def runClustering(clusterManager: ClusterManager): Cluster = {
-            time(duration ⇒ {
-                //println("cluster time: "+nanoSecondsToMilliseconds(duration)+"ms")
-                durations = duration :: durations
-            }) {
+            if (runCounter < numberOfTestRuns) {
+                print(".")
+                runCounter += 1
+                if (runCounter == numberOfTestRuns)
+                    println()
                 super.runClustering(clusterManager)
+            }
+            else {
+                runCounter += 1
+                time(duration ⇒ {
+                    //println("cluster time: "+nanoSecondsToMilliseconds(duration)+"ms")
+                    durations = duration :: durations
+                }) {
+                    super.runClustering(clusterManager)
+                }
             }
         }
 
@@ -109,6 +124,8 @@ class PerformanceTest extends AbstractEvaluationTest {
             val avg = (0l /: durations) { _ + _ } / durations.length
             val (lower, upper) = durations.sortWith(_ < _).splitAt(durations.size / 2)
             val med = if (durations.size % 2 == 0) (lower.last + upper.head) / 2 else upper.head
+
+            println("measured runs(test runs): "+durations.size+"("+numberOfTestRuns+")")
             println("cluster time (min): "+nanoSecondsToMilliseconds(min)+"ms")
             println("cluster time (max): "+nanoSecondsToMilliseconds(max)+"ms")
             println("cluster time (avg): "+nanoSecondsToMilliseconds(avg)+"ms")
@@ -132,12 +149,35 @@ class PerformanceTest extends AbstractEvaluationTest {
             cachedClusterManager.getProjectCluster.clearNodes()
             cachedClusterManager.getProjectCluster.clusterable = true
 
-            // reset all clusters in node store... (using reflections)
-            val method = classOf[NodeStore].getMethods.find(_.getName == "clusterNodes").get
-            method.setAccessible(true);
-            val clusterNodes = method.invoke(cachedClusterManager).asInstanceOf[scala.collection.mutable.Map[Int, Cluster]]
-            clusterNodes.clear()
-            clusterNodes.put(cachedClusterManager.getProjectCluster.uniqueID, cachedClusterManager.getProjectCluster)
+            // reset all states in the default cluster manager... (using reflections)
+            val methods = classOf[de.tud.cs.st.clusters.framework.structure.util.DefaultClusterManager].getMethods
+
+            methods.filter(_.getName == "clusterNodes") foreach { method ⇒
+                method.setAccessible(true);
+                val clusterNodes = method.invoke(cachedClusterManager).asInstanceOf[scala.collection.mutable.Map[Int, Cluster]]
+                clusterNodes.clear()
+                clusterNodes.put(cachedClusterManager.getProjectCluster.uniqueID, cachedClusterManager.getProjectCluster)
+            }
+
+            methods.filter(_.getName == "de$tud$cs$st$clusters$framework$structure$util$NodeStore$_setter_$clusterNodes_$eq") foreach { method ⇒
+                method.setAccessible(true);
+                method.invoke(cachedClusterManager, scala.collection.mutable.Map(cachedClusterManager.getProjectCluster.uniqueID -> cachedClusterManager.getProjectCluster).asInstanceOf[AnyRef])
+            }
+
+            methods.filter(_.getName == "de$tud$cs$st$clusters$framework$structure$util$ClusterFactory$$nextGloballyUniqueID_$eq") foreach { method ⇒
+                method.setAccessible(true);
+                method.invoke(cachedClusterManager, 0.asInstanceOf[AnyRef])
+            }
+
+            methods.filter(_.getName == "de$tud$cs$st$clusters$framework$structure$util$ClusterIDsMap$_setter_$de$tud$cs$st$clusters$framework$structure$util$ClusterIDsMap$$clusterIDs_$eq") foreach { method ⇒
+                method.setAccessible(true);
+                method.invoke(cachedClusterManager, scala.collection.mutable.WeakHashMap[String, Int]().asInstanceOf[AnyRef])
+            }
+
+            methods.filter(_.getName == "de$tud$cs$st$clusters$framework$structure$util$ClusterIDsMap$$nextClusterID_$eq") foreach { method ⇒
+                method.setAccessible(true);
+                method.invoke(cachedClusterManager, (cachedClusterManager.getProjectCluster.uniqueID + 1).asInstanceOf[AnyRef])
+            }
 
             // add all source elements directly to the root cluster
             cachedSourceElements foreach { node ⇒
