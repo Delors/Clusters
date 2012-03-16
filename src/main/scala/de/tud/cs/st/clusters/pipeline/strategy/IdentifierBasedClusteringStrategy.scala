@@ -52,20 +52,17 @@ trait IdentifierBasedClusteringStrategy extends ClusteringStage {
 
     val considerOnlyClusterable = false
 
-    abstract override def performClustering(cluster: Cluster): Boolean =
-        (false /: cluster.nodes)((cnc, node) ⇒ cnc | {
+    abstract override def performClustering(cluster: Cluster): Boolean = {
+        val createdNewCluster = (false /: cluster.nodes)((cnc, node) ⇒ cnc | {
             node match {
-                case subCluster: Cluster ⇒ {
-                    val nc = performClustering(subCluster)
-                    if (clusterIdentifier == subCluster.identifier &&
-                        (!considerOnlyClusterable || subCluster.clusterable)) {
-                        nc || super.performClustering(subCluster)
-                    }
-                    else {
-                        nc
-                    }
-                }
-                case _ ⇒ false // nothing to do; a single node cannot be clustered
+                case subCluster: Cluster ⇒ performClustering(subCluster)
+                case _                   ⇒ false // nothing to do; a single node cannot be clustered
             }
         })
+        if (clusterIdentifier == cluster.identifier &&
+            (!considerOnlyClusterable || cluster.clusterable)) {
+            return createdNewCluster || super.performClustering(cluster)
+        }
+        createdNewCluster
+    }
 }
