@@ -59,6 +59,8 @@ class PerformanceTest extends AbstractEvaluationTest {
         testName: String,
         sourceFiles: SourceFile,
         referenceClusteringFilePath: String,
+        testRuns: Int,
+        measuredRuns: Int,
         allStageCombos: Array[(String, Array[ClusteringStage])]) {
         println(testName+" - START")
 
@@ -74,10 +76,10 @@ class PerformanceTest extends AbstractEvaluationTest {
                 new ClusteringPipeline(
                     stageCombo,
                     None) with PerformanceEvaluatedPipeline with ClusterCachedPipeline {
-                    val numberOfTestRuns = 50
+                    val numberOfTestRuns = testRuns
                 }
 
-            1 to 100 foreach { x ⇒
+            1 to (measuredRuns + testRuns) foreach { x ⇒
                 val cl = clusteringPipeline.runPipeline(sourceFiles)
                 val mojoHM = new MoJoWrapper(cl, refCluster).singleDirectionMoJoHM
                 if (mojoHM != 100.0) {

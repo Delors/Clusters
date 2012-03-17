@@ -197,14 +197,18 @@ abstract class AbstractEvaluationTest extends AbstractClusteringTest {
     private def evaluate(
         testName: String,
         sourceFiles: SourceFile,
-        referenceClusteringFilePath: String) {
-        evaluate(testName, sourceFiles, referenceClusteringFilePath, allStageCombos)
+        referenceClusteringFilePath: String,
+        testRuns: Int = 100,
+        measuredRuns: Int = 50) {
+        evaluate(testName, sourceFiles, referenceClusteringFilePath, testRuns, measuredRuns, allStageCombos)
     }
 
     protected def evaluate(
         testName: String,
         sourceFiles: SourceFile,
         referenceClusteringFilePath: String,
+        testRuns: Int,
+        measuredRuns: Int,
         allStageCombos: Array[(String, Array[ClusteringStage])])
 
     test("evaluate [Flashcards]") {
@@ -268,7 +272,9 @@ abstract class AbstractEvaluationTest extends AbstractClusteringTest {
         evaluate(
             "evaluate [javaRuntimeSourceZipFile]",
             javaRuntimeSourceZipFile,
-            null)
+            null,
+            testRuns = 25,
+            measuredRuns = 50)
     }
 
 }

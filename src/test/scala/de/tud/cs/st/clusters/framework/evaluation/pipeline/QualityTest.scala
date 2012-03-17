@@ -56,6 +56,8 @@ class QualityTest extends AbstractEvaluationTest {
         testName: String,
         sourceFiles: SourceFile,
         referenceClusteringFilePath: String,
+        testRuns: Int,
+        measuredRuns: Int,
         allStageCombos: Array[(String, Array[ClusteringStage])]) {
 
         println(testName+" - START")
