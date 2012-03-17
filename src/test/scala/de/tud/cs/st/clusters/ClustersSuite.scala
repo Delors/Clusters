@@ -14,13 +14,13 @@ class ClustersSuite extends Suites(
 
     // Clustering tests...
     new pipeline.ApplicationLibrariesSeparatorTest,
+    new pipeline.BasePackageExtractorTest,
     new pipeline.ChineseWhispersTest,
     new pipeline.ClassExtractorTest,
     new pipeline.CombinedClusteringTest,
     new pipeline.GetterSetterClusteringTest,
     new pipeline.ImplementationTestingSeparatorTest,
     new pipeline.LayerClusteringTest,
-    new pipeline.PackageClusteringTest,
     new pipeline.StronglyConnectedComponentsClusteringTest,
 
     // Framework tests

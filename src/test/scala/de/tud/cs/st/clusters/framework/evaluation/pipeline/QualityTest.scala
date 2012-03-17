@@ -60,6 +60,9 @@ class QualityTest extends AbstractEvaluationTest {
 
         println(testName+" - START")
 
+        if (referenceClusteringFilePath == null)
+            sys.error("No reference clustering file is given!")
+
         val referenceClusters = ReferenceClusterCreator.readReferenceCluster(
             sourceFiles,
             new java.io.File(referenceClusteringFilePath))

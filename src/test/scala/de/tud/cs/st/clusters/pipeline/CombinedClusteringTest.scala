@@ -41,8 +41,8 @@ import framework.TestResultWriterCreators._
 import framework.pipeline.ClusteringStage
 import algorithm.ApplicationLibrariesSeparator
 import algorithm.ApplicationLibrariesSeparatorConfiguration
-import algorithm.PackageClustering
-import algorithm.PackageClusteringConfiguration
+import algorithm.BasePackageExtractor
+import algorithm.BasePackageExtractorConfiguration
 import algorithm.ImplementationTestingSeparator
 import algorithm.ImplementationTestingSeparatorConfiguration
 import algorithm.GetterSetterClustering
@@ -65,16 +65,16 @@ import framework.util.ReferenceClusterCreator
 class CombinedClusteringTest extends AbstractClusteringTest {
 
     val appLibsConfig = new ApplicationLibrariesSeparatorConfiguration {}
-    val pkgConfig = new PackageClusteringConfiguration {}
+    val basePkgConfig = new BasePackageExtractorConfiguration {}
     val implTestConfig = new ImplementationTestingSeparatorConfiguration {}
     val getterSetterConfig = new GetterSetterClusteringConfiguration {}
     val chineseWhispersConfig = new ChineseWhispersConfiguration {}
     val sccConfig = new StronglyConnectedComponentsClusteringConfiguration {}
 
     val appLibsSeparator = new ApplicationLibrariesSeparator(appLibsConfig)
-    val packageClustering = new {
+    val basePackageExtractor = new {
         val clusterIdentifier = appLibsConfig.librariesClusterIdentifier
-    } with PackageClustering(pkgConfig) with IdentifierBasedClusteringStrategy
+    } with BasePackageExtractor(basePkgConfig) with IdentifierBasedClusteringStrategy
     val implTestSeparator = new ImplementationTestingSeparator(implTestConfig) with FirstClusterablesClusteringStrategy
     val sccClustering = new StronglyConnectedComponentsClustering(sccConfig) with FirstClusterablesClusteringStrategy
     val getterSetterClustering = new GetterSetterClustering(getterSetterConfig) with FirstClusterablesClusteringStrategy
@@ -84,7 +84,7 @@ class CombinedClusteringTest extends AbstractClusteringTest {
 
     implicit val clusteringStages: Array[ClusteringStage] = Array(
         appLibsSeparator,
-        packageClustering,
+        basePackageExtractor,
         implTestSeparator,
         sccClustering,
         getterSetterClustering,

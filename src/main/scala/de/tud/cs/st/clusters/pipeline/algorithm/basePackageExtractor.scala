@@ -40,13 +40,13 @@ import framework.structure.Cluster
 import framework.structure.util.ClusterManager
 
 /**
- * Creates hyper clusters based on greatest common prefix of classes' package names
+ * Creates clusters based on greatest common prefix of classes' package names
  *
  * @author Thomas Schlosser
  *
  */
-class PackageClustering(
-    val config: PackageClusteringConfiguration)
+class BasePackageExtractor(
+    val config: BasePackageExtractorConfiguration)
         extends ClusteringAlgorithm {
 
     def doPerformClustering(cluster: Cluster): Boolean = {
@@ -165,9 +165,9 @@ private trait GreatestCommonPrefixTree[Content] {
 
 }
 
-trait PackageClusteringConfiguration {
+trait BasePackageExtractorConfiguration {
     // new clusters should be marked as unclusterable if they are only libraries that should not further be considered
     val createUnclusterableClusters = true
 }
 
-object PackageClusteringConfiguration extends PackageClusteringConfiguration
+object BasePackageExtractorConfiguration extends BasePackageExtractorConfiguration

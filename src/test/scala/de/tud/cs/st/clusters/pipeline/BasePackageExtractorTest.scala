@@ -39,30 +39,30 @@ import framework.AbstractClusteringTest
 import framework.TestSources._
 import framework.TestResultWriterCreators._
 import framework.pipeline.ClusteringStage
-import algorithm.PackageClustering
-import algorithm.PackageClusteringConfiguration
+import algorithm.BasePackageExtractor
+import algorithm.BasePackageExtractorConfiguration
 
 /**
  * @author Thomas Schlosser
  *
  */
 @RunWith(classOf[JUnitRunner])
-class PackageClusteringTest extends AbstractClusteringTest {
+class BasePackageExtractorTest extends AbstractClusteringTest {
 
-    val configuration = new PackageClusteringConfiguration {}
+    val configuration = new BasePackageExtractorConfiguration {}
 
     implicit val clusteringStages: Array[ClusteringStage] = Array(
-        new PackageClustering(configuration)
+        new BasePackageExtractor(configuration)
     )
 
-    test("testPackageClustering [cocome]") {
-        testClustering("testPackageClustering [cocome]",
-            graphmlClusteringResultWriterCreator("pckgClust_cocome"),
+    test("testBasePackageExtractor [cocome]") {
+        testClustering("testBasePackageExtractor [cocome]",
+            graphmlClusteringResultWriterCreator("basePackageExtractor_cocome"),
             cocomeSourceZipFile)
     }
 
-    test("testPackageClustering [hibernate]") {
-        testClustering("testPackageClustering [hibernate]",
+    test("testBasePackageExtractor [hibernate]") {
+        testClustering("testBasePackageExtractor [hibernate]",
             hibernateSourceZipFile)
     }
 }
