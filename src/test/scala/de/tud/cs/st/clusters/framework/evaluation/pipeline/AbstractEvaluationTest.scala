@@ -215,19 +215,19 @@ abstract class AbstractEvaluationTest extends AbstractClusteringTest {
     }
 
     // TODO: there are no valid reference clusters...
-    //    test("evaluate [CoCoME]") {
-    //        evaluate(
-    //            "evaluate [CoCoME]",
-    //            cocomeSourceZipFile,
-    //            "test/referenceCluster/cocome-impl-classes.sei")
-    //    }
-    //
-    //    test("evaluate [hibernate]") {
-    //        evaluate(
-    //            "evaluate [hibernate]",
-    //            hibernateSourceZipFile,
-    //            "test/referenceCluster/hibernate-core-3.6.0.Final.sei")
-    //    }
+    test("evaluate [CoCoME]") {
+        evaluate(
+            "evaluate [CoCoME]",
+            cocomeSourceZipFile,
+            "test/referenceCluster/cocome-impl-classes.sei")
+    }
+
+    test("evaluate [hibernate]") {
+        evaluate(
+            "evaluate [hibernate]",
+            hibernateSourceZipFile,
+            "test/referenceCluster/hibernate-core-3.6.0.Final.sei")
+    }
 
     test("evaluate [ClusteringTestProject]") {
         evaluate(
@@ -254,6 +254,13 @@ abstract class AbstractEvaluationTest extends AbstractClusteringTest {
         evaluate(
             "evaluate [antSourceZipFile]",
             antSourceZipFile,
+            null)
+    }
+
+    test("evaluate [clustersSourceZipFile]") {
+        evaluate(
+            "evaluate [clustersSourceZipFile]",
+            clustersSourceZipFile,
             null)
     }
 
