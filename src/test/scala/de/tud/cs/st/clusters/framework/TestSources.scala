@@ -48,7 +48,7 @@ trait TestSources {
     val flashcardsSourceZipFile = SourceZipFile("test/classfiles/Flashcards 0.4 - target 1.6.zip")
     val hibernateSourceZipFile = SourceZipFile("test/classfiles/hibernate-core-3.6.0.Final.jar")
     def clustersSourceZipFile = optionalSourceZipFile("build/clusters-1.6.ALPHA.jar")
-    def javaRuntimeSourceZipFile = optionalSourceZipFile("test/classfiles/rt_jdk1.7.0_01.jar")
+    def javaRuntimeSourceZipFile = optionalSourceZipFile("test/classfiles/rt_jdk1.7.jar")
 
     // only selected classes
     val getterSetterTestClassSourceZipFile = SourceZipFile("test/classfiles/ClusteringTestProject.zip", "test/GetterSetterTestClass.class")
