@@ -69,26 +69,31 @@ class PerformanceTest extends AbstractEvaluationTest {
             val (comboName, stageCombo) = combo
             print("run combination #"+i+" ("+comboName+")")
 
-            //NOTE: this validity check requires a large max heap size...Xmx of 2G is not large enough for hibernate.  
-            //            val referenceClusteringPipeline = new ClusteringPipeline(stageCombo, None)
-            //            val refCluster = referenceClusteringPipeline.runPipeline(sourceFiles)
+            try {
+                //NOTE: this validity check requires a large max heap size...Xmx of 2G is not large enough for hibernate.  
+                //            val referenceClusteringPipeline = new ClusteringPipeline(stageCombo, None)
+                //            val refCluster = referenceClusteringPipeline.runPipeline(sourceFiles)
 
-            var clusteringPipeline =
-                new ClusteringPipeline(
-                    stageCombo,
-                    None) with PerformanceEvaluatedPipeline with ClusterCachedPipeline {
-                    val numberOfTestRuns = testRuns
+                var clusteringPipeline =
+                    new ClusteringPipeline(
+                        stageCombo,
+                        None) with PerformanceEvaluatedPipeline with ClusterCachedPipeline {
+                        val numberOfTestRuns = testRuns
+                    }
+
+                1 to (measuredRuns + testRuns) foreach { x ⇒
+                    val cl = clusteringPipeline.runPipeline(sourceFiles)
+                    //NOTE: this validity check requires a large max heap size...Xmx of 2G is not large enough for hibernate.
+                    //                val mojoHM = new MoJoWrapper(cl, refCluster).singleDirectionMoJoHM
+                    //                if (mojoHM != 100.0) {
+                    //                    println("ERROR: wrong result in iteration ["+x+"] mojoHM:["+mojoHM+"]")
+                    //                }
                 }
-
-            1 to (measuredRuns + testRuns) foreach { x ⇒
-                val cl = clusteringPipeline.runPipeline(sourceFiles)
-                //NOTE: this validity check requires a large max heap size...Xmx of 2G is not large enough for hibernate.
-                //                val mojoHM = new MoJoWrapper(cl, refCluster).singleDirectionMoJoHM
-                //                if (mojoHM != 100.0) {
-                //                    println("ERROR: wrong result in iteration ["+x+"] mojoHM:["+mojoHM+"]")
-                //                }
+                clusteringPipeline.printStatistics()
             }
-            clusteringPipeline.printStatistics()
+            catch {
+                case e: OutOfMemoryError ⇒ println("\nERROR: "+e.getMessage())
+            }
             i += 1
         }
 
