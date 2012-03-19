@@ -33,6 +33,7 @@
 package de.tud.cs.st.clusters
 package framework
 package pipeline
+package result
 
 import structure.Node
 import structure.Cluster

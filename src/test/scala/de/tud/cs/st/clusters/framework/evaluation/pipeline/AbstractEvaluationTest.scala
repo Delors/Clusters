@@ -64,7 +64,6 @@ import de.tud.cs.st.clusters.pipeline.strategy.IdentifierBasedClusteringStrategy
 import de.tud.cs.st.clusters.pipeline.strategy.MinClusterSizeClusteringStrategy
 import util.ReferenceClusterCreator
 import util.SourceFile
-import framework.pipeline.ClusteringResultWriter
 import framework.structure.Cluster
 import framework.structure.util.ClusterManager
 import framework.structure.SourceElementNode

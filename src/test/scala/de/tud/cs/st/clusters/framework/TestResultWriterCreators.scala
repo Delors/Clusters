@@ -33,11 +33,11 @@
 package de.tud.cs.st.clusters
 package framework
 
-import pipeline.DOTClusteringResultWriter
-import pipeline.DOTClusteringResultWriterConfiguration
-import pipeline.GMLClusteringResultWriter
-import pipeline.GraphmlClusteringResultWriter
-import pipeline.GraphmlClusteringResultWriterConfiguration
+import pipeline.result.DOTClusteringResultWriter
+import pipeline.result.DOTClusteringResultWriterConfiguration
+import pipeline.result.GMLClusteringResultWriter
+import pipeline.result.GraphmlClusteringResultWriter
+import pipeline.result.GraphmlClusteringResultWriterConfiguration
 
 /**
  * @author Thomas Schlosser

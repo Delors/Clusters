@@ -36,7 +36,7 @@ package framework
 import org.scalatest.FunSuite
 import pipeline.ClusteringStage
 import pipeline.ClusteringPipeline
-import pipeline.ClusteringResultWriter
+import pipeline.result.ClusteringResultWriter
 import evaluation.PerformanceEvaluatedPipeline
 import structure.Cluster
 import structure.util.ClusterManager

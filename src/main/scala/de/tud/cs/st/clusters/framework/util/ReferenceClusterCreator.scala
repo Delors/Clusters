@@ -37,8 +37,6 @@ package util
 import java.io.File
 import java.io.FileReader
 import java.io.BufferedReader
-import pipeline.GraphmlClusteringResultWriter
-import pipeline.GraphmlClusteringResultWriterConfiguration
 import structure.Cluster
 import structure.Node
 import structure.util.DefaultDependencyExtractor

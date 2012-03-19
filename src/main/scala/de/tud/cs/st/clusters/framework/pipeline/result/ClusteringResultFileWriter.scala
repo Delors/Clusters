@@ -33,6 +33,7 @@
 package de.tud.cs.st.clusters
 package framework
 package pipeline
+package result
 
 import structure.Cluster
 import structure.SourceElementNode
@@ -43,14 +44,30 @@ import java.io.FileWriter
  * @author Thomas Schlosser
  *
  */
-trait ClusteringResultWriter {
+abstract class ClusteringResultFileWriter(
+    val fileName: String, val fileExtension: String)
+        extends FileWriter(
+            if (fileName.contains('.'))
+                fileName
+            else fileName + '.' + fileExtension)
+        with ClusteringResultWriter {
 
-    def write(clusteringResult: Cluster)
+    def write(clusteringResult: Cluster) {
+        writeHeader()
+        val nodeBuffer = new StringBuffer()
+        val edgeBuffer = new StringBuffer()
+        writeCluster(clusteringResult, nodeBuffer, edgeBuffer)
+        write(nodeBuffer.toString)
+        write(edgeBuffer.toString)
+        writeFooter()
+    }
 
-    /**
-     * Closes open resources if the concrete writer uses any resource at all.
-     * If the concrete implementation do not use any resources, calling this method has no effect.
-     */
-    def close()
+    protected def writeHeader()
+
+    protected def writeFooter()
+
+    protected def writeCluster(cluster: Cluster, nodeBuffer: StringBuffer, edgeBuffer: StringBuffer)
+
+    protected def writeSourceElementNode(node: SourceElementNode, nodeBuffer: StringBuffer, edgeBuffer: StringBuffer)
 
 }

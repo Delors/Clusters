@@ -35,8 +35,8 @@ package framework
 package util
 
 import java.io.File
-import pipeline.GraphmlClusteringResultWriter
-import pipeline.GraphmlClusteringResultWriterConfiguration
+import pipeline.result.GraphmlClusteringResultWriter
+import pipeline.result.GraphmlClusteringResultWriterConfiguration
 
 /**
  * @author Thomas Schlosser

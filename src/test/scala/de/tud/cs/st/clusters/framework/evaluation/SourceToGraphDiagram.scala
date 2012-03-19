@@ -37,8 +37,8 @@ package evaluation
 import structure.util.DefaultDependencyExtractor
 import util.SourceZipFile
 import util.DependencyExtractionUtils
-import framework.pipeline.GraphmlClusteringResultWriter
-import framework.pipeline.GraphmlClusteringResultWriterConfiguration
+import framework.pipeline.result.GraphmlClusteringResultWriter
+import framework.pipeline.result.GraphmlClusteringResultWriterConfiguration
 
 /**
  * @author Thomas Schlosser

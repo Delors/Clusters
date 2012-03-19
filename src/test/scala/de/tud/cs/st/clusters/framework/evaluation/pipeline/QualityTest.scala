@@ -40,7 +40,6 @@ import framework.pipeline.ClusteringStage
 import util.ReferenceClusterCreator
 import evaluation.MoJoWrapper
 import util.SourceFile
-import framework.pipeline.ClusteringResultWriter
 import framework.structure.Cluster
 import framework.structure.SourceElementNode
 import de.tud.cs.st.util.perf._

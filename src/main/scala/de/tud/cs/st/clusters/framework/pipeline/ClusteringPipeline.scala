@@ -42,6 +42,7 @@ import de.tud.cs.st.bat.resolved.dependency.DependencyExtractor
 import structure.util.ClusterManager
 import structure.util.DefaultDependencyExtractor
 import structure.Cluster
+import result.ClusteringResultWriter
 
 /**
  * @author Thomas Schlosser
