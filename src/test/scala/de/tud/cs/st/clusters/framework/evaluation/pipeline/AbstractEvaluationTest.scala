@@ -80,6 +80,9 @@ abstract class AbstractEvaluationTest extends AbstractClusteringTest {
 
     val appLibsConfig = new ApplicationLibrariesSeparatorConfiguration {}
     val basePkgConfig = new BasePackageExtractorConfiguration {}
+    val basePkgConfigCreateClusterable = new BasePackageExtractorConfiguration {
+        override val createUnclusterableClusters = false
+    }
     val implTestConfig = new ImplementationTestingSeparatorConfiguration {}
     val getterSetterConfig = new GetterSetterClusteringConfiguration {}
     val chineseWhispersConfig = new ChineseWhispersConfiguration {}
@@ -90,9 +93,12 @@ abstract class AbstractEvaluationTest extends AbstractClusteringTest {
     val layerConfig = new LayerClusteringConfiguration {}
 
     val appLibsSeparator = new ApplicationLibrariesSeparator(appLibsConfig)
-    val basePackageExtractor = new {
+    val libsBasePackageExtractor = new {
         val clusterIdentifier = appLibsConfig.librariesClusterIdentifier
     } with BasePackageExtractor(basePkgConfig) with IdentifierBasedClusteringStrategy
+    val implBasePackageExtractor = new {
+        val clusterIdentifier = implTestConfig.implementationClusterIdentifier
+    } with BasePackageExtractor(basePkgConfigCreateClusterable) with IdentifierBasedClusteringStrategy
     val implTestSeparator = new ImplementationTestingSeparator(implTestConfig) with FirstClusterablesClusteringStrategy
     val sccClustering = new StronglyConnectedComponentsClustering(sccConfig) with FirstClusterablesClusteringStrategy
     val getterSetterClustering = new GetterSetterClustering(getterSetterConfig) with FirstClusterablesClusteringStrategy
@@ -104,13 +110,15 @@ abstract class AbstractEvaluationTest extends AbstractClusteringTest {
         override val minClusterSizeThreshold: Int = 3
     } with ChineseWhispers(chineseWhispersEquallyWeightedConfig) with MinClusterSizeClusteringStrategy with FirstClusterablesClusteringStrategy with FixedPointIterationClusteringStrategy
 
-    val layerClustering = new LayerClustering(layerConfig)
+    val layerClustering = new {
+        val clusterIdentifier = implTestConfig.implementationClusterIdentifier
+    } with LayerClustering(layerConfig) with FirstClusterablesClusteringStrategy with IdentifierBasedClusteringStrategy
     val classExtractor = new ClassExtractor() with FirstClusterablesClusteringStrategy
 
     val onlyChineseWhispers: Array[ClusteringStage] = Array(chineseWhispers)
     val combinedStagesChineseWhispers: Array[ClusteringStage] = Array(
         appLibsSeparator,
-        basePackageExtractor,
+        libsBasePackageExtractor,
         implTestSeparator,
         sccClustering,
         getterSetterClustering,
@@ -119,16 +127,16 @@ abstract class AbstractEvaluationTest extends AbstractClusteringTest {
     val onlyChineseWhispersEquallyWeighted: Array[ClusteringStage] = Array(chineseWhispersEquallyWeighted)
     val combinedStagesChineseWhispersEquallyWeighted: Array[ClusteringStage] = Array(
         appLibsSeparator,
-        basePackageExtractor,
+        libsBasePackageExtractor,
         implTestSeparator,
         sccClustering,
         getterSetterClustering,
         chineseWhispersEquallyWeighted
     )
-    val onlyLayerClustering: Array[ClusteringStage] = Array(layerClustering)
+    val onlyLayerClustering: Array[ClusteringStage] = Array(new LayerClustering(layerConfig))
     val combinedStagesLayerClustering: Array[ClusteringStage] = Array(
         appLibsSeparator,
-        basePackageExtractor,
+        libsBasePackageExtractor,
         implTestSeparator,
         sccClustering,
         getterSetterClustering,
@@ -137,7 +145,7 @@ abstract class AbstractEvaluationTest extends AbstractClusteringTest {
     val onlyClassExtractor: Array[ClusteringStage] = Array(classExtractor)
     val combinedStagesClassExtractor: Array[ClusteringStage] = Array(
         appLibsSeparator,
-        basePackageExtractor,
+        libsBasePackageExtractor,
         implTestSeparator,
         sccClustering,
         getterSetterClustering,
@@ -145,7 +153,7 @@ abstract class AbstractEvaluationTest extends AbstractClusteringTest {
     )
     val combinedStagesClassExChineseWhisp: Array[ClusteringStage] = Array(
         appLibsSeparator,
-        basePackageExtractor,
+        libsBasePackageExtractor,
         implTestSeparator,
         sccClustering,
         getterSetterClustering,
@@ -154,7 +162,7 @@ abstract class AbstractEvaluationTest extends AbstractClusteringTest {
     )
     val combinedStagesClassExChineseWhispEqWe: Array[ClusteringStage] = Array(
         appLibsSeparator,
-        basePackageExtractor,
+        libsBasePackageExtractor,
         implTestSeparator,
         sccClustering,
         getterSetterClustering,
@@ -163,7 +171,7 @@ abstract class AbstractEvaluationTest extends AbstractClusteringTest {
     )
     val combinedStagesWithoutFinalizer: Array[ClusteringStage] = Array(
         appLibsSeparator,
-        basePackageExtractor,
+        libsBasePackageExtractor,
         implTestSeparator,
         sccClustering,
         getterSetterClustering
@@ -173,6 +181,14 @@ abstract class AbstractEvaluationTest extends AbstractClusteringTest {
     val onlyImplTestSeparator: Array[ClusteringStage] = Array(implTestSeparator)
     val onlyBasePackageExtractor: Array[ClusteringStage] = Array(new BasePackageExtractor(basePkgConfig))
     val onlySCCClustering: Array[ClusteringStage] = Array(sccClustering)
+
+    val packageClassBasedClustering: Array[ClusteringStage] = Array(
+        appLibsSeparator,
+        libsBasePackageExtractor,
+        implTestSeparator,
+        implBasePackageExtractor,
+        classExtractor
+    )
 
     val allStageCombos: Array[(String, Array[ClusteringStage])] = Array(
         ("onlyChineseWhispers", onlyChineseWhispers),
@@ -191,6 +207,7 @@ abstract class AbstractEvaluationTest extends AbstractClusteringTest {
         ("onlyImplTestSeparator", onlyImplTestSeparator),
         ("onlyBasePackageExtractor", onlyBasePackageExtractor),
         ("onlySCCClustering", onlySCCClustering),
+        ("packageClassBasedClustering", packageClassBasedClustering),
         ("noClustering", Array())
     )
 
@@ -218,7 +235,6 @@ abstract class AbstractEvaluationTest extends AbstractClusteringTest {
             "test/referenceCluster/Flashcards 0.4 - target 1.6.sei")
     }
 
-    // TODO: there are no valid reference clusters...
     test("evaluate [CoCoME]") {
         evaluate(
             "evaluate [CoCoME]",
@@ -226,6 +242,7 @@ abstract class AbstractEvaluationTest extends AbstractClusteringTest {
             "test/referenceCluster/cocome-impl-classes.sei")
     }
 
+    // TODO: there are no valid reference clusters...
     test("evaluate [hibernate]") {
         evaluate(
             "evaluate [hibernate]",
