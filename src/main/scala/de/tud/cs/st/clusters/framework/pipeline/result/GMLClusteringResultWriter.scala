@@ -65,13 +65,13 @@ class GMLClusteringResultWriter(
         //	]
         nodeBuffer.append("\tnode\n")
         nodeBuffer.append("\t[\n")
-        nodeBuffer.append("\t\tid\t\t")
+        nodeBuffer.append("\t\tid\t")
         nodeBuffer.append(cluster.uniqueID)
         nodeBuffer.append("\n\t\tlabel\t\"")
         nodeBuffer.append(cluster.identifier)
         nodeBuffer.append("\"\n")
         if (cluster.parent != null) {
-            nodeBuffer.append("\t\tgid\t\t")
+            nodeBuffer.append("\t\tgid\t")
             nodeBuffer.append(cluster.parent.uniqueID)
             nodeBuffer.append("\n")
         }
@@ -101,13 +101,13 @@ class GMLClusteringResultWriter(
         //	]
         nodeBuffer.append("\tnode\n")
         nodeBuffer.append("\t[\n")
-        nodeBuffer.append("\t\tid\t\t")
+        nodeBuffer.append("\t\tid\t")
         nodeBuffer.append(node.uniqueID)
         nodeBuffer.append("\n\t\tlabel\t\"")
         nodeBuffer.append(node.identifier)
         nodeBuffer.append("\"\n")
         if (node.parent != null) {
-            nodeBuffer.append("\t\tgid\t\t")
+            nodeBuffer.append("\t\tgid\t")
             nodeBuffer.append(node.parent.uniqueID)
             nodeBuffer.append("\n")
         }
