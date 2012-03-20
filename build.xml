@@ -93,12 +93,12 @@ Author 	Thomas Schlosser
 		<pathelement location="${class.dir}" />
 		<pathelement location="${bat.jar}" />
 		<pathelement location="${commons-lang.jar}" />
+		<pathelement location="${graphclustering.jar}" />
 	</path>
 	<path id="test.classpath">
 		<path refid="project.classpath" />
 		<pathelement location="${scalatest.jar}" />
 		<pathelement location="${junit.jar}" />
-		<pathelement location="${graphclustering.jar}" />
 	</path>
 
 	<!-- Definition of additional tasks used to generate / compile Clusters. -->
