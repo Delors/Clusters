@@ -40,6 +40,10 @@ import java.io.File
 import mojo.MoJoCalculator
 
 /**
+ * The MoJoWrapper wraps an external MoJo implementation and
+ * adds a new Metric called MoJoHM that also considers the
+ * cluster hierarchy while determine a similarity value.
+ *
  * @author Thomas Schlosser
  *
  */

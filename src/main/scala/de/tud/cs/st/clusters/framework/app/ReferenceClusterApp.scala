@@ -32,13 +32,20 @@
 */
 package de.tud.cs.st.clusters
 package framework
-package util
+package app
 
 import java.io.File
 import pipeline.result.GraphmlClusteringResultWriter
 import pipeline.result.GraphmlClusteringResultWriterConfiguration
+import util.ConsoleParameterValidator
+import util.DependencyExtractionUtils
+import util.ReferenceClusterCreator
+import util.SourceElementIdentifiersToFile
+import util.SourceZipFile
 
 /**
+ * This application can be used to (manually) create a reference architecture.
+ *
  * @author Thomas Schlosser
  *
  */

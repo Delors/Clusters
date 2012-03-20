@@ -32,7 +32,7 @@
 */
 package de.tud.cs.st.clusters
 package framework
-package evaluation
+package app
 
 import structure.util.DefaultDependencyExtractor
 import util.SourceZipFile
@@ -41,12 +41,35 @@ import framework.pipeline.result.GraphmlClusteringResultWriter
 import framework.pipeline.result.GraphmlClusteringResultWriterConfiguration
 
 /**
+ * This application can be used to create a diagram of a software project's dependency graph.
+ *
  * @author Thomas Schlosser
  *
  */
-object SourceToGraphDiagram {
+object SourceToDiagramApp {
+
+    private val usage = """
+Usage: SourceToDiagramApp <inputFile> <outputFile>
+   or  SourceToDiagramApp -h | --help | -?
+           (to print this help message)
+"""
+
     def main(args: Array[String]) {
-        val sourceZipFile = SourceZipFile("test/classfiles/HelloWorld.class.zip")
+        if (args.length == 0 ||
+            (args.length == 1 && (args(0) == "-h" || args(0) == "--help" || args(0) == "-?"))) {
+            println(usage)
+            sys.exit(0)
+        }
+        if (args.length == 1) {
+            println("The given parameter is unknown.\nPlease use 'SourceToDiagramApp -h' to get help.")
+            sys.exit(1)
+        }
+        if (args.length > 2) {
+            println("Too many parameters are given.\nPlease use 'SourceToDiagramApp -h' to get help.")
+            sys.exit(1)
+        }
+
+        val sourceZipFile = SourceZipFile(args(0))
 
         val dependencyExtractor = new DefaultDependencyExtractor()
         DependencyExtractionUtils.extractDependencies(dependencyExtractor)(sourceZipFile)
@@ -57,7 +80,7 @@ object SourceToGraphDiagram {
             override val showSourceElementNodes = true
             override val maxNumberOfLevels = None
         } with GraphmlClusteringResultWriterConfiguration
-        val resultWriter = new GraphmlClusteringResultWriter("helloWorld", writerConfiguration)
+        val resultWriter = new GraphmlClusteringResultWriter(args(1), writerConfiguration)
 
         try {
             resultWriter.write(dependencyExtractor.clusterManager.getProjectCluster)
