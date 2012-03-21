@@ -44,6 +44,7 @@ import framework.structure.Cluster
 import framework.structure.SourceElementNode
 import de.tud.cs.st.util.perf._
 import org.junit.rules.TestName
+import de.tud.cs.st.clusters.framework.evaluation.ClusterStatistics
 
 /**
  * @author Thomas Schlosser
@@ -51,15 +52,19 @@ import org.junit.rules.TestName
  */
 class QualityTest extends AbstractEvaluationTest {
 
-    protected def evaluate(
-        testName: String,
+    final val mojoFM = "MoJoFM"
+    final val mojoHM = "MoJoHM"
+
+    val mojoVariant = mojoHM
+
+    protected final def evaluate(
+        projectName: String,
         sourceFiles: SourceFile,
         referenceClusteringFilePath: String,
         testRuns: Int,
         measuredRuns: Int,
         allStageCombos: Array[(String, Array[ClusteringStage])]) {
-
-        println(testName+" - START")
+        val testName = "evaluate ["+projectName+"]"
 
         if (referenceClusteringFilePath == null)
             sys.error("No reference clustering file is given!")
@@ -67,27 +72,14 @@ class QualityTest extends AbstractEvaluationTest {
         val referenceClusters = ReferenceClusterCreator.readReferenceCluster(
             sourceFiles,
             new java.io.File(referenceClusteringFilePath))
-        //        val maxLevelReferenceCluster = maxDepth(referenceClusters)
-        //        println("Levels (ReferenceCluster):"+maxLevelReferenceCluster)
 
-        //LaTeX output:
-        println("""%TODO: use correct ylabel MoJoFM and MoJoHM, respectively.
-\begin{figure}[htp]
-	\centering
-	\begin{tikzpicture}
-		\pgfplotsset{width=0.5\textwidth}
-		\begin{axis}[
-			xtick=data,
-			xlabel=level,
-			ylabel=MojoHM value,
-			cycle list name= black white,
-			legend style={at={(-0.3,0.5)},anchor=east,legend}
-		]""")
+        beforeEvaluation(testName, projectName)
 
         var i = 1
         allStageCombos foreach { combo ⇒
             val (comboName, stageCombo) = combo
-            // println("run combination #"+i+" ("+comboName+")")
+
+            beforeStageEvaluation(i, testName, projectName, comboName)
 
             var clusteringPipeline: ClusteringPipeline =
                 new ClusteringPipeline(stageCombo, None)
@@ -95,33 +87,43 @@ class QualityTest extends AbstractEvaluationTest {
             val extractedCluster = clusteringPipeline.runPipeline(sourceFiles)
 
             var mjw = new MoJoWrapper(extractedCluster, referenceClusters)
-
             val maxLevelReferenceCluster = mjw.maxDepthAuthorativeCluster
             val maxLevelExtractedCluster = mjw.maxDepthCalculatedCluster
-            // println("Levels (ExctractedCluster):"+maxLevelExtractedCluster)
             val levelLimit = scala.math.max(maxLevelReferenceCluster, maxLevelExtractedCluster)
-            // LaTeX output:
-            println("\\addlegendentry{"+comboName+"}")
-            println("\\addplot coordinates {")
-            1 to levelLimit foreach { level ⇒
-                mjw.levelLimit = Some(level)
-                //                println("MoJo(level="+level+"):"+mjw.singleDirectionMoJo+"\t MojoPlus: "+mjw.singleDirectionMoJoPlus+"\t MojoFm: "+mjw.singleDirectionMoJoFM)
-                //                println("MoJoFM(level="+level+"):"+mjw.singleDirectionMoJoFM)
-                //LaTeX format:
-                println("("+level+","+mjw.singleDirectionMoJoHM+")")
-            }
-            // LaTeX output:
-            println("};")
+
+            afterStageEvaluation(i, testName, projectName, comboName, mjw, extractedCluster, maxLevelReferenceCluster, maxLevelExtractedCluster, levelLimit)
+
             i += 1
         }
 
-        //LaTeX output:
-        println("""		\end{axis}
-    	\end{tikzpicture}
-    \caption{"""+testName+"""} %TODO: change caption
-    \label{fig:TODO} %TODO: change label
-\end{figure}""")
+        afterEvaluation(testName, projectName)
+    }
 
+    protected def beforeEvaluation(testName: String, projectName: String) {
+        println(testName+" - START")
+    }
+
+    protected def beforeStageEvaluation(comboNumber: Int, testName: String, projectName: String, comboName: String) {
+        println("run combination #"+comboNumber+" ("+comboName+")")
+    }
+
+    protected def afterStageEvaluation(comboNumber: Int, testName: String, projectName: String, comboName: String, mjw: MoJoWrapper, extractedCluster: Cluster, maxLevelReferenceCluster: Int, maxLevelExtractedCluster: Int, levelLimit: Int) {
+        1 to levelLimit foreach { level ⇒
+            mjw.levelLimit = Some(level)
+            if (mojoVariant == mojoHM) {
+                println(mojoVariant+"(level="+level+"): "+mjw.singleDirectionMoJoHM)
+            }
+            else if (mojoVariant == mojoFM) {
+                println(mojoVariant+"(level="+level+"): "+mjw.singleDirectionMoJoFM)
+            }
+        }
+
+        println("Levels (ReferenceCluster):"+maxLevelReferenceCluster)
+        println("Levels (ExctractedCluster):"+maxLevelExtractedCluster)
+        ClusterStatistics.printStatistics(extractedCluster)
+    }
+
+    protected def afterEvaluation(testName: String, projectName: String) {
         println(testName+" - END\n")
     }
 }

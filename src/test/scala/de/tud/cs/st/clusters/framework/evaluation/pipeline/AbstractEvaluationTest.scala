@@ -211,16 +211,16 @@ abstract class AbstractEvaluationTest extends AbstractClusteringTest {
     )
 
     private def evaluate(
-        testName: String,
+        projectName: String,
         sourceFiles: SourceFile,
         referenceClusteringFilePath: String,
         testRuns: Int = 100,
         measuredRuns: Int = 50) {
-        evaluate(testName, sourceFiles, referenceClusteringFilePath, testRuns, measuredRuns, allStageCombos)
+        evaluate(projectName, sourceFiles, referenceClusteringFilePath, testRuns, measuredRuns, allStageCombos)
     }
 
     protected def evaluate(
-        testName: String,
+        projectName: String,
         sourceFiles: SourceFile,
         referenceClusteringFilePath: String,
         testRuns: Int,
@@ -229,14 +229,14 @@ abstract class AbstractEvaluationTest extends AbstractClusteringTest {
 
     test("evaluate [Flashcards]") {
         evaluate(
-            "evaluate [Flashcards]",
+            "Flashcards",
             flashcardsSourceZipFile,
             "test/referenceCluster/Flashcards 0.4 - target 1.6.sei")
     }
 
     test("evaluate [CoCoME]") {
         evaluate(
-            "evaluate [CoCoME]",
+            "CoCoME",
             cocomeSourceZipFile,
             "test/referenceCluster/cocome-impl-classes.sei")
     }
@@ -244,49 +244,49 @@ abstract class AbstractEvaluationTest extends AbstractClusteringTest {
     // TODO: there are no valid reference clusters...
     test("evaluate [hibernate]") {
         evaluate(
-            "evaluate [hibernate]",
+            "Hibernate",
             hibernateSourceZipFile,
             "test/referenceCluster/hibernate-core-3.6.0.Final.sei")
     }
 
     test("evaluate [ClusteringTestProject]") {
         evaluate(
-            "evaluate [ClusteringTestProject]",
+            "ClusteringTestProject",
             clusteringTestProjectSourceZipFile,
             "test/referenceCluster/ClusteringTestProject.sei")
     }
 
     test("evaluate [clTestProjectexampleTest1SourcesZipFile]") {
         evaluate(
-            "evaluate [clTestProjectexampleTest1SourcesZipFile]",
+            "ExampleTest1",
             clTestProjectExampleTest1SourcesZipFile,
             "test/referenceCluster/ClusteringTestProject-example-test1.sei")
     }
 
     test("evaluate [clTestProjectPatternAbstractFactorySourcesZipFile]") {
         evaluate(
-            "evaluate [clTestProjectPatternAbstractFactorySourcesZipFile]",
+            "AbstractFactoryPattern",
             clTestProjectPatternAbstractFactorySourcesZipFile,
             "test/referenceCluster/ClusteringTestProject-pattern-abstractFactory.sei")
     }
 
     test("evaluate [antSourceZipFile]") {
         evaluate(
-            "evaluate [antSourceZipFile]",
+            "ANT",
             antSourceZipFile,
             null)
     }
 
     test("evaluate [clustersSourceZipFile]") {
         evaluate(
-            "evaluate [clustersSourceZipFile]",
+            "Clusters",
             clustersSourceZipFile,
             null)
     }
 
     test("evaluate [javaRuntimeSourceZipFile]") {
         evaluate(
-            "evaluate [javaRuntimeSourceZipFile]",
+            "javaRuntime",
             javaRuntimeSourceZipFile,
             null,
             testRuns = 2,
