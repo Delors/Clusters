@@ -83,6 +83,8 @@ class ChineseWhispers(
                 }
             }
 
+            // TODO check what is the reason for OutOfMemoryError when using the following line
+            // val clusterset = for (c ← clusters.values) yield { for (n ← c.cluster) yield n.id }
             var clusterset = Set[Set[Int]]()
             for (c ← clusters.values) {
                 var cl = Set[Int]()
