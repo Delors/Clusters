@@ -55,27 +55,49 @@ trait ClusterStatistics {
         var availableTypeCounter = 0
         var availableFieldCounter = 0
         var availableMethodCounter = 0
+        var edgeCounter = 0
+        var edgeToAvailable = 0
+        var edgeToNotAvailable = 0
 
         def calcStatistics(c: Cluster) {
-            c.nodes foreach {
-                case subCluster: Cluster ⇒
-                    subclusterCounter += 1
-                    calcStatistics(subCluster)
-                case TypeNode(_, _, Some(_)) ⇒
-                    typeCounter += 1
-                    availableTypeCounter += 1
-                case TypeNode(_, _, None) ⇒
-                    typeCounter += 1
-                case FieldNode(_, _, Some(_)) ⇒
-                    fieldCounter += 1
-                    availableFieldCounter += 1
-                case FieldNode(_, _, None) ⇒
-                    fieldCounter += 1
-                case MethodNode(_, _, Some(_)) ⇒
-                    methodCounter += 1
-                    availableMethodCounter += 1
-                case MethodNode(_, _, None) ⇒
-                    methodCounter += 1
+            c.nodes foreach { node ⇒
+                node match {
+                    case subCluster: Cluster ⇒
+                        subclusterCounter += 1
+                        calcStatistics(subCluster)
+                    case TypeNode(_, _, Some(_)) ⇒
+                        typeCounter += 1
+                        availableTypeCounter += 1
+                    case TypeNode(_, _, None) ⇒
+                        typeCounter += 1
+                    case FieldNode(_, _, Some(_)) ⇒
+                        fieldCounter += 1
+                        availableFieldCounter += 1
+                    case FieldNode(_, _, None) ⇒
+                        fieldCounter += 1
+                    case MethodNode(_, _, Some(_)) ⇒
+                        methodCounter += 1
+                        availableMethodCounter += 1
+                    case MethodNode(_, _, None) ⇒
+                        methodCounter += 1
+                }
+                node.getOwnEdges foreach { edge ⇒
+                    edgeCounter += 1
+                    edge.target match {
+                        case TypeNode(_, _, Some(_)) ⇒
+                            edgeToAvailable += 1
+                        case TypeNode(_, _, None) ⇒
+                            edgeToNotAvailable += 1
+                        case FieldNode(_, _, Some(_)) ⇒
+                            edgeToAvailable += 1
+                        case FieldNode(_, _, None) ⇒
+                            edgeToNotAvailable += 1
+                        case MethodNode(_, _, Some(_)) ⇒
+                            edgeToAvailable += 1
+                        case MethodNode(_, _, None) ⇒
+                            edgeToNotAvailable += 1
+                    }
+                }
             }
         }
         calcStatistics(cluster)
@@ -88,6 +110,7 @@ trait ClusterStatistics {
         println("Number of Fields (available/not available): "+fieldCounter+"("+availableFieldCounter+"/"+(fieldCounter - availableFieldCounter)+")")
         println("Number of Methods (available/not available): "+methodCounter+"("+availableMethodCounter+"/"+(methodCounter - availableMethodCounter)+")")
         println("Number of Source Elements (available/not available): "+sourceElementCounter+"("+availableSourceElementCounter+"/"+(sourceElementCounter - availableSourceElementCounter)+")")
+        println("Number of Edges (to available/to not available): "+edgeCounter+"("+edgeToAvailable+"/"+edgeToNotAvailable+")")
         println("Number of (Sub-)Cluster: "+subclusterCounter)
     }
 

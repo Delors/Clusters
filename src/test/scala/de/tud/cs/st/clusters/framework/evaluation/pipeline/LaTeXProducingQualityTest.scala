@@ -92,7 +92,7 @@ class LaTeXProducingQualityTest extends QualityTest {
             }
             latexFileWriter.write("};\n")
         }
-        afterStageEvaluation(comboNumber, testName, projectName, comboName, mjw, extractedCluster, maxLevelReferenceCluster, maxLevelExtractedCluster, levelLimit)
+        super.afterStageEvaluation(comboNumber, testName, projectName, comboName, mjw, extractedCluster, maxLevelReferenceCluster, maxLevelExtractedCluster, levelLimit)
     }
 
     protected override def afterEvaluation(testName: String, projectName: String) {
