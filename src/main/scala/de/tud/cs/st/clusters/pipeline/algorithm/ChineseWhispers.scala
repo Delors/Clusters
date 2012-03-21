@@ -83,13 +83,13 @@ class ChineseWhispers(
                 }
             }
 
-            var clusterset = List[Set[Int]]()
+            var clusterset = Set[Set[Int]]()
             for (c ← clusters.values) {
                 var cl = Set[Int]()
                 for (n ← c.cluster) {
                     cl += n.id
                 }
-                clusterset = cl :: clusterset
+                clusterset += cl
             }
 
             val result = new Array[Node](clusterset.size)
