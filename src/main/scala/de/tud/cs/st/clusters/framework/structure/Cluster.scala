@@ -57,7 +57,7 @@ class Cluster(
     /////////////////////////////////////////////
     // children(nodes)-related stuff
     /////////////////////////////////////////////
-    val nodeMap = Map[Int, Node]()
+    private val nodeMap = Map[Int, Node]()
 
     def nodes: Iterable[Node] =
         nodeMap.values

@@ -45,7 +45,7 @@ import de.tud.cs.st.bat.resolved.Method
  */
 sealed trait SourceElementNode extends Node {
 
-    def identifierFun: () ⇒ String
+    protected def identifierFun: () ⇒ String
     override lazy val identifier = identifierFun()
 
     override val isCluster: Boolean = false
@@ -92,7 +92,7 @@ sealed trait SourceElementNode extends Node {
 
 case class TypeNode(
     val uniqueID: Int,
-    val identifierFun: () ⇒ String,
+    protected val identifierFun: () ⇒ String,
     var clazz: Option[ClassFile])
         extends SourceElementNode {
 
@@ -107,7 +107,7 @@ case class TypeNode(
 
 case class FieldNode(
     val uniqueID: Int,
-    val identifierFun: () ⇒ String,
+    protected val identifierFun: () ⇒ String,
     var field: Option[Field])
         extends SourceElementNode {
 
@@ -122,7 +122,7 @@ case class FieldNode(
 
 case class MethodNode(
     val uniqueID: Int,
-    val identifierFun: () ⇒ String,
+    protected val identifierFun: () ⇒ String,
     var method: Option[Method])
         extends SourceElementNode {
 

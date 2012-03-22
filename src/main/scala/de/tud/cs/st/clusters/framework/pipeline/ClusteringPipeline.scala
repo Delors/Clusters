@@ -49,15 +49,8 @@ import result.ClusteringResultWriter
  *
  */
 class ClusteringPipeline(
-        protected val initialClusteringStages: Traversable[ClusteringStage],
+        protected val clusteringStages: Traversable[ClusteringStage],
         protected val createConcreteClusteringResultWriter: Option[() ⇒ ClusteringResultWriter] = None) {
-
-    // adding the 'initialClusteringStages' is part of the constructor code...
-    private val clusteringStages = new Queue[ClusteringStage]() ++ initialClusteringStages
-
-    final def addClusteringStage(clusteringStage: ClusteringStage) {
-        clusteringStages += clusteringStage
-    }
 
     final def runPipeline(sourceFiles: SourceFile*): Cluster = {
         val clusterManager = runDependencyExtraction(sourceFiles: _*)
