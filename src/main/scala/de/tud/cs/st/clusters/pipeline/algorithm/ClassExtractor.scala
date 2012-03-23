@@ -50,7 +50,7 @@ import framework.structure.MethodNode
  */
 class ClassExtractor extends ClusteringAlgorithm {
 
-    def doPerformClustering(cluster: Cluster): Boolean = {
+    protected def doPerformClustering(cluster: Cluster): Boolean = {
         var createdNewCluster = false
         val clustersMap = Map[String, Set[Node]]()
         var ignoredClusters: Set[Node] = Set()

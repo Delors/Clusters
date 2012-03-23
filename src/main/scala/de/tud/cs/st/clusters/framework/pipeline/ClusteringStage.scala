@@ -51,7 +51,7 @@ trait ClusteringStage {
 
     var clusterManager: ClusterManager = _
 
-    def stageName: String = this.getClass.getCanonicalName
+    val stageName: String = this.getClass.getCanonicalName
 
     /**
      * Performs the stage-specific clustering algorithm on the given cluster.<br/>

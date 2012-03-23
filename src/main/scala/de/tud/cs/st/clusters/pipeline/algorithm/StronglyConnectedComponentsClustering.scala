@@ -50,7 +50,7 @@ class StronglyConnectedComponentsClustering(
     val config: StronglyConnectedComponentsClusteringConfiguration)
         extends ClusteringAlgorithm {
 
-    def doPerformClustering(cluster: Cluster): Boolean = {
+    protected def doPerformClustering(cluster: Cluster): Boolean = {
         // calculate finishing times of all nodes using depth first search
         var result = GraphScanningAlgorithms.graphScanComplete(
             cluster, null, true, null)

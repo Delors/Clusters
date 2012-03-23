@@ -54,7 +54,7 @@ class ImplementationTestingSeparator(
     val config: ImplementationTestingSeparatorConfiguration)
         extends ClusteringAlgorithm {
 
-    def doPerformClustering(cluster: Cluster): Boolean = {
+    protected def doPerformClustering(cluster: Cluster): Boolean = {
         val directlyTestRelatedNodes = extractDirectlyTestRelatedNodes(cluster)
 
         var allTestRelatedNodes: List[Node] = Nil

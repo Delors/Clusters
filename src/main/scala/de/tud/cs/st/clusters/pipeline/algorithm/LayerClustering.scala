@@ -50,7 +50,7 @@ class LayerClustering(
     val config: LayerClusteringConfiguration)
         extends ClusteringAlgorithm {
 
-    def doPerformClustering(cluster: Cluster): Boolean = {
+    protected def doPerformClustering(cluster: Cluster): Boolean = {
         var createdNewCluster = false
         var layer = 0
 

@@ -54,7 +54,7 @@ class ChineseWhispers(
     val config: ChineseWhispersConfiguration)
         extends ClusteringAlgorithm {
 
-    def doPerformClustering(cluster: Cluster): Boolean = {
+    protected def doPerformClustering(cluster: Cluster): Boolean = {
         var createdNewCluster = false
         val inputNodes = cluster.nodes.toArray
 

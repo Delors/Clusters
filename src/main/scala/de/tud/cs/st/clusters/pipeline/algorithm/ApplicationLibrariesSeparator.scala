@@ -52,7 +52,7 @@ class ApplicationLibrariesSeparator(
     val config: ApplicationLibrariesSeparatorConfiguration)
         extends ClusteringAlgorithm {
 
-    def doPerformClustering(cluster: Cluster): Boolean = {
+    protected def doPerformClustering(cluster: Cluster): Boolean = {
         // create list that contains all names of the application packages
         var applicationPackages: Set[String] = Set()
         for (node ← cluster.nodes) {

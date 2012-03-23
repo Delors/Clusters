@@ -43,13 +43,13 @@ import structure.util.ClusterManager
  */
 trait ClusteringAlgorithm extends ClusteringStage {
 
-    val algorithmNameKey = "lastAppliedAlgorithm"
+    protected val algorithmNameKey = "lastAppliedAlgorithm"
 
     def performClustering(cluster: Cluster): Boolean = {
         cluster.metaInfo(algorithmNameKey) = this.stageName
         doPerformClustering(cluster)
     }
 
-    def doPerformClustering(cluster: Cluster): Boolean
+    protected def doPerformClustering(cluster: Cluster): Boolean
 
 }

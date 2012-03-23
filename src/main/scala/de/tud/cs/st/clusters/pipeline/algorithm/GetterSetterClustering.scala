@@ -58,7 +58,7 @@ class GetterSetterClustering(
     val config: GetterSetterClusteringConfiguration)
         extends ClusteringAlgorithm {
 
-    def doPerformClustering(cluster: Cluster): Boolean = {
+    protected def doPerformClustering(cluster: Cluster): Boolean = {
         var createdNewCluster = false
         // TODO: cluster needs methods that return only type/field/method nodes => performance improvement
         val inputNodes = cluster.nodes.toArray

@@ -49,7 +49,7 @@ class BasePackageExtractor(
     val config: BasePackageExtractorConfiguration)
         extends ClusteringAlgorithm {
 
-    def doPerformClustering(cluster: Cluster): Boolean = {
+    protected def doPerformClustering(cluster: Cluster): Boolean = {
         def getMatchingPrefix(value: String, prefixes: Array[String]): String = {
             prefixes.find(prfx ⇒ value.startsWith(prfx)) match {
                 case Some(prfx) ⇒ return prfx
