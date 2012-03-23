@@ -36,9 +36,6 @@ package pipeline
 package result
 
 import structure.Cluster
-import structure.SourceElementNode
-import structure.util.ClusterManager
-import java.io.FileWriter
 
 /**
  * @author Thomas Schlosser

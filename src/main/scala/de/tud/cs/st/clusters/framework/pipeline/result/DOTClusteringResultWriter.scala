@@ -37,9 +37,7 @@ package result
 
 import structure.Cluster
 import structure.SourceElementNode
-import structure.util.ClusterManager
-import java.io.FileWriter
-import de.tud.cs.st.clusters.framework.structure.Node
+import structure.Node
 
 /**
  * @author Thomas Schlosser
