@@ -76,6 +76,7 @@ class ClusteringPipeline(
         clusteringStages foreach { stage ⇒
             stage.clusterManager = clusterManager
             stage.performClustering(projectCluster)
+            stage.clusterManager = null
         }
         projectCluster
     }
