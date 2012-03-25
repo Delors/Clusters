@@ -101,7 +101,7 @@ class DOTClusteringResultWriter(
         }
     }
 
-    override protected def writeSourceElementNode(node: SourceElementNode, nodeBuffer: StringBuffer, edgeBuffer: StringBuffer) {
+    private def writeSourceElementNode(node: SourceElementNode, nodeBuffer: StringBuffer, edgeBuffer: StringBuffer) {
         if (configuration.includeSingleNodes) {
             nodeBuffer.append("\t")
             nodeBuffer.append(node.uniqueID)

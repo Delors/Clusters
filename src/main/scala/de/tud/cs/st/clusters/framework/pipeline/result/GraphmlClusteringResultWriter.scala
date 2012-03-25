@@ -200,7 +200,7 @@ class GraphmlClusteringResultWriter(
         }
     }
 
-    override protected def writeSourceElementNode(node: SourceElementNode, nodeBuffer: StringBuffer, edgeBuffer: StringBuffer) {
+    private def writeSourceElementNode(node: SourceElementNode, nodeBuffer: StringBuffer, edgeBuffer: StringBuffer) {
         // Example:
         //   <node id="n0::n0::n0">
         //     <data key="d5"/>

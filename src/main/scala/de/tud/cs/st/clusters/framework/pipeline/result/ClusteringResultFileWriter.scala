@@ -67,6 +67,4 @@ abstract class ClusteringResultFileWriter(
 
     protected def writeCluster(cluster: Cluster, nodeBuffer: StringBuffer, edgeBuffer: StringBuffer)
 
-    protected def writeSourceElementNode(node: SourceElementNode, nodeBuffer: StringBuffer, edgeBuffer: StringBuffer)
-
 }
