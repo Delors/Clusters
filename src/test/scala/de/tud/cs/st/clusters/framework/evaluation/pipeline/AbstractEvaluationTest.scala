@@ -289,8 +289,8 @@ abstract class AbstractEvaluationTest extends AbstractClusteringTest {
             "javaRuntime",
             javaRuntimeSourceZipFile,
             null,
-            testRuns = 2,
-            measuredRuns = 10)
+            testRuns = 1,
+            measuredRuns = 1)
     }
 
 }
