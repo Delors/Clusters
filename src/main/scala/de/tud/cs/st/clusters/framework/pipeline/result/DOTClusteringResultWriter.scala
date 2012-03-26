@@ -66,7 +66,7 @@ class DOTClusteringResultWriter(
 
         var emptyCluster = true
         // add nodes
-        cluster.nodes foreach {
+        cluster.children foreach {
             case c: Cluster ⇒
                 if (emptyCluster) {
                     nodeBuffer.append(subGraphBuffer)
@@ -117,7 +117,7 @@ class DOTClusteringResultWriter(
     private def writeEdges(node: Node, edgeBuffer: StringBuffer) {
         // add egdes
         if (configuration.includeEdges)
-            for (e ← node.getOwnEdges) {
+            for (e ← node.ownEdges) {
                 edgeBuffer.append("\t")
                 edgeBuffer.append(e.source.uniqueID)
                 edgeBuffer.append(" -> ")

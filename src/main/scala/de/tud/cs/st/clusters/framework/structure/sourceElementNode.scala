@@ -55,33 +55,33 @@ sealed trait SourceElementNode extends Node {
     /////////////////////////////////////////////
     // edges-related stuff
     /////////////////////////////////////////////
-    def getSpecialEdgesBetweenChildren(): Set[Edge] = {
+    def edgesBetweenConnectedChildren: Set[Edge] = {
         Set()
     }
 
     /////////////////////////////////////////////
     // children(nodes)-related stuff
     /////////////////////////////////////////////
-    def addNode(node: Node) {
+    def addChild(child: Node) {
         throw new UnsupportedOperationException("This method call is not allowed on this kind of node!")
     }
 
-    def removeNode(id: Int) {
+    def removeChild(id: Int) {
         throw new UnsupportedOperationException("This method call is not allowed on this kind of node!")
     }
 
-    def clearNodes() {
+    def clearChildren() {
         throw new UnsupportedOperationException("This method call is not allowed on this kind of node!")
     }
 
-    def containsNode(id: Int): Boolean =
+    def hasDescendant(id: Int): Boolean =
         false
 
-    def getNode(id: Int): Node = {
+    def getChild(id: Int): Node = {
         throw new UnsupportedOperationException("This method call is not allowed on this kind of node!")
     }
 
-    def nodes: Iterable[Node] = {
+    def children: Iterable[Node] = {
         Iterable()
     }
 
@@ -96,7 +96,7 @@ case class TypeNode(
     var clazz: Option[ClassFile])
         extends SourceElementNode {
 
-    def cloneStructure: TypeNode = {
+    def cloneNode: TypeNode = {
         val clone = new TypeNode(this.uniqueID, this.identifierFun, this.clazz)
         clone.clusterable = this.clusterable
         clone.metaInfo ++= this.metaInfo
@@ -111,7 +111,7 @@ case class FieldNode(
     var field: Option[Field])
         extends SourceElementNode {
 
-    def cloneStructure: FieldNode = {
+    def cloneNode: FieldNode = {
         val clone = new FieldNode(this.uniqueID, this.identifierFun, this.field)
         clone.clusterable = this.clusterable
         clone.metaInfo ++= this.metaInfo
@@ -126,7 +126,7 @@ case class MethodNode(
     var method: Option[Method])
         extends SourceElementNode {
 
-    def cloneStructure: MethodNode = {
+    def cloneNode: MethodNode = {
         val clone = new MethodNode(this.uniqueID, this.identifierFun, this.method)
         clone.clusterable = this.clusterable
         clone.metaInfo ++= this.metaInfo

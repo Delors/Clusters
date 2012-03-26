@@ -55,8 +55,8 @@ class ApplicationLibrariesSeparator(
     protected def doPerformClustering(cluster: Cluster): Boolean = {
         // create list that contains all names of the application packages
         var applicationPackages: Set[String] = Set()
-        for (node ← cluster.nodes) {
-            node match {
+        for (child ← cluster.children) {
+            child match {
                 case TypeNode(_, _, Some(t)) ⇒
                     // replace all '/'s with '.'s. This has to be done, since the identifiers contain '.'s
                     // as separators between package names. And the application packages that are collected
@@ -81,20 +81,20 @@ class ApplicationLibrariesSeparator(
         // TODO do consider using the "map" function ("merge" in the above method)
         applicationPackages foreach { removeLongerPackagePrefix(_) }
 
-        val inputNodes = cluster.nodes.toArray
-        cluster.clearNodes()
+        val inputChildren = cluster.children.toArray
+        cluster.clearChildren()
         cluster.clusterable = false
         val applicationCluster = clusterManager.createCluster(config.applicationClusterIdentifier, this.stageName)
         val librariesCluster = clusterManager.createCluster(config.librariesClusterIdentifier, this.stageName)
         librariesCluster.clusterable = !config.markLibrariesAsUnclusterable
-        cluster.addNode(applicationCluster)
-        cluster.addNode(librariesCluster)
-        for (node ← inputNodes) {
-            if (applicationPackages exists (node.identifier.startsWith(_))) {
-                applicationCluster.addNode(node)
+        cluster.addChild(applicationCluster)
+        cluster.addChild(librariesCluster)
+        for (child ← inputChildren) {
+            if (applicationPackages exists (child.identifier.startsWith(_))) {
+                applicationCluster.addChild(child)
             }
             else {
-                librariesCluster.addNode(node)
+                librariesCluster.addChild(child)
             }
         }
 

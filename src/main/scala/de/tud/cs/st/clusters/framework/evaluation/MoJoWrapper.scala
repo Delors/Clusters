@@ -184,7 +184,7 @@ class MoJoWrapper(val calculatedCluster: Cluster, val authorativeCluster: Cluste
         var data: List[String] = Nil
 
         def extractRSFContentFromCluster(cl: Cluster, containerID: Int, currentDepth: Int = 1) {
-            cl.nodes foreach {
+            cl.children foreach {
                 case subCluster: Cluster ⇒ {
                     if (levelLimit.isEmpty || currentDepth < levelLimit.get) {
                         extractRSFContentFromCluster(subCluster, subCluster.uniqueID, currentDepth + 1)
@@ -218,7 +218,7 @@ class MoJoWrapper(val calculatedCluster: Cluster, val authorativeCluster: Cluste
 
     private def calcMaxDepth(cluster: Cluster): Int = {
         var maxDpth = 0
-        cluster.nodes foreach {
+        cluster.children foreach {
             case subCl: Cluster ⇒
                 maxDpth = scala.math.max(maxDpth, calcMaxDepth(subCl))
             case sen: SourceElementNode ⇒

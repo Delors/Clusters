@@ -56,7 +56,7 @@ class ChineseWhispers(
 
     protected def doPerformClustering(cluster: Cluster): Boolean = {
         var createdNewCluster = false
-        val inputNodes = cluster.nodes.toArray
+        val inputChildren = cluster.children.toArray
 
         def calcClusters(sortedEdges: List[((Int, Int), Long)], nodes: Iterable[Node]): Array[Node] = {
             val clusters = Map[Int, ChineseWhispersNode]()
@@ -101,7 +101,7 @@ class ChineseWhispers(
                     val cluster = clusterManager.createCluster(config.clusterIdentifierPrefix + i, this.stageName, true)
                     createdNewCluster = true
                     nodes foreach { node ⇒
-                        cluster.addNode(clusterManager.getNode(node))
+                        cluster.addChild(clusterManager.getNode(node))
                     }
                     result(i) = cluster
                 }
@@ -115,7 +115,7 @@ class ChineseWhispers(
 
         val weightMatrix: Map[(Int, Int), Long] = Map()
 
-        cluster.getSpecialEdgesBetweenChildren foreach { edge ⇒
+        cluster.edgesBetweenConnectedChildren foreach { edge ⇒
             val key = (edge.source.uniqueID, edge.target.uniqueID)
             val oldWeight: Long = weightMatrix.getOrElse(key, 0)
             val newWeight = oldWeight + (config.getWeight(edge.dType) * edge.count)
@@ -125,10 +125,10 @@ class ChineseWhispers(
 
         val sortedEdges = weightMatrix.toList.sortWith((a, b) ⇒ a._2 > b._2 || (a._2 == b._2 && (a._1._1 > b._1._1 || (a._1._1 == b._1._1 && a._1._2 > b._1._2))))
 
-        cluster.clearNodes()
+        cluster.clearChildren()
 
-        calcClusters(sortedEdges, inputNodes) foreach {
-            cluster.addNode(_)
+        calcClusters(sortedEdges, inputChildren) foreach {
+            cluster.addChild(_)
         }
 
         cluster.clusterable = createdNewCluster

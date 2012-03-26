@@ -53,8 +53,8 @@ trait IdentifierBasedClusteringStrategy extends ClusteringStage {
     val considerOnlyClusterable = false
 
     abstract override def performClustering(cluster: Cluster): Boolean = {
-        val createdNewCluster = (false /: cluster.nodes)((cnc, node) ⇒ cnc | {
-            node match {
+        val createdNewCluster = (false /: cluster.children)((cnc, child) ⇒ cnc | {
+            child match {
                 case subCluster: Cluster ⇒ performClustering(subCluster)
                 case _                   ⇒ false // nothing to do; a single node cannot be clustered
             }

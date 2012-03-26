@@ -151,11 +151,11 @@ class PerformanceTest extends AbstractEvaluationTest {
         protected abstract override def runDependencyExtraction(sourceFiles: SourceFile*): ClusterManager = {
             if (cachedClusterManager == null) {
                 cachedClusterManager = super.runDependencyExtraction(sourceFiles: _*)
-                cachedSourceElements = cachedClusterManager.getProjectCluster.nodes.toSet
+                cachedSourceElements = cachedClusterManager.getProjectCluster.children.toSet
             }
 
             // reset root cluster
-            cachedClusterManager.getProjectCluster.clearNodes()
+            cachedClusterManager.getProjectCluster.clearChildren()
             cachedClusterManager.getProjectCluster.clusterable = true
 
             // reset all states in the default cluster manager... (using reflections)
@@ -192,7 +192,7 @@ class PerformanceTest extends AbstractEvaluationTest {
             cachedSourceElements foreach { node ⇒
                 node.metaInfo.empty
                 node.clusterable = false
-                cachedClusterManager.getProjectCluster.addNode(node)
+                cachedClusterManager.getProjectCluster.addChild(node)
             }
 
             cachedClusterManager

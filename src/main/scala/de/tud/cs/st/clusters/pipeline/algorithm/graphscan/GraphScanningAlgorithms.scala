@@ -74,12 +74,12 @@ object GraphScanningAlgorithms {
         graphScanIntern(cluster, {
             if (startNode == null) {
                 if (order != null) order(0)
-                else cluster.nodes.head.uniqueID
+                else cluster.children.head.uniqueID
             }
             else startNode
         }, dfs, 0, { countStarts += 1; countStarts - 1 })
         // run algorithm as long as not all nodes have been finished (all node colors!= white)
-        for (index ← { if (order != null) order.iterator else cluster.nodes.map(_.uniqueID) }) {
+        for (index ← { if (order != null) order.iterator else cluster.children.map(_.uniqueID) }) {
             if (resultBean.color(index) == WHITE)
                 graphScanIntern(cluster, index, dfs,
                     resultBean.time, { countStarts += 1; countStarts - 1 })
@@ -122,8 +122,8 @@ object GraphScanningAlgorithms {
             resultBean.createOrderElements(cluster.childCount)
             resultBean.pi = Map()
             resultBean.evenDist = Map()
-            for (node ← cluster.nodes) {
-                val i = node.uniqueID
+            for (child ← cluster.children) {
+                val i = child.uniqueID
                 resultBean.color(i) = WHITE
                 resultBean.discoveryTime(i) = 0
                 resultBean.finishingTime(i) = -1
@@ -141,7 +141,7 @@ object GraphScanningAlgorithms {
         // CALCULATION
         while (!q.isEmpty) {
             var u = q.getNext
-            var current = getNextWhiteNode({ if (useTransposedEdges) cluster.getNode(u).getIncomingEdges else cluster.getNode(u).getOutgoingEdges })
+            var current = getNextWhiteNode({ if (useTransposedEdges) cluster.getChild(u).incomingEdges else cluster.getChild(u).outgoingEdges })
             if (current != null) {
                 // found white neighbor node
                 resultBean.color(current.target.uniqueID) = BLUE

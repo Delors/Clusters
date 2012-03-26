@@ -81,7 +81,7 @@ class GMLClusteringResultWriter(
         //        nodeBuffer.append(cluster.identifier)
         //        nodeBuffer.append("\"\n\t\t]\n\t]")
 
-        cluster.nodes foreach {
+        cluster.children foreach {
             case c: Cluster ⇒
                 writeCluster(c, nodeBuffer, edgeBuffer)
             case sen: SourceElementNode ⇒
@@ -125,7 +125,7 @@ class GMLClusteringResultWriter(
         //		label   "AB"
         //	]
         // add egdes
-        for (e ← node.getOwnEdges) {
+        for (e ← node.ownEdges) {
             edgeBuffer.append("\tedge\n")
             edgeBuffer.append("\t[\n")
             edgeBuffer.append("\t\tsource\t")

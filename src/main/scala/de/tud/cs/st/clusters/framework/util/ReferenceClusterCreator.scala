@@ -56,10 +56,10 @@ trait ReferenceClusterCreator {
         DependencyExtractionUtils.extractDependencies(dependencyExtractor)(sourceFile)
         val projectCluster = clusterManager.getProjectCluster
         var identifierMap = Map[String, Node]()
-        projectCluster.nodes foreach { node ⇒
-            identifierMap = identifierMap + ((node.identifier, node))
+        projectCluster.children foreach { child ⇒
+            identifierMap = identifierMap + ((child.identifier, child))
         }
-        projectCluster.clearNodes();
+        projectCluster.clearChildren();
 
         var fr: FileReader = null
         var br: BufferedReader = null
@@ -79,7 +79,7 @@ trait ReferenceClusterCreator {
                     else {
                         val newParent = clusterManager.createCluster("cluster_"+clusterCounter, "")
                         clusterCounter += 1
-                        currentParent.addNode(newParent)
+                        currentParent.addChild(newParent)
                         currentParent = newParent
                     }
                 }
@@ -98,7 +98,7 @@ trait ReferenceClusterCreator {
                                 sys.error("A cluster has to be started before node '"+line+"' in line "+lineCounter+" can be added.")
                             }
                             else
-                                currentParent.addNode(currentNode)
+                                currentParent.addChild(currentNode)
                         }
                         case None ⇒ {
                             sys.error("Line "+lineCounter+" '"+line+"' is not a valid identifier for the given 'sourceInputFile'. Please re-check this line and try it again.")

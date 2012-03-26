@@ -59,14 +59,14 @@ class LayerClustering(
                 val layerCluster = clusterManager.createCluster(config.clusterIdentifierPrefix + layer, this.stageName, true)
                 createdNewCluster = true
                 layer += 1
-                cluster.addNode(layerCluster)
+                cluster.addChild(layerCluster)
                 layerCluster
             }
 
             def createNewLayerClusterWithNodes(nodes: Iterable[Node]) {
                 val layerCluster = createNewLayerCluster()
                 nodes foreach { node ⇒
-                    layerCluster.addNode(node)
+                    layerCluster.addChild(node)
                 }
             }
 
@@ -81,8 +81,8 @@ class LayerClustering(
                 // only edges to nodes in 'nodes' should be considered for degree calculation
                 // each edge group (edges with same source, target and dependency type are grouped together)
                 // is only counted once.
-                val groupedInDegree = node.getIncomingEdges.filter(edge ⇒ nodeIDs contains edge.target.uniqueID).size
-                val groupedOutDegree = node.getOutgoingEdges.filter(edge ⇒ nodeIDs contains edge.target.uniqueID).size
+                val groupedInDegree = node.incomingEdges.filter(edge ⇒ nodeIDs contains edge.target.uniqueID).size
+                val groupedOutDegree = node.outgoingEdges.filter(edge ⇒ nodeIDs contains edge.target.uniqueID).size
                 if (groupedInDegree == 0 && groupedOutDegree > 0)
                     topLayerNodes = topLayerNodes + node
                 else if (groupedInDegree > 0 && groupedOutDegree > 0)
@@ -98,7 +98,7 @@ class LayerClustering(
             if (sparatedNodes.nonEmpty) {
                 if (layer == 0)
                     sparatedNodes foreach { node ⇒
-                        cluster.addNode(node)
+                        cluster.addChild(node)
                     }
                 else
                     bottomLayerNodes = bottomLayerNodes ++ sparatedNodes
@@ -123,10 +123,10 @@ class LayerClustering(
             }
         }
 
-        val inputNodes = cluster.nodes.toSet
-        cluster.clearNodes()
+        val inputChildren = cluster.children.toSet
+        cluster.clearChildren()
         cluster.clusterable = false
-        createLayers(inputNodes)
+        createLayers(inputChildren)
 
         createdNewCluster
     }

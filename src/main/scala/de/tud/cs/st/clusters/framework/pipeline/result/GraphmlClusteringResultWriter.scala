@@ -130,7 +130,7 @@ class GraphmlClusteringResultWriter(
                     writeAllChildNodeIdentifiers(cluster)
                 }
                 else {
-                    cluster.nodes foreach { child ⇒
+                    cluster.children foreach { child ⇒
                         if (!child.isCluster) {
                             write(child.identifier+"\n")
                         }
@@ -173,7 +173,7 @@ class GraphmlClusteringResultWriter(
         }
 
         // write child nodes
-        cluster.nodes foreach {
+        cluster.children foreach {
             case c: Cluster ⇒
                 writeCluster(c, nodeBuffer, edgeBuffer)
             case sen: SourceElementNode ⇒
@@ -190,7 +190,7 @@ class GraphmlClusteringResultWriter(
     }
 
     private def writeAllChildNodeIdentifiers(node: Node) {
-        node.nodes foreach { child ⇒
+        node.children foreach { child ⇒
             if (!child.isCluster) {
                 write(child.identifier+"\n")
             }
@@ -248,33 +248,33 @@ class GraphmlClusteringResultWriter(
         //      </data>
         //    </edge>
         // add egdes
-        for (e ← node.getOwnEdges) {
+        for (e ← node.ownEdges) {
             val sourceID = if (configuration.showSourceElementNodes || e.source.isCluster) {
                 if (isVisibleLevel(e.source.level))
                     e.source.uniqueID
                 else
-                    e.source.getNodeOfLevel(configuration.maxNumberOfLevels.get).uniqueID
+                    e.source.getAncestorByLevel(configuration.maxNumberOfLevels.get).uniqueID
             }
             else {
                 if (isVisibleLevel(e.source.level - 1)) {
                     e.source.parent.uniqueID
                 }
                 else {
-                    e.source.getNodeOfLevel(configuration.maxNumberOfLevels.get).uniqueID
+                    e.source.getAncestorByLevel(configuration.maxNumberOfLevels.get).uniqueID
                 }
             }
             val targetID = if (configuration.showSourceElementNodes || e.target.isCluster) {
                 if (isVisibleLevel(e.target.level))
                     e.target.uniqueID
                 else
-                    e.target.getNodeOfLevel(configuration.maxNumberOfLevels.get).uniqueID
+                    e.target.getAncestorByLevel(configuration.maxNumberOfLevels.get).uniqueID
             }
             else {
                 if (isVisibleLevel(e.target.level - 1)) {
                     e.target.parent.uniqueID
                 }
                 else {
-                    e.target.getNodeOfLevel(configuration.maxNumberOfLevels.get).uniqueID
+                    e.target.getAncestorByLevel(configuration.maxNumberOfLevels.get).uniqueID
                 }
             }
             if (!configuration.aggregateEdges || !aggregatedEdgesSet.contains((sourceID, targetID))) {

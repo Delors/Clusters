@@ -60,8 +60,8 @@ trait ClusterStatistics {
         var edgeToNotAvailable = 0
 
         def calcStatistics(c: Cluster) {
-            c.nodes foreach { node ⇒
-                node match {
+            c.children foreach { child ⇒
+                child match {
                     case subCluster: Cluster ⇒
                         subclusterCounter += 1
                         calcStatistics(subCluster)
@@ -81,7 +81,7 @@ trait ClusterStatistics {
                     case MethodNode(_, _, None) ⇒
                         methodCounter += 1
                 }
-                node.getOwnEdges foreach { edge ⇒
+                child.ownEdges foreach { edge ⇒
                     edgeCounter += 1
                     edge.target match {
                         case TypeNode(_, _, Some(_)) ⇒
@@ -116,7 +116,7 @@ trait ClusterStatistics {
 
     private def calcMaxDepth(cluster: Cluster): Int = {
         var maxDpth = 0
-        cluster.nodes foreach {
+        cluster.children foreach {
             case subCl: Cluster ⇒
                 maxDpth = scala.math.max(maxDpth, calcMaxDepth(subCl))
             case sen: SourceElementNode ⇒

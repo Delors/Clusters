@@ -50,8 +50,8 @@ trait FirstClusterablesClusteringStrategy extends ClusteringStage {
             createdNewCluster |= super.performClustering(cluster)
         }
         else {
-            (createdNewCluster /: cluster.nodes)((cnc, node) ⇒ cnc | {
-                node match {
+            (createdNewCluster /: cluster.children)((cnc, child) ⇒ cnc | {
+                child match {
                     case subCluster: Cluster ⇒ performClustering(subCluster)
                     case _                   ⇒ false // nothing to do; a single node cannot be clustered
                 }

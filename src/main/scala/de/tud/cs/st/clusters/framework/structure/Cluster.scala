@@ -57,47 +57,47 @@ class Cluster(
     /////////////////////////////////////////////
     // children(nodes)-related stuff
     /////////////////////////////////////////////
-    private val nodeMap = Map[Int, Node]()
+    private val childrenMap = Map[Int, Node]()
 
-    def nodes: Iterable[Node] =
-        nodeMap.values
+    def children: Iterable[Node] =
+        childrenMap.values
 
-    def getNode(id: Int): Node =
-        nodeMap.getOrElse(id, sys.error("Node with ID["+id+"] was not found"))
+    def getChild(id: Int): Node =
+        childrenMap.getOrElse(id, sys.error("Node with ID["+id+"] was not found"))
 
     def childCount: Int =
-        nodeMap.size
+        childrenMap.size
 
-    def addNode(node: Node) {
-        nodeMap.put(node.uniqueID, node)
-        if (node.parent != null && node.parent != this) {
-            node.parent match {
-                case c: Cluster ⇒ c.removeNode(node.uniqueID)
+    def addChild(child: Node) {
+        childrenMap.put(child.uniqueID, child)
+        if (child.parent != null && child.parent != this) {
+            child.parent match {
+                case c: Cluster ⇒ c.removeChild(child.uniqueID)
             }
         }
-        node.parent = this
+        child.parent = this
     }
 
-    def removeNode(id: Int) {
-        val removedNode = nodeMap.remove(id)
-        if (removedNode.isDefined && removedNode.get.parent == this)
-            removedNode.get.parent = null
+    def removeChild(id: Int) {
+        val removeChild = childrenMap.remove(id)
+        if (removeChild.isDefined && removeChild.get.parent == this)
+            removeChild.get.parent = null
     }
 
-    def clearNodes() =
-        nodeMap.clear
+    def clearChildren() =
+        childrenMap.clear
 
-    def containsNode(id: Int): Boolean =
-        nodeMap.contains(id) || nodeMap.values.exists(n ⇒ n.containsNode(id))
+    def hasDescendant(id: Int): Boolean =
+        childrenMap.contains(id) || childrenMap.values.exists(n ⇒ n.hasDescendant(id))
 
     /////////////////////////////////////////////
     // edges-related stuff
     /////////////////////////////////////////////
-    override def getOutgoingEdges(): Set[Edge] = {
+    override def outgoingEdges: Set[Edge] = {
         // fetch edges from cluster elements
         var edges = Set[Edge]()
-        nodeMap.values foreach {
-            _.getOutgoingEdges foreach { edge ⇒
+        childrenMap.values foreach {
+            _.outgoingEdges foreach { edge ⇒
                 val containsTarget: Boolean = edge.target == this || edge.target.isDescendantOf(this.uniqueID)
                 if (!containsTarget) {
                     edges = edges + edge
@@ -105,14 +105,14 @@ class Cluster(
             }
         }
         // add own outgoing edges to the result
-        edges ++ super.getOutgoingEdges()
+        edges ++ super.outgoingEdges
     }
 
-    override def getIncomingEdges(): Set[Edge] = {
+    override def incomingEdges: Set[Edge] = {
         // fetch transposed edges from cluster elements
         var edges = Set[Edge]()
-        nodeMap.values foreach {
-            _.getIncomingEdges foreach { edge ⇒
+        childrenMap.values foreach {
+            _.incomingEdges foreach { edge ⇒
                 val containsTarget = edge.target == this || edge.target.isDescendantOf(this.uniqueID)
                 if (!containsTarget) {
                     edges = edges + edge
@@ -120,34 +120,47 @@ class Cluster(
             }
         }
         // add own incoming edges to the result
-        edges ++ super.getIncomingEdges()
+        edges ++ super.incomingEdges
     }
 
-    override def getInnerEdges(): Set[Edge] = {
+    override def edgesBetweenDescendants: Set[Edge] = {
         // fetch inner edges from cluster elements
         var edges = Set[Edge]()
-        nodeMap.values foreach {
-            _.getOutgoingEdges foreach { edge ⇒
+        childrenMap.values foreach {
+            _.outgoingEdges foreach { edge ⇒
                 val containsTarget = edge.target == this || edge.target.isDescendantOf(this.uniqueID)
                 if (containsTarget) {
                     edges = edges + edge
                 }
             }
         }
-        edges ++ super.getInnerEdges()
+        edges ++ super.edgesBetweenDescendants
     }
 
-    override def getAllEdges(): Set[Edge] =
+    override def allRelatedEdges(): Set[Edge] =
         // fetch all edges from cluster elements and from cluster itself
-        super.getAllEdges() ++ { for (node ← nodeMap.values; edge ← node.getAllEdges) yield edge }
+        super.allRelatedEdges ++ { for (node ← childrenMap.values; edge ← node.allRelatedEdges) yield edge }
 
-    def getSpecialEdgesBetweenChildren(): Set[Edge] = {
+    def edgesBetweenConnectedChildren: Set[Edge] = {
+        /**
+         * Gets the child of the node that has the given pathTargetID as uniqueID
+         * and that is member of the path between pathSource and the node with the pathTargetID.
+         */
+        def secondToLastOnPath(pathSource: Node, pathTargetID: Int): Node = {
+            require(pathSource.parent != null, println("parent is null"))
+
+            if (pathSource.parent.uniqueID == pathTargetID)
+                return pathSource
+            else
+                return secondToLastOnPath(pathSource.parent, pathTargetID)
+        }
+
         var edges = Set[Edge]()
-        nodeMap.values foreach {
-            _.getOutgoingEdges foreach { edge ⇒
+        childrenMap.values foreach {
+            _.outgoingEdges foreach { edge ⇒
                 val childrenContainsTarget = edge.target.isDescendantOf(this.uniqueID)
                 if (childrenContainsTarget) {
-                    edges = edges + new Edge(edge.source.getChildOnPath(this.uniqueID), edge.target.getChildOnPath(this.uniqueID), edge.dType, edge.count)
+                    edges = edges + new Edge(secondToLastOnPath(edge.source, this.uniqueID), secondToLastOnPath(edge.target, this.uniqueID), edge.dType, edge.count)
                 }
             }
         }
@@ -158,14 +171,14 @@ class Cluster(
     // clone-related stuff
     /////////////////////////////////////////////
 
-    def cloneStructure: Cluster = {
+    def cloneNode: Cluster = {
         val clone = new Cluster(this.uniqueID, this.identifier)
         clone.clusterable = this.clusterable
         clone.metaInfo ++= this.metaInfo
         // add clones of cluster elements to the cluster's clone
-        this.nodes foreach { node ⇒
-            val nodeClone = node.cloneStructure
-            clone.addNode(nodeClone)
+        this.children foreach { node ⇒
+            val childClone = node.cloneNode
+            clone.addChild(childClone)
         }
         clone
     }

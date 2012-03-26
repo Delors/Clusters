@@ -68,7 +68,7 @@ class ImplementationTestingSeparator(
                 }
             }
             case fn: SourceElementNode ⇒ { // this case matches for FieldNodes and MethodNodes
-                val testType = fn.getOutgoingEdges.find(edge ⇒ edge.dType == DependencyType.IS_INSTANCE_MEMBER_OF || edge.dType == DependencyType.IS_CLASS_MEMBER_OF)
+                val testType = fn.outgoingEdges.find(edge ⇒ edge.dType == DependencyType.IS_INSTANCE_MEMBER_OF || edge.dType == DependencyType.IS_CLASS_MEMBER_OF)
                 if (testType.isDefined) {
                     val typeNode = testType.get.target
                     val mostOuterType = getMostOuterType(typeNode)
@@ -83,26 +83,26 @@ class ImplementationTestingSeparator(
         }
 
         if (allTestRelatedNodes.nonEmpty) {
-            val inputNodes = cluster.nodes.toSet
+            val inputChildren = cluster.children.toSet
 
-            cluster.clearNodes()
+            cluster.clearChildren()
             cluster.clusterable = false
 
             val implementationCluster = clusterManager.createCluster(config.implementationClusterIdentifier, this.stageName)
             val testingCluster = clusterManager.createCluster(config.testingClusterIdentifier, this.stageName)
             testingCluster.clusterable = !config.markTestClusterAsUnclusterable
 
-            cluster.addNode(implementationCluster)
-            cluster.addNode(testingCluster)
+            cluster.addChild(implementationCluster)
+            cluster.addChild(testingCluster)
 
-            val implementationRelatedNodes = inputNodes -- allTestRelatedNodes
+            val implementationRelatedNodes = inputChildren -- allTestRelatedNodes
 
             implementationRelatedNodes foreach {
-                implementationCluster.addNode(_)
+                implementationCluster.addChild(_)
             }
 
             allTestRelatedNodes foreach {
-                testingCluster.addNode(_)
+                testingCluster.addChild(_)
             }
 
             true
@@ -113,7 +113,7 @@ class ImplementationTestingSeparator(
     }
 
     protected def getMostOuterType(typeNode: Node): Node = {
-        typeNode.getOutgoingEdges.find(edge ⇒ edge.dType == DependencyType.IS_INNER_CLASS_OF ||
+        typeNode.outgoingEdges.find(edge ⇒ edge.dType == DependencyType.IS_INNER_CLASS_OF ||
             edge.dType == DependencyType.IS_INSTANCE_MEMBER_OF ||
             edge.dType == DependencyType.IS_CLASS_MEMBER_OF) match {
             case Some(edge) ⇒
@@ -125,16 +125,16 @@ class ImplementationTestingSeparator(
 
     protected def extractDirectlyTestRelatedNodes(cluster: Cluster): List[Node] = {
         var result: List[Node] = Nil
-        cluster.nodes foreach { node ⇒
+        cluster.children foreach { child ⇒
             // a node with an identifier that starts with a test library package prefix is considered as directly test related
-            if (config.testLibrariesPackagePrefixes.exists(prfx ⇒ node.identifier.startsWith(prfx))) {
-                result = node :: result
+            if (config.testLibrariesPackagePrefixes.exists(prfx ⇒ child.identifier.startsWith(prfx))) {
+                result = child :: result
             }
             else {
                 // check whether the current node has a direct dependency to a test library
-                node.getOutgoingEdges foreach { edge ⇒
+                child.outgoingEdges foreach { edge ⇒
                     if (config.testLibrariesPackagePrefixes.exists(prfx ⇒ edge.target.identifier.startsWith(prfx))) {
-                        result = node :: result
+                        result = child :: result
                     }
                 }
             }
@@ -144,7 +144,7 @@ class ImplementationTestingSeparator(
 
     protected def getClassRelatedNodes(typeNode: Node): List[Node] = {
         var result = List(typeNode)
-        for (tEdge ← typeNode.getIncomingEdges) {
+        for (tEdge ← typeNode.incomingEdges) {
             if (tEdge.dType == DependencyType.IS_INSTANCE_MEMBER_OF ||
                 tEdge.dType == DependencyType.IS_CLASS_MEMBER_OF ||
                 tEdge.dType == DependencyType.IS_INNER_CLASS_OF) {

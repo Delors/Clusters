@@ -55,13 +55,13 @@ class ClassExtractor extends ClusteringAlgorithm {
         val clustersMap = Map[String, Set[Node]]()
         var ignoredClusters: Set[Node] = Set()
 
-        for (node ← cluster.nodes) {
-            if (node.isCluster) {
-                ignoredClusters = ignoredClusters + node
+        for (child ← cluster.children) {
+            if (child.isCluster) {
+                ignoredClusters = ignoredClusters + child
             }
             else {
                 var typeIdentifier: String = null
-                node match {
+                child match {
                     case t: TypeNode ⇒
                         typeIdentifier = t.identifier
                     case f: FieldNode ⇒
@@ -71,22 +71,22 @@ class ClassExtractor extends ClusteringAlgorithm {
                         typeIdentifier = typeIdentifier.substring(0, typeIdentifier.lastIndexOf('.'))
                 }
                 val clusterSet = clustersMap.getOrElse(typeIdentifier, Set())
-                clustersMap(typeIdentifier) = clusterSet + node
+                clustersMap(typeIdentifier) = clusterSet + child
             }
         }
 
-        cluster.clearNodes()
+        cluster.clearChildren()
         for ((clusterIdentifier, nodeSet) ← clustersMap) {
             val sameNeighborCluster = clusterManager.createCluster(clusterIdentifier, this.stageName)
             createdNewCluster = true
             nodeSet foreach {
-                sameNeighborCluster.addNode(_)
+                sameNeighborCluster.addChild(_)
             }
-            cluster.addNode(sameNeighborCluster)
+            cluster.addChild(sameNeighborCluster)
         }
         // re-add all ignored clusters to the result cluster
         ignoredClusters foreach {
-            cluster.addNode(_)
+            cluster.addChild(_)
         }
 
         createdNewCluster

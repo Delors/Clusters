@@ -59,15 +59,15 @@ class BasePackageExtractor(
         }
 
         var prefixRoot = new GreatestCommonCharPrefixTree()
-        for (node ← cluster.nodes) {
-            if (!node.isCluster) {
-                prefixRoot.addPrefix(node.identifier.toCharArray())
+        for (child ← cluster.children) {
+            if (!child.isCluster) {
+                prefixRoot.addPrefix(child.identifier.toCharArray())
             }
         }
         var prfxs = prefixRoot.prefixes.map(charArray ⇒ String.copyValueOf(charArray))
 
-        val inputNodes = cluster.nodes.toArray
-        cluster.clearNodes()
+        val inputChildren = cluster.children.toArray
+        cluster.clearChildren()
         cluster.clusterable = false
 
         // create resulting clusters
@@ -79,15 +79,15 @@ class BasePackageExtractor(
             createdNewCluster = true
             cl.clusterable = !config.createUnclusterableClusters
             resultMap(prfx) = cl
-            cluster.addNode(cl)
+            cluster.addChild(cl)
         }
-        for (node ← inputNodes) {
-            if (node.isCluster) {
-                cluster.addNode(node)
+        for (child ← inputChildren) {
+            if (child.isCluster) {
+                cluster.addChild(child)
             }
             else {
-                val c = resultMap(getMatchingPrefix(node.identifier, prfxs))
-                c.addNode(node)
+                val c = resultMap(getMatchingPrefix(child.identifier, prfxs))
+                c.addChild(child)
             }
         }
         createdNewCluster

@@ -61,30 +61,30 @@ class StronglyConnectedComponentsClustering(
             null, true, result.order)(true)
 
         // create resulting clusters
-        val inputNodes = cluster.nodes.toArray
-        cluster.clearNodes()
+        val inputChildren = cluster.children.toArray
+        cluster.clearChildren()
         // The first element of a cluster is buffered in this map.
         // If it remains the only element in that "cluster", no new cluster will be created.
         // As soon as the second element of that cluster occurs, the cluster will be created. 
         var createdNewCluster = false
         var newClusterMinSizeBuffer = Map[Int, Node]()
         var resultMap = Map[Int, Cluster]()
-        for (node ← inputNodes) {
+        for (node ← inputChildren) {
             val sccID = result.color(node.uniqueID) - 2
             if (sccID >= 0) {
                 resultMap.get(sccID) match {
                     case Some(c) ⇒
-                        c.addNode(node)
+                        c.addChild(node)
                     case None ⇒
                         // handling to ensure that only clusters with more than one element will be created
                         newClusterMinSizeBuffer.get(sccID) match {
                             case Some(firstElement) ⇒
                                 val c = clusterManager.createCluster(config.clusterIdentifierPrefix + sccID, this.stageName, true)
                                 createdNewCluster = true
-                                c.addNode(firstElement)
-                                c.addNode(node)
+                                c.addChild(firstElement)
+                                c.addChild(node)
                                 resultMap(sccID) = c
-                                cluster.addNode(c)
+                                cluster.addChild(c)
                                 newClusterMinSizeBuffer.remove(sccID)
                             case None ⇒
                                 newClusterMinSizeBuffer(sccID) = node
@@ -93,7 +93,7 @@ class StronglyConnectedComponentsClustering(
             }
         }
         newClusterMinSizeBuffer.values foreach {
-            cluster.addNode(_)
+            cluster.addChild(_)
         }
         createdNewCluster
     }

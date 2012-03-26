@@ -62,21 +62,21 @@ trait ClusterManager
     abstract override def sourceElementID(t: Type): Int = {
         val id = super.sourceElementID(t)
         val node = createTypeNode(id, t)
-        projectCluster.addNode(node)
+        projectCluster.addChild(node)
         id
     }
 
     abstract override def sourceElementID(definingObjectType: ObjectType, fieldName: String): Int = {
         val id = super.sourceElementID(definingObjectType, fieldName)
         val node = createFieldNode(id, definingObjectType, fieldName)
-        projectCluster.addNode(node)
+        projectCluster.addChild(node)
         id
     }
 
     abstract override def sourceElementID(definingReferenceType: ReferenceType, methodName: String, methodDescriptor: MethodDescriptor): Int = {
         val id = super.sourceElementID(definingReferenceType, methodName, methodDescriptor)
         val node = createMethodNode(id, definingReferenceType, methodName, methodDescriptor)
-        projectCluster.addNode(node)
+        projectCluster.addChild(node)
         id
     }
 

@@ -62,39 +62,26 @@ trait Node {
     def level: Int =
         if (parent != null) parent.level + 1 else 1
 
-    def getNodeOfLevel(level: Int): Node =
-        this.getAncestor(this.level - level)
+    def getAncestorByLevel(level: Int): Node =
+        this.getAncestorByLevelDifference(this.level - level)
 
-    private def getAncestor(levelDiff: Int): Node =
+    private def getAncestorByLevelDifference(levelDiff: Int): Node =
         if (levelDiff == 0) {
             this
         }
         else {
             if (levelDiff > 0 && this.parent != null) {
-                parent.getAncestor(levelDiff - 1)
+                parent.getAncestorByLevelDifference(levelDiff - 1)
             }
             else {
                 sys.error("node["+this.uniqueID+"] has no ancestor with levelDiff of \""+levelDiff+"\"")
             }
         }
 
-    /**
-     * Gets the child of the node that has the given parentID as uniqueID
-     * and that is member of the path between this node and the node with the parentID.
-     */
-    def getChildOnPath(parentID: Int): Node = {
-        require(this.parent != null, println("parent is null"))
-
-        if (this.parent.uniqueID == parentID)
-            return this
-        else
-            return parent.getChildOnPath(parentID)
-    }
-
-    def isDescendantOf(parentID: Int): Boolean =
+    def isDescendantOf(ancestorID: Int): Boolean =
         this.parent != null && (
-            this.parent.uniqueID == parentID ||
-            this.parent.isDescendantOf(parentID))
+            this.parent.uniqueID == ancestorID ||
+            this.parent.isDescendantOf(ancestorID))
 
     /////////////////////////////////////////////
     // edges-related stuff
@@ -145,20 +132,20 @@ trait Node {
     /**
      * Gets all edges whose source is this node.
      */
-    def getOwnEdges: List[Edge] =
+    def ownEdges: List[Edge] =
         edges
 
     /**
      * Gets all edges of the transposed graph whose source is this node.
      */
-    def getOwnTransposedEdges: List[Edge] =
+    def ownTransposedEdges: List[Edge] =
         transposedEdges
 
     /**
      * Gets all edges whose source is this node or any of its descendants
      * and whose target is neither this node nor any of its descendants.
      */
-    def getOutgoingEdges(): Set[Edge] = {
+    def outgoingEdges: Set[Edge] = {
         edges.filter(e ⇒ !(e.target == this || e.target.isDescendantOf(this.uniqueID))).toSet
     }
 
@@ -166,21 +153,21 @@ trait Node {
      * Gets all edges of the transposed graph whose source is this node or any of its descendants
      * and whose target is neither this node nor any of its descendants.
      */
-    def getIncomingEdges(): Set[Edge] = {
+    def incomingEdges: Set[Edge] = {
         transposedEdges.filter(e ⇒ !(e.target == this || e.target.isDescendantOf(this.uniqueID))).toSet
     }
 
     /**
      * Gets all edges whose source and target are descendants of this node.
      */
-    def getInnerEdges(): Set[Edge] =
+    def edgesBetweenDescendants: Set[Edge] =
         Set()
 
     /**
      * Gets all edges that are somehow related to this node or its descendants.
      */
-    def getAllEdges(): Set[Edge] = {
-        getOutgoingEdges() ++ getIncomingEdges() ++ getInnerEdges()
+    def allRelatedEdges: Set[Edge] = {
+        outgoingEdges ++ incomingEdges ++ edgesBetweenDescendants
     }
 
     /**
@@ -188,22 +175,22 @@ trait Node {
      * is also a child of this node. The target of the returned (special) edges is
      * set to the direct child -- on the path to the original target -- of this node.
      */
-    def getSpecialEdgesBetweenChildren(): Set[Edge]
+    def edgesBetweenConnectedChildren: Set[Edge]
 
     /////////////////////////////////////////////
     // children(nodes)-related stuff
     /////////////////////////////////////////////
-    def addNode(node: Node)
+    def addChild(child: Node)
 
-    def removeNode(id: Int)
+    def removeChild(id: Int)
 
-    def clearNodes()
+    def clearChildren()
 
-    def containsNode(id: Int): Boolean
+    def hasDescendant(id: Int): Boolean
 
-    def getNode(id: Int): Node
+    def getChild(id: Int): Node
 
-    def nodes: Iterable[Node]
+    def children: Iterable[Node]
 
     def childCount: Int
 
@@ -221,6 +208,6 @@ trait Node {
      *
      * @return A clone of this instance of a node.
      */
-    def cloneStructure: Node
+    def cloneNode: Node
 
 }

@@ -61,8 +61,8 @@ trait SourceElementIdentifiersToFile {
             bw = new BufferedWriter(fw)
             bw.write("[\n")
             var identifierList: List[String] = Nil
-            projectCluster.nodes foreach { node ⇒
-                identifierList = node.identifier :: identifierList
+            projectCluster.children foreach { child ⇒
+                identifierList = child.identifier :: identifierList
             }
             identifierList = identifierList.sortWith(_.toLowerCase < _.toLowerCase)
             identifierList foreach { identifier ⇒
