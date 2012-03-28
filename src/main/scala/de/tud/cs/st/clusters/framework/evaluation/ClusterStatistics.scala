@@ -105,7 +105,7 @@ trait ClusterStatistics {
         var sourceElementCounter = typeCounter + fieldCounter + methodCounter
         var availableSourceElementCounter = availableTypeCounter + availableFieldCounter + availableMethodCounter
 
-        println("## Statistics of cluster["+cluster.identifier+"]:")
+        println("## Statistics of cluster["+cluster.identifier.toHRR+"]:")
         println("Number of Types (available/not available): "+typeCounter+"("+availableTypeCounter+"/"+(typeCounter - availableTypeCounter)+")")
         println("Number of Fields (available/not available): "+fieldCounter+"("+availableFieldCounter+"/"+(fieldCounter - availableFieldCounter)+")")
         println("Number of Methods (available/not available): "+methodCounter+"("+availableMethodCounter+"/"+(methodCounter - availableMethodCounter)+")")

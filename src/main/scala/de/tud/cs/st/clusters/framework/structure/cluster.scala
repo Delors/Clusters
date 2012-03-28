@@ -37,6 +37,7 @@ package structure
 import scala.collection.mutable.ListBuffer
 import scala.collection.mutable.Map
 import de.tud.cs.st.bat.resolved.dependency._
+import de.tud.cs.st.bat.resolved.SourceElementIdentifier
 
 /**
  * @author Thomas Schlosser
@@ -44,7 +45,7 @@ import de.tud.cs.st.bat.resolved.dependency._
  */
 class Cluster(
     val uniqueID: Int,
-    val identifier: String)
+    val identifier: ClusterIdentifier)
         extends Node {
 
     override val isCluster: Boolean = true
@@ -183,4 +184,11 @@ class Cluster(
         clone
     }
 
+}
+
+case class ClusterIdentifier(name: String, val uniqueName: String) extends SourceElementIdentifier {
+
+    def toHRR = name
+
+    def declaringPackage = None
 }

@@ -54,6 +54,11 @@ class ImplementationTestingSeparator(
     val config: ImplementationTestingSeparatorConfiguration)
         extends ClusteringAlgorithm {
 
+    /**
+     * Character that marks the end of a package string
+     */
+    private val EOP: Char = '/'
+
     protected def doPerformClustering(cluster: Cluster): Boolean = {
         val directlyTestRelatedNodes = extractDirectlyTestRelatedNodes(cluster)
 
@@ -127,13 +132,13 @@ class ImplementationTestingSeparator(
         var result: List[Node] = Nil
         cluster.children foreach { child ⇒
             // a node with an identifier that starts with a test library package prefix is considered as directly test related
-            if (config.testLibrariesPackagePrefixes.exists(prfx ⇒ child.identifier.startsWith(prfx))) {
+            if (config.testLibrariesPackagePrefixes.exists(prfx ⇒ child.identifier.declaringPackage.exists(p ⇒ (p + EOP).startsWith(prfx)))) {
                 result = child :: result
             }
             else {
                 // check whether the current node has a direct dependency to a test library
                 child.outgoingEdges foreach { edge ⇒
-                    if (config.testLibrariesPackagePrefixes.exists(prfx ⇒ edge.target.identifier.startsWith(prfx))) {
+                    if (config.testLibrariesPackagePrefixes.exists(prfx ⇒ edge.target.identifier.declaringPackage.exists(p ⇒ (p + EOP).startsWith(prfx)))) {
                         result = child :: result
                     }
                 }
@@ -160,7 +165,7 @@ trait ImplementationTestingSeparatorConfiguration {
     val implementationClusterIdentifier = "implemenation"
     val testingClusterIdentifier = "testing"
 
-    val testLibrariesPackagePrefixes = List("org.junit.", "org.scalatest.")
+    val testLibrariesPackagePrefixes = List("org/junit/", "org/scalatest/")
     val markTestClusterAsUnclusterable = true
 }
 

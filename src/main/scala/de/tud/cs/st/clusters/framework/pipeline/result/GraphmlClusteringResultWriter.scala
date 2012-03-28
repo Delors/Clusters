@@ -132,7 +132,7 @@ class GraphmlClusteringResultWriter(
                 else {
                     cluster.children foreach { child ⇒
                         if (!child.isCluster) {
-                            write(child.identifier+"\n")
+                            write(child.identifier.toHRR+"\n")
                         }
                     }
                 }
@@ -146,7 +146,7 @@ class GraphmlClusteringResultWriter(
               <y:Fill color="#F8ECC9" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="right" autoSizePolicy="node_width" backgroundColor="#404040" borderDistance="0.0" fontFamily="Dialog" fontSize="16" fontStyle="plain" hasLineColor="false" height="22.625" modelName="internal" modelPosition="t" textColor="#FFFFFF" visible="true" width="3260.63639027429" x="0.0" y="0.0">""")
-            write(StringEscapeUtils.escapeXml(cluster.identifier))
+            write(StringEscapeUtils.escapeXml(cluster.identifier.toHRR))
             write("""</y:NodeLabel>
               <y:Shape type="rectangle3d"/>
                <y:State closed="false" innerGraphDisplayEnabled="false"/>
@@ -157,7 +157,7 @@ class GraphmlClusteringResultWriter(
               <y:Fill color="#F8ECC9" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="right" autoSizePolicy="node_width" backgroundColor="#404040" borderDistance="0.0" fontFamily="Dialog" fontSize="16" fontStyle="plain" hasLineColor="false" height="22.625" modelName="internal" modelPosition="t" textColor="#FFFFFF" visible="true" width="3263.636474609375" x="0.0" y="0.0">""")
-            write(StringEscapeUtils.escapeXml(cluster.identifier))
+            write(StringEscapeUtils.escapeXml(cluster.identifier.toHRR))
             write("""</y:NodeLabel>
               <y:Shape type="rectangle3d"/>
               <y:State closed="true" innerGraphDisplayEnabled="false"/>
@@ -192,7 +192,7 @@ class GraphmlClusteringResultWriter(
     private def writeAllChildNodeIdentifiers(node: Node) {
         node.children foreach { child ⇒
             if (!child.isCluster) {
-                write(child.identifier+"\n")
+                write(child.identifier.toHRR+"\n")
             }
             else {
                 writeAllChildNodeIdentifiers(child)
@@ -222,7 +222,7 @@ class GraphmlClusteringResultWriter(
         <y:Fill color="#FFCC00" transparent="false"/>
         <y:BorderStyle color="#000000" type="line" width="1.0"/>
         <y:NodeLabel alignment="center" autoSizePolicy="content" borderDistance="0.0" fontFamily="Dialog" fontSize="13" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="19.1328125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="114.3349609375" x="5.0" y="5.43359375">""")
-            write(StringEscapeUtils.escapeXml(node.identifier))
+            write(StringEscapeUtils.escapeXml(node.identifier.toHRR))
             write("""</y:NodeLabel>
         <y:Shape type="rectangle"/>
       </y:ShapeNode>

@@ -34,6 +34,7 @@ package de.tud.cs.st.clusters
 package framework
 package structure
 
+import de.tud.cs.st.bat.resolved.SourceElementIdentifier
 import de.tud.cs.st.bat.resolved.dependency._
 import scala.collection.mutable.Map
 import scala.collection.mutable.HashMap
@@ -44,7 +45,7 @@ import scala.collection.mutable.HashMap
  */
 trait Node {
 
-    def identifier: String
+    def identifier: SourceElementIdentifier
 
     def uniqueID: Int
 

@@ -57,7 +57,7 @@ trait ClusterManager
 
     protected val PROJECT_CLUSTER_NAME = "project"
 
-    private val projectCluster = new Cluster(clusterID(PROJECT_CLUSTER_NAME), PROJECT_CLUSTER_NAME)
+    private val projectCluster = new Cluster(clusterID(PROJECT_CLUSTER_NAME), ClusterIdentifier(PROJECT_CLUSTER_NAME, PROJECT_CLUSTER_NAME))
 
     abstract override def sourceElementID(t: Type): Int = {
         val id = super.sourceElementID(t)

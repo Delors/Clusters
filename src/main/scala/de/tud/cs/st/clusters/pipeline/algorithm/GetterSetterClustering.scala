@@ -69,7 +69,7 @@ class GetterSetterClustering(
                     optClusterBean match {
                         case Some(clusterBean) ⇒
                             // create setter/getter cluster
-                            val gsCluster = clusterManager.createCluster(config.clusterIdentifierPrefix + clusterBean.field.identifier, this.stageName)
+                            val gsCluster = clusterManager.createCluster(config.clusterIdentifierPrefix + clusterBean.field.identifier.toHRR, this.stageName)
                             gsCluster.addChild(clusterBean.field)
                             clusterBean.methods foreach { gsCluster.addChild(_) }
                             gsCluster.clusterable = false // a getter-setter cluster is treated as a primitive unit

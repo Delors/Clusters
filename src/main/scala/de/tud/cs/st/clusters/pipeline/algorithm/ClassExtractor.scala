@@ -41,6 +41,7 @@ import framework.structure.Node
 import framework.structure.TypeNode
 import framework.structure.FieldNode
 import framework.structure.MethodNode
+import de.tud.cs.st.bat.resolved.Type
 
 /**
  *
@@ -52,7 +53,7 @@ class ClassExtractor extends ClusteringAlgorithm {
 
     protected def doPerformClustering(cluster: Cluster): Boolean = {
         var createdNewCluster = false
-        val clustersMap = Map[String, Set[Node]]()
+        val clustersMap = Map[Type, Set[Node]]()
         var ignoredClusters: Set[Node] = Set()
 
         for (child ← cluster.children) {
@@ -60,24 +61,23 @@ class ClassExtractor extends ClusteringAlgorithm {
                 ignoredClusters = ignoredClusters + child
             }
             else {
-                var typeIdentifier: String = null
+                var t: Type = null
                 child match {
-                    case t: TypeNode ⇒
-                        typeIdentifier = t.identifier
-                    case f: FieldNode ⇒
-                        typeIdentifier = f.identifier.substring(0, f.identifier.lastIndexOf('.'))
-                    case m: MethodNode ⇒
-                        typeIdentifier = m.identifier.substring(0, m.identifier.lastIndexOf('('))
-                        typeIdentifier = typeIdentifier.substring(0, typeIdentifier.lastIndexOf('.'))
+                    case tn: TypeNode ⇒
+                        t = tn.identifier.t
+                    case fn: FieldNode ⇒
+                        t = fn.identifier.declaringObjectType
+                    case mn: MethodNode ⇒
+                        t = mn.identifier.declaringReferenceType
                 }
-                val clusterSet = clustersMap.getOrElse(typeIdentifier, Set())
-                clustersMap(typeIdentifier) = clusterSet + child
+                val clusterSet = clustersMap.getOrElse(t, Set())
+                clustersMap(t) = clusterSet + child
             }
         }
 
         cluster.clearChildren()
-        for ((clusterIdentifier, nodeSet) ← clustersMap) {
-            val sameNeighborCluster = clusterManager.createCluster(clusterIdentifier, this.stageName)
+        for ((t, nodeSet) ← clustersMap) {
+            val sameNeighborCluster = clusterManager.createCluster(t.toJava, this.stageName)
             createdNewCluster = true
             nodeSet foreach {
                 sameNeighborCluster.addChild(_)

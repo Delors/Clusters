@@ -36,17 +36,17 @@ package structure
 
 import de.tud.cs.st.bat.resolved.dependency._
 import de.tud.cs.st.bat.resolved.ClassFile
+import de.tud.cs.st.bat.resolved.TypeIdentifier
 import de.tud.cs.st.bat.resolved.Field
+import de.tud.cs.st.bat.resolved.FieldIdentifier
 import de.tud.cs.st.bat.resolved.Method
+import de.tud.cs.st.bat.resolved.MethodIdentifier
 
 /**
  * @author Thomas Schlosser
  *
  */
 sealed trait SourceElementNode extends Node {
-
-    protected def identifierFun: () ⇒ String
-    override lazy val identifier = identifierFun()
 
     override val isCluster: Boolean = false
 
@@ -92,12 +92,12 @@ sealed trait SourceElementNode extends Node {
 
 case class TypeNode(
     val uniqueID: Int,
-    protected val identifierFun: () ⇒ String,
+    val identifier: TypeIdentifier,
     var clazz: Option[ClassFile])
         extends SourceElementNode {
 
     def cloneNode: TypeNode = {
-        val clone = new TypeNode(this.uniqueID, this.identifierFun, this.clazz)
+        val clone = new TypeNode(this.uniqueID, this.identifier, this.clazz)
         clone.clusterable = this.clusterable
         clone.metaInfo ++= this.metaInfo
         clone
@@ -107,12 +107,12 @@ case class TypeNode(
 
 case class FieldNode(
     val uniqueID: Int,
-    protected val identifierFun: () ⇒ String,
+    val identifier: FieldIdentifier,
     var field: Option[Field])
         extends SourceElementNode {
 
     def cloneNode: FieldNode = {
-        val clone = new FieldNode(this.uniqueID, this.identifierFun, this.field)
+        val clone = new FieldNode(this.uniqueID, this.identifier, this.field)
         clone.clusterable = this.clusterable
         clone.metaInfo ++= this.metaInfo
         clone
@@ -122,12 +122,12 @@ case class FieldNode(
 
 case class MethodNode(
     val uniqueID: Int,
-    protected val identifierFun: () ⇒ String,
+    val identifier: MethodIdentifier,
     var method: Option[Method])
         extends SourceElementNode {
 
     def cloneNode: MethodNode = {
-        val clone = new MethodNode(this.uniqueID, this.identifierFun, this.method)
+        val clone = new MethodNode(this.uniqueID, this.identifier, this.method)
         clone.clusterable = this.clusterable
         clone.metaInfo ++= this.metaInfo
         clone

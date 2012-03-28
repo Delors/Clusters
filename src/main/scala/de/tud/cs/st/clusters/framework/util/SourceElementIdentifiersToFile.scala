@@ -62,7 +62,7 @@ trait SourceElementIdentifiersToFile {
             bw.write("[\n")
             var identifierList: List[String] = Nil
             projectCluster.children foreach { child ⇒
-                identifierList = child.identifier :: identifierList
+                identifierList = child.identifier.toHRR :: identifierList
             }
             identifierList = identifierList.sortWith(_.toLowerCase < _.toLowerCase)
             identifierList foreach { identifier ⇒

@@ -42,51 +42,54 @@ import de.tud.cs.st.bat.resolved.ClassFile
 import de.tud.cs.st.bat.resolved.ObjectType
 import de.tud.cs.st.bat.resolved.ReferenceType
 import de.tud.cs.st.bat.resolved.MethodDescriptor
+import de.tud.cs.st.bat.resolved.TypeIdentifier
+import de.tud.cs.st.bat.resolved.FieldIdentifier
+import de.tud.cs.st.bat.resolved.MethodIdentifier
 
 /**
  * @author Thomas Schlosser
  *
  */
-trait NodeFactory extends PrettyPrint with NodeStore {
+trait NodeFactory extends NodeStore {
 
     def createTypeNode(id: Int, classFile: ClassFile) {
         createNode(
             id,
             (oldNode: TypeNode) ⇒ oldNode.clazz = Some(classFile),
-            (id) ⇒ new TypeNode(id, () ⇒ prettyPrint(classFile.thisClass), Some(classFile)))
+            (id) ⇒ new TypeNode(id, TypeIdentifier(classFile.thisClass), Some(classFile)))
     }
 
     def createTypeNode(id: Int, t: Type): TypeNode =
         createNode(
             id,
             (c: TypeNode) ⇒ (),
-            (id) ⇒ new TypeNode(id, () ⇒ prettyPrint(t), None))
+            (id) ⇒ new TypeNode(id, TypeIdentifier(t), None))
 
     def createFieldNode(id: Int, classFile: ClassFile, field: Field) {
         createNode(
             id,
             (oldNode: FieldNode) ⇒ oldNode.field = Some(field),
-            (id) ⇒ new FieldNode(id, () ⇒ prettyPrint(classFile.thisClass, field.name), Some(field)))
+            (id) ⇒ new FieldNode(id, FieldIdentifier(classFile.thisClass, field.name), Some(field)))
     }
 
     def createFieldNode(id: Int, definingObjectType: ObjectType, fieldName: String): FieldNode =
         createNode(
             id,
             (c: FieldNode) ⇒ (),
-            (id) ⇒ new FieldNode(id, () ⇒ prettyPrint(definingObjectType, fieldName), None))
+            (id) ⇒ new FieldNode(id, FieldIdentifier(definingObjectType, fieldName), None))
 
     def createMethodNode(id: Int, classFile: ClassFile, method: Method) {
         createNode(
             id,
             (oldNode: MethodNode) ⇒ oldNode.method = Some(method),
-            (id) ⇒ new MethodNode(id, () ⇒ prettyPrint(classFile.thisClass, method.name, method.descriptor), Some(method)))
+            (id) ⇒ new MethodNode(id, MethodIdentifier(classFile.thisClass, method.name, method.descriptor), Some(method)))
     }
 
     def createMethodNode(id: Int, definingReferenceType: ReferenceType, methodName: String, methodDescriptor: MethodDescriptor): MethodNode =
         createNode(
             id,
             (c: MethodNode) ⇒ (),
-            (id) ⇒ new MethodNode(id, () ⇒ prettyPrint(definingReferenceType, methodName, methodDescriptor), None))
+            (id) ⇒ new MethodNode(id, MethodIdentifier(definingReferenceType, methodName, methodDescriptor), None))
 
     private def createNode[N <: Node](
         id: Int,

@@ -52,18 +52,21 @@ class ApplicationLibrariesSeparator(
     val config: ApplicationLibrariesSeparatorConfiguration)
         extends ClusteringAlgorithm {
 
+    /**
+     * Character that marks the end of a package string
+     */
+    private val EOP: Char = '/'
+
     protected def doPerformClustering(cluster: Cluster): Boolean = {
         // create list that contains all names of the application packages
         var applicationPackages: Set[String] = Set()
         for (child ← cluster.children) {
             child match {
                 case TypeNode(_, _, Some(t)) ⇒
-                    // replace all '/'s with '.'s. This has to be done, since the identifiers contain '.'s
-                    // as separators between package names. And the application packages that are collected
-                    // in this loop have to match with the nodes' identifiers. At the end, a '.' is added,
-                    // because sub-packages on the last package level should not match with other sub-packages
+                    // At the end, a '/' is added, because sub-packages on the last
+                    // package level should not match with other sub-packages
                     // that have this package as prefix.
-                    applicationPackages = applicationPackages + (t.thisClass.packageName.replace('/', '.') + '.')
+                    applicationPackages = applicationPackages + (t.thisClass.packageName + EOP)
                 case _ ⇒
                 // nothing to do in this case, because the node is not associated with a classFile object
                 // fields and methods can be omitted, since their packages will be added to the list
@@ -90,7 +93,7 @@ class ApplicationLibrariesSeparator(
         cluster.addChild(applicationCluster)
         cluster.addChild(librariesCluster)
         for (child ← inputChildren) {
-            if (applicationPackages exists (child.identifier.startsWith(_))) {
+            if (applicationPackages.exists(appPkg ⇒ child.identifier.declaringPackage.exists(p ⇒ (p + EOP).startsWith(appPkg)))) {
                 applicationCluster.addChild(child)
             }
             else {

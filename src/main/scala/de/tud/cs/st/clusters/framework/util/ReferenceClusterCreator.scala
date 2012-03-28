@@ -57,7 +57,7 @@ trait ReferenceClusterCreator {
         val projectCluster = clusterManager.getProjectCluster
         var identifierMap = Map[String, Node]()
         projectCluster.children foreach { child ⇒
-            identifierMap = identifierMap + ((child.identifier, child))
+            identifierMap = identifierMap + ((child.identifier.toHRR, child))
         }
         projectCluster.clearChildren();
 

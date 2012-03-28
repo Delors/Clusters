@@ -87,7 +87,7 @@ class DOTClusteringResultWriter(
         if (emptyCluster) {
             nodeBuffer.append("\t\"")
             nodeBuffer.append(cluster.uniqueID)
-            nodeBuffer.append("\"[shape=box, label=\""+cluster.identifier+"\"];\n")
+            nodeBuffer.append("\"[shape=box, label=\""+cluster.identifier.toHRR+"\"];\n")
         }
         else if (!cluster.isProjectCluster) {
             nodeBuffer.append("\tnode [style=filled,fillcolor=white,color=black];\n")
@@ -95,7 +95,7 @@ class DOTClusteringResultWriter(
             nodeBuffer.append("\tfillcolor=lightgrey;\n")
             nodeBuffer.append("\tcolor=black;\n")
             nodeBuffer.append("\tlabel = \"")
-            nodeBuffer.append(cluster.identifier)
+            nodeBuffer.append(cluster.identifier.toHRR)
             nodeBuffer.append("\";\n")
             nodeBuffer.append("}\n")
         }
@@ -106,7 +106,7 @@ class DOTClusteringResultWriter(
             nodeBuffer.append("\t")
             nodeBuffer.append(node.uniqueID)
             nodeBuffer.append("[label=\"")
-            nodeBuffer.append(node.identifier)
+            nodeBuffer.append(node.identifier.toHRR)
             nodeBuffer.append("\"];\n")
 
             // add egdes

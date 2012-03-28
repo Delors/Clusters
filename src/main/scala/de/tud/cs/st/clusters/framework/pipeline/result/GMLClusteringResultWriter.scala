@@ -68,7 +68,7 @@ class GMLClusteringResultWriter(
         nodeBuffer.append("\t\tid\t")
         nodeBuffer.append(cluster.uniqueID)
         nodeBuffer.append("\n\t\tlabel\t\"")
-        nodeBuffer.append(cluster.identifier)
+        nodeBuffer.append(cluster.identifier.toHRR)
         nodeBuffer.append("\"\n")
         if (cluster.parent != null) {
             nodeBuffer.append("\t\tgid\t")
@@ -78,7 +78,7 @@ class GMLClusteringResultWriter(
         nodeBuffer.append("\t\tisGroup\t1\n\t]\n")
 
         //        nodeBuffer.append("\t\tisGroup\t1\n\t\tLabelGraphics\n\t\t[\n\t\t\ttext\t\"")
-        //        nodeBuffer.append(cluster.identifier)
+        //        nodeBuffer.append(cluster.identifier.toHRR)
         //        nodeBuffer.append("\"\n\t\t]\n\t]")
 
         cluster.children foreach {
@@ -104,7 +104,7 @@ class GMLClusteringResultWriter(
         nodeBuffer.append("\t\tid\t")
         nodeBuffer.append(node.uniqueID)
         nodeBuffer.append("\n\t\tlabel\t\"")
-        nodeBuffer.append(node.identifier)
+        nodeBuffer.append(node.identifier.toHRR)
         nodeBuffer.append("\"\n")
         if (node.parent != null) {
             nodeBuffer.append("\t\tgid\t")

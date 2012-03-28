@@ -50,14 +50,12 @@ trait ClusterFactory
         id
     }
 
-    def createCluster(clusterIdentifier: String, creatorName: String, makeUnique: Boolean = false): Cluster = {
+    def createCluster(clusterName: String, creatorName: String, makeUnique: Boolean = false): Cluster = {
+        val uniqueName = if (makeUnique) (clusterName + globallyUniqueID) else clusterName
         val cluster = createClusterInStore(
-            if (makeUnique)
-                clusterID(clusterIdentifier + globallyUniqueID)
-            else
-                clusterID(clusterIdentifier),
+            clusterID(uniqueName),
             (c: Cluster) ⇒ (),
-            (id) ⇒ new Cluster(id, clusterIdentifier))
+            (id) ⇒ new Cluster(id, ClusterIdentifier(clusterName, uniqueName)))
         if (cluster.metaInfo.isDefinedAt("creator")) {
             cluster.metaInfo("lastExplicitAccessor") = creatorName
         }

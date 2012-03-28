@@ -49,6 +49,11 @@ class BasePackageExtractor(
     val config: BasePackageExtractorConfiguration)
         extends ClusteringAlgorithm {
 
+    /**
+     * Character that marks the end of a package string
+     */
+    private val EOP: Char = 0
+
     protected def doPerformClustering(cluster: Cluster): Boolean = {
         def getMatchingPrefix(value: String, prefixes: Array[String]): String = {
             prefixes.find(prfx ⇒ value.startsWith(prfx)) match {
@@ -61,7 +66,8 @@ class BasePackageExtractor(
         var prefixRoot = new GreatestCommonCharPrefixTree()
         for (child ← cluster.children) {
             if (!child.isCluster) {
-                prefixRoot.addPrefix(child.identifier.toCharArray())
+                child.identifier.declaringPackage.foreach(declPkg ⇒
+                    prefixRoot.addPrefix((declPkg + EOP).toCharArray()))
             }
         }
         var prfxs = prefixRoot.prefixes.map(charArray ⇒ String.copyValueOf(charArray))
@@ -86,83 +92,89 @@ class BasePackageExtractor(
                 cluster.addChild(child)
             }
             else {
-                val c = resultMap(getMatchingPrefix(child.identifier, prfxs))
-                c.addChild(child)
+                val dclPkg = child.identifier.declaringPackage
+                if (dclPkg.isDefined) {
+                    val c = resultMap(getMatchingPrefix((dclPkg.get + EOP), prfxs))
+                    c.addChild(child)
+                }
+                else {
+                    cluster.addChild(child)
+                }
             }
         }
         createdNewCluster
     }
-}
 
-/**
- *
- * @param content In case that this instance is the root element of the tree, the content is 'None'.
- * 		  If this instance is an intermediate tree element or a leaf of the whole tree,
- *                the content is the character at the x-th position in the prefix, where x is the hierarchy
- *                level of this instance in the whole tree.
- *
- * @author Thomas Schlosser
- *
- */
-private class GreatestCommonCharPrefixTree(
-    val content: Option[Char] = None)
-        extends GreatestCommonPrefixTree[Char] {
+    /**
+     *
+     * @param content In case that this instance is the root element of the tree, the content is 'None'.
+     * 		  If this instance is an intermediate tree element or a leaf of the whole tree,
+     *                the content is the character at the x-th position in the prefix, where x is the hierarchy
+     *                level of this instance in the whole tree.
+     *
+     * @author Thomas Schlosser
+     *
+     */
+    private class GreatestCommonCharPrefixTree(
+        val content: Option[Char] = None)
+            extends GreatestCommonPrefixTree[Char] {
 
-    val children: Map[Char, GreatestCommonPrefixTree[Char]] = Map.empty
+        val children: Map[Char, GreatestCommonPrefixTree[Char]] = Map.empty
 
-    override def isEndMarker(content: Char): Boolean =
-        content.isUpper
+        override def isEndMarker(content: Char): Boolean =
+            content == EOP //content.isUpper
 
-    override def GreatestCommonPrefixTree(content: Char): GreatestCommonCharPrefixTree =
-        new GreatestCommonCharPrefixTree(Some(content))
-}
-
-private trait GreatestCommonPrefixTree[Content] {
-    val content: Option[Content]
-    val children: Map[Content, GreatestCommonPrefixTree[Content]]
-    var end: Boolean = false
-
-    def addPrefix(prefix: Array[Content]) {
-        var predecessor: GreatestCommonPrefixTree[Content] = null
-        var current: GreatestCommonPrefixTree[Content] = this
-        prefix.foreach(c ⇒ {
-            if (isEndMarker(c)) {
-                current.end = true
-                current.children.clear()
-                return
-            }
-            current.children.get(c) match {
-                case Some(c2) ⇒
-                    predecessor = current
-                    current = c2
-                case None ⇒
-                    if (current.end) {
-                        return
-                    }
-                    current.children(c) = GreatestCommonPrefixTree(c)
-
-                    predecessor = current
-                    current = current.children(c)
-            }
-        })
+        override def GreatestCommonPrefixTree(content: Char): GreatestCommonCharPrefixTree =
+            new GreatestCommonCharPrefixTree(Some(content))
     }
 
-    def prefixes(implicit m: ClassManifest[Content]): Array[Array[Content]] = {
-        var result: Array[Array[Content]] = Array()
-        for ((key, value) ← children) {
-            var subResult: Array[Array[Content]] = for (prfx ← value.prefixes) yield { Array(key) ++ prfx }
-            if (subResult.length == 0) {
-                subResult = Array(Array(key))
-            }
-            result ++= subResult
+    private trait GreatestCommonPrefixTree[Content] {
+        val content: Option[Content]
+        val children: Map[Content, GreatestCommonPrefixTree[Content]]
+        var end: Boolean = false
+
+        def addPrefix(prefix: Array[Content]) {
+            var predecessor: GreatestCommonPrefixTree[Content] = null
+            var current: GreatestCommonPrefixTree[Content] = this
+            prefix.foreach(c ⇒ {
+                if (isEndMarker(c)) {
+                    current.end = true
+                    current.children.clear()
+                    return
+                }
+                current.children.get(c) match {
+                    case Some(c2) ⇒
+                        predecessor = current
+                        current = c2
+                    case None ⇒
+                        if (current.end) {
+                            return
+                        }
+                        current.children(c) = GreatestCommonPrefixTree(c)
+
+                        predecessor = current
+                        current = current.children(c)
+                }
+            })
         }
-        result
+
+        def prefixes(implicit m: ClassManifest[Content]): Array[Array[Content]] = {
+            var result: Array[Array[Content]] = Array()
+            for ((key, value) ← children) {
+                var subResult: Array[Array[Content]] = for (prfx ← value.prefixes) yield { Array(key) ++ prfx }
+                if (subResult.length == 0) {
+                    subResult = Array(Array(key))
+                }
+                result ++= subResult
+            }
+            result
+        }
+
+        def isEndMarker(content: Content): Boolean
+
+        def GreatestCommonPrefixTree(content: Content): GreatestCommonPrefixTree[Content]
+
     }
-
-    def isEndMarker(content: Content): Boolean
-
-    def GreatestCommonPrefixTree(content: Content): GreatestCommonPrefixTree[Content]
-
 }
 
 trait BasePackageExtractorConfiguration {
