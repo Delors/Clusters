@@ -179,7 +179,6 @@ trait ChineseWhispersConfiguration {
             case DependencyType.USES_METHOD_DECLARING_TYPE         ⇒
             case DependencyType.CALLS_METHOD                       ⇒ return 90 //return 50
             case DependencyType.CALLS_INTERFACE_METHOD             ⇒ return 80 //return 40
-            case DependencyType.USES_TYPE                          ⇒
 
             // annotation related dependency types
             case DependencyType.ANNOTATED_WITH                     ⇒
