@@ -45,9 +45,9 @@ import scala.collection.mutable.HashMap
  */
 trait Node {
 
-    def identifier: SourceElementIdentifier
-
     def uniqueID: Int
+
+    def identifier: SourceElementIdentifier
 
     val isCluster: Boolean
 

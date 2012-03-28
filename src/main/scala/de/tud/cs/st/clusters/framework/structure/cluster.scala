@@ -138,7 +138,7 @@ class Cluster(
         edges ++ super.edgesBetweenDescendants
     }
 
-    override def allRelatedEdges(): Set[Edge] =
+    override def allRelatedEdges: Set[Edge] =
         // fetch all edges from cluster elements and from cluster itself
         super.allRelatedEdges ++ { for (node ← childrenMap.values; edge ← node.allRelatedEdges) yield edge }
 
