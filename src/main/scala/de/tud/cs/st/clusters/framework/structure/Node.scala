@@ -168,7 +168,7 @@ trait Node {
      * Gets all edges that are somehow related to this node or its descendants.
      */
     def allRelatedEdges: Set[Edge] = {
-        outgoingEdges ++ incomingEdges ++ edgesBetweenDescendants
+        ownEdges.toSet ++ incomingEdges ++ edgesBetweenDescendants
     }
 
     /**

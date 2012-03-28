@@ -81,7 +81,8 @@ class BasePackageExtractor(
         var resultMap = Map[String, Cluster]()
         for (i ← 0 to prfxs.size - 1) {
             val prfx = prfxs(i)
-            val cl = clusterManager.createCluster(prfx, this.stageName)
+            // In order to get the Java notation, the character '/' is replaced by '.'
+            val cl = clusterManager.createCluster(prfx.replace('/', '.'), this.stageName)
             createdNewCluster = true
             cl.clusterable = !config.createUnclusterableClusters
             resultMap(prfx) = cl
