@@ -37,7 +37,7 @@ package structure
 import scala.collection.mutable.ListBuffer
 import scala.collection.mutable.Map
 import de.tud.cs.st.bat.resolved.dependency._
-import de.tud.cs.st.bat.resolved.SourceElementIdentifier
+import de.tud.cs.st.bat.resolved.StructureIdentifier
 
 /**
  * @author Thomas Schlosser
@@ -186,7 +186,7 @@ class Cluster(
 
 }
 
-case class ClusterIdentifier(name: String, val uniqueName: String) extends SourceElementIdentifier {
+case class ClusterIdentifier(name: String, val uniqueName: String) extends StructureIdentifier {
 
     def toHRR = name
 
