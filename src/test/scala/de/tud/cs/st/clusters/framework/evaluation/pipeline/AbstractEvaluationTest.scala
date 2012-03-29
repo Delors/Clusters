@@ -293,5 +293,53 @@ abstract class AbstractEvaluationTest extends AbstractClusteringTest {
             measuredRuns = 1)
     }
 
+    test("evaluate [ant183SourceZipFile]") {
+        evaluate(
+            "ANT-1.8.3",
+            ant183SourceZipFile,
+            null)
+    }
+
+    test("evaluate [argoUMLSourceZipFile]") {
+        evaluate(
+            "ArgoUML",
+            argoUMLSourceZipFile,
+            null)
+    }
+
+    test("evaluate [derbySourceZipFile]") {
+        evaluate(
+            "derby",
+            derbySourceZipFile,
+            null)
+    }
+
+    test("evaluate [droolsSourceZipFile]") {
+        evaluate(
+            "drools",
+            droolsSourceZipFile,
+            null)
+    }
+
+    test("evaluate [eclipseJdtUISourceZipFile]") {
+        evaluate(
+            "eclipseJdtUI",
+            eclipseJdtUISourceZipFile,
+            null)
+    }
+
+    test("evaluate [saxonSourceZipFile]") {
+        evaluate(
+            "SAXON",
+            saxonSourceZipFile,
+            null)
+    }
+
+    test("evaluate [springFrameworkSourceZipFile]") {
+        evaluate(
+            "SpringFramework",
+            springFrameworkSourceZipFile,
+            null)
+    }
 }
 

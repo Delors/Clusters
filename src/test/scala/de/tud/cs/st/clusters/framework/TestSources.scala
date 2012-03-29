@@ -47,8 +47,16 @@ trait TestSources {
     val cocomeSourceZipFile = SourceZipFile("test/classfiles/cocome-impl-classes.jar")
     val flashcardsSourceZipFile = SourceZipFile("test/classfiles/Flashcards 0.4 - target 1.6.zip")
     val hibernateSourceZipFile = SourceZipFile("test/classfiles/hibernate-core-3.6.0.Final.jar")
+
     def clustersSourceZipFile = optionalSourceZipFile("build/clusters-1.6.ALPHA.jar")
     def javaRuntimeSourceZipFile = optionalSourceZipFile("test/classfiles/rt_jdk1.7.jar")
+    def ant183SourceZipFile = optionalSourceZipFile("test/classfiles/apache-ant-1.8.3.jar")
+    def argoUMLSourceZipFile = optionalSourceZipFile("test/classfiles/ArgoUML-0.34.jar")
+    def derbySourceZipFile = optionalSourceZipFile("test/classfiles/derby-10.8.2.2.jar")
+    def droolsSourceZipFile = optionalSourceZipFile("test/classfiles/drools-core-5.3.0.Final.jar")
+    def eclipseJdtUISourceZipFile = optionalSourceZipFile("test/classfiles/org.eclipse.jdt.ui_3.7.2.v20120109-1427.jar")
+    def saxonSourceZipFile = optionalSourceZipFile("test/classfiles/saxonee9-3-0-11j.jar")
+    def springFrameworkSourceZipFile = optionalSourceZipFile("test/classfiles/spring-framework-3.1.1.RELEASE.zip")
 
     // only selected classes
     val getterSetterTestClassSourceZipFile = SourceZipFile("test/classfiles/ClusteringTestProject.zip", "test/GetterSetterTestClass.class")
