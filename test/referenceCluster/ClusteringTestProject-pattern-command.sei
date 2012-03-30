@@ -1,37 +1,37 @@
 [
 java.io.PrintStream
-java.io.PrintStream.println(java.lang.String)
+java.io.PrintStream.println(java.lang.String) : void
 java.lang.Exception
 java.lang.Object
-java.lang.Object.<init>()
+java.lang.Object.<init>() : void
 java.lang.String
-java.lang.String.equalsIgnoreCase(java.lang.String)
+java.lang.String.equalsIgnoreCase(java.lang.String) : boolean
 java.lang.System
-java.lang.System.exit(int)
+java.lang.System.exit(int) : void
 java.lang.System.out
 java.util.ArrayList
-java.util.ArrayList.<init>()
+java.util.ArrayList.<init>() : void
 java.util.List
-java.util.List.add(java.lang.Object)
+java.util.List.add(java.lang.Object) : boolean
 pattern.command.Command
-pattern.command.Command.execute()
+pattern.command.Command.execute() : void
 pattern.command.FlipDownCommand
-pattern.command.FlipDownCommand.<init>(pattern.command.Light)
-pattern.command.FlipDownCommand.execute()
+pattern.command.FlipDownCommand.<init>(pattern.command.Light) : void
+pattern.command.FlipDownCommand.execute() : void
 pattern.command.FlipDownCommand.theLight
 pattern.command.FlipUpCommand
-pattern.command.FlipUpCommand.<init>(pattern.command.Light)
-pattern.command.FlipUpCommand.execute()
+pattern.command.FlipUpCommand.<init>(pattern.command.Light) : void
+pattern.command.FlipUpCommand.execute() : void
 pattern.command.FlipUpCommand.theLight
 pattern.command.Light
-pattern.command.Light.<init>()
-pattern.command.Light.turnOff()
-pattern.command.Light.turnOn()
+pattern.command.Light.<init>() : void
+pattern.command.Light.turnOff() : void
+pattern.command.Light.turnOn() : void
 pattern.command.PressSwitch
-pattern.command.PressSwitch.<init>()
-pattern.command.PressSwitch.main(java.lang.String[])
+pattern.command.PressSwitch.<init>() : void
+pattern.command.PressSwitch.main(java.lang.String[]) : void
 pattern.command.Switch
-pattern.command.Switch.<init>()
+pattern.command.Switch.<init>() : void
 pattern.command.Switch.history
-pattern.command.Switch.storeAndExecute(pattern.command.Command)
+pattern.command.Switch.storeAndExecute(pattern.command.Command) : void
 ]

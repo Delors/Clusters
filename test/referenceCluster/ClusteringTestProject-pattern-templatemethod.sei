@@ -1,24 +1,24 @@
 [
 java.lang.Object
-java.lang.Object.<init>()
+java.lang.Object.<init>() : void
 pattern.templatemethod.Chess
-pattern.templatemethod.Chess.<init>()
-pattern.templatemethod.Chess.endOfGame()
-pattern.templatemethod.Chess.initializeGame()
-pattern.templatemethod.Chess.makePlay(int)
-pattern.templatemethod.Chess.printWinner()
+pattern.templatemethod.Chess.<init>() : void
+pattern.templatemethod.Chess.endOfGame() : boolean
+pattern.templatemethod.Chess.initializeGame() : void
+pattern.templatemethod.Chess.makePlay(int) : void
+pattern.templatemethod.Chess.printWinner() : void
 pattern.templatemethod.Game
-pattern.templatemethod.Game.<init>()
-pattern.templatemethod.Game.endOfGame()
-pattern.templatemethod.Game.initializeGame()
-pattern.templatemethod.Game.makePlay(int)
+pattern.templatemethod.Game.<init>() : void
+pattern.templatemethod.Game.endOfGame() : boolean
+pattern.templatemethod.Game.initializeGame() : void
+pattern.templatemethod.Game.makePlay(int) : void
 pattern.templatemethod.Game.playersCount
-pattern.templatemethod.Game.playOneGame(int)
-pattern.templatemethod.Game.printWinner()
+pattern.templatemethod.Game.playOneGame(int) : void
+pattern.templatemethod.Game.printWinner() : void
 pattern.templatemethod.Monopoly
-pattern.templatemethod.Monopoly.<init>()
-pattern.templatemethod.Monopoly.endOfGame()
-pattern.templatemethod.Monopoly.initializeGame()
-pattern.templatemethod.Monopoly.makePlay(int)
-pattern.templatemethod.Monopoly.printWinner()
+pattern.templatemethod.Monopoly.<init>() : void
+pattern.templatemethod.Monopoly.endOfGame() : boolean
+pattern.templatemethod.Monopoly.initializeGame() : void
+pattern.templatemethod.Monopoly.makePlay(int) : void
+pattern.templatemethod.Monopoly.printWinner() : void
 ]

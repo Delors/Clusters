@@ -1,38 +1,38 @@
 [
 java.io.PrintStream
-java.io.PrintStream.println(java.lang.String)
+java.io.PrintStream.println(java.lang.String) : void
 java.lang.Object
-java.lang.Object.<init>()
+java.lang.Object.<init>() : void
 java.lang.String
 java.lang.StringBuilder
-java.lang.StringBuilder.<init>()
-java.lang.StringBuilder.append(java.lang.Object)
-java.lang.StringBuilder.append(java.lang.String)
-java.lang.StringBuilder.toString()
+java.lang.StringBuilder.<init>() : void
+java.lang.StringBuilder.append(java.lang.Object) : java.lang.StringBuilder
+java.lang.StringBuilder.append(java.lang.String) : java.lang.StringBuilder
+java.lang.StringBuilder.toString() : java.lang.String
 java.lang.System
 java.lang.System.out
 pattern.builder.Pizza
-pattern.builder.Pizza.<init>(pattern.builder.PizzaBuilder)
+pattern.builder.Pizza.<init>(pattern.builder.PizzaBuilder) : void
 pattern.builder.Pizza.dough
-pattern.builder.Pizza.getDough()
-pattern.builder.Pizza.getSauce()
-pattern.builder.Pizza.getTopping()
+pattern.builder.Pizza.getDough() : java.lang.String
+pattern.builder.Pizza.getSauce() : java.lang.String
+pattern.builder.Pizza.getTopping() : java.lang.String
 pattern.builder.Pizza.sauce
 pattern.builder.Pizza.topping
-pattern.builder.Pizza.toString()
+pattern.builder.Pizza.toString() : java.lang.String
 pattern.builder.PizzaBuilder
-pattern.builder.PizzaBuilder.<init>()
-pattern.builder.PizzaBuilder.build()
+pattern.builder.PizzaBuilder.<init>() : void
+pattern.builder.PizzaBuilder.build() : pattern.builder.Pizza
 pattern.builder.PizzaBuilder.dough
-pattern.builder.PizzaBuilder.getDough()
-pattern.builder.PizzaBuilder.getSauce()
-pattern.builder.PizzaBuilder.getTopping()
+pattern.builder.PizzaBuilder.getDough() : java.lang.String
+pattern.builder.PizzaBuilder.getSauce() : java.lang.String
+pattern.builder.PizzaBuilder.getTopping() : java.lang.String
 pattern.builder.PizzaBuilder.sauce
-pattern.builder.PizzaBuilder.setDough(java.lang.String)
-pattern.builder.PizzaBuilder.setSauce(java.lang.String)
-pattern.builder.PizzaBuilder.setTopping(java.lang.String)
+pattern.builder.PizzaBuilder.setDough(java.lang.String) : pattern.builder.PizzaBuilder
+pattern.builder.PizzaBuilder.setSauce(java.lang.String) : pattern.builder.PizzaBuilder
+pattern.builder.PizzaBuilder.setTopping(java.lang.String) : pattern.builder.PizzaBuilder
 pattern.builder.PizzaBuilder.topping
 pattern.builder.PizzaBuilderExample
-pattern.builder.PizzaBuilderExample.<init>()
-pattern.builder.PizzaBuilderExample.main(java.lang.String[])
+pattern.builder.PizzaBuilderExample.<init>() : void
+pattern.builder.PizzaBuilderExample.main(java.lang.String[]) : void
 ]

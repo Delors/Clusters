@@ -1,28 +1,28 @@
 [
 java.io.PrintStream
-java.io.PrintStream.println(java.lang.String)
+java.io.PrintStream.println(java.lang.String) : void
 java.lang.Object
-java.lang.Object.<init>()
+java.lang.Object.<init>() : void
 java.lang.String
 java.lang.StringBuilder
-java.lang.StringBuilder.<init>()
-java.lang.StringBuilder.append(java.lang.String)
-java.lang.StringBuilder.toString()
+java.lang.StringBuilder.<init>() : void
+java.lang.StringBuilder.append(java.lang.String) : java.lang.StringBuilder
+java.lang.StringBuilder.toString() : java.lang.String
 java.lang.System
 java.lang.System.out
 pattern.proxy.Image
-pattern.proxy.Image.displayImage()
+pattern.proxy.Image.displayImage() : void
 pattern.proxy.ProxyExample
-pattern.proxy.ProxyExample.<init>()
-pattern.proxy.ProxyExample.main(java.lang.String[])
+pattern.proxy.ProxyExample.<init>() : void
+pattern.proxy.ProxyExample.main(java.lang.String[]) : void
 pattern.proxy.ProxyImage
-pattern.proxy.ProxyImage.<init>(java.lang.String)
-pattern.proxy.ProxyImage.displayImage()
+pattern.proxy.ProxyImage.<init>(java.lang.String) : void
+pattern.proxy.ProxyImage.displayImage() : void
 pattern.proxy.ProxyImage.filename
 pattern.proxy.ProxyImage.image
 pattern.proxy.RealImage
-pattern.proxy.RealImage.<init>(java.lang.String)
-pattern.proxy.RealImage.displayImage()
+pattern.proxy.RealImage.<init>(java.lang.String) : void
+pattern.proxy.RealImage.displayImage() : void
 pattern.proxy.RealImage.filename
-pattern.proxy.RealImage.loadImageFromDisk()
+pattern.proxy.RealImage.loadImageFromDisk() : void
 ]

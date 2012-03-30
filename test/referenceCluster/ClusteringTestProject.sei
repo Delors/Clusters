@@ -2,18 +2,18 @@
 	[
 		[
 			java.io.PrintStream
-			java.io.PrintStream.println(java.lang.String)
+			java.io.PrintStream.println(java.lang.String) : void
 		]
 		[
 			java.lang.Integer
 			java.lang.Object
-			java.lang.Object.<init>()
+			java.lang.Object.<init>() : void
 			java.lang.String
 			java.lang.StringBuilder
-			java.lang.StringBuilder.<init>()
-			java.lang.StringBuilder.append(java.lang.Object)
-			java.lang.StringBuilder.append(java.lang.String)
-			java.lang.StringBuilder.toString()
+			java.lang.StringBuilder.<init>() : void
+			java.lang.StringBuilder.append(java.lang.Object) : java.lang.StringBuilder
+			java.lang.StringBuilder.append(java.lang.String) : java.lang.StringBuilder
+			java.lang.StringBuilder.toString() : java.lang.String
 			java.lang.System
 			java.lang.System.out
 		]
@@ -22,117 +22,117 @@
 		[
 			[
 				example.test1.HungryClient
-				example.test1.HungryClient.<init>(example.test1.Restaurant)
-				example.test1.HungryClient.eatPizza()
-				example.test1.HungryClient.eatSteak()
+				example.test1.HungryClient.<init>(example.test1.Restaurant) : void
+				example.test1.HungryClient.eatPizza() : void
+				example.test1.HungryClient.eatSteak() : void
 				example.test1.HungryClient.restaurant
-				example.test1.Restaurant.orderPizza()
-				example.test1.Restaurant.orderSteak()
+				example.test1.Restaurant.orderPizza() : void
+				example.test1.Restaurant.orderSteak() : void
 			]
 			[
 				example.test1.Restaurant
-				example.test1.Restaurant.<init>()
+				example.test1.Restaurant.<init>() : void
 			]
 			[
 				example.test1.ThirstyClient
-				example.test1.ThirstyClient.<init>(example.test1.Restaurant)
-				example.test1.ThirstyClient.drinkWater()
-				example.test1.ThirstyClient.drinkCoke()
+				example.test1.ThirstyClient.<init>(example.test1.Restaurant) : void
+				example.test1.ThirstyClient.drinkWater() : void
+				example.test1.ThirstyClient.drinkCoke() : void
 				example.test1.ThirstyClient.restaurant
-				example.test1.Restaurant.orderCoke()
-				example.test1.Restaurant.orderWater()
+				example.test1.Restaurant.orderCoke() : void
+				example.test1.Restaurant.orderWater() : void
 			]
 		]
 		[
 			pattern.abstractFactory.Application
-			pattern.abstractFactory.Application.<init>(pattern.abstractFactory.GUIFactory)
+			pattern.abstractFactory.Application.<init>(pattern.abstractFactory.GUIFactory) : void
 			pattern.abstractFactory.ApplicationRunner
-			pattern.abstractFactory.ApplicationRunner.<init>()
-			pattern.abstractFactory.ApplicationRunner.createOsSpecificFactory()
-			pattern.abstractFactory.ApplicationRunner.main(java.lang.String[])
+			pattern.abstractFactory.ApplicationRunner.<init>() : void
+			pattern.abstractFactory.ApplicationRunner.createOsSpecificFactory() : pattern.abstractFactory.GUIFactory
+			pattern.abstractFactory.ApplicationRunner.main(java.lang.String[]) : void
 			pattern.abstractFactory.Button
-			pattern.abstractFactory.Button.paint()
+			pattern.abstractFactory.Button.paint() : void
 			pattern.abstractFactory.GUIFactory
-			pattern.abstractFactory.GUIFactory.createButton()
+			pattern.abstractFactory.GUIFactory.createButton() : pattern.abstractFactory.Button
 			pattern.abstractFactory.OSXButton
-			pattern.abstractFactory.OSXButton.<init>()
-			pattern.abstractFactory.OSXButton.paint()
+			pattern.abstractFactory.OSXButton.<init>() : void
+			pattern.abstractFactory.OSXButton.paint() : void
 			pattern.abstractFactory.OSXFactory
-			pattern.abstractFactory.OSXFactory.<init>()
-			pattern.abstractFactory.OSXFactory.createButton()
+			pattern.abstractFactory.OSXFactory.<init>() : void
+			pattern.abstractFactory.OSXFactory.createButton() : pattern.abstractFactory.Button
 			pattern.abstractFactory.WinButton
-			pattern.abstractFactory.WinButton.<init>()
-			pattern.abstractFactory.WinButton.paint()
+			pattern.abstractFactory.WinButton.<init>() : void
+			pattern.abstractFactory.WinButton.paint() : void
 			pattern.abstractFactory.WinFactory
-			pattern.abstractFactory.WinFactory.<init>()
-			pattern.abstractFactory.WinFactory.createButton()
+			pattern.abstractFactory.WinFactory.<init>() : void
+			pattern.abstractFactory.WinFactory.createButton() : pattern.abstractFactory.Button
 		]
 		[
 			pattern.builder.Pizza
-			pattern.builder.Pizza.<init>(pattern.builder.PizzaBuilder)
+			pattern.builder.Pizza.<init>(pattern.builder.PizzaBuilder) : void
 			pattern.builder.Pizza.dough
-			pattern.builder.Pizza.getDough()
-			pattern.builder.Pizza.getSauce()
-			pattern.builder.Pizza.getTopping()
+			pattern.builder.Pizza.getDough() : java.lang.String
+			pattern.builder.Pizza.getSauce() : java.lang.String
+			pattern.builder.Pizza.getTopping() : java.lang.String
 			pattern.builder.Pizza.sauce
 			pattern.builder.Pizza.topping
-			pattern.builder.Pizza.toString()
+			pattern.builder.Pizza.toString() : java.lang.String
 			pattern.builder.PizzaBuilder
-			pattern.builder.PizzaBuilder.<init>()
-			pattern.builder.PizzaBuilder.build()
+			pattern.builder.PizzaBuilder.<init>() : void
+			pattern.builder.PizzaBuilder.build() : pattern.builder.Pizza
 			pattern.builder.PizzaBuilder.dough
-			pattern.builder.PizzaBuilder.getDough()
-			pattern.builder.PizzaBuilder.getSauce()
-			pattern.builder.PizzaBuilder.getTopping()
+			pattern.builder.PizzaBuilder.getDough() : java.lang.String
+			pattern.builder.PizzaBuilder.getSauce() : java.lang.String
+			pattern.builder.PizzaBuilder.getTopping() : java.lang.String
 			pattern.builder.PizzaBuilder.sauce
-			pattern.builder.PizzaBuilder.setDough(java.lang.String)
-			pattern.builder.PizzaBuilder.setSauce(java.lang.String)
-			pattern.builder.PizzaBuilder.setTopping(java.lang.String)
+			pattern.builder.PizzaBuilder.setDough(java.lang.String) : pattern.builder.PizzaBuilder
+			pattern.builder.PizzaBuilder.setSauce(java.lang.String) : pattern.builder.PizzaBuilder
+			pattern.builder.PizzaBuilder.setTopping(java.lang.String) : pattern.builder.PizzaBuilder
 			pattern.builder.PizzaBuilder.topping
 			pattern.builder.PizzaBuilderExample
-			pattern.builder.PizzaBuilderExample.<init>()
-			pattern.builder.PizzaBuilderExample.main(java.lang.String[])
+			pattern.builder.PizzaBuilderExample.<init>() : void
+			pattern.builder.PizzaBuilderExample.main(java.lang.String[]) : void
 		]
 		[
 			pattern.factorymethod.MagicMazeGame
-			pattern.factorymethod.MagicMazeGame.<init>()
-			pattern.factorymethod.MagicMazeGame.makeRoom()
+			pattern.factorymethod.MagicMazeGame.<init>() : void
+			pattern.factorymethod.MagicMazeGame.makeRoom() : pattern.factorymethod.Room
 			pattern.factorymethod.MagicRoom
-			pattern.factorymethod.MagicRoom.<init>()
-			pattern.factorymethod.MagicRoom.connect(pattern.factorymethod.Room)
+			pattern.factorymethod.MagicRoom.<init>() : void
+			pattern.factorymethod.MagicRoom.connect(pattern.factorymethod.Room) : void
 			pattern.factorymethod.MazeGame
-			pattern.factorymethod.MazeGame.<init>()
-			pattern.factorymethod.MazeGame.addRoom(pattern.factorymethod.Room)
-			pattern.factorymethod.MazeGame.makeRoom()
+			pattern.factorymethod.MazeGame.<init>() : void
+			pattern.factorymethod.MazeGame.addRoom(pattern.factorymethod.Room) : void
+			pattern.factorymethod.MazeGame.makeRoom() : pattern.factorymethod.Room
 			pattern.factorymethod.OrdinaryRoom
-			pattern.factorymethod.OrdinaryRoom.<init>()
-			pattern.factorymethod.OrdinaryRoom.connect(pattern.factorymethod.Room)
+			pattern.factorymethod.OrdinaryRoom.<init>() : void
+			pattern.factorymethod.OrdinaryRoom.connect(pattern.factorymethod.Room) : void
 			pattern.factorymethod.Room
-			pattern.factorymethod.Room.connect(pattern.factorymethod.Room)
+			pattern.factorymethod.Room.connect(pattern.factorymethod.Room) : void
 		]
 		[
 			test.GetterSetterTestClass
-			test.GetterSetterTestClass.<init>()
+			test.GetterSetterTestClass.<init>() : void
 			[
 				test.GetterSetterTestClass.field
-				test.GetterSetterTestClass.getField()
-				test.GetterSetterTestClass.setField(java.lang.Integer)
+				test.GetterSetterTestClass.getField() : java.lang.Integer
+				test.GetterSetterTestClass.setField(java.lang.Integer) : void
 			]
 			[
 				test.GetterSetterTestClass.field2
-				test.GetterSetterTestClass.getField2()
-				test.GetterSetterTestClass.setField2(java.lang.String)
+				test.GetterSetterTestClass.getField2() : java.lang.String
+				test.GetterSetterTestClass.setField2(java.lang.String) : void
 			]
 		]
 		[
 			test.StronglyConnectedComponentsTestClass
-			test.StronglyConnectedComponentsTestClass.<init>()
+			test.StronglyConnectedComponentsTestClass.<init>() : void
 			[
-				test.StronglyConnectedComponentsTestClass.methodA()
-				test.StronglyConnectedComponentsTestClass.methodB()
-				test.StronglyConnectedComponentsTestClass.methodC()
+				test.StronglyConnectedComponentsTestClass.methodA() : void
+				test.StronglyConnectedComponentsTestClass.methodB() : void
+				test.StronglyConnectedComponentsTestClass.methodC() : void
 			]
-			test.StronglyConnectedComponentsTestClass.methodD()
+			test.StronglyConnectedComponentsTestClass.methodD() : void
 		]
 	]
 ]

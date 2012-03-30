@@ -1,28 +1,28 @@
 [
 java.lang.Object
-java.lang.Object.<init>()
+java.lang.Object.<init>() : void
 java.lang.String
 pattern.facade.Computer
-pattern.facade.Computer.<init>()
+pattern.facade.Computer.<init>() : void
 pattern.facade.Computer.BOOT_ADDRESS
 pattern.facade.Computer.BOOT_SECTOR
 pattern.facade.Computer.cpu
 pattern.facade.Computer.hardDrive
 pattern.facade.Computer.memory
 pattern.facade.Computer.SECTOR_SIZE
-pattern.facade.Computer.startComputer()
+pattern.facade.Computer.startComputer() : void
 pattern.facade.CPU
-pattern.facade.CPU.<init>()
-pattern.facade.CPU.execute()
-pattern.facade.CPU.freeze()
-pattern.facade.CPU.jump(long)
+pattern.facade.CPU.<init>() : void
+pattern.facade.CPU.execute() : void
+pattern.facade.CPU.freeze() : void
+pattern.facade.CPU.jump(long) : void
 pattern.facade.HardDrive
-pattern.facade.HardDrive.<init>()
-pattern.facade.HardDrive.read(long, int)
+pattern.facade.HardDrive.<init>() : void
+pattern.facade.HardDrive.read(long, int) : byte[]
 pattern.facade.Memory
-pattern.facade.Memory.<init>()
-pattern.facade.Memory.load(long, byte[])
+pattern.facade.Memory.<init>() : void
+pattern.facade.Memory.load(long, byte[]) : void
 pattern.facade.You
-pattern.facade.You.<init>()
-pattern.facade.You.main(java.lang.String[])
+pattern.facade.You.<init>() : void
+pattern.facade.You.main(java.lang.String[]) : void
 ]

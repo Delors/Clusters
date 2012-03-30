@@ -1,28 +1,28 @@
 [
 java.io.PrintStream
-java.io.PrintStream.println(java.lang.String)
+java.io.PrintStream.println(java.lang.String) : void
 java.lang.Object
-java.lang.Object.<init>()
+java.lang.Object.<init>() : void
 java.lang.String
-java.lang.String.toLowerCase()
-java.lang.String.toUpperCase()
+java.lang.String.toLowerCase() : java.lang.String
+java.lang.String.toUpperCase() : java.lang.String
 java.lang.System
 java.lang.System.out
 pattern.state.State
-pattern.state.State.writeName(pattern.state.StateContext, java.lang.String)
+pattern.state.State.writeName(pattern.state.StateContext, java.lang.String) : void
 pattern.state.StateA
-pattern.state.StateA.<init>()
-pattern.state.StateA.writeName(pattern.state.StateContext, java.lang.String)
+pattern.state.StateA.<init>() : void
+pattern.state.StateA.writeName(pattern.state.StateContext, java.lang.String) : void
 pattern.state.StateB
-pattern.state.StateB.<init>()
+pattern.state.StateB.<init>() : void
 pattern.state.StateB.count
-pattern.state.StateB.writeName(pattern.state.StateContext, java.lang.String)
+pattern.state.StateB.writeName(pattern.state.StateContext, java.lang.String) : void
 pattern.state.StateContext
-pattern.state.StateContext.<init>()
+pattern.state.StateContext.<init>() : void
 pattern.state.StateContext.myState
-pattern.state.StateContext.setState(pattern.state.State)
-pattern.state.StateContext.writeName(java.lang.String)
+pattern.state.StateContext.setState(pattern.state.State) : void
+pattern.state.StateContext.writeName(java.lang.String) : void
 pattern.state.TestClientState
-pattern.state.TestClientState.<init>()
-pattern.state.TestClientState.main(java.lang.String[])
+pattern.state.TestClientState.<init>() : void
+pattern.state.TestClientState.main(java.lang.String[]) : void
 ]

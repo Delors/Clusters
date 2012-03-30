@@ -1,38 +1,38 @@
 [
 java.io.PrintStream
-java.io.PrintStream.println(java.lang.Object)
+java.io.PrintStream.println(java.lang.Object) : void
 java.lang.Integer
-java.lang.Integer.<init>(int)
+java.lang.Integer.<init>(int) : void
 java.lang.Object
-java.lang.Object.<init>()
+java.lang.Object.<init>() : void
 java.lang.String
 java.lang.System
 java.lang.System.out
 java.util.ArrayList
-java.util.ArrayList.<init>()
+java.util.ArrayList.<init>() : void
 java.util.Collections
-java.util.Collections.unmodifiableList(java.util.List)
+java.util.Collections.unmodifiableList(java.util.List) : java.util.List
 java.util.List
-java.util.List.add(java.lang.Object)
-java.util.List.get(int)
-java.util.List.size()
+java.util.List.add(java.lang.Object) : boolean
+java.util.List.get(int) : java.lang.Object
+java.util.List.size() : int
 pattern.iterator.Aggregate
-pattern.iterator.Aggregate.getIterator()
+pattern.iterator.Aggregate.getIterator() : pattern.iterator.Iterator
 pattern.iterator.ConcreteAggregate
-pattern.iterator.ConcreteAggregate.<init>(java.util.List)
-pattern.iterator.ConcreteAggregate.getIterator()
+pattern.iterator.ConcreteAggregate.<init>(java.util.List) : void
+pattern.iterator.ConcreteAggregate.getIterator() : pattern.iterator.Iterator
 pattern.iterator.ConcreteAggregate.list
 pattern.iterator.ConcreteIterator
-pattern.iterator.ConcreteIterator.<init>(pattern.iterator.ConcreteAggregate)
+pattern.iterator.ConcreteIterator.<init>(pattern.iterator.ConcreteAggregate) : void
 pattern.iterator.ConcreteIterator.currentPos
-pattern.iterator.ConcreteIterator.hasNext()
+pattern.iterator.ConcreteIterator.hasNext() : boolean
 pattern.iterator.ConcreteIterator.list
-pattern.iterator.ConcreteIterator.next()
-pattern.iterator.ConcreteIterator.next()
+pattern.iterator.ConcreteIterator.next() : java.lang.Integer
+pattern.iterator.ConcreteIterator.next() : java.lang.Object
 pattern.iterator.Iterator
-pattern.iterator.Iterator.hasNext()
-pattern.iterator.Iterator.next()
+pattern.iterator.Iterator.hasNext() : boolean
+pattern.iterator.Iterator.next() : java.lang.Object
 pattern.iterator.IteratorDemo
-pattern.iterator.IteratorDemo.<init>()
-pattern.iterator.IteratorDemo.main(java.lang.String[])
+pattern.iterator.IteratorDemo.<init>() : void
+pattern.iterator.IteratorDemo.main(java.lang.String[]) : void
 ]

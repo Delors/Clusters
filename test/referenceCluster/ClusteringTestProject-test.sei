@@ -1,20 +1,20 @@
 [
 java.lang.Integer
 java.lang.Object
-java.lang.Object.<init>()
+java.lang.Object.<init>() : void
 java.lang.String
 test.GetterSetterTestClass
-test.GetterSetterTestClass.<init>()
+test.GetterSetterTestClass.<init>() : void
 test.GetterSetterTestClass.field
 test.GetterSetterTestClass.field2
-test.GetterSetterTestClass.getField()
-test.GetterSetterTestClass.getField2()
-test.GetterSetterTestClass.setField(java.lang.Integer)
-test.GetterSetterTestClass.setField2(java.lang.String)
+test.GetterSetterTestClass.getField() : java.lang.Integer
+test.GetterSetterTestClass.getField2() : java.lang.String
+test.GetterSetterTestClass.setField(java.lang.Integer) : void
+test.GetterSetterTestClass.setField2(java.lang.String) : void
 test.StronglyConnectedComponentsTestClass
-test.StronglyConnectedComponentsTestClass.<init>()
-test.StronglyConnectedComponentsTestClass.methodA()
-test.StronglyConnectedComponentsTestClass.methodB()
-test.StronglyConnectedComponentsTestClass.methodC()
-test.StronglyConnectedComponentsTestClass.methodD()
+test.StronglyConnectedComponentsTestClass.<init>() : void
+test.StronglyConnectedComponentsTestClass.methodA() : void
+test.StronglyConnectedComponentsTestClass.methodB() : void
+test.StronglyConnectedComponentsTestClass.methodC() : void
+test.StronglyConnectedComponentsTestClass.methodD() : void
 ]

@@ -1,40 +1,40 @@
 [
 java.io.PrintStream
-java.io.PrintStream.println(java.lang.String)
+java.io.PrintStream.println(java.lang.String) : void
 java.lang.Object
-java.lang.Object.<init>()
+java.lang.Object.<init>() : void
 java.lang.String
 java.lang.StringBuilder
-java.lang.StringBuilder.<init>()
-java.lang.StringBuilder.append(java.lang.String)
-java.lang.StringBuilder.toString()
+java.lang.StringBuilder.<init>() : void
+java.lang.StringBuilder.append(java.lang.String) : java.lang.StringBuilder
+java.lang.StringBuilder.toString() : java.lang.String
 java.lang.System
 java.lang.System.err
 java.lang.System.out
 pattern.chainofresponsibility.example1.ChainOfResponsibilityExample
-pattern.chainofresponsibility.example1.ChainOfResponsibilityExample.<init>()
-pattern.chainofresponsibility.example1.ChainOfResponsibilityExample.main(java.lang.String[])
+pattern.chainofresponsibility.example1.ChainOfResponsibilityExample.<init>() : void
+pattern.chainofresponsibility.example1.ChainOfResponsibilityExample.main(java.lang.String[]) : void
 pattern.chainofresponsibility.example1.EmailLogger
-pattern.chainofresponsibility.example1.EmailLogger.<init>(int)
+pattern.chainofresponsibility.example1.EmailLogger.<init>(int) : void
 pattern.chainofresponsibility.example1.EmailLogger.mask
-pattern.chainofresponsibility.example1.EmailLogger.writeMessage(java.lang.String)
+pattern.chainofresponsibility.example1.EmailLogger.writeMessage(java.lang.String) : void
 pattern.chainofresponsibility.example1.Logger
-pattern.chainofresponsibility.example1.Logger.<clinit>()
-pattern.chainofresponsibility.example1.Logger.<init>()
+pattern.chainofresponsibility.example1.Logger.<clinit>() : void
+pattern.chainofresponsibility.example1.Logger.<init>() : void
 pattern.chainofresponsibility.example1.Logger.DEBUG
 pattern.chainofresponsibility.example1.Logger.ERR
 pattern.chainofresponsibility.example1.Logger.mask
-pattern.chainofresponsibility.example1.Logger.message(java.lang.String, int)
+pattern.chainofresponsibility.example1.Logger.message(java.lang.String, int) : void
 pattern.chainofresponsibility.example1.Logger.next
 pattern.chainofresponsibility.example1.Logger.NOTICE
-pattern.chainofresponsibility.example1.Logger.setNext(pattern.chainofresponsibility.example1.Logger)
-pattern.chainofresponsibility.example1.Logger.writeMessage(java.lang.String)
+pattern.chainofresponsibility.example1.Logger.setNext(pattern.chainofresponsibility.example1.Logger) : pattern.chainofresponsibility.example1.Logger
+pattern.chainofresponsibility.example1.Logger.writeMessage(java.lang.String) : void
 pattern.chainofresponsibility.example1.StderrLogger
-pattern.chainofresponsibility.example1.StderrLogger.<init>(int)
+pattern.chainofresponsibility.example1.StderrLogger.<init>(int) : void
 pattern.chainofresponsibility.example1.StderrLogger.mask
-pattern.chainofresponsibility.example1.StderrLogger.writeMessage(java.lang.String)
+pattern.chainofresponsibility.example1.StderrLogger.writeMessage(java.lang.String) : void
 pattern.chainofresponsibility.example1.StdoutLogger
-pattern.chainofresponsibility.example1.StdoutLogger.<init>(int)
+pattern.chainofresponsibility.example1.StdoutLogger.<init>(int) : void
 pattern.chainofresponsibility.example1.StdoutLogger.mask
-pattern.chainofresponsibility.example1.StdoutLogger.writeMessage(java.lang.String)
+pattern.chainofresponsibility.example1.StdoutLogger.writeMessage(java.lang.String) : void
 ]

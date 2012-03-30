@@ -1,32 +1,32 @@
 [
 java.io.PrintStream
-java.io.PrintStream.println(java.lang.String)
+java.io.PrintStream.println(java.lang.String) : void
 java.lang.Object
-java.lang.Object.<init>()
+java.lang.Object.<init>() : void
 java.lang.String
 java.lang.System
 java.lang.System.out
 java.util.ArrayList
-java.util.ArrayList.<init>()
+java.util.ArrayList.<init>() : void
 java.util.Iterator
-java.util.Iterator.hasNext()
-java.util.Iterator.next()
+java.util.Iterator.hasNext() : boolean
+java.util.Iterator.next() : java.lang.Object
 java.util.List
-java.util.List.add(java.lang.Object)
-java.util.List.iterator()
-java.util.List.remove(java.lang.Object)
+java.util.List.add(java.lang.Object) : boolean
+java.util.List.iterator() : java.util.Iterator
+java.util.List.remove(java.lang.Object) : boolean
 pattern.composite.CompositeGraphic
-pattern.composite.CompositeGraphic.<init>()
-pattern.composite.CompositeGraphic.add(pattern.composite.Graphic)
+pattern.composite.CompositeGraphic.<init>() : void
+pattern.composite.CompositeGraphic.add(pattern.composite.Graphic) : void
 pattern.composite.CompositeGraphic.mChildGraphics
-pattern.composite.CompositeGraphic.print()
-pattern.composite.CompositeGraphic.remove(pattern.composite.Graphic)
+pattern.composite.CompositeGraphic.print() : void
+pattern.composite.CompositeGraphic.remove(pattern.composite.Graphic) : void
 pattern.composite.Ellipse
-pattern.composite.Ellipse.<init>()
-pattern.composite.Ellipse.print()
+pattern.composite.Ellipse.<init>() : void
+pattern.composite.Ellipse.print() : void
 pattern.composite.Graphic
-pattern.composite.Graphic.print()
+pattern.composite.Graphic.print() : void
 pattern.composite.Program
-pattern.composite.Program.<init>()
-pattern.composite.Program.main(java.lang.String[])
+pattern.composite.Program.<init>() : void
+pattern.composite.Program.main(java.lang.String[]) : void
 ]

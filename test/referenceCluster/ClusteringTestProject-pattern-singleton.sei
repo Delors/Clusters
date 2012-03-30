@@ -1,22 +1,22 @@
 [
 java.lang.Object
-java.lang.Object.<init>()
+java.lang.Object.<init>() : void
 pattern.singleton.BillPughSingleton
 pattern.singleton.BillPughSingleton$1
 pattern.singleton.BillPughSingleton$BillPughSingletonHolder
-pattern.singleton.BillPughSingleton$BillPughSingletonHolder.<clinit>()
-pattern.singleton.BillPughSingleton$BillPughSingletonHolder.<init>()
+pattern.singleton.BillPughSingleton$BillPughSingletonHolder.<clinit>() : void
+pattern.singleton.BillPughSingleton$BillPughSingletonHolder.<init>() : void
 pattern.singleton.BillPughSingleton$BillPughSingletonHolder.instance
-pattern.singleton.BillPughSingleton.<init>()
-pattern.singleton.BillPughSingleton.<init>(pattern.singleton.BillPughSingleton$1)
-pattern.singleton.BillPughSingleton.getInstance()
+pattern.singleton.BillPughSingleton.<init>() : void
+pattern.singleton.BillPughSingleton.<init>(pattern.singleton.BillPughSingleton$1) : void
+pattern.singleton.BillPughSingleton.getInstance() : pattern.singleton.BillPughSingleton
 pattern.singleton.LazySingleton
-pattern.singleton.LazySingleton.<init>()
+pattern.singleton.LazySingleton.<init>() : void
 pattern.singleton.LazySingleton._instance
-pattern.singleton.LazySingleton.getInstance()
+pattern.singleton.LazySingleton.getInstance() : pattern.singleton.LazySingleton
 pattern.singleton.TraditionalSingleton
-pattern.singleton.TraditionalSingleton.<clinit>()
-pattern.singleton.TraditionalSingleton.<init>()
-pattern.singleton.TraditionalSingleton.getInstance()
+pattern.singleton.TraditionalSingleton.<clinit>() : void
+pattern.singleton.TraditionalSingleton.<init>() : void
+pattern.singleton.TraditionalSingleton.getInstance() : pattern.singleton.TraditionalSingleton
 pattern.singleton.TraditionalSingleton.instance
 ]

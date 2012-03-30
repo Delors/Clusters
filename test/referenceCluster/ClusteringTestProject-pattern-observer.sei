@@ -1,43 +1,43 @@
 [
 java.io.BufferedReader
-java.io.BufferedReader.<init>(java.io.Reader)
-java.io.BufferedReader.readLine()
+java.io.BufferedReader.<init>(java.io.Reader) : void
+java.io.BufferedReader.readLine() : java.lang.String
 java.io.InputStream
 java.io.InputStreamReader
-java.io.InputStreamReader.<init>(java.io.InputStream)
+java.io.InputStreamReader.<init>(java.io.InputStream) : void
 java.io.IOException
-java.io.IOException.printStackTrace()
+java.io.IOException.printStackTrace() : void
 java.io.PrintStream
-java.io.PrintStream.println(java.lang.String)
+java.io.PrintStream.println(java.lang.String) : void
 java.io.Reader
 java.lang.Object
-java.lang.Object.<init>()
+java.lang.Object.<init>() : void
 java.lang.Runnable
 java.lang.String
 java.lang.StringBuilder
-java.lang.StringBuilder.<init>()
-java.lang.StringBuilder.append(java.lang.String)
-java.lang.StringBuilder.toString()
+java.lang.StringBuilder.<init>() : void
+java.lang.StringBuilder.append(java.lang.String) : java.lang.StringBuilder
+java.lang.StringBuilder.toString() : java.lang.String
 java.lang.System
 java.lang.System.in
 java.lang.System.out
 java.lang.Thread
-java.lang.Thread.<init>(java.lang.Runnable)
-java.lang.Thread.start()
+java.lang.Thread.<init>(java.lang.Runnable) : void
+java.lang.Thread.start() : void
 java.util.Observable
-java.util.Observable.<init>()
+java.util.Observable.<init>() : void
 java.util.Observer
 pattern.observer.EventSource
-pattern.observer.EventSource.<init>()
-pattern.observer.EventSource.addObserver(java.util.Observer)
-pattern.observer.EventSource.notifyObservers(java.lang.Object)
-pattern.observer.EventSource.run()
-pattern.observer.EventSource.setChanged()
+pattern.observer.EventSource.<init>() : void
+pattern.observer.EventSource.addObserver(java.util.Observer) : void
+pattern.observer.EventSource.notifyObservers(java.lang.Object) : void
+pattern.observer.EventSource.run() : void
+pattern.observer.EventSource.setChanged() : void
 pattern.observer.MyApp
-pattern.observer.MyApp.<init>()
-pattern.observer.MyApp.main(java.lang.String[])
+pattern.observer.MyApp.<init>() : void
+pattern.observer.MyApp.main(java.lang.String[]) : void
 pattern.observer.ResponseHandler
-pattern.observer.ResponseHandler.<init>()
+pattern.observer.ResponseHandler.<init>() : void
 pattern.observer.ResponseHandler.resp
-pattern.observer.ResponseHandler.update(java.util.Observable, java.lang.Object)
+pattern.observer.ResponseHandler.update(java.util.Observable, java.lang.Object) : void
 ]

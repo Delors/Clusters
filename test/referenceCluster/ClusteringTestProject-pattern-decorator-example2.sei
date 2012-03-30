@@ -1,45 +1,45 @@
 [
 java.io.PrintStream
-java.io.PrintStream.println(java.lang.String)
+java.io.PrintStream.println(java.lang.String) : void
 java.lang.Object
-java.lang.Object.<init>()
+java.lang.Object.<init>() : void
 java.lang.String
 java.lang.StringBuilder
-java.lang.StringBuilder.<init>()
-java.lang.StringBuilder.append(double)
-java.lang.StringBuilder.append(java.lang.String)
-java.lang.StringBuilder.toString()
+java.lang.StringBuilder.<init>() : void
+java.lang.StringBuilder.append(double) : java.lang.StringBuilder
+java.lang.StringBuilder.append(java.lang.String) : java.lang.StringBuilder
+java.lang.StringBuilder.toString() : java.lang.String
 java.lang.System
 java.lang.System.out
 pattern.decorator.example2.Coffee
-pattern.decorator.example2.Coffee.getCost()
-pattern.decorator.example2.Coffee.getIngredients()
+pattern.decorator.example2.Coffee.getCost() : double
+pattern.decorator.example2.Coffee.getIngredients() : java.lang.String
 pattern.decorator.example2.CoffeeDecorator
-pattern.decorator.example2.CoffeeDecorator.<init>(pattern.decorator.example2.Coffee)
+pattern.decorator.example2.CoffeeDecorator.<init>(pattern.decorator.example2.Coffee) : void
 pattern.decorator.example2.CoffeeDecorator.decoratedCoffee
-pattern.decorator.example2.CoffeeDecorator.getCost()
-pattern.decorator.example2.CoffeeDecorator.getIngredients()
+pattern.decorator.example2.CoffeeDecorator.getCost() : double
+pattern.decorator.example2.CoffeeDecorator.getIngredients() : java.lang.String
 pattern.decorator.example2.CoffeeDecorator.ingredientSeparator
 pattern.decorator.example2.CoffeeMain
-pattern.decorator.example2.CoffeeMain.<init>()
-pattern.decorator.example2.CoffeeMain.main(java.lang.String[])
+pattern.decorator.example2.CoffeeMain.<init>() : void
+pattern.decorator.example2.CoffeeMain.main(java.lang.String[]) : void
 pattern.decorator.example2.Milk
-pattern.decorator.example2.Milk.<init>(pattern.decorator.example2.Coffee)
-pattern.decorator.example2.Milk.getCost()
-pattern.decorator.example2.Milk.getIngredients()
+pattern.decorator.example2.Milk.<init>(pattern.decorator.example2.Coffee) : void
+pattern.decorator.example2.Milk.getCost() : double
+pattern.decorator.example2.Milk.getIngredients() : java.lang.String
 pattern.decorator.example2.Milk.ingredientSeparator
 pattern.decorator.example2.SimpleCoffee
-pattern.decorator.example2.SimpleCoffee.<init>()
-pattern.decorator.example2.SimpleCoffee.getCost()
-pattern.decorator.example2.SimpleCoffee.getIngredients()
+pattern.decorator.example2.SimpleCoffee.<init>() : void
+pattern.decorator.example2.SimpleCoffee.getCost() : double
+pattern.decorator.example2.SimpleCoffee.getIngredients() : java.lang.String
 pattern.decorator.example2.Sprinkles
-pattern.decorator.example2.Sprinkles.<init>(pattern.decorator.example2.Coffee)
-pattern.decorator.example2.Sprinkles.getCost()
-pattern.decorator.example2.Sprinkles.getIngredients()
+pattern.decorator.example2.Sprinkles.<init>(pattern.decorator.example2.Coffee) : void
+pattern.decorator.example2.Sprinkles.getCost() : double
+pattern.decorator.example2.Sprinkles.getIngredients() : java.lang.String
 pattern.decorator.example2.Sprinkles.ingredientSeparator
 pattern.decorator.example2.Whip
-pattern.decorator.example2.Whip.<init>(pattern.decorator.example2.Coffee)
-pattern.decorator.example2.Whip.getCost()
-pattern.decorator.example2.Whip.getIngredients()
+pattern.decorator.example2.Whip.<init>(pattern.decorator.example2.Coffee) : void
+pattern.decorator.example2.Whip.getCost() : double
+pattern.decorator.example2.Whip.getIngredients() : java.lang.String
 pattern.decorator.example2.Whip.ingredientSeparator
 ]

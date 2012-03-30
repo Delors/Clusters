@@ -1,19 +1,19 @@
 [
 java.lang.Object
-java.lang.Object.<init>()
+java.lang.Object.<init>() : void
 pattern.factorymethod.MagicMazeGame
-pattern.factorymethod.MagicMazeGame.<init>()
-pattern.factorymethod.MagicMazeGame.makeRoom()
+pattern.factorymethod.MagicMazeGame.<init>() : void
+pattern.factorymethod.MagicMazeGame.makeRoom() : pattern.factorymethod.Room
 pattern.factorymethod.MagicRoom
-pattern.factorymethod.MagicRoom.<init>()
-pattern.factorymethod.MagicRoom.connect(pattern.factorymethod.Room)
+pattern.factorymethod.MagicRoom.<init>() : void
+pattern.factorymethod.MagicRoom.connect(pattern.factorymethod.Room) : void
 pattern.factorymethod.MazeGame
-pattern.factorymethod.MazeGame.<init>()
-pattern.factorymethod.MazeGame.addRoom(pattern.factorymethod.Room)
-pattern.factorymethod.MazeGame.makeRoom()
+pattern.factorymethod.MazeGame.<init>() : void
+pattern.factorymethod.MazeGame.addRoom(pattern.factorymethod.Room) : void
+pattern.factorymethod.MazeGame.makeRoom() : pattern.factorymethod.Room
 pattern.factorymethod.OrdinaryRoom
-pattern.factorymethod.OrdinaryRoom.<init>()
-pattern.factorymethod.OrdinaryRoom.connect(pattern.factorymethod.Room)
+pattern.factorymethod.OrdinaryRoom.<init>() : void
+pattern.factorymethod.OrdinaryRoom.connect(pattern.factorymethod.Room) : void
 pattern.factorymethod.Room
-pattern.factorymethod.Room.connect(pattern.factorymethod.Room)
+pattern.factorymethod.Room.connect(pattern.factorymethod.Room) : void
 ]

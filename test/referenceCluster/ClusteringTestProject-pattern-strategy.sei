@@ -1,27 +1,27 @@
 [
 java.io.PrintStream
-java.io.PrintStream.println(java.lang.String)
+java.io.PrintStream.println(java.lang.String) : void
 java.lang.Object
-java.lang.Object.<init>()
+java.lang.Object.<init>() : void
 java.lang.String
 java.lang.System
 java.lang.System.out
 pattern.strategy.ConcreteStrategyAdd
-pattern.strategy.ConcreteStrategyAdd.<init>()
-pattern.strategy.ConcreteStrategyAdd.execute(int, int)
+pattern.strategy.ConcreteStrategyAdd.<init>() : void
+pattern.strategy.ConcreteStrategyAdd.execute(int, int) : int
 pattern.strategy.ConcreteStrategyMultiply
-pattern.strategy.ConcreteStrategyMultiply.<init>()
-pattern.strategy.ConcreteStrategyMultiply.execute(int, int)
+pattern.strategy.ConcreteStrategyMultiply.<init>() : void
+pattern.strategy.ConcreteStrategyMultiply.execute(int, int) : int
 pattern.strategy.ConcreteStrategySubtract
-pattern.strategy.ConcreteStrategySubtract.<init>()
-pattern.strategy.ConcreteStrategySubtract.execute(int, int)
+pattern.strategy.ConcreteStrategySubtract.<init>() : void
+pattern.strategy.ConcreteStrategySubtract.execute(int, int) : int
 pattern.strategy.Context
-pattern.strategy.Context.<init>(pattern.strategy.Strategy)
-pattern.strategy.Context.executeStrategy(int, int)
+pattern.strategy.Context.<init>(pattern.strategy.Strategy) : void
+pattern.strategy.Context.executeStrategy(int, int) : int
 pattern.strategy.Context.strategy
 pattern.strategy.Strategy
-pattern.strategy.Strategy.execute(int, int)
+pattern.strategy.Strategy.execute(int, int) : int
 pattern.strategy.StrategyExample
-pattern.strategy.StrategyExample.<init>()
-pattern.strategy.StrategyExample.main(java.lang.String[])
+pattern.strategy.StrategyExample.<init>() : void
+pattern.strategy.StrategyExample.main(java.lang.String[]) : void
 ]

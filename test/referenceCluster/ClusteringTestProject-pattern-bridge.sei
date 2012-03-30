@@ -1,35 +1,35 @@
 [
 java.io.PrintStream
-java.io.PrintStream.printf(java.lang.String, java.lang.Object[])
+java.io.PrintStream.printf(java.lang.String, java.lang.Object[]) : java.io.PrintStream
 java.lang.Double
-java.lang.Double.valueOf(double)
+java.lang.Double.valueOf(double) : java.lang.Double
 java.lang.Object
-java.lang.Object.<init>()
+java.lang.Object.<init>() : void
 java.lang.String
 java.lang.System
 java.lang.System.out
 pattern.bridge.BridgePattern
-pattern.bridge.BridgePattern.<init>()
-pattern.bridge.BridgePattern.main(java.lang.String[])
+pattern.bridge.BridgePattern.<init>() : void
+pattern.bridge.BridgePattern.main(java.lang.String[]) : void
 pattern.bridge.CircleShape
-pattern.bridge.CircleShape.<init>(double, double, double, pattern.bridge.DrawingAPI)
-pattern.bridge.CircleShape.draw()
+pattern.bridge.CircleShape.<init>(double, double, double, pattern.bridge.DrawingAPI) : void
+pattern.bridge.CircleShape.draw() : void
 pattern.bridge.CircleShape.drawingAPI
 pattern.bridge.CircleShape.radius
-pattern.bridge.CircleShape.resizeByPercentage(double)
+pattern.bridge.CircleShape.resizeByPercentage(double) : void
 pattern.bridge.CircleShape.x
 pattern.bridge.CircleShape.y
 pattern.bridge.DrawingAPI
-pattern.bridge.DrawingAPI.drawCircle(double, double, double)
+pattern.bridge.DrawingAPI.drawCircle(double, double, double) : void
 pattern.bridge.DrawingAPI1
-pattern.bridge.DrawingAPI1.<init>()
-pattern.bridge.DrawingAPI1.drawCircle(double, double, double)
+pattern.bridge.DrawingAPI1.<init>() : void
+pattern.bridge.DrawingAPI1.drawCircle(double, double, double) : void
 pattern.bridge.DrawingAPI2
-pattern.bridge.DrawingAPI2.<init>()
-pattern.bridge.DrawingAPI2.drawCircle(double, double, double)
+pattern.bridge.DrawingAPI2.<init>() : void
+pattern.bridge.DrawingAPI2.drawCircle(double, double, double) : void
 pattern.bridge.Shape
-pattern.bridge.Shape.<init>(pattern.bridge.DrawingAPI)
-pattern.bridge.Shape.draw()
+pattern.bridge.Shape.<init>(pattern.bridge.DrawingAPI) : void
+pattern.bridge.Shape.draw() : void
 pattern.bridge.Shape.drawingAPI
-pattern.bridge.Shape.resizeByPercentage(double)
+pattern.bridge.Shape.resizeByPercentage(double) : void
 ]

@@ -1,39 +1,39 @@
 [
 java.io.PrintStream
-java.io.PrintStream.println(java.lang.String)
+java.io.PrintStream.println(java.lang.String) : void
 java.lang.Object
-java.lang.Object.<init>()
+java.lang.Object.<init>() : void
 java.lang.String
 java.lang.StringBuilder
-java.lang.StringBuilder.<init>()
-java.lang.StringBuilder.append(java.lang.String)
-java.lang.StringBuilder.toString()
+java.lang.StringBuilder.<init>() : void
+java.lang.StringBuilder.append(java.lang.String) : java.lang.StringBuilder
+java.lang.StringBuilder.toString() : java.lang.String
 java.lang.System
 java.lang.System.out
 pattern.decorator.example1.DecoratedWindowTest
-pattern.decorator.example1.DecoratedWindowTest.<init>()
-pattern.decorator.example1.DecoratedWindowTest.main(java.lang.String[])
+pattern.decorator.example1.DecoratedWindowTest.<init>() : void
+pattern.decorator.example1.DecoratedWindowTest.main(java.lang.String[]) : void
 pattern.decorator.example1.HorizontalScrollBarDecorator
-pattern.decorator.example1.HorizontalScrollBarDecorator.<init>(pattern.decorator.example1.Window)
+pattern.decorator.example1.HorizontalScrollBarDecorator.<init>(pattern.decorator.example1.Window) : void
 pattern.decorator.example1.HorizontalScrollBarDecorator.decoratedWindow
-pattern.decorator.example1.HorizontalScrollBarDecorator.draw()
-pattern.decorator.example1.HorizontalScrollBarDecorator.drawHorizontalScrollBar()
-pattern.decorator.example1.HorizontalScrollBarDecorator.getDescription()
+pattern.decorator.example1.HorizontalScrollBarDecorator.draw() : void
+pattern.decorator.example1.HorizontalScrollBarDecorator.drawHorizontalScrollBar() : void
+pattern.decorator.example1.HorizontalScrollBarDecorator.getDescription() : java.lang.String
 pattern.decorator.example1.SimpleWindow
-pattern.decorator.example1.SimpleWindow.<init>()
-pattern.decorator.example1.SimpleWindow.draw()
-pattern.decorator.example1.SimpleWindow.getDescription()
+pattern.decorator.example1.SimpleWindow.<init>() : void
+pattern.decorator.example1.SimpleWindow.draw() : void
+pattern.decorator.example1.SimpleWindow.getDescription() : java.lang.String
 pattern.decorator.example1.VerticalScrollBarDecorator
-pattern.decorator.example1.VerticalScrollBarDecorator.<init>(pattern.decorator.example1.Window)
+pattern.decorator.example1.VerticalScrollBarDecorator.<init>(pattern.decorator.example1.Window) : void
 pattern.decorator.example1.VerticalScrollBarDecorator.decoratedWindow
-pattern.decorator.example1.VerticalScrollBarDecorator.draw()
-pattern.decorator.example1.VerticalScrollBarDecorator.drawVerticalScrollBar()
-pattern.decorator.example1.VerticalScrollBarDecorator.getDescription()
+pattern.decorator.example1.VerticalScrollBarDecorator.draw() : void
+pattern.decorator.example1.VerticalScrollBarDecorator.drawVerticalScrollBar() : void
+pattern.decorator.example1.VerticalScrollBarDecorator.getDescription() : java.lang.String
 pattern.decorator.example1.Window
-pattern.decorator.example1.Window.draw()
-pattern.decorator.example1.Window.getDescription()
+pattern.decorator.example1.Window.draw() : void
+pattern.decorator.example1.Window.getDescription() : java.lang.String
 pattern.decorator.example1.WindowDecorator
-pattern.decorator.example1.WindowDecorator.<init>(pattern.decorator.example1.Window)
+pattern.decorator.example1.WindowDecorator.<init>(pattern.decorator.example1.Window) : void
 pattern.decorator.example1.WindowDecorator.decoratedWindow
-pattern.decorator.example1.WindowDecorator.draw()
+pattern.decorator.example1.WindowDecorator.draw() : void
 ]

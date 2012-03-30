@@ -2,11 +2,11 @@
 	[
 		[
 			java.io.PrintStream
-			java.io.PrintStream.println(java.lang.String)
+			java.io.PrintStream.println(java.lang.String) : void
 		]
 		[
 			java.lang.Object
-			java.lang.Object.<init>()
+			java.lang.Object.<init>() : void
 			java.lang.String
 			java.lang.System
 			java.lang.System.out
@@ -15,33 +15,33 @@
 	[
 		[
 			pattern.abstractFactory.Application
-			pattern.abstractFactory.Application.<init>(pattern.abstractFactory.GUIFactory)
+			pattern.abstractFactory.Application.<init>(pattern.abstractFactory.GUIFactory) : void
 			pattern.abstractFactory.Button
-			pattern.abstractFactory.Button.paint()
+			pattern.abstractFactory.Button.paint() : void
 			pattern.abstractFactory.GUIFactory
-			pattern.abstractFactory.GUIFactory.createButton()
+			pattern.abstractFactory.GUIFactory.createButton() : pattern.abstractFactory.Button
 		]
 		[
 			pattern.abstractFactory.ApplicationRunner
-			pattern.abstractFactory.ApplicationRunner.<init>()
-			pattern.abstractFactory.ApplicationRunner.createOsSpecificFactory()
-			pattern.abstractFactory.ApplicationRunner.main(java.lang.String[])
+			pattern.abstractFactory.ApplicationRunner.<init>() : void
+			pattern.abstractFactory.ApplicationRunner.createOsSpecificFactory() : pattern.abstractFactory.GUIFactory
+			pattern.abstractFactory.ApplicationRunner.main(java.lang.String[]) : void
 		]
 		[
 			pattern.abstractFactory.OSXButton
-			pattern.abstractFactory.OSXButton.<init>()
-			pattern.abstractFactory.OSXButton.paint()
+			pattern.abstractFactory.OSXButton.<init>() : void
+			pattern.abstractFactory.OSXButton.paint() : void
 			pattern.abstractFactory.OSXFactory
-			pattern.abstractFactory.OSXFactory.<init>()
-			pattern.abstractFactory.OSXFactory.createButton()
+			pattern.abstractFactory.OSXFactory.<init>() : void
+			pattern.abstractFactory.OSXFactory.createButton() : pattern.abstractFactory.Button
 		]
 		[
 			pattern.abstractFactory.WinButton
-			pattern.abstractFactory.WinButton.<init>()
-			pattern.abstractFactory.WinButton.paint()
+			pattern.abstractFactory.WinButton.<init>() : void
+			pattern.abstractFactory.WinButton.paint() : void
 			pattern.abstractFactory.WinFactory
-			pattern.abstractFactory.WinFactory.<init>()
-			pattern.abstractFactory.WinFactory.createButton()
+			pattern.abstractFactory.WinFactory.<init>() : void
+			pattern.abstractFactory.WinFactory.createButton() : pattern.abstractFactory.Button
 		]
 	]
 ]

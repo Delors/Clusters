@@ -1,32 +1,32 @@
 [
 java.io.PrintStream
-java.io.PrintStream.println(java.lang.String)
+java.io.PrintStream.println(java.lang.String) : void
 java.lang.Cloneable
 java.lang.CloneNotSupportedException
 java.lang.Object
-java.lang.Object.<init>()
-java.lang.Object.clone()
+java.lang.Object.<init>() : void
+java.lang.Object.clone() : java.lang.Object
 java.lang.String
 java.lang.StringBuilder
-java.lang.StringBuilder.<init>()
-java.lang.StringBuilder.append(int)
-java.lang.StringBuilder.append(java.lang.String)
-java.lang.StringBuilder.toString()
+java.lang.StringBuilder.<init>() : void
+java.lang.StringBuilder.append(int) : java.lang.StringBuilder
+java.lang.StringBuilder.append(java.lang.String) : java.lang.StringBuilder
+java.lang.StringBuilder.toString() : java.lang.String
 java.lang.System
 java.lang.System.out
 pattern.prototype.Prototype
-pattern.prototype.Prototype.<init>()
-pattern.prototype.Prototype.clone()
-pattern.prototype.Prototype.getX()
-pattern.prototype.Prototype.printX()
-pattern.prototype.Prototype.setX(int)
+pattern.prototype.Prototype.<init>() : void
+pattern.prototype.Prototype.clone() : java.lang.Object
+pattern.prototype.Prototype.getX() : int
+pattern.prototype.Prototype.printX() : void
+pattern.prototype.Prototype.setX(int) : void
 pattern.prototype.PrototypeImpl
-pattern.prototype.PrototypeImpl.<init>(int)
-pattern.prototype.PrototypeImpl.getX()
-pattern.prototype.PrototypeImpl.printX()
-pattern.prototype.PrototypeImpl.setX(int)
+pattern.prototype.PrototypeImpl.<init>(int) : void
+pattern.prototype.PrototypeImpl.getX() : int
+pattern.prototype.PrototypeImpl.printX() : void
+pattern.prototype.PrototypeImpl.setX(int) : void
 pattern.prototype.PrototypeImpl.x
 pattern.prototype.PrototypeTest
-pattern.prototype.PrototypeTest.<init>()
-pattern.prototype.PrototypeTest.main(java.lang.String[])
+pattern.prototype.PrototypeTest.<init>() : void
+pattern.prototype.PrototypeTest.main(java.lang.String[]) : void
 ]
