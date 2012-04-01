@@ -1,0 +1,32 @@
+[
+	[
+		[
+			example.mixedConcern.HungryClient
+			example.mixedConcern.HungryClient.<init>(example.mixedConcern.Restaurant) : void
+			example.mixedConcern.HungryClient.eatPizza() : void
+			example.mixedConcern.HungryClient.eatSteak() : void
+			example.mixedConcern.HungryClient.restaurant
+			example.mixedConcern.Restaurant.orderPizza() : void
+			example.mixedConcern.Restaurant.orderSteak() : void
+		]
+		[
+			example.mixedConcern.Restaurant
+			example.mixedConcern.Restaurant.<init>() : void
+		]
+		[
+			example.mixedConcern.ThirstyClient
+			example.mixedConcern.ThirstyClient.<init>(example.mixedConcern.Restaurant) : void
+			example.mixedConcern.ThirstyClient.drinkCoke() : void
+			example.mixedConcern.ThirstyClient.drinkWater() : void
+			example.mixedConcern.ThirstyClient.restaurant
+			example.mixedConcern.Restaurant.orderCoke() : void
+			example.mixedConcern.Restaurant.orderWater() : void
+		]
+	]
+	[
+		[
+			java.lang.Object
+			java.lang.Object.<init>() : void
+		]
+	]
+]

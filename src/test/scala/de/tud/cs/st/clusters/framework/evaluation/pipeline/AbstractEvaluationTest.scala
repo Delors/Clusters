@@ -86,7 +86,7 @@ abstract class AbstractEvaluationTest extends AbstractClusteringTest {
     val getterSetterConfig = new GetterSetterClusteringConfiguration {}
     val chineseWhispersConfig = new ChineseWhispersConfiguration {}
     val chineseWhispersEquallyWeightedConfig = new ChineseWhispersConfiguration {
-        override def getWeight(dType: DependencyType): Long = 10
+        override def getWeight(dType: DependencyType): Long = 1
     }
     val sccConfig = new StronglyConnectedComponentsClusteringConfiguration {}
     val layerConfig = new LayerClusteringConfiguration {}
@@ -256,11 +256,18 @@ abstract class AbstractEvaluationTest extends AbstractClusteringTest {
             "test/referenceCluster/ClusteringTestProject.sei")
     }
 
-    test("evaluate [clTestProjectexampleTest1SourcesZipFile]") {
+    test("evaluate [clTestProjectExampleCrosscuttingConcernSourcesZipFile]") {
         evaluate(
-            "ExampleTest1",
-            clTestProjectExampleTest1SourcesZipFile,
-            "test/referenceCluster/ClusteringTestProject-example-test1.sei")
+            "CrosscuttingConcern",
+            clTestProjectExampleCrosscuttingConcernSourcesZipFile,
+            "test/referenceCluster/ClusteringTestProject-example-crosscuttingConcern.sei")
+    }
+
+    test("evaluate [clTestProjectExampleMixedConcernSourcesZipFile]") {
+        evaluate(
+            "MixedConcern",
+            clTestProjectExampleMixedConcernSourcesZipFile,
+            "test/referenceCluster/ClusteringTestProject-example-mixedConcern.sei")
     }
 
     test("evaluate [clTestProjectPatternAbstractFactorySourcesZipFile]") {

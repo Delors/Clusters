@@ -161,24 +161,6 @@ class MoJoWrapper(val calculatedCluster: Cluster, val authorativeCluster: Cluste
         scala.math.max(one, two)
     }
 
-    /**
-     *
-     * asks for the sequence of Move and Join operations (single
-     * direction)
-     * @return
-     */
-    def showMoveJoinSequence() = {
-        val sourceFile = writeIntoTempRSFfile(calculatedCluster, levelLimit)
-        val targetFile = writeIntoTempRSFfile(authorativeCluster, levelLimit)
-        val relFile = null
-
-        val mjc = new MoJoCalculator(sourceFile, targetFile, relFile)
-        mjc.showSequence()
-
-        removeFile(sourceFile)
-        removeFile(targetFile)
-    }
-
     private def writeIntoTempRSFfile(cluster: Cluster, levelLimit: Option[Int]): String = {
         val tmpFile = File.createTempFile(cluster.uniqueID+"_", ".tmp")
         var data: List[String] = Nil

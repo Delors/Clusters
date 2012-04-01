@@ -67,7 +67,8 @@ trait TestSources {
         "org/cocome/tradingsystem/cashdeskline/cashdesk/printercontroller/impl/PrinterControllerEventHandlerImpl.class",
         "org/cocome/tradingsystem/cashdeskline/cashdesk/printercontroller/impl/PrinterStates.class")
 
-    val clTestProjectExampleTest1SourcesZipFile = SourceZipFile("test/classfiles/clusteringTestProject/ClusteringTestProject-example-test1.jar")
+    val clTestProjectExampleCrosscuttingConcernSourcesZipFile = SourceZipFile("test/classfiles/clusteringTestProject/ClusteringTestProject-example-crosscuttingConcern.jar")
+    val clTestProjectExampleMixedConcernSourcesZipFile = SourceZipFile("test/classfiles/clusteringTestProject/ClusteringTestProject-example-mixedConcern.jar")
     val clTestProjectPatternAbstractFactorySourcesZipFile = SourceZipFile("test/classfiles/clusteringTestProject/ClusteringTestProject-pattern-abstractFactory.jar")
     val clTestProjectPatternAdapterSourcesZipFile = SourceZipFile("test/classfiles/clusteringTestProject/ClusteringTestProject-pattern-adapter.jar")
     val clTestProjectPatternBridgeSourcesZipFile = SourceZipFile("test/classfiles/clusteringTestProject/ClusteringTestProject-pattern-bridge.jar")

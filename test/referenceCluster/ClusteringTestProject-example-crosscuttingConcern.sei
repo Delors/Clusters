@@ -1,0 +1,35 @@
+[
+	[
+		example.crosscuttingConcern.LoadableData
+		example.crosscuttingConcern.LoadableData.<init>() : void
+		example.crosscuttingConcern.LoadableData.state
+		example.crosscuttingConcern.MultiuseData
+		example.crosscuttingConcern.MultiuseData.<init>() : void
+		example.crosscuttingConcern.MultiuseData.state
+		example.crosscuttingConcern.RowData
+		example.crosscuttingConcern.RowData.<init>() : void
+		example.crosscuttingConcern.StorableData
+		example.crosscuttingConcern.StorableData.<init>() : void
+		example.crosscuttingConcern.StorableData.state
+		[
+			example.crosscuttingConcern.Loadable
+			example.crosscuttingConcern.Loadable.load() : void
+			example.crosscuttingConcern.LoadableData.load() : void
+			example.crosscuttingConcern.MultiuseData.load() : void
+			example.crosscuttingConcern.RowData.load() : void
+		]
+		[
+			example.crosscuttingConcern.Storable
+			example.crosscuttingConcern.Storable.store() : void
+			example.crosscuttingConcern.StorableData.store() : void
+			example.crosscuttingConcern.MultiuseData.store() : void
+			example.crosscuttingConcern.RowData.store() : void
+		]
+	]
+	[
+		[
+			java.lang.Object
+			java.lang.Object.<init>() : void
+		]
+	]
+]

@@ -80,6 +80,7 @@ class StronglyConnectedComponentsClustering(
                         newClusterMinSizeBuffer.get(sccID) match {
                             case Some(firstElement) ⇒
                                 val c = clusterManager.createCluster(config.clusterIdentifierPrefix + sccID, this.stageName, true)
+                                c.clusterable = false // a SCC cluster is treated as a primitive unit
                                 createdNewCluster = true
                                 c.addChild(firstElement)
                                 c.addChild(node)

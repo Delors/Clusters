@@ -62,8 +62,15 @@ class MoJoWrapperTest extends AbstractClusteringTest {
             "testMoJoWrapper-ApplicationLibrariesSeparatorStage [ClusteringTestProject.zip]",
             clusteringTestProjectSourceZipFile)(clusteringStages)
 
-        println("MoJo:")
         var mjw = new MoJoWrapper(extractedClusters, referenceClusters)
-        println(mjw.doubleDirectionMojoFM)
+        println("singleDirectionMoJoHM: "+mjw.singleDirectionMoJoHM)
+        println("singleDirectionMoJo: "+mjw.singleDirectionMoJo)
+        println("singleDirectionMoJoPlus: "+mjw.singleDirectionMoJoPlus)
+        println("singleDirectionMoJoFM: "+mjw.singleDirectionMoJoFM)
+        println("doubleDirectionMoJo: "+mjw.doubleDirectionMoJo)
+        println("doubleDirectionMoJoPlus: "+mjw.doubleDirectionMoJoPlus)
+        println("doubleDirectionMojoFM: "+mjw.doubleDirectionMojoFM)
+        //        println("showMoveJoinSequence(): ")
+        //        mjw.showMoveJoinSequence()
     }
 }
