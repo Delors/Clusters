@@ -1235,21 +1235,13 @@
 		[
 			de.tud.cs.st.contraints.NotNull
 			de.tud.cs.st.contraints.Null
-		]
-		[
 			de.tud.cs.st.structure.gof.factory_method.Product
 			de.tud.cs.st.structure.gof.factory_method.FactoryMethod
-		]
-		[
 			de.tud.cs.st.structure.gof.decorator.Component
 			de.tud.cs.st.structure.gof.decorator.ConcreteComponent
 			de.tud.cs.st.structure.gof.decorator.ConcreteDecorator
-		]
-		[
 			de.tud.cs.st.structure.gof.observer.ConcreteSubject
 			de.tud.cs.st.structure.gof.observer.Observer
-		]
-		[
 			de.tud.cs.st.structure.mvc.ModelLayer
 			de.tud.cs.st.structure.mvc.PersistenceLayer
 			de.tud.cs.st.structure.mvc.UILayer
