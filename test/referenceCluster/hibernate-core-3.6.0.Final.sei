@@ -1,129 +1,5 @@
 [
 	[
-		org.hibernate.tool.hbm2ddl.ManagedProviderConnectionHelper
-		org.hibernate.tool.hbm2ddl.ManagedProviderConnectionHelper.<init>(java.util.Properties) : void
-		org.hibernate.tool.hbm2ddl.ManagedProviderConnectionHelper.cfgProperties
-		org.hibernate.tool.hbm2ddl.ManagedProviderConnectionHelper.connection
-		org.hibernate.tool.hbm2ddl.ManagedProviderConnectionHelper.connectionProvider
-		org.hibernate.tool.hbm2ddl.ManagedProviderConnectionHelper.getConnection() : java.sql.Connection
-		org.hibernate.tool.hbm2ddl.ManagedProviderConnectionHelper.prepare(boolean) : void
-		org.hibernate.tool.hbm2ddl.ManagedProviderConnectionHelper.release() : void
-		org.hibernate.tool.hbm2ddl.SuppliedConnectionHelper
-		org.hibernate.tool.hbm2ddl.SuppliedConnectionHelper.<init>(java.sql.Connection) : void
-		org.hibernate.tool.hbm2ddl.SuppliedConnectionHelper.connection
-		org.hibernate.tool.hbm2ddl.SuppliedConnectionHelper.getConnection() : java.sql.Connection
-		org.hibernate.tool.hbm2ddl.SuppliedConnectionHelper.prepare(boolean) : void
-		org.hibernate.tool.hbm2ddl.SuppliedConnectionHelper.release() : void
-		org.hibernate.tool.hbm2ddl.SuppliedConnectionHelper.toggleAutoCommit
-		org.hibernate.tool.hbm2ddl.SuppliedConnectionProviderConnectionHelper
-		org.hibernate.tool.hbm2ddl.SuppliedConnectionProviderConnectionHelper.<init>(org.hibernate.connection.ConnectionProvider) : void
-		org.hibernate.tool.hbm2ddl.SuppliedConnectionProviderConnectionHelper.connection
-		org.hibernate.tool.hbm2ddl.SuppliedConnectionProviderConnectionHelper.getConnection() : java.sql.Connection
-		org.hibernate.tool.hbm2ddl.SuppliedConnectionProviderConnectionHelper.prepare(boolean) : void
-		org.hibernate.tool.hbm2ddl.SuppliedConnectionProviderConnectionHelper.provider
-		org.hibernate.tool.hbm2ddl.SuppliedConnectionProviderConnectionHelper.release() : void
-		org.hibernate.tool.hbm2ddl.SuppliedConnectionProviderConnectionHelper.toggleAutoCommit
-		org.hibernate.engine.query.sql.NativeSQLQueryCollectionReturn
-		org.hibernate.engine.query.sql.NativeSQLQueryCollectionReturn.<init>(java.lang.String, java.lang.String, java.lang.String, java.util.Map, org.hibernate.LockMode) : void
-		org.hibernate.engine.query.sql.NativeSQLQueryCollectionReturn.determineHashCode() : int
-		org.hibernate.engine.query.sql.NativeSQLQueryCollectionReturn.equals(java.lang.Object) : boolean
-		org.hibernate.engine.query.sql.NativeSQLQueryCollectionReturn.getAlias() : java.lang.String
-		org.hibernate.engine.query.sql.NativeSQLQueryCollectionReturn.getLockMode() : org.hibernate.LockMode
-		org.hibernate.engine.query.sql.NativeSQLQueryCollectionReturn.getOwnerEntityName() : java.lang.String
-		org.hibernate.engine.query.sql.NativeSQLQueryCollectionReturn.getOwnerProperty() : java.lang.String
-		org.hibernate.engine.query.sql.NativeSQLQueryCollectionReturn.getPropertyResultsMap() : java.util.Map
-		org.hibernate.engine.query.sql.NativeSQLQueryCollectionReturn.hashCode
-		org.hibernate.engine.query.sql.NativeSQLQueryCollectionReturn.hashCode() : int
-		org.hibernate.engine.query.sql.NativeSQLQueryCollectionReturn.ownerEntityName
-		org.hibernate.engine.query.sql.NativeSQLQueryCollectionReturn.ownerProperty
-		org.hibernate.engine.query.sql.NativeSQLQueryJoinReturn
-		org.hibernate.engine.query.sql.NativeSQLQueryJoinReturn.<init>(java.lang.String, java.lang.String, java.lang.String, java.util.Map, org.hibernate.LockMode) : void
-		org.hibernate.engine.query.sql.NativeSQLQueryJoinReturn.determineHashCode() : int
-		org.hibernate.engine.query.sql.NativeSQLQueryJoinReturn.equals(java.lang.Object) : boolean
-		org.hibernate.engine.query.sql.NativeSQLQueryJoinReturn.getAlias() : java.lang.String
-		org.hibernate.engine.query.sql.NativeSQLQueryJoinReturn.getLockMode() : org.hibernate.LockMode
-		org.hibernate.engine.query.sql.NativeSQLQueryJoinReturn.getOwnerAlias() : java.lang.String
-		org.hibernate.engine.query.sql.NativeSQLQueryJoinReturn.getOwnerProperty() : java.lang.String
-		org.hibernate.engine.query.sql.NativeSQLQueryJoinReturn.getPropertyResultsMap() : java.util.Map
-		org.hibernate.engine.query.sql.NativeSQLQueryJoinReturn.hashCode
-		org.hibernate.engine.query.sql.NativeSQLQueryJoinReturn.hashCode() : int
-		org.hibernate.engine.query.sql.NativeSQLQueryJoinReturn.ownerAlias
-		org.hibernate.engine.query.sql.NativeSQLQueryJoinReturn.ownerProperty
-		org.hibernate.engine.query.sql.NativeSQLQueryNonScalarReturn
-		org.hibernate.engine.query.sql.NativeSQLQueryNonScalarReturn.<init>(java.lang.String, java.util.Map, org.hibernate.LockMode) : void
-		org.hibernate.engine.query.sql.NativeSQLQueryNonScalarReturn.alias
-		org.hibernate.engine.query.sql.NativeSQLQueryNonScalarReturn.determineHashCode() : int
-		org.hibernate.engine.query.sql.NativeSQLQueryNonScalarReturn.equals(java.lang.Object) : boolean
-		org.hibernate.engine.query.sql.NativeSQLQueryNonScalarReturn.getAlias() : java.lang.String
-		org.hibernate.engine.query.sql.NativeSQLQueryNonScalarReturn.getLockMode() : org.hibernate.LockMode
-		org.hibernate.engine.query.sql.NativeSQLQueryNonScalarReturn.getPropertyResultsMap() : java.util.Map
-		org.hibernate.engine.query.sql.NativeSQLQueryNonScalarReturn.hashCode
-		org.hibernate.engine.query.sql.NativeSQLQueryNonScalarReturn.hashCode() : int
-		org.hibernate.engine.query.sql.NativeSQLQueryNonScalarReturn.lockMode
-		org.hibernate.engine.query.sql.NativeSQLQueryNonScalarReturn.propertyResults
-		org.hibernate.engine.query.sql.NativeSQLQueryReturn
-		org.hibernate.engine.query.sql.NativeSQLQueryRootReturn
-		org.hibernate.engine.query.sql.NativeSQLQueryRootReturn.<init>(java.lang.String, java.lang.String, java.util.Map, org.hibernate.LockMode) : void
-		org.hibernate.engine.query.sql.NativeSQLQueryRootReturn.<init>(java.lang.String, java.lang.String, org.hibernate.LockMode) : void
-		org.hibernate.engine.query.sql.NativeSQLQueryRootReturn.determineHashCode() : int
-		org.hibernate.engine.query.sql.NativeSQLQueryRootReturn.equals(java.lang.Object) : boolean
-		org.hibernate.engine.query.sql.NativeSQLQueryRootReturn.getAlias() : java.lang.String
-		org.hibernate.engine.query.sql.NativeSQLQueryRootReturn.getLockMode() : org.hibernate.LockMode
-		org.hibernate.engine.query.sql.NativeSQLQueryRootReturn.getPropertyResultsMap() : java.util.Map
-		org.hibernate.engine.query.sql.NativeSQLQueryRootReturn.getReturnEntityName() : java.lang.String
-		org.hibernate.engine.query.sql.NativeSQLQueryRootReturn.hashCode
-		org.hibernate.engine.query.sql.NativeSQLQueryRootReturn.hashCode() : int
-		org.hibernate.engine.query.sql.NativeSQLQueryRootReturn.returnEntityName
-		org.hibernate.engine.query.sql.NativeSQLQueryScalarReturn
-		org.hibernate.engine.query.sql.NativeSQLQueryScalarReturn.<init>(java.lang.String, org.hibernate.type.Type) : void
-		org.hibernate.engine.query.sql.NativeSQLQueryScalarReturn.columnAlias
-		org.hibernate.engine.query.sql.NativeSQLQueryScalarReturn.determineHashCode() : int
-		org.hibernate.engine.query.sql.NativeSQLQueryScalarReturn.equals(java.lang.Object) : boolean
-		org.hibernate.engine.query.sql.NativeSQLQueryScalarReturn.getColumnAlias() : java.lang.String
-		org.hibernate.engine.query.sql.NativeSQLQueryScalarReturn.getType() : org.hibernate.type.Type
-		org.hibernate.engine.query.sql.NativeSQLQueryScalarReturn.hashCode
-		org.hibernate.engine.query.sql.NativeSQLQueryScalarReturn.hashCode() : int
-		org.hibernate.engine.query.sql.NativeSQLQueryScalarReturn.type
-		org.hibernate.engine.query.sql.NativeSQLQuerySpecification
-		org.hibernate.engine.query.sql.NativeSQLQuerySpecification.<init>(java.lang.String, org.hibernate.engine.query.sql.NativeSQLQueryReturn[], java.util.Collection) : void
-		org.hibernate.engine.query.sql.NativeSQLQuerySpecification.equals(java.lang.Object) : boolean
-		org.hibernate.engine.query.sql.NativeSQLQuerySpecification.getQueryReturns() : org.hibernate.engine.query.sql.NativeSQLQueryReturn[]
-		org.hibernate.engine.query.sql.NativeSQLQuerySpecification.getQuerySpaces() : java.util.Set
-		org.hibernate.engine.query.sql.NativeSQLQuerySpecification.getQueryString() : java.lang.String
-		org.hibernate.engine.query.sql.NativeSQLQuerySpecification.hashCode
-		org.hibernate.engine.query.sql.NativeSQLQuerySpecification.hashCode() : int
-		org.hibernate.engine.query.sql.NativeSQLQuerySpecification.queryReturns
-		org.hibernate.engine.query.sql.NativeSQLQuerySpecification.querySpaces
-		org.hibernate.engine.query.sql.NativeSQLQuerySpecification.queryString
-		org.hibernate.util.ReflectHelper
-		org.hibernate.util.ReflectHelper.$assertionsDisabled
-		org.hibernate.util.ReflectHelper.<clinit>() : void
-		org.hibernate.util.ReflectHelper.<init>() : void
-		org.hibernate.util.ReflectHelper.BASIC_PROPERTY_ACCESSOR
-		org.hibernate.util.ReflectHelper.classForName(java.lang.String) : java.lang.Class
-		org.hibernate.util.ReflectHelper.classForName(java.lang.String, java.lang.Class) : java.lang.Class
-		org.hibernate.util.ReflectHelper.DIRECT_PROPERTY_ACCESSOR
-		org.hibernate.util.ReflectHelper.extractEqualsMethod(java.lang.Class) : java.lang.reflect.Method
-		org.hibernate.util.ReflectHelper.extractHashCodeMethod(java.lang.Class) : java.lang.reflect.Method
-		org.hibernate.util.ReflectHelper.getConstantValue(java.lang.String) : java.lang.Object
-		org.hibernate.util.ReflectHelper.getConstructor(java.lang.Class, org.hibernate.type.Type[]) : java.lang.reflect.Constructor
-		org.hibernate.util.ReflectHelper.getDefaultConstructor(java.lang.Class) : java.lang.reflect.Constructor
-		org.hibernate.util.ReflectHelper.getGetter(java.lang.Class, java.lang.String) : org.hibernate.property.Getter
-		org.hibernate.util.ReflectHelper.getMethod(java.lang.Class, java.lang.reflect.Method) : java.lang.reflect.Method
-		org.hibernate.util.ReflectHelper.getter(java.lang.Class, java.lang.String) : org.hibernate.property.Getter
-		org.hibernate.util.ReflectHelper.implementsInterface(java.lang.Class, java.lang.Class) : boolean
-		org.hibernate.util.ReflectHelper.isAbstractClass(java.lang.Class) : boolean
-		org.hibernate.util.ReflectHelper.isFinalClass(java.lang.Class) : boolean
-		org.hibernate.util.ReflectHelper.isPublic(java.lang.Class, java.lang.reflect.Member) : boolean
-		org.hibernate.util.ReflectHelper.isPublic(java.lang.reflect.Member) : boolean
-		org.hibernate.util.ReflectHelper.NO_PARAM_SIGNATURE
-		org.hibernate.util.ReflectHelper.NO_PARAMS
-		org.hibernate.util.ReflectHelper.OBJECT_EQUALS
-		org.hibernate.util.ReflectHelper.OBJECT_HASHCODE
-		org.hibernate.util.ReflectHelper.overridesEquals(java.lang.Class) : boolean
-		org.hibernate.util.ReflectHelper.overridesHashCode(java.lang.Class) : boolean
-		org.hibernate.util.ReflectHelper.reflectedPropertyClass(java.lang.String, java.lang.String) : java.lang.Class
-		org.hibernate.util.ReflectHelper.SINGLE_OBJECT_PARAM_SIGNATURE
 		[
 			org.hibernate.AssertionFailure
 			org.hibernate.AssertionFailure.<clinit>() : void
@@ -9263,6 +9139,78 @@
 			org.hibernate.sql.Update.versionColumnName
 			org.hibernate.sql.Update.where
 			org.hibernate.sql.Update.whereColumns
+			org.hibernate.engine.query.sql.NativeSQLQueryCollectionReturn
+			org.hibernate.engine.query.sql.NativeSQLQueryCollectionReturn.<init>(java.lang.String, java.lang.String, java.lang.String, java.util.Map, org.hibernate.LockMode) : void
+			org.hibernate.engine.query.sql.NativeSQLQueryCollectionReturn.determineHashCode() : int
+			org.hibernate.engine.query.sql.NativeSQLQueryCollectionReturn.equals(java.lang.Object) : boolean
+			org.hibernate.engine.query.sql.NativeSQLQueryCollectionReturn.getAlias() : java.lang.String
+			org.hibernate.engine.query.sql.NativeSQLQueryCollectionReturn.getLockMode() : org.hibernate.LockMode
+			org.hibernate.engine.query.sql.NativeSQLQueryCollectionReturn.getOwnerEntityName() : java.lang.String
+			org.hibernate.engine.query.sql.NativeSQLQueryCollectionReturn.getOwnerProperty() : java.lang.String
+			org.hibernate.engine.query.sql.NativeSQLQueryCollectionReturn.getPropertyResultsMap() : java.util.Map
+			org.hibernate.engine.query.sql.NativeSQLQueryCollectionReturn.hashCode
+			org.hibernate.engine.query.sql.NativeSQLQueryCollectionReturn.hashCode() : int
+			org.hibernate.engine.query.sql.NativeSQLQueryCollectionReturn.ownerEntityName
+			org.hibernate.engine.query.sql.NativeSQLQueryCollectionReturn.ownerProperty
+			org.hibernate.engine.query.sql.NativeSQLQueryJoinReturn
+			org.hibernate.engine.query.sql.NativeSQLQueryJoinReturn.<init>(java.lang.String, java.lang.String, java.lang.String, java.util.Map, org.hibernate.LockMode) : void
+			org.hibernate.engine.query.sql.NativeSQLQueryJoinReturn.determineHashCode() : int
+			org.hibernate.engine.query.sql.NativeSQLQueryJoinReturn.equals(java.lang.Object) : boolean
+			org.hibernate.engine.query.sql.NativeSQLQueryJoinReturn.getAlias() : java.lang.String
+			org.hibernate.engine.query.sql.NativeSQLQueryJoinReturn.getLockMode() : org.hibernate.LockMode
+			org.hibernate.engine.query.sql.NativeSQLQueryJoinReturn.getOwnerAlias() : java.lang.String
+			org.hibernate.engine.query.sql.NativeSQLQueryJoinReturn.getOwnerProperty() : java.lang.String
+			org.hibernate.engine.query.sql.NativeSQLQueryJoinReturn.getPropertyResultsMap() : java.util.Map
+			org.hibernate.engine.query.sql.NativeSQLQueryJoinReturn.hashCode
+			org.hibernate.engine.query.sql.NativeSQLQueryJoinReturn.hashCode() : int
+			org.hibernate.engine.query.sql.NativeSQLQueryJoinReturn.ownerAlias
+			org.hibernate.engine.query.sql.NativeSQLQueryJoinReturn.ownerProperty
+			org.hibernate.engine.query.sql.NativeSQLQueryNonScalarReturn
+			org.hibernate.engine.query.sql.NativeSQLQueryNonScalarReturn.<init>(java.lang.String, java.util.Map, org.hibernate.LockMode) : void
+			org.hibernate.engine.query.sql.NativeSQLQueryNonScalarReturn.alias
+			org.hibernate.engine.query.sql.NativeSQLQueryNonScalarReturn.determineHashCode() : int
+			org.hibernate.engine.query.sql.NativeSQLQueryNonScalarReturn.equals(java.lang.Object) : boolean
+			org.hibernate.engine.query.sql.NativeSQLQueryNonScalarReturn.getAlias() : java.lang.String
+			org.hibernate.engine.query.sql.NativeSQLQueryNonScalarReturn.getLockMode() : org.hibernate.LockMode
+			org.hibernate.engine.query.sql.NativeSQLQueryNonScalarReturn.getPropertyResultsMap() : java.util.Map
+			org.hibernate.engine.query.sql.NativeSQLQueryNonScalarReturn.hashCode
+			org.hibernate.engine.query.sql.NativeSQLQueryNonScalarReturn.hashCode() : int
+			org.hibernate.engine.query.sql.NativeSQLQueryNonScalarReturn.lockMode
+			org.hibernate.engine.query.sql.NativeSQLQueryNonScalarReturn.propertyResults
+			org.hibernate.engine.query.sql.NativeSQLQueryReturn
+			org.hibernate.engine.query.sql.NativeSQLQueryRootReturn
+			org.hibernate.engine.query.sql.NativeSQLQueryRootReturn.<init>(java.lang.String, java.lang.String, java.util.Map, org.hibernate.LockMode) : void
+			org.hibernate.engine.query.sql.NativeSQLQueryRootReturn.<init>(java.lang.String, java.lang.String, org.hibernate.LockMode) : void
+			org.hibernate.engine.query.sql.NativeSQLQueryRootReturn.determineHashCode() : int
+			org.hibernate.engine.query.sql.NativeSQLQueryRootReturn.equals(java.lang.Object) : boolean
+			org.hibernate.engine.query.sql.NativeSQLQueryRootReturn.getAlias() : java.lang.String
+			org.hibernate.engine.query.sql.NativeSQLQueryRootReturn.getLockMode() : org.hibernate.LockMode
+			org.hibernate.engine.query.sql.NativeSQLQueryRootReturn.getPropertyResultsMap() : java.util.Map
+			org.hibernate.engine.query.sql.NativeSQLQueryRootReturn.getReturnEntityName() : java.lang.String
+			org.hibernate.engine.query.sql.NativeSQLQueryRootReturn.hashCode
+			org.hibernate.engine.query.sql.NativeSQLQueryRootReturn.hashCode() : int
+			org.hibernate.engine.query.sql.NativeSQLQueryRootReturn.returnEntityName
+			org.hibernate.engine.query.sql.NativeSQLQueryScalarReturn
+			org.hibernate.engine.query.sql.NativeSQLQueryScalarReturn.<init>(java.lang.String, org.hibernate.type.Type) : void
+			org.hibernate.engine.query.sql.NativeSQLQueryScalarReturn.columnAlias
+			org.hibernate.engine.query.sql.NativeSQLQueryScalarReturn.determineHashCode() : int
+			org.hibernate.engine.query.sql.NativeSQLQueryScalarReturn.equals(java.lang.Object) : boolean
+			org.hibernate.engine.query.sql.NativeSQLQueryScalarReturn.getColumnAlias() : java.lang.String
+			org.hibernate.engine.query.sql.NativeSQLQueryScalarReturn.getType() : org.hibernate.type.Type
+			org.hibernate.engine.query.sql.NativeSQLQueryScalarReturn.hashCode
+			org.hibernate.engine.query.sql.NativeSQLQueryScalarReturn.hashCode() : int
+			org.hibernate.engine.query.sql.NativeSQLQueryScalarReturn.type
+			org.hibernate.engine.query.sql.NativeSQLQuerySpecification
+			org.hibernate.engine.query.sql.NativeSQLQuerySpecification.<init>(java.lang.String, org.hibernate.engine.query.sql.NativeSQLQueryReturn[], java.util.Collection) : void
+			org.hibernate.engine.query.sql.NativeSQLQuerySpecification.equals(java.lang.Object) : boolean
+			org.hibernate.engine.query.sql.NativeSQLQuerySpecification.getQueryReturns() : org.hibernate.engine.query.sql.NativeSQLQueryReturn[]
+			org.hibernate.engine.query.sql.NativeSQLQuerySpecification.getQuerySpaces() : java.util.Set
+			org.hibernate.engine.query.sql.NativeSQLQuerySpecification.getQueryString() : java.lang.String
+			org.hibernate.engine.query.sql.NativeSQLQuerySpecification.hashCode
+			org.hibernate.engine.query.sql.NativeSQLQuerySpecification.hashCode() : int
+			org.hibernate.engine.query.sql.NativeSQLQuerySpecification.queryReturns
+			org.hibernate.engine.query.sql.NativeSQLQuerySpecification.querySpaces
+			org.hibernate.engine.query.sql.NativeSQLQuerySpecification.queryString
 		]
 		[
 			org.hibernate.engine.AssociationKey
@@ -10488,6 +10436,7 @@
 			org.hibernate.engine.SubselectFetch.resultingEntityKeys
 			org.hibernate.engine.SubselectFetch.toString() : java.lang.String
 			org.hibernate.engine.SubselectFetch.toSubselectString(java.lang.String) : java.lang.String
+		]
 		[
 			org.hibernate.engine.transaction.IsolatedWork
 			org.hibernate.engine.transaction.IsolatedWork.doWork(java.sql.Connection) : void
@@ -21889,6 +21838,29 @@
 			org.hibernate.tool.hbm2ddl.TableMetadata.name
 			org.hibernate.tool.hbm2ddl.TableMetadata.schema
 			org.hibernate.tool.hbm2ddl.TableMetadata.toString() : java.lang.String
+			org.hibernate.tool.hbm2ddl.ManagedProviderConnectionHelper
+			org.hibernate.tool.hbm2ddl.ManagedProviderConnectionHelper.<init>(java.util.Properties) : void
+			org.hibernate.tool.hbm2ddl.ManagedProviderConnectionHelper.cfgProperties
+			org.hibernate.tool.hbm2ddl.ManagedProviderConnectionHelper.connection
+			org.hibernate.tool.hbm2ddl.ManagedProviderConnectionHelper.connectionProvider
+			org.hibernate.tool.hbm2ddl.ManagedProviderConnectionHelper.getConnection() : java.sql.Connection
+			org.hibernate.tool.hbm2ddl.ManagedProviderConnectionHelper.prepare(boolean) : void
+			org.hibernate.tool.hbm2ddl.ManagedProviderConnectionHelper.release() : void
+			org.hibernate.tool.hbm2ddl.SuppliedConnectionHelper
+			org.hibernate.tool.hbm2ddl.SuppliedConnectionHelper.<init>(java.sql.Connection) : void
+			org.hibernate.tool.hbm2ddl.SuppliedConnectionHelper.connection
+			org.hibernate.tool.hbm2ddl.SuppliedConnectionHelper.getConnection() : java.sql.Connection
+			org.hibernate.tool.hbm2ddl.SuppliedConnectionHelper.prepare(boolean) : void
+			org.hibernate.tool.hbm2ddl.SuppliedConnectionHelper.release() : void
+			org.hibernate.tool.hbm2ddl.SuppliedConnectionHelper.toggleAutoCommit
+			org.hibernate.tool.hbm2ddl.SuppliedConnectionProviderConnectionHelper
+			org.hibernate.tool.hbm2ddl.SuppliedConnectionProviderConnectionHelper.<init>(org.hibernate.connection.ConnectionProvider) : void
+			org.hibernate.tool.hbm2ddl.SuppliedConnectionProviderConnectionHelper.connection
+			org.hibernate.tool.hbm2ddl.SuppliedConnectionProviderConnectionHelper.getConnection() : java.sql.Connection
+			org.hibernate.tool.hbm2ddl.SuppliedConnectionProviderConnectionHelper.prepare(boolean) : void
+			org.hibernate.tool.hbm2ddl.SuppliedConnectionProviderConnectionHelper.provider
+			org.hibernate.tool.hbm2ddl.SuppliedConnectionProviderConnectionHelper.release() : void
+			org.hibernate.tool.hbm2ddl.SuppliedConnectionProviderConnectionHelper.toggleAutoCommit
 		]
 		[
 			org.hibernate.tool.hbm2ddl.SchemaExportTask
@@ -26990,6 +26962,35 @@
 				org.hibernate.util.PropertiesHelper.toMap(java.lang.String, java.lang.String, java.util.Properties) : java.util.Map
 				org.hibernate.util.PropertiesHelper.toStringArray(java.lang.String, java.lang.String) : java.lang.String[]
 				org.hibernate.util.PropertiesHelper.toStringArray(java.lang.String, java.lang.String, java.util.Properties) : java.lang.String[]
+				org.hibernate.util.ReflectHelper
+				org.hibernate.util.ReflectHelper.$assertionsDisabled
+				org.hibernate.util.ReflectHelper.<clinit>() : void
+				org.hibernate.util.ReflectHelper.<init>() : void
+				org.hibernate.util.ReflectHelper.BASIC_PROPERTY_ACCESSOR
+				org.hibernate.util.ReflectHelper.classForName(java.lang.String) : java.lang.Class
+				org.hibernate.util.ReflectHelper.classForName(java.lang.String, java.lang.Class) : java.lang.Class
+				org.hibernate.util.ReflectHelper.DIRECT_PROPERTY_ACCESSOR
+				org.hibernate.util.ReflectHelper.extractEqualsMethod(java.lang.Class) : java.lang.reflect.Method
+				org.hibernate.util.ReflectHelper.extractHashCodeMethod(java.lang.Class) : java.lang.reflect.Method
+				org.hibernate.util.ReflectHelper.getConstantValue(java.lang.String) : java.lang.Object
+				org.hibernate.util.ReflectHelper.getConstructor(java.lang.Class, org.hibernate.type.Type[]) : java.lang.reflect.Constructor
+				org.hibernate.util.ReflectHelper.getDefaultConstructor(java.lang.Class) : java.lang.reflect.Constructor
+				org.hibernate.util.ReflectHelper.getGetter(java.lang.Class, java.lang.String) : org.hibernate.property.Getter
+				org.hibernate.util.ReflectHelper.getMethod(java.lang.Class, java.lang.reflect.Method) : java.lang.reflect.Method
+				org.hibernate.util.ReflectHelper.getter(java.lang.Class, java.lang.String) : org.hibernate.property.Getter
+				org.hibernate.util.ReflectHelper.implementsInterface(java.lang.Class, java.lang.Class) : boolean
+				org.hibernate.util.ReflectHelper.isAbstractClass(java.lang.Class) : boolean
+				org.hibernate.util.ReflectHelper.isFinalClass(java.lang.Class) : boolean
+				org.hibernate.util.ReflectHelper.isPublic(java.lang.Class, java.lang.reflect.Member) : boolean
+				org.hibernate.util.ReflectHelper.isPublic(java.lang.reflect.Member) : boolean
+				org.hibernate.util.ReflectHelper.NO_PARAM_SIGNATURE
+				org.hibernate.util.ReflectHelper.NO_PARAMS
+				org.hibernate.util.ReflectHelper.OBJECT_EQUALS
+				org.hibernate.util.ReflectHelper.OBJECT_HASHCODE
+				org.hibernate.util.ReflectHelper.overridesEquals(java.lang.Class) : boolean
+				org.hibernate.util.ReflectHelper.overridesHashCode(java.lang.Class) : boolean
+				org.hibernate.util.ReflectHelper.reflectedPropertyClass(java.lang.String, java.lang.String) : java.lang.Class
+				org.hibernate.util.ReflectHelper.SINGLE_OBJECT_PARAM_SIGNATURE
 				org.hibernate.util.SimpleMRUCache
 				org.hibernate.util.SimpleMRUCache.<init>() : void
 				org.hibernate.util.SimpleMRUCache.<init>(int) : void
@@ -29429,4 +29430,5 @@
 			org.xml.sax.SAXParseException.getLineNumber() : int
 			org.xml.sax.SAXParseException.getMessage() : java.lang.String
 		]
+	]
 ]
