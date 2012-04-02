@@ -1,4 +1,5 @@
 [
+	[
 			org.hibernate.action.AfterTransactionCompletionProcess
 			org.hibernate.action.AfterTransactionCompletionProcess.doAfterTransactionCompletion(boolean, org.hibernate.engine.SessionImplementor) : void
 			org.hibernate.action.BeforeTransactionCompletionProcess
