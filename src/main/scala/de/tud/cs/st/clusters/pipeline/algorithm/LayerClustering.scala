@@ -135,7 +135,7 @@ class LayerClustering(
 trait LayerClusteringConfiguration {
     val clusterIdentifierPrefix = "layer_"
 
-    val performRecursion: Boolean = false
+    val performRecursion: Boolean = true
 }
 
 object LayerClusteringConfiguration extends LayerClusteringConfiguration
