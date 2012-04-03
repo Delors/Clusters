@@ -59,7 +59,7 @@ trait IdentifierBasedClusteringStrategy extends ClusteringStage {
                 case _                   ⇒ false // nothing to do; a single node cannot be clustered
             }
         })
-        if (clusterIdentifier == cluster.identifier &&
+        if (clusterIdentifier == cluster.identifier.toHRR &&
             (!considerOnlyClusterable || cluster.clusterable)) {
             return createdNewCluster || super.performClustering(cluster)
         }
