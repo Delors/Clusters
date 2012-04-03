@@ -1,8 +1,0 @@
-Project: "pjan - a java souce code analayser based on eclipse jdt plugin"
-Project-Page: http://code.google.com/p/pjan/
-Module: GraphClustering
-SVN: http://pjan.googlecode.com/svn/trunk/GraphClustering
-Author:PkuStack <PkuStack@gmail.com>
-Date: 31 May 2009
-Revision: 39
-License: MIT License (http://www.opensource.org/licenses/mit-license.php)

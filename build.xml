@@ -79,7 +79,7 @@ Author 	Thomas Schlosser
 
 	<property name="bat.jar" value="${lib.dir}/bat-1.6.0.RC1.jar" />
 	<property name="commons-lang.jar" value="${lib.dir}/commons-lang3-3.1.jar" />
-	<property name="graphclustering.jar" value="${lib.dir}/graphclustering.jar" />
+	<property name="mojo.jar" value="${lib.dir}/mojo.jar" />
 	<property name="scalatest.jar" value="${lib.dir}/scalatest-1.6.1.jar" />
 	<property name="junit.jar" value="${lib.dir}/junit-4.10.jar" />
 
@@ -93,7 +93,7 @@ Author 	Thomas Schlosser
 		<pathelement location="${class.dir}" />
 		<pathelement location="${bat.jar}" />
 		<pathelement location="${commons-lang.jar}" />
-		<pathelement location="${graphclustering.jar}" />
+		<pathelement location="${mojo.jar}" />
 	</path>
 	<path id="test.classpath">
 		<path refid="project.classpath" />
