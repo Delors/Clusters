@@ -225,27 +225,6 @@ abstract class AbstractEvaluationTest extends AbstractClusteringTest {
         measuredRuns: Int,
         allStageCombos: Array[(String, Array[ClusteringStage])])
 
-    test("evaluate [Flashcards]") {
-        evaluate(
-            "Flashcards",
-            flashcardsSourceZipFile,
-            "test/referenceCluster/Flashcards 0.4 - target 1.6.sei")
-    }
-
-    test("evaluate [CoCoME]") {
-        evaluate(
-            "CoCoME",
-            cocomeSourceZipFile,
-            "test/referenceCluster/cocome-impl-classes.sei")
-    }
-
-    test("evaluate [hibernate]") {
-        evaluate(
-            "Hibernate",
-            hibernateSourceZipFile,
-            "test/referenceCluster/hibernate-core-3.6.0.Final.sei")
-    }
-
     test("evaluate [clTestProjectExampleCrosscuttingConcernSourcesZipFile]") {
         evaluate(
             "CrosscuttingConcern",
@@ -266,27 +245,35 @@ abstract class AbstractEvaluationTest extends AbstractClusteringTest {
             clTestProjectPatternAbstractFactorySourcesZipFile_plain,
             "test/referenceCluster/ClusteringTestProject-pattern-abstractFactory_plain.sei")
     }
+
     test("evaluate [clTestProjectPatternVisitorSourcesZipFile_plain]") {
         evaluate(
             "VisitorPattern",
             clTestProjectPatternVisitorSourcesZipFile_plain,
             "test/referenceCluster/ClusteringTestProject-pattern-visitor_plain.sei")
     }
+
+    test("evaluate [Flashcards]") {
+        evaluate(
+            "Flashcards",
+            flashcardsSourceZipFile,
+            "test/referenceCluster/Flashcards 0.4 - target 1.6.sei")
+    }
+
+    test("evaluate [CoCoME]") {
+        evaluate(
+            "CoCoME",
+            cocomeSourceZipFile,
+            "test/referenceCluster/cocome-impl-classes.sei")
+    }
+
+    test("evaluate [hibernate]") {
+        evaluate(
+            "Hibernate",
+            hibernateSourceZipFile,
+            "test/referenceCluster/hibernate-core-3.6.0.Final.sei")
+    }
     // TODO: there are no valid reference clusters...
-    test("evaluate [ClusteringTestProject]") {
-        evaluate(
-            "ClusteringTestProject",
-            clusteringTestProjectSourceZipFile,
-            "test/referenceCluster/ClusteringTestProject.sei")
-    }
-
-    test("evaluate [antSourceZipFile]") {
-        evaluate(
-            "ANT",
-            antSourceZipFile,
-            null)
-    }
-
     test("evaluate [clustersSourceZipFile]") {
         evaluate(
             "Clusters",
