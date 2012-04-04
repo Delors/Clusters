@@ -47,7 +47,7 @@ import structure.SourceElementNode
  */
 trait ClusterStatistics {
 
-    def printStatistics(cluster: Cluster) {
+    def printStatistics(cluster: Cluster, printOnlyClusteringSpecificInfo: Boolean = false) {
         var subclusterCounter = 0
         var typeCounter = 0
         var fieldCounter = 0
@@ -105,12 +105,14 @@ trait ClusterStatistics {
         var sourceElementCounter = typeCounter + fieldCounter + methodCounter
         var availableSourceElementCounter = availableTypeCounter + availableFieldCounter + availableMethodCounter
 
-        println("## Statistics of cluster["+cluster.identifier.toHRR+"]:")
-        println("Number of Types (available/not available): "+typeCounter+"("+availableTypeCounter+"/"+(typeCounter - availableTypeCounter)+")")
-        println("Number of Fields (available/not available): "+fieldCounter+"("+availableFieldCounter+"/"+(fieldCounter - availableFieldCounter)+")")
-        println("Number of Methods (available/not available): "+methodCounter+"("+availableMethodCounter+"/"+(methodCounter - availableMethodCounter)+")")
-        println("Number of Source Elements (available/not available): "+sourceElementCounter+"("+availableSourceElementCounter+"/"+(sourceElementCounter - availableSourceElementCounter)+")")
-        println("Number of Edges (to available/to not available): "+edgeCounter+"("+edgeToAvailable+"/"+edgeToNotAvailable+")")
+        if (!printOnlyClusteringSpecificInfo) {
+            println("## Statistics of cluster["+cluster.identifier.toHRR+"]:")
+            println("Number of Types (available/not available): "+typeCounter+"("+availableTypeCounter+"/"+(typeCounter - availableTypeCounter)+")")
+            println("Number of Fields (available/not available): "+fieldCounter+"("+availableFieldCounter+"/"+(fieldCounter - availableFieldCounter)+")")
+            println("Number of Methods (available/not available): "+methodCounter+"("+availableMethodCounter+"/"+(methodCounter - availableMethodCounter)+")")
+            println("Number of Source Elements (available/not available): "+sourceElementCounter+"("+availableSourceElementCounter+"/"+(sourceElementCounter - availableSourceElementCounter)+")")
+            println("Number of Edges (to available/to not available): "+edgeCounter+"("+edgeToAvailable+"/"+edgeToNotAvailable+")")
+        }
         println("Number of (Sub-)Cluster: "+subclusterCounter)
     }
 
