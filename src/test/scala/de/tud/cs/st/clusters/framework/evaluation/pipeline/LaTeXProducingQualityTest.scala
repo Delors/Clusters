@@ -186,11 +186,11 @@ class LaTeXProducingQualityTest extends QualityTest {
             }
 
             latexTableFileWriter.write("""\end{tabular}
-\caption["""+mojoVariant+" values of experiment TODO -- "+projectName+"""] %TODO: fix name and experiment number!
-{"""+mojoVariant+" values of experiment TODO -- "+projectName+""". %TODO: fix name and experiment number!
+\caption["""+mojoVariant+" values of Experiment \\experimentNumber"+projectName+" -- \\experimentName"+projectName+"""]
+{"""+mojoVariant+" values of Experiment \\experimentNumber"+projectName+" -- \\experimentName"+projectName+""".
 The abbreviations of the pipeline configurations are explained in Table~\ref{tab:evaluation:overviewPipelineConfiguration}.
-The maximum level of the reference clustering is tagged by $\ast$ -- in the table header.
-The """+mojoVariant+""" value of the generated clustering's maximum level is tagged by $\dagger$.}
+The deepest level of the reference clustering is marked by $\ast$ in the table header.
+The """+mojoVariant+""" value of the generated clustering's deepest level is marked by $\dagger$.}
 \label{tab:"""+projectName+"_"+mojoVariant+"""}
 \end{table}""")
         }
