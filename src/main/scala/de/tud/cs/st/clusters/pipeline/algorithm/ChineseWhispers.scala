@@ -126,9 +126,17 @@ class ChineseWhispers(
         val sortedEdges = weightMatrix.toList.sortWith((a, b) ⇒ a._2 > b._2 || (a._2 == b._2 && (a._1._1 > b._1._1 || (a._1._1 == b._1._1 && a._1._2 > b._1._2))))
 
         cluster.clearChildren()
-
-        calcClusters(sortedEdges, inputChildren) foreach {
-            cluster.addChild(_)
+        val newChildren = calcClusters(sortedEdges, inputChildren)
+        if (newChildren.size != 1) {
+            newChildren foreach {
+                cluster.addChild(_)
+            }
+        }
+        else {
+            newChildren(0).children foreach {
+                cluster.addChild(_)
+            }
+            createdNewCluster = false
         }
 
         cluster.clusterable = createdNewCluster
