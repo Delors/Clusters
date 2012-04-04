@@ -139,7 +139,7 @@ class LaTeXProducingQualityTest extends QualityTest {
     }
 
     protected def writeTable(projectName: String, mojoVariant: String, results: scala.collection.mutable.Map[String, (Int, Array[(Int, Double)])]) {
-        val maxLevels = results.values.foldLeft(0)((c, a) ⇒ scala.Math.max(c, a._2.size))
+        val maxLevels = results.values.foldLeft(0)((c, a) ⇒ scala.math.max(c, a._2.size))
         val latexTableFileWriter = new java.io.FileWriter(new java.io.File(projectName+"_"+mojoVariant+"_table.tex"))
         try {
             latexTableFileWriter.write("""\begin{table}[H]
