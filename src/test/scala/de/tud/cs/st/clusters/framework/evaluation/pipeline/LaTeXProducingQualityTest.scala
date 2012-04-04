@@ -54,12 +54,55 @@ import de.tud.cs.st.clusters.framework.evaluation.ClusterStatistics
  */
 class LaTeXProducingQualityTest extends QualityTest {
 
-    var latexFileWriter: java.io.FileWriter = null
+    var comboNames: Array[String] = _
+    var maxLevelReferenceClustering: Int = -1
 
-    protected override def beforeEvaluation(testName: String, projectName: String) {
-        super.beforeEvaluation(testName, projectName)
-        latexFileWriter = new java.io.FileWriter(new java.io.File(projectName+"_"+mojoVariant+".tex"))
-        latexFileWriter.write("""\begin{figure}[htp]
+    // comboName => (maxLevelExtractedCluster,Array[(level,MoJoXXValue)])
+    var resultsMoJoFM: scala.collection.mutable.Map[String, (Int, Array[(Int, Double)])] = _
+    var resultsMoJoHM: scala.collection.mutable.Map[String, (Int, Array[(Int, Double)])] = _
+
+    protected override def beforeEvaluation(testName: String, projectName: String, referenceCluster: Cluster) {
+        super.beforeEvaluation(testName, projectName, referenceCluster)
+        comboNames = Array.empty
+        maxLevelReferenceClustering = -1
+        resultsMoJoFM = scala.collection.mutable.Map.empty
+        resultsMoJoHM = scala.collection.mutable.Map.empty
+    }
+
+    protected override def beforeStageEvaluation(comboNumber: Int, testName: String, projectName: String, comboName: String) {
+        super.beforeStageEvaluation(comboNumber, testName, projectName, comboName)
+    }
+
+    protected override def afterStageEvaluation(comboNumber: Int, testName: String, projectName: String, comboName: String, mjw: MoJoWrapper, extractedCluster: Cluster, maxLevelReferenceCluster: Int, maxLevelExtractedCluster: Int, levelLimit: Int) {
+        comboNames = comboNames :+ comboName
+        maxLevelReferenceClustering = maxLevelReferenceCluster
+        1 to levelLimit foreach { level ⇒
+            mjw.levelLimit = Some(level)
+            val mojoHMvalue = mjw.singleDirectionMoJoHM
+            var combo: (Int, Array[(Int, Double)]) = resultsMoJoHM.getOrElse(comboName, (maxLevelExtractedCluster, Array.empty))
+            combo = (combo._1, combo._2 :+ ((level, mojoHMvalue)))
+            resultsMoJoHM(comboName) = combo
+            val mojoFMvalue = mjw.singleDirectionMoJoFM
+            combo = resultsMoJoFM.getOrElse(comboName, (maxLevelExtractedCluster, Array.empty))
+            combo = (combo._1, combo._2 :+ ((level, mojoFMvalue)))
+            resultsMoJoFM(comboName) = combo
+        }
+        super.afterStageEvaluation(comboNumber, testName, projectName, comboName, mjw, extractedCluster, maxLevelReferenceCluster, maxLevelExtractedCluster, levelLimit)
+    }
+
+    protected override def afterEvaluation(testName: String, projectName: String) {
+        writeFigure(projectName, mojoFM, resultsMoJoFM)
+        writeFigure(projectName, mojoHM, resultsMoJoHM)
+        writeTable(projectName, mojoFM, resultsMoJoFM)
+        writeTable(projectName, mojoHM, resultsMoJoHM)
+
+        super.afterEvaluation(testName, projectName)
+    }
+
+    protected def writeFigure(projectName: String, mojoVariant: String, results: scala.collection.mutable.Map[String, (Int, Array[(Int, Double)])]) {
+        val latexFigureFileWriter = new java.io.FileWriter(new java.io.File(projectName+"_"+mojoVariant+".tex"))
+        try {
+            latexFigureFileWriter.write("""\begin{figure}[htp]
 	\centering
 	\begin{tikzpicture}
 		\pgfplotsset{width=0.5\textwidth}
@@ -71,43 +114,88 @@ class LaTeXProducingQualityTest extends QualityTest {
 			legend style={at={(-0.3,0.5)},anchor=east,legend}
 		]
 """)
-    }
-
-    protected override def beforeStageEvaluation(comboNumber: Int, testName: String, projectName: String, comboName: String) {
-        super.beforeStageEvaluation(comboNumber, testName, projectName, comboName)
-    }
-
-    protected override def afterStageEvaluation(comboNumber: Int, testName: String, projectName: String, comboName: String, mjw: MoJoWrapper, extractedCluster: Cluster, maxLevelReferenceCluster: Int, maxLevelExtractedCluster: Int, levelLimit: Int) {
-        if (latexFileWriter != null) {
-            latexFileWriter.write("\\addlegendentry{"+comboName+"}\n")
-            latexFileWriter.write("\\addplot coordinates {\n")
-            1 to levelLimit foreach { level ⇒
-                mjw.levelLimit = Some(level)
-                if (mojoVariant == mojoHM) {
-                    latexFileWriter.write("("+level+","+mjw.singleDirectionMoJoHM+")\n")
+            0 to comboNames.size - 1 foreach { i ⇒
+                val comboName = comboNames(i)
+                latexFigureFileWriter.write("\\addlegendentry{$\\"+comboName+"$}\n")
+                latexFigureFileWriter.write("\\addplot coordinates {\n")
+                val comboResults = results(comboName)
+                comboResults._2.foreach { comboRes ⇒
+                    val (level, mojoXXValue) = comboRes
+                    latexFigureFileWriter.write("("+level+","+mojoXXValue+")\n")
                 }
-                else if (mojoVariant == mojoFM) {
-                    latexFileWriter.write("("+level+","+mjw.singleDirectionMoJoFM+")\n")
-                }
+
+                latexFigureFileWriter.write("};\n")
             }
-            latexFileWriter.write("};\n")
-        }
-        super.afterStageEvaluation(comboNumber, testName, projectName, comboName, mjw, extractedCluster, maxLevelReferenceCluster, maxLevelExtractedCluster, levelLimit)
-    }
 
-    protected override def afterEvaluation(testName: String, projectName: String) {
-        if (latexFileWriter != null) {
-            try {
-                latexFileWriter.write("""		\end{axis}
+            latexFigureFileWriter.write("""		\end{axis}
     	\end{tikzpicture}
     \caption{"""+mojoVariant+" values of "+projectName+"""} %TODO: change caption
     \label{fig:"""+projectName+"_"+mojoVariant+"""}
 \end{figure}""")
-            }
-            finally {
-                latexFileWriter.close()
-            }
         }
-        super.afterEvaluation(testName, projectName)
+        finally {
+            latexFigureFileWriter.close()
+        }
+    }
+
+    protected def writeTable(projectName: String, mojoVariant: String, results: scala.collection.mutable.Map[String, (Int, Array[(Int, Double)])]) {
+        val maxLevels = results.values.foldLeft(0)((c, a) ⇒ scala.Math.max(c, a._2.size))
+        val latexTableFileWriter = new java.io.FileWriter(new java.io.File(projectName+"_"+mojoVariant+"_table.tex"))
+        try {
+            latexTableFileWriter.write("""\begin{table}[H]
+\centering
+\begin{tabular}{>{\centering\arraybackslash}m{\widthof{Configuration}}""")
+            1 to maxLevels foreach { _ ⇒
+                latexTableFileWriter.write("|c")
+            }
+            latexTableFileWriter.write("""}
+\toprule
+\textbf{Pipeline\newline Configuration}""")
+            1 to maxLevels foreach { l ⇒
+                latexTableFileWriter.write(" & \\textbf{Level "+l)
+                if (l == maxLevelReferenceClustering) {
+                    latexTableFileWriter.write("$^{\\ast}$")
+                }
+                latexTableFileWriter.write("}")
+            }
+            latexTableFileWriter.write(" \\\\ \\midrule\n")
+
+            0 to comboNames.size - 1 foreach { i ⇒
+                val comboName = comboNames(i)
+                latexTableFileWriter.write("\t$\\"+comboName+"$")
+                val comboResults = results(comboName)
+                0 to maxLevels - 1 foreach { l ⇒
+                    if (comboResults._2.size <= l) {
+                        latexTableFileWriter.write(" & --")
+                    }
+                    else {
+                        val (level, mojoXXValue) = comboResults._2(l)
+                        val mojoXXValueString = new java.text.DecimalFormat("#.##").format(mojoXXValue)
+                        latexTableFileWriter.write(" & $"+mojoXXValueString+"\\%$")
+                        if (level == comboResults._1) {
+                            latexTableFileWriter.write("$^{\\dagger}$")
+                        }
+                    }
+                }
+                if (i < comboNames.size - 1) {
+                    latexTableFileWriter.write(""" \\ % entry"""+"\n") //""" \\ \midrule % entry"""+"\n")
+                }
+                else {
+                    latexTableFileWriter.write(""" \\ \bottomrule % entry"""+"\n")
+                }
+            }
+
+            latexTableFileWriter.write("""\end{tabular}
+\caption["""+mojoVariant+" values of experiment TODO -- "+projectName+"""] %TODO: fix name and experiment number!
+{"""+mojoVariant+" values of experiment TODO -- "+projectName+""". %TODO: fix name and experiment number!
+The abbreviations of the pipeline configurations are explained in Table~\ref{tab:evaluation:overviewPipelineConfiguration}.
+The maximum level of the reference clustering is tagged by $\ast$ -- in the table header.
+The """+mojoVariant+""" value of the generated clustering's maximum level is tagged by $\dagger$.}
+\label{tab:"""+projectName+"_"+mojoVariant+"""}
+\end{table}""")
+        }
+        finally {
+            latexTableFileWriter.close()
+        }
     }
 }

@@ -109,9 +109,7 @@ abstract class AbstractEvaluationTest extends AbstractClusteringTest {
         override val minClusterSizeThreshold: Int = 3
     } with ChineseWhispers(chineseWhispersEquallyWeightedConfig) with MinClusterSizeClusteringStrategy with FirstClusterablesClusteringStrategy with FixedPointIterationClusteringStrategy
 
-    val layerClustering = new {
-        val clusterIdentifier = implTestConfig.implementationClusterIdentifier
-    } with LayerClustering(layerConfig) with FirstClusterablesClusteringStrategy with IdentifierBasedClusteringStrategy
+    val layerClustering = new LayerClustering(layerConfig) with FirstClusterablesClusteringStrategy
     val classExtractor = new ClassExtractor() with FirstClusterablesClusteringStrategy
 
     val onlyChineseWhispers: Array[ClusteringStage] = Array(chineseWhispers)
@@ -190,24 +188,24 @@ abstract class AbstractEvaluationTest extends AbstractClusteringTest {
     )
 
     val allStageCombos: Array[(String, Array[ClusteringStage])] = Array(
-        ("onlyChineseWhispers", onlyChineseWhispers),
-        ("combinedStagesChineseWhispers", combinedStagesChineseWhispers),
-        ("onlyChineseWhispersEquallyWeighted", onlyChineseWhispersEquallyWeighted),
-        ("combinedStagesChineseWhispersEquallyWeighted", combinedStagesChineseWhispersEquallyWeighted),
-        ("onlyLayerClustering", onlyLayerClustering),
-        ("combinedStagesLayerClustering", combinedStagesLayerClustering),
-        ("onlyClassExtractor", onlyClassExtractor),
-        ("combinedStagesClassExtractor", combinedStagesClassExtractor),
-        ("combinedStagesClassExChineseWhisp", combinedStagesClassExChineseWhisp),
-        ("combinedStagesClassExChineseWhispEqWe", combinedStagesClassExChineseWhispEqWe),
-        ("combinedStagesWithoutFinalizer", combinedStagesWithoutFinalizer),
-        ("onlyAppLibsSeparator", onlyAppLibsSeparator),
-        ("onlyGetterSetterClustering", onlyGetterSetterClustering),
-        ("onlyImplTestSeparator", onlyImplTestSeparator),
-        ("onlyBasePackageExtractor", onlyBasePackageExtractor),
-        ("onlySCCClustering", onlySCCClustering),
-        ("packageClassBasedClustering", packageClassBasedClustering),
-        ("noClustering", Array())
+        ("noClustering", Array()),
+        ("singleStageAppLibs", onlyAppLibsSeparator),
+        ("singleStageClass", onlyClassExtractor),
+        ("singleStageGetterSetter", onlyGetterSetterClustering),
+        ("singleStageImplTest", onlyImplTestSeparator),
+        ("singleStageBasePackage", onlyBasePackageExtractor),
+        ("singleStageSCC", onlySCCClustering),
+        ("singleStageLayer", onlyLayerClustering),
+        ("singleStageCW", onlyChineseWhispers),
+        ("singleStageCWeq", onlyChineseWhispersEquallyWeighted),
+        ("multipleStagesWithoutFinalizer", combinedStagesWithoutFinalizer),
+        ("multipleStagesClass", combinedStagesClassExtractor),
+        ("multipleStagesLayer", combinedStagesLayerClustering),
+        ("multipleStagesCW", combinedStagesChineseWhispers),
+        ("multipleStagesCWeq", combinedStagesChineseWhispersEquallyWeighted),
+        ("multipleStagesClassCW", combinedStagesClassExChineseWhisp),
+        ("multipleStagesClassCWeq", combinedStagesClassExChineseWhispEqWe),
+        ("multipleStagesPrimePackageClass", packageClassBasedClustering)
     )
 
     private def evaluate(
@@ -241,19 +239,11 @@ abstract class AbstractEvaluationTest extends AbstractClusteringTest {
             "test/referenceCluster/cocome-impl-classes.sei")
     }
 
-    // TODO: there are no valid reference clusters...
     test("evaluate [hibernate]") {
         evaluate(
             "Hibernate",
             hibernateSourceZipFile,
             "test/referenceCluster/hibernate-core-3.6.0.Final.sei")
-    }
-
-    test("evaluate [ClusteringTestProject]") {
-        evaluate(
-            "ClusteringTestProject",
-            clusteringTestProjectSourceZipFile,
-            "test/referenceCluster/ClusteringTestProject.sei")
     }
 
     test("evaluate [clTestProjectExampleCrosscuttingConcernSourcesZipFile]") {
@@ -270,11 +260,24 @@ abstract class AbstractEvaluationTest extends AbstractClusteringTest {
             "test/referenceCluster/ClusteringTestProject-example-mixedConcern.sei")
     }
 
-    test("evaluate [clTestProjectPatternAbstractFactorySourcesZipFile]") {
+    test("evaluate [clTestProjectPatternAbstractFactorySourcesZipFile_plain]") {
         evaluate(
             "AbstractFactoryPattern",
-            clTestProjectPatternAbstractFactorySourcesZipFile,
-            "test/referenceCluster/ClusteringTestProject-pattern-abstractFactory.sei")
+            clTestProjectPatternAbstractFactorySourcesZipFile_plain,
+            "test/referenceCluster/ClusteringTestProject-pattern-abstractFactory_plain.sei")
+    }
+    test("evaluate [clTestProjectPatternVisitorSourcesZipFile_plain]") {
+        evaluate(
+            "VisitorPattern",
+            clTestProjectPatternVisitorSourcesZipFile_plain,
+            "test/referenceCluster/ClusteringTestProject-pattern-visitor_plain.sei")
+    }
+    // TODO: there are no valid reference clusters...
+    test("evaluate [ClusteringTestProject]") {
+        evaluate(
+            "ClusteringTestProject",
+            clusteringTestProjectSourceZipFile,
+            "test/referenceCluster/ClusteringTestProject.sei")
     }
 
     test("evaluate [antSourceZipFile]") {

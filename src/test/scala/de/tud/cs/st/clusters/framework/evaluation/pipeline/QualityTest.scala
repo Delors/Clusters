@@ -69,11 +69,11 @@ class QualityTest extends AbstractEvaluationTest {
         if (referenceClusteringFilePath == null)
             sys.error("No reference clustering file is given!")
 
-        val referenceClusters = ReferenceClusterCreator.readReferenceCluster(
+        val referenceCluster = ReferenceClusterCreator.readReferenceCluster(
             sourceFiles,
             new java.io.File(referenceClusteringFilePath))
 
-        beforeEvaluation(testName, projectName)
+        beforeEvaluation(testName, projectName, referenceCluster)
 
         var i = 1
         allStageCombos foreach { combo ⇒
@@ -86,7 +86,7 @@ class QualityTest extends AbstractEvaluationTest {
 
             val extractedCluster = clusteringPipeline.runPipeline(sourceFiles)
 
-            var mjw = new MoJoWrapper(extractedCluster, referenceClusters)
+            var mjw = new MoJoWrapper(extractedCluster, referenceCluster)
             val maxLevelReferenceCluster = mjw.maxDepthAuthorativeCluster
             val maxLevelExtractedCluster = mjw.maxDepthCalculatedCluster
             val levelLimit = scala.math.max(maxLevelReferenceCluster, maxLevelExtractedCluster)
@@ -99,8 +99,9 @@ class QualityTest extends AbstractEvaluationTest {
         afterEvaluation(testName, projectName)
     }
 
-    protected def beforeEvaluation(testName: String, projectName: String) {
+    protected def beforeEvaluation(testName: String, projectName: String, referenceCluster: Cluster) {
         println(testName+" - START")
+        ClusterStatistics.printStatistics(referenceCluster, true)
     }
 
     protected def beforeStageEvaluation(comboNumber: Int, testName: String, projectName: String, comboName: String) {
@@ -120,7 +121,7 @@ class QualityTest extends AbstractEvaluationTest {
 
         println("Levels (ReferenceCluster):"+maxLevelReferenceCluster)
         println("Levels (ExctractedCluster):"+maxLevelExtractedCluster)
-        ClusterStatistics.printStatistics(extractedCluster)
+        ClusterStatistics.printStatistics(extractedCluster, true)
     }
 
     protected def afterEvaluation(testName: String, projectName: String) {
