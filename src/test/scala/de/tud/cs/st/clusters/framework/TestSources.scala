@@ -67,6 +67,27 @@ trait TestSources {
         "org/cocome/tradingsystem/cashdeskline/cashdesk/printercontroller/impl/PrinterControllerEventHandlerImpl.class",
         "org/cocome/tradingsystem/cashdeskline/cashdesk/printercontroller/impl/PrinterStates.class")
 
+    val clTestProjectPatternAbstractFactorySourcesZipFile_plain = SourceZipFile("test/classfiles/clusteringTestProject/ClusteringTestProject-pattern-abstractFactory.jar",
+        "pattern/abstractFactory/GUIFactory.class",
+        "pattern/abstractFactory/WinFactory.class",
+        "pattern/abstractFactory/OSXFactory.class",
+        "pattern/abstractFactory/Button.class",
+        "pattern/abstractFactory/WinButton.class",
+        "pattern/abstractFactory/OSXButton.class",
+        "pattern/abstractFactory/Application.class"
+    )
+
+    val clTestProjectPatternVisitorSourcesZipFile_plain = SourceZipFile("test/classfiles/clusteringTestProject/ClusteringTestProject-pattern-visitor.jar",
+        "pattern/visitor/CarElementVisitor.class",
+        "pattern/visitor/CarElement.class",
+        "pattern/visitor/Wheel.class",
+        "pattern/visitor/Engine.class",
+        "pattern/visitor/Body.class",
+        "pattern/visitor/Car.class",
+        "pattern/visitor/CarElementPrintVisitor.class",
+        "pattern/visitor/CarElementDoVisitor.class"
+    )
+
     val clTestProjectExampleCrosscuttingConcernSourcesZipFile = SourceZipFile("test/classfiles/clusteringTestProject/ClusteringTestProject-example-crosscuttingConcern.jar")
     val clTestProjectExampleMixedConcernSourcesZipFile = SourceZipFile("test/classfiles/clusteringTestProject/ClusteringTestProject-example-mixedConcern.jar")
     val clTestProjectPatternAbstractFactorySourcesZipFile = SourceZipFile("test/classfiles/clusteringTestProject/ClusteringTestProject-pattern-abstractFactory.jar")

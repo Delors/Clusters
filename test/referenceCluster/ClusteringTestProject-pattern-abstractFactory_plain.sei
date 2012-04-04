@@ -1,0 +1,45 @@
+[
+	[
+		[
+			java.io.PrintStream
+			java.io.PrintStream.println(java.lang.String) : void
+		]
+		[
+			java.lang.Object
+			java.lang.Object.<init>() : void
+			java.lang.String
+			java.lang.System
+			java.lang.System.out
+		]
+	]
+	[
+		[
+			pattern.abstractFactory.GUIFactory
+			pattern.abstractFactory.OSXFactory
+			pattern.abstractFactory.WinFactory
+			pattern.abstractFactory.WinFactory.<init>() : void
+			pattern.abstractFactory.OSXFactory.<init>() : void
+		]
+		[
+			pattern.abstractFactory.Button
+			pattern.abstractFactory.OSXButton
+			pattern.abstractFactory.WinButton
+			pattern.abstractFactory.WinButton.paint() : void
+			pattern.abstractFactory.OSXButton.paint() : void
+		]
+		[
+			pattern.abstractFactory.OSXFactory.createButton() : pattern.abstractFactory.Button
+			pattern.abstractFactory.OSXButton.<init>() : void
+		]
+		[
+			pattern.abstractFactory.WinFactory.createButton() : pattern.abstractFactory.Button
+			pattern.abstractFactory.WinButton.<init>() : void
+		]
+		[
+			pattern.abstractFactory.Application
+			pattern.abstractFactory.Application.<init>(pattern.abstractFactory.GUIFactory) : void
+			pattern.abstractFactory.Button.paint() : void
+			pattern.abstractFactory.GUIFactory.createButton() : pattern.abstractFactory.Button
+		]
+	]
+]

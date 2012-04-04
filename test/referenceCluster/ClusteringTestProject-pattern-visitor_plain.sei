@@ -1,0 +1,81 @@
+[
+	[
+		[
+			java.io.PrintStream
+			java.io.PrintStream.println(java.lang.String) : void
+		]
+		[
+			java.lang.Object
+			java.lang.Object.<init>() : void
+			pattern.visitor.CarElement[].clone() : java.lang.Object
+			java.lang.String
+			java.lang.StringBuilder
+			java.lang.StringBuilder.<init>() : void
+			java.lang.StringBuilder.append(java.lang.String) : java.lang.StringBuilder
+			java.lang.StringBuilder.toString() : java.lang.String
+			java.lang.System
+			java.lang.System.out
+		]
+	]
+	[
+		[
+			pattern.visitor.Car.<init>() : void
+			pattern.visitor.Body.<init>() : void
+			pattern.visitor.Engine.<init>() : void
+			pattern.visitor.Wheel.<init>(java.lang.String) : void
+		]
+		[
+			pattern.visitor.CarElement
+			pattern.visitor.CarElement.accept(pattern.visitor.CarElementVisitor) : void
+			pattern.visitor.Car
+			pattern.visitor.Body
+			pattern.visitor.Engine
+			pattern.visitor.Wheel
+		]
+		[
+			pattern.visitor.Car.elements
+			pattern.visitor.Car.getElements() : pattern.visitor.CarElement[]
+		]
+		[
+			pattern.visitor.CarElementVisitor
+			pattern.visitor.CarElementDoVisitor
+			pattern.visitor.CarElementDoVisitor.<init>() : void
+			pattern.visitor.CarElementPrintVisitor
+			pattern.visitor.CarElementPrintVisitor.<init>() : void
+		]
+		[
+			pattern.visitor.CarElementDoVisitor.visit(pattern.visitor.Body) : void
+			pattern.visitor.CarElementDoVisitor.visit(pattern.visitor.Car) : void
+			pattern.visitor.CarElementDoVisitor.visit(pattern.visitor.Engine) : void
+		]
+		[
+			pattern.visitor.CarElementPrintVisitor.visit(pattern.visitor.Body) : void
+			pattern.visitor.CarElementPrintVisitor.visit(pattern.visitor.Car) : void
+			pattern.visitor.CarElementPrintVisitor.visit(pattern.visitor.Engine) : void
+		]
+		[
+			pattern.visitor.CarElementDoVisitor.visit(pattern.visitor.Wheel) : void
+			pattern.visitor.CarElementPrintVisitor.visit(pattern.visitor.Wheel) : void
+			[
+				pattern.visitor.Wheel.getName() : java.lang.String
+				pattern.visitor.Wheel.name
+			]
+		]
+		[
+			pattern.visitor.CarElementVisitor.visit(pattern.visitor.Body) : void
+			pattern.visitor.Body.accept(pattern.visitor.CarElementVisitor) : void
+		]
+		[	
+			pattern.visitor.CarElementVisitor.visit(pattern.visitor.Car) : void
+			pattern.visitor.Car.accept(pattern.visitor.CarElementVisitor) : void
+		]
+		[
+			pattern.visitor.CarElementVisitor.visit(pattern.visitor.Engine) : void
+			pattern.visitor.Engine.accept(pattern.visitor.CarElementVisitor) : void
+		]
+		[	
+			pattern.visitor.CarElementVisitor.visit(pattern.visitor.Wheel) : void
+			pattern.visitor.Wheel.accept(pattern.visitor.CarElementVisitor) : void
+		]
+	]
+]
