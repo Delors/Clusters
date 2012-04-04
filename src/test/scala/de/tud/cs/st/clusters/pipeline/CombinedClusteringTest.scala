@@ -91,6 +91,34 @@ class CombinedClusteringTest extends AbstractClusteringTest {
         chineseWhispers
     )
 
+    test("testCombinedClustering [plainAbstractFactory]") {
+        testClustering(
+            "testCombinedClustering [plainAbstractFactory]",
+            graphmlClusteringResultWriterCreator("combinedClust_plainAbstractFactory"),
+            clTestProjectPatternAbstractFactorySourcesZipFile_plain)
+    }
+
+    test("testCombinedClustering [plainVisitor]") {
+        testClustering(
+            "testCombinedClustering [plainVisitor]",
+            graphmlClusteringResultWriterCreator("combinedClust_plainVisitor"),
+            clTestProjectPatternVisitorSourcesZipFile_plain)
+    }
+
+    test("testCombinedClustering [crosscuttingConcern]") {
+        testClustering(
+            "testCombinedClustering [crosscuttingConcern]",
+            graphmlClusteringResultWriterCreator("combinedClust_crosscuttingConcern"),
+            clTestProjectExampleCrosscuttingConcernSourcesZipFile)
+    }
+
+    test("testCombinedClustering [mixedConcern]") {
+        testClustering(
+            "testCombinedClustering [mixedConcern]",
+            graphmlClusteringResultWriterCreator("combinedClust_mixedConcern"),
+            clTestProjectExampleMixedConcernSourcesZipFile)
+    }
+
     test("testCombinedClustering [ClusteringTestProject]") {
         testClustering(
             "testCombinedClustering [ClusteringTestProject]",
