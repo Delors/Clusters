@@ -101,7 +101,7 @@ class QualityTest extends AbstractEvaluationTest {
 
     protected def beforeEvaluation(testName: String, projectName: String, referenceCluster: Cluster) {
         println(testName+" - START")
-        ClusterStatistics.printStatistics(referenceCluster, true)
+        ClusterStatistics.printStatistics(referenceCluster)
     }
 
     protected def beforeStageEvaluation(comboNumber: Int, testName: String, projectName: String, comboName: String) {
