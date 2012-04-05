@@ -239,11 +239,11 @@ abstract class AbstractEvaluationTest extends AbstractClusteringTest {
             "test/referenceCluster/ClusteringTestProject-example-mixedConcern.sei")
     }
 
-    test("evaluate [clTestProjectPatternAbstractFactorySourcesZipFile_plain]") {
+    test("evaluate [clTestProjectPatternAbstractFactorySourcesZipFile]") {
         evaluate(
             "AbstractFactoryPattern",
-            clTestProjectPatternAbstractFactorySourcesZipFile_plain,
-            "test/referenceCluster/ClusteringTestProject-pattern-abstractFactory_plain.sei")
+            clTestProjectPatternAbstractFactorySourcesZipFile,
+            "test/referenceCluster/ClusteringTestProject-pattern-abstractFactory.sei")
     }
 
     test("evaluate [clTestProjectPatternVisitorSourcesZipFile_plain]") {

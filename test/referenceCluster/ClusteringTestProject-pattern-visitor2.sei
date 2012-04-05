@@ -1,0 +1,25 @@
+[
+java.lang.Object
+java.lang.Object.<init>() : void
+pattern.visitor2.AssignmentNode
+pattern.visitor2.AssignmentNode.<init>() : void
+pattern.visitor2.AssignmentNode.accept(pattern.visitor2.NodeVisitor) : void
+pattern.visitor2.Client
+pattern.visitor2.Client.<init>() : void
+pattern.visitor2.CodeGeneratingVisitor
+pattern.visitor2.CodeGeneratingVisitor.<init>() : void
+pattern.visitor2.CodeGeneratingVisitor.visit(pattern.visitor2.AssignmentNode) : void
+pattern.visitor2.CodeGeneratingVisitor.visit(pattern.visitor2.VariableRefNode) : void
+pattern.visitor2.Node
+pattern.visitor2.Node.accept(pattern.visitor2.NodeVisitor) : void
+pattern.visitor2.NodeVisitor
+pattern.visitor2.NodeVisitor.visit(pattern.visitor2.AssignmentNode) : void
+pattern.visitor2.NodeVisitor.visit(pattern.visitor2.VariableRefNode) : void
+pattern.visitor2.TypeCheckingVisitor
+pattern.visitor2.TypeCheckingVisitor.<init>() : void
+pattern.visitor2.TypeCheckingVisitor.visit(pattern.visitor2.AssignmentNode) : void
+pattern.visitor2.TypeCheckingVisitor.visit(pattern.visitor2.VariableRefNode) : void
+pattern.visitor2.VariableRefNode
+pattern.visitor2.VariableRefNode.<init>() : void
+pattern.visitor2.VariableRefNode.accept(pattern.visitor2.NodeVisitor) : void
+]

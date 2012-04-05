@@ -7,7 +7,6 @@
 		[
 			java.lang.Object
 			java.lang.Object.<init>() : void
-			pattern.visitor.CarElement[].clone() : java.lang.Object
 			java.lang.String
 			java.lang.StringBuilder
 			java.lang.StringBuilder.<init>() : void
@@ -35,6 +34,7 @@
 		[
 			pattern.visitor.Car.elements
 			pattern.visitor.Car.getElements() : pattern.visitor.CarElement[]
+			pattern.visitor.CarElement[].clone() : java.lang.Object
 		]
 		[
 			pattern.visitor.CarElementVisitor

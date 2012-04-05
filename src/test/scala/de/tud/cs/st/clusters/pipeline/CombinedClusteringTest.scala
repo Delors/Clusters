@@ -91,11 +91,11 @@ class CombinedClusteringTest extends AbstractClusteringTest {
         chineseWhispers
     )
 
-    test("testCombinedClustering [plainAbstractFactory]") {
+    test("testCombinedClustering [abstractFactory]") {
         testClustering(
-            "testCombinedClustering [plainAbstractFactory]",
-            graphmlClusteringResultWriterCreator("combinedClust_plainAbstractFactory"),
-            clTestProjectPatternAbstractFactorySourcesZipFile_plain)
+            "testCombinedClustering [abstractFactory]",
+            graphmlClusteringResultWriterCreator("combinedClust_abstractFactory"),
+            clTestProjectPatternAbstractFactorySourcesZipFile)
     }
 
     test("testCombinedClustering [plainVisitor]") {

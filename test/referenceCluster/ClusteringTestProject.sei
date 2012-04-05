@@ -51,28 +51,96 @@
 				example.mixedConcern.Restaurant.orderWater() : void
 			]
 		]
-			pattern.abstractFactory.Application
-			pattern.abstractFactory.Application.<init>(pattern.abstractFactory.GUIFactory) : void
-			pattern.abstractFactory.ApplicationRunner
-			pattern.abstractFactory.ApplicationRunner.<init>() : void
-			pattern.abstractFactory.ApplicationRunner.createOsSpecificFactory() : pattern.abstractFactory.GUIFactory
-			pattern.abstractFactory.ApplicationRunner.main(java.lang.String[]) : void
-			pattern.abstractFactory.Button
-			pattern.abstractFactory.Button.paint() : void
+		[
+			pattern.abstractFactory.App
+			pattern.abstractFactory.App.<init>(pattern.abstractFactory.GUIFactory) : void
+			pattern.abstractFactory.GTKGUIFactory
+			pattern.abstractFactory.GTKGUIFactory.<init>() : void
+			pattern.abstractFactory.GTKGUIFactory.createMenu() : pattern.abstractFactory.Menu
+			pattern.abstractFactory.GTKGUIFactory.createWindow() : pattern.abstractFactory.Window
+			pattern.abstractFactory.GTKMenu
+			pattern.abstractFactory.GTKMenu.<init>() : void
+			pattern.abstractFactory.GTKMenu.show() : void
+			pattern.abstractFactory.GTKWindow
+			pattern.abstractFactory.GTKWindow.<init>() : void
+			pattern.abstractFactory.GTKWindow.show() : void
 			pattern.abstractFactory.GUIFactory
-			pattern.abstractFactory.GUIFactory.createButton() : pattern.abstractFactory.Button
-			pattern.abstractFactory.OSXButton
-			pattern.abstractFactory.OSXButton.<init>() : void
-			pattern.abstractFactory.OSXButton.paint() : void
-			pattern.abstractFactory.OSXFactory
-			pattern.abstractFactory.OSXFactory.<init>() : void
-			pattern.abstractFactory.OSXFactory.createButton() : pattern.abstractFactory.Button
-			pattern.abstractFactory.WinButton
-			pattern.abstractFactory.WinButton.<init>() : void
-			pattern.abstractFactory.WinButton.paint() : void
-			pattern.abstractFactory.WinFactory
-			pattern.abstractFactory.WinFactory.<init>() : void
-			pattern.abstractFactory.WinFactory.createButton() : pattern.abstractFactory.Button
+			pattern.abstractFactory.GUIFactory.createMenu() : pattern.abstractFactory.Menu
+			pattern.abstractFactory.GUIFactory.createWindow() : pattern.abstractFactory.Window
+			pattern.abstractFactory.Menu
+			pattern.abstractFactory.Menu.show() : void
+			pattern.abstractFactory.QtGUIFactory
+			pattern.abstractFactory.QtGUIFactory.<init>() : void
+			pattern.abstractFactory.QtGUIFactory.createMenu() : pattern.abstractFactory.Menu
+			pattern.abstractFactory.QtGUIFactory.createWindow() : pattern.abstractFactory.Window
+			pattern.abstractFactory.QtMenu
+			pattern.abstractFactory.QtMenu.<init>() : void
+			pattern.abstractFactory.QtMenu.show() : void
+			pattern.abstractFactory.QtWindow
+			pattern.abstractFactory.QtWindow.<init>() : void
+			pattern.abstractFactory.QtWindow.show() : void
+			pattern.abstractFactory.Window
+			pattern.abstractFactory.Window.show() : void
+		]
+		[
+			pattern.abstractFactory2.Application
+			pattern.abstractFactory2.Application.<init>(pattern.abstractFactory2.GUIFactory) : void
+			pattern.abstractFactory2.ApplicationRunner
+			pattern.abstractFactory2.ApplicationRunner.<init>() : void
+			pattern.abstractFactory2.ApplicationRunner.createOsSpecificFactory() : pattern.abstractFactory2.GUIFactory
+			pattern.abstractFactory2.ApplicationRunner.main(java.lang.String[]) : void
+			pattern.abstractFactory2.Button
+			pattern.abstractFactory2.Button.paint() : void
+			pattern.abstractFactory2.GUIFactory
+			pattern.abstractFactory2.GUIFactory.createButton() : pattern.abstractFactory2.Button
+			pattern.abstractFactory2.OSXButton
+			pattern.abstractFactory2.OSXButton.<init>() : void
+			pattern.abstractFactory2.OSXButton.paint() : void
+			pattern.abstractFactory2.OSXFactory
+			pattern.abstractFactory2.OSXFactory.<init>() : void
+			pattern.abstractFactory2.OSXFactory.createButton() : pattern.abstractFactory2.Button
+			pattern.abstractFactory2.WinButton
+			pattern.abstractFactory2.WinButton.<init>() : void
+			pattern.abstractFactory2.WinButton.paint() : void
+			pattern.abstractFactory2.WinFactory
+			pattern.abstractFactory2.WinFactory.<init>() : void
+			pattern.abstractFactory2.WinFactory.createButton() : pattern.abstractFactory2.Button
+		]
+		[
+			pattern.abstractFactory3.Application
+			pattern.abstractFactory3.Application.<init>(pattern.abstractFactory3.GUIFactory) : void
+			pattern.abstractFactory3.ApplicationRunner
+			pattern.abstractFactory3.ApplicationRunner.<init>() : void
+			pattern.abstractFactory3.ApplicationRunner.createOsSpecificFactory() : pattern.abstractFactory3.GUIFactory
+			pattern.abstractFactory3.ApplicationRunner.main(java.lang.String[]) : void
+			pattern.abstractFactory3.Button
+			pattern.abstractFactory3.Button.paint() : void
+			pattern.abstractFactory3.GUIElement
+			pattern.abstractFactory3.GUIElement.paint() : void
+			pattern.abstractFactory3.GUIFactory
+			pattern.abstractFactory3.GUIFactory.createButton() : pattern.abstractFactory3.Button
+			pattern.abstractFactory3.GUIFactory.createMenu() : pattern.abstractFactory3.Menu
+			pattern.abstractFactory3.Menu
+			pattern.abstractFactory3.OSXButton
+			pattern.abstractFactory3.OSXButton.<init>() : void
+			pattern.abstractFactory3.OSXButton.paint() : void
+			pattern.abstractFactory3.OSXFactory
+			pattern.abstractFactory3.OSXFactory.<init>() : void
+			pattern.abstractFactory3.OSXFactory.createButton() : pattern.abstractFactory3.Button
+			pattern.abstractFactory3.OSXFactory.createMenu() : pattern.abstractFactory3.Menu
+			pattern.abstractFactory3.OSXMenu
+			pattern.abstractFactory3.OSXMenu.<init>() : void
+			pattern.abstractFactory3.OSXMenu.paint() : void
+			pattern.abstractFactory3.WinButton
+			pattern.abstractFactory3.WinButton.<init>() : void
+			pattern.abstractFactory3.WinButton.paint() : void
+			pattern.abstractFactory3.WinFactory
+			pattern.abstractFactory3.WinFactory.<init>() : void
+			pattern.abstractFactory3.WinFactory.createButton() : pattern.abstractFactory3.Button
+			pattern.abstractFactory3.WinFactory.createMenu() : pattern.abstractFactory3.Menu
+			pattern.abstractFactory3.WinMenu
+			pattern.abstractFactory3.WinMenu.<init>() : void
+			pattern.abstractFactory3.WinMenu.paint() : void
 		]
 		[
 			pattern.adapter.AdapteeClass
@@ -677,6 +745,29 @@
 			pattern.visitor.Wheel.accept(pattern.visitor.CarElementVisitor) : void
 			pattern.visitor.Wheel.getName() : java.lang.String
 			pattern.visitor.Wheel.name
+		]
+		[
+			pattern.visitor2.AssignmentNode
+			pattern.visitor2.AssignmentNode.<init>() : void
+			pattern.visitor2.AssignmentNode.accept(pattern.visitor2.NodeVisitor) : void
+			pattern.visitor2.Client
+			pattern.visitor2.Client.<init>() : void
+			pattern.visitor2.CodeGeneratingVisitor
+			pattern.visitor2.CodeGeneratingVisitor.<init>() : void
+			pattern.visitor2.CodeGeneratingVisitor.visit(pattern.visitor2.AssignmentNode) : void
+			pattern.visitor2.CodeGeneratingVisitor.visit(pattern.visitor2.VariableRefNode) : void
+			pattern.visitor2.Node
+			pattern.visitor2.Node.accept(pattern.visitor2.NodeVisitor) : void
+			pattern.visitor2.NodeVisitor
+			pattern.visitor2.NodeVisitor.visit(pattern.visitor2.AssignmentNode) : void
+			pattern.visitor2.NodeVisitor.visit(pattern.visitor2.VariableRefNode) : void
+			pattern.visitor2.TypeCheckingVisitor
+			pattern.visitor2.TypeCheckingVisitor.<init>() : void
+			pattern.visitor2.TypeCheckingVisitor.visit(pattern.visitor2.AssignmentNode) : void
+			pattern.visitor2.TypeCheckingVisitor.visit(pattern.visitor2.VariableRefNode) : void
+			pattern.visitor2.VariableRefNode
+			pattern.visitor2.VariableRefNode.<init>() : void
+			pattern.visitor2.VariableRefNode.accept(pattern.visitor2.NodeVisitor) : void
 		]
 		[
 			test.GetterSetterTestClass

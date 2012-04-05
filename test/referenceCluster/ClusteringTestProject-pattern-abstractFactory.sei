@@ -14,34 +14,49 @@
 	]
 	[
 		[
-			pattern.abstractFactory.Application
-			pattern.abstractFactory.Application.<init>(pattern.abstractFactory.GUIFactory) : void
-			pattern.abstractFactory.Button
-			pattern.abstractFactory.Button.paint() : void
 			pattern.abstractFactory.GUIFactory
-			pattern.abstractFactory.GUIFactory.createButton() : pattern.abstractFactory.Button
+			pattern.abstractFactory.GTKGUIFactory
+			pattern.abstractFactory.QtGUIFactory
+			pattern.abstractFactory.GTKGUIFactory.<init>() : void
+			pattern.abstractFactory.QtGUIFactory.<init>() : void
+		]
+		[			
+			pattern.abstractFactory.Menu
+			pattern.abstractFactory.QtMenu
+			pattern.abstractFactory.GTKMenu
+			pattern.abstractFactory.GTKMenu.show() : void
+			pattern.abstractFactory.QtMenu.show() : void
 		]
 		[
-			pattern.abstractFactory.ApplicationRunner
-			pattern.abstractFactory.ApplicationRunner.<init>() : void
-			pattern.abstractFactory.ApplicationRunner.createOsSpecificFactory() : pattern.abstractFactory.GUIFactory
-			pattern.abstractFactory.ApplicationRunner.main(java.lang.String[]) : void
+			pattern.abstractFactory.Window
+			pattern.abstractFactory.QtWindow
+			pattern.abstractFactory.GTKWindow
+			pattern.abstractFactory.GTKWindow.show() : void
+			pattern.abstractFactory.QtWindow.show() : void
 		]
 		[
-			pattern.abstractFactory.OSXButton
-			pattern.abstractFactory.OSXButton.<init>() : void
-			pattern.abstractFactory.OSXButton.paint() : void
-			pattern.abstractFactory.OSXFactory
-			pattern.abstractFactory.OSXFactory.<init>() : void
-			pattern.abstractFactory.OSXFactory.createButton() : pattern.abstractFactory.Button
+			pattern.abstractFactory.GTKGUIFactory.createWindow() : pattern.abstractFactory.Window
+			pattern.abstractFactory.GTKWindow.<init>() : void
 		]
 		[
-			pattern.abstractFactory.WinButton
-			pattern.abstractFactory.WinButton.<init>() : void
-			pattern.abstractFactory.WinButton.paint() : void
-			pattern.abstractFactory.WinFactory
-			pattern.abstractFactory.WinFactory.<init>() : void
-			pattern.abstractFactory.WinFactory.createButton() : pattern.abstractFactory.Button
+			pattern.abstractFactory.GTKGUIFactory.createMenu() : pattern.abstractFactory.Menu
+			pattern.abstractFactory.GTKMenu.<init>() : void
+		]
+		[
+			pattern.abstractFactory.QtGUIFactory.createWindow() : pattern.abstractFactory.Window
+			pattern.abstractFactory.QtWindow.<init>() : void
+		]
+		[
+			pattern.abstractFactory.QtMenu.<init>() : void
+			pattern.abstractFactory.QtGUIFactory.createMenu() : pattern.abstractFactory.Menu
+		]
+		[
+			pattern.abstractFactory.App
+			pattern.abstractFactory.App.<init>(pattern.abstractFactory.GUIFactory) : void
+			pattern.abstractFactory.Menu.show() : void
+			pattern.abstractFactory.Window.show() : void
+			pattern.abstractFactory.GUIFactory.createMenu() : pattern.abstractFactory.Menu
+			pattern.abstractFactory.GUIFactory.createWindow() : pattern.abstractFactory.Window
 		]
 	]
 ]

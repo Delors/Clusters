@@ -1,0 +1,43 @@
+[
+java.io.PrintStream
+java.io.PrintStream.println(java.lang.String) : void
+java.lang.Object
+java.lang.Object.<init>() : void
+java.lang.String
+java.lang.System
+java.lang.System.out
+pattern.abstractFactory3.Application
+pattern.abstractFactory3.Application.<init>(pattern.abstractFactory3.GUIFactory) : void
+pattern.abstractFactory3.ApplicationRunner
+pattern.abstractFactory3.ApplicationRunner.<init>() : void
+pattern.abstractFactory3.ApplicationRunner.createOsSpecificFactory() : pattern.abstractFactory3.GUIFactory
+pattern.abstractFactory3.ApplicationRunner.main(java.lang.String[]) : void
+pattern.abstractFactory3.Button
+pattern.abstractFactory3.Button.paint() : void
+pattern.abstractFactory3.GUIElement
+pattern.abstractFactory3.GUIElement.paint() : void
+pattern.abstractFactory3.GUIFactory
+pattern.abstractFactory3.GUIFactory.createButton() : pattern.abstractFactory3.Button
+pattern.abstractFactory3.GUIFactory.createMenu() : pattern.abstractFactory3.Menu
+pattern.abstractFactory3.Menu
+pattern.abstractFactory3.OSXButton
+pattern.abstractFactory3.OSXButton.<init>() : void
+pattern.abstractFactory3.OSXButton.paint() : void
+pattern.abstractFactory3.OSXFactory
+pattern.abstractFactory3.OSXFactory.<init>() : void
+pattern.abstractFactory3.OSXFactory.createButton() : pattern.abstractFactory3.Button
+pattern.abstractFactory3.OSXFactory.createMenu() : pattern.abstractFactory3.Menu
+pattern.abstractFactory3.OSXMenu
+pattern.abstractFactory3.OSXMenu.<init>() : void
+pattern.abstractFactory3.OSXMenu.paint() : void
+pattern.abstractFactory3.WinButton
+pattern.abstractFactory3.WinButton.<init>() : void
+pattern.abstractFactory3.WinButton.paint() : void
+pattern.abstractFactory3.WinFactory
+pattern.abstractFactory3.WinFactory.<init>() : void
+pattern.abstractFactory3.WinFactory.createButton() : pattern.abstractFactory3.Button
+pattern.abstractFactory3.WinFactory.createMenu() : pattern.abstractFactory3.Menu
+pattern.abstractFactory3.WinMenu
+pattern.abstractFactory3.WinMenu.<init>() : void
+pattern.abstractFactory3.WinMenu.paint() : void
+]

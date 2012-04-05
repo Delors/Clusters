@@ -67,14 +67,28 @@ trait TestSources {
         "org/cocome/tradingsystem/cashdeskline/cashdesk/printercontroller/impl/PrinterControllerEventHandlerImpl.class",
         "org/cocome/tradingsystem/cashdeskline/cashdesk/printercontroller/impl/PrinterStates.class")
 
-    val clTestProjectPatternAbstractFactorySourcesZipFile_plain = SourceZipFile("test/classfiles/clusteringTestProject/ClusteringTestProject-pattern-abstractFactory.jar",
-        "pattern/abstractFactory/GUIFactory.class",
-        "pattern/abstractFactory/WinFactory.class",
-        "pattern/abstractFactory/OSXFactory.class",
-        "pattern/abstractFactory/Button.class",
-        "pattern/abstractFactory/WinButton.class",
-        "pattern/abstractFactory/OSXButton.class",
-        "pattern/abstractFactory/Application.class"
+    val clTestProjectPatternAbstractFactory2SourcesZipFile_plain = SourceZipFile("test/classfiles/clusteringTestProject/ClusteringTestProject-pattern-abstractFactory2.jar",
+        "pattern/abstractFactory2/GUIFactory.class",
+        "pattern/abstractFactory2/WinFactory.class",
+        "pattern/abstractFactory2/OSXFactory.class",
+        "pattern/abstractFactory2/Button.class",
+        "pattern/abstractFactory2/WinButton.class",
+        "pattern/abstractFactory2/OSXButton.class",
+        "pattern/abstractFactory2/Application.class"
+    )
+
+    val clTestProjectPatternAbstractFactory3SourcesZipFile_plain = SourceZipFile("test/classfiles/clusteringTestProject/ClusteringTestProject-pattern-abstractFactory3.jar",
+        "pattern/abstractFactory3/GUIFactory.class",
+        "pattern/abstractFactory3/WinFactory.class",
+        "pattern/abstractFactory3/OSXFactory.class",
+        "pattern/abstractFactory3/GUIElement.class",
+        "pattern/abstractFactory3/Button.class",
+        "pattern/abstractFactory3/WinButton.class",
+        "pattern/abstractFactory3/OSXButton.class",
+        "pattern/abstractFactory3/Menu.class",
+        "pattern/abstractFactory3/WinMenu.class",
+        "pattern/abstractFactory3/OSXMenu.class",
+        "pattern/abstractFactory3/Application.class"
     )
 
     val clTestProjectPatternVisitorSourcesZipFile_plain = SourceZipFile("test/classfiles/clusteringTestProject/ClusteringTestProject-pattern-visitor.jar",
@@ -91,6 +105,8 @@ trait TestSources {
     val clTestProjectExampleCrosscuttingConcernSourcesZipFile = SourceZipFile("test/classfiles/clusteringTestProject/ClusteringTestProject-example-crosscuttingConcern.jar")
     val clTestProjectExampleMixedConcernSourcesZipFile = SourceZipFile("test/classfiles/clusteringTestProject/ClusteringTestProject-example-mixedConcern.jar")
     val clTestProjectPatternAbstractFactorySourcesZipFile = SourceZipFile("test/classfiles/clusteringTestProject/ClusteringTestProject-pattern-abstractFactory.jar")
+    val clTestProjectPatternAbstractFactory2SourcesZipFile = SourceZipFile("test/classfiles/clusteringTestProject/ClusteringTestProject-pattern-abstractFactory2.jar")
+    val clTestProjectPatternAbstractFactory3SourcesZipFile = SourceZipFile("test/classfiles/clusteringTestProject/ClusteringTestProject-pattern-abstractFactory3.jar")
     val clTestProjectPatternAdapterSourcesZipFile = SourceZipFile("test/classfiles/clusteringTestProject/ClusteringTestProject-pattern-adapter.jar")
     val clTestProjectPatternBridgeSourcesZipFile = SourceZipFile("test/classfiles/clusteringTestProject/ClusteringTestProject-pattern-bridge.jar")
     val clTestProjectPatternBuilderSourcesZipFile = SourceZipFile("test/classfiles/clusteringTestProject/ClusteringTestProject-pattern-builder.jar")
@@ -115,6 +131,7 @@ trait TestSources {
     val clTestProjectPatternStrategySourcesZipFile = SourceZipFile("test/classfiles/clusteringTestProject/ClusteringTestProject-pattern-strategy.jar")
     val clTestProjectPatternTemplatemethodSourcesZipFile = SourceZipFile("test/classfiles/clusteringTestProject/ClusteringTestProject-pattern-templatemethod.jar")
     val clTestProjectPatternVisitorSourcesZipFile = SourceZipFile("test/classfiles/clusteringTestProject/ClusteringTestProject-pattern-visitor.jar")
+    val clTestProjectPatternVisitor2SourcesZipFile = SourceZipFile("test/classfiles/clusteringTestProject/ClusteringTestProject-pattern-visitor2.jar")
 
     private def optionalSourceZipFile(zipFileName: String) = {
         if (!new java.io.File(zipFileName).exists()) {

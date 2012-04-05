@@ -8,7 +8,7 @@
 	<classpathentry kind="lib" path="lib/junit-4.10.jar"/>
 	<classpathentry kind="lib" path="lib/scalatest-1.6.1.jar"/>
 	<classpathentry kind="lib" path="lib/commons-lang3-3.1.jar"/>
-	<classpathentry kind="lib" path="lib/bat-1.6.0.RC1.jar"/>
 	<classpathentry kind="lib" path="lib/mojo.jar"/>
+	<classpathentry kind="lib" path="lib/bat-1.6.0.RC2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
