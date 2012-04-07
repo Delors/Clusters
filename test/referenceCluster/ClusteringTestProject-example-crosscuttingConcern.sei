@@ -11,22 +11,22 @@
 			example.crosscuttingConcern.MultiuseData.<init>() : void
 		]
 		[
-			example.crosscuttingConcern.RowData
-			example.crosscuttingConcern.RowData.<init>() : void
+			example.crosscuttingConcern.RawData
+			example.crosscuttingConcern.RawData.<init>() : void
 		]
 		[
 			example.crosscuttingConcern.Loadable.load() : void
 			example.crosscuttingConcern.LoadableData.state
 			example.crosscuttingConcern.LoadableData.load() : void
 			example.crosscuttingConcern.MultiuseData.load() : void
-			example.crosscuttingConcern.RowData.load() : void
+			example.crosscuttingConcern.RawData.load() : void
 		]
 		[
 			example.crosscuttingConcern.Storable.store() : void
 			example.crosscuttingConcern.StorableData.state
 			example.crosscuttingConcern.StorableData.store() : void
 			example.crosscuttingConcern.MultiuseData.store() : void
-			example.crosscuttingConcern.RowData.store() : void
+			example.crosscuttingConcern.RawData.store() : void
 		]
 		example.crosscuttingConcern.MultiuseData.state
 	]
