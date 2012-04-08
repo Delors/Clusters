@@ -212,8 +212,8 @@ abstract class AbstractEvaluationTest extends AbstractClusteringTest {
         projectName: String,
         sourceFiles: SourceFile,
         referenceClusteringFilePath: String,
-        testRuns: Int = 100,
-        measuredRuns: Int = 50) {
+        testRuns: Int = 50,
+        measuredRuns: Int = 100) {
         evaluate(projectName, sourceFiles, referenceClusteringFilePath, testRuns, measuredRuns, allStageCombos)
     }
 
