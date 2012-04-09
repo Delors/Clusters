@@ -55,7 +55,7 @@ trait TestSources {
     def derbySourceZipFile = optionalSourceZipFile("test/classfiles/derby-10.8.2.2.jar")
     def droolsSourceZipFile = optionalSourceZipFile("test/classfiles/drools-core-5.3.0.Final.jar")
     def eclipseJdtUISourceZipFile = optionalSourceZipFile("test/classfiles/org.eclipse.jdt.ui_3.7.2.v20120109-1427.jar")
-    def saxonSourceZipFile = optionalSourceZipFile("test/classfiles/saxonee9-3-0-11j.jar")
+    def saxonSourceZipFile = optionalSourceZipFile("test/classfiles/saxon9he.jar")
     def springFrameworkSourceZipFile = optionalSourceZipFile("test/classfiles/spring-framework-3.1.1.RELEASE.zip")
 
     // only selected classes
